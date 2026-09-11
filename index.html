@@ -265,12 +265,12 @@
             </div>
             <div onclick="selectGranularity('C')" id="opt-2-C"
               class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex-1 flex flex-col justify-center">
-              <div class="text-xs md:text-sm font-bold text-slate-900 flex items-center gap-2"><span>🔧</span> C. Opérations Unitaires & Postes (Micro)</div>
-              <p class="text-[11px] text-slate-600 mt-1 leading-snug"><strong>1 ligne = 1 slot machine d'atelier.</strong> Gammes opératoires unitaires (usinage 5 axes, ressuage CND, équilibrage rotor, banc).</p>
+              <div class="text-xs md:text-sm font-bold text-slate-900 flex items-center gap-2"><span>🔧</span> C. Opérations & Types de Réparation (Micro)</div>
+              <p class="text-[11px] text-slate-600 mt-1 leading-snug"><strong>1 ligne = 1 type de réparation / opération par type de moteur.</strong> Suivi détaillé des gammes de réparation (usinage 5 axes, ressuage CND, équilibrage, banc).</p>
               <div class="text-[9.5px] text-slate-500 mt-1.5 bg-slate-50 rounded p-1.5 border border-slate-200 font-mono space-y-0.5">
-                <div><span class="text-amber-700 font-bold">FAIT_OPERATIONS_SLOTS</span> (>250k lig/an)</div>
-                <div class="text-slate-500">PK: ID_Slot_Op | FK: Poste_Machine, Gamme_Tache, Package, Date_Shift</div>
-                <div class="text-emerald-700 font-medium">Dimensions : DIM_POSTE_MACHINE, DIM_TACHE_GAMME, DIM_PACKAGE, DIM_CALENDRIER_HORAIRE</div>
+                <div><span class="text-amber-700 font-bold">FAIT_OPERATIONS_REPARATION</span> (>250k lig/an)</div>
+                <div class="text-slate-500">PK: ID_Op_Reparation | FK: Type_Moteur, Type_Reparation, Package, Date</div>
+                <div class="text-emerald-700 font-medium">Dimensions : DIM_TYPE_REPARATION, DIM_MOTEUR, DIM_PACKAGE, DIM_CALENDRIER</div>
               </div>
             </div>
           </div>
@@ -310,14 +310,14 @@
               class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex items-center justify-between gap-3">
               <div class="flex-1 min-w-0">
                 <div class="text-xs font-bold text-slate-900 mb-0.5 flex items-center gap-1.5">
-                  <span class="text-sm">➕</span> A. Modèle additif déterministe (Gamme standard)
+                  <span class="text-sm">➕</span> A. Délais théoriques de traitement
                 </div>
                 <p class="text-[10.5px] text-slate-600 leading-snug">
-                  <strong>Principe métier :</strong> Somme arithmétique des barèmes constructeur Safran et forfaits logistiques : $TAT = \sum Temps\_Standard + Forfait\_Transit$.
+                  Délais théoriques de traitement par (demande/package/opération par type de moteur selon la réponse en 2).
                 </p>
                 <div class="text-[10px] text-slate-500 mt-1 space-y-0.5">
-                  <div><span class="text-blue-700 font-semibold">Réalité terrain :</span> Ne tient aucun compte de l'attente en atelier, de la fatigue outillage, ni des imprévus au déculassage.</div>
-                  <div><span class="text-slate-500">Usage MRO :</span> Devis initial client & jalon contractuel théorique. Sous-estime systématiquement le délai réel de 20 à 35%.</div>
+                  <div><span class="text-blue-700 font-semibold">Principe :</span> Somme arithmétique des temps de gammes standards et forfaits logistiques.</div>
+                  <div><span class="text-slate-500">Usage MRO :</span> Devis commercial initial & référence théorique constructeur.</div>
                 </div>
                 <div class="text-[9px] text-blue-700 font-mono mt-1 font-semibold"><code>SUMX(FAIT, FAIT[Duree_Standard] + FAIT[Transit_Forfait])</code></div>
               </div>
@@ -338,24 +338,26 @@
               class="option-card active glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex items-center justify-between gap-3">
               <div class="flex-1 min-w-0">
                 <div class="text-xs font-bold text-slate-900 mb-0.5 flex items-center gap-1.5">
-                  <span class="text-sm">📊</span> B. Méthode probabiliste PERT (3 scénarios d'aléa)
+                  <span class="text-sm">📊</span> B. Table des délais moyens (5%, 95%, médian)
                 </div>
                 <p class="text-[10.5px] text-slate-600 leading-snug">
-                  <strong>Principe métier :</strong> Modélisation par loi Bêta pondérée : $E(TAT) = \frac{o + 4m + p}{6}$ intégrant la dispersion technique selon l'état d'usure du moteur.
+                  Table des délais moyens de traitement (à 5%, à 95%, médian).
                 </p>
                 <div class="text-[10px] text-slate-500 mt-1 space-y-0.5">
-                  <div><span class="text-amber-700 font-semibold">Réalité terrain :</span> Intègre les scénarios <em>optimiste</em> (visite propre), <em>nominal</em> (révision standard) et <em>pessimiste</em> (aubes criquées, dépose imprévue).</div>
-                  <div><span class="text-slate-500">Usage MRO :</span> Établissement d'engagements réalistes auprès des compagnies pour limiter l'exposition aux pénalités.</div>
+                  <div><span class="text-amber-700 font-semibold">Principe :</span> Distribution statistique réelle basée sur l'historique des visites ($P_{5}, P_{50}, P_{95}$).</div>
+                  <div><span class="text-slate-500">Usage MRO :</span> Évaluation de la dispersion, engagement contractuel garanti & gestion des risques.</div>
                 </div>
-                <div class="text-[9px] text-amber-700 font-mono mt-1 font-semibold"><code>(Duree_Opt + 4*Duree_Nom + Duree_Pess) / 6</code></div>
+                <div class="text-[9px] text-amber-700 font-mono mt-1 font-semibold"><code>PERCENTILEX.INC(FAIT, FAIT[Duree_Reelle], 0.50)</code></div>
               </div>
               <div
                 class="w-14 h-14 bg-white rounded-lg p-1 border border-slate-200 shadow-sm flex items-center justify-center shrink-0">
                 <svg class="w-full h-full" viewBox="0 0 50 50">
-                  <path d="M 5 40 Q 18 40, 25 12 Q 32 40, 45 40" fill="none" stroke="#2563eb" stroke-width="2" />
-                  <line x1="25" y1="12" x2="25" y2="40" stroke="#d97706" stroke-dasharray="2,2" />
-                  <circle cx="25" cy="12" r="2.5" fill="#d97706" />
-                  <text x="25" y="47" font-size="6.5" font-weight="bold" text-anchor="middle" fill="#d97706">m</text>
+                  <rect x="6" y="28" width="6" height="14" fill="#93c5fd" />
+                  <rect x="15" y="18" width="6" height="24" fill="#93c5fd" />
+                  <rect x="24" y="10" width="6" height="32" fill="#2563eb" />
+                  <rect x="33" y="14" width="6" height="28" fill="#93c5fd" />
+                  <line x1="27" y1="6" x2="27" y2="42" stroke="#059669" stroke-width="1.5" />
+                  <text x="27" y="48" font-size="6" font-weight="bold" text-anchor="middle" fill="#059669">P50</text>
                 </svg>
               </div>
             </div>
@@ -365,14 +367,14 @@
               class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex items-center justify-between gap-3">
               <div class="flex-1 min-w-0">
                 <div class="text-xs font-bold text-slate-900 mb-0.5 flex items-center gap-1.5">
-                  <span class="text-sm">🚦</span> C. Théorie des Files d'Attente (Loi de Little & Saturation)
+                  <span class="text-sm">🚦</span> C. Délais selon le taux d'occupation atelier
                 </div>
                 <p class="text-[10.5px] text-slate-600 leading-snug">
-                  <strong>Principe métier :</strong> Modélisation physique des goulots d'atelier (M/M/1) : $TAT = \frac{Temps\_Usinage}{1 - Taux\_Charge\_Atelier}$. L'attente explose dès que la charge dépasse 85%.
+                  Table des délais de traitement moyens selon le taux d'occupation de l'atelier.
                 </p>
                 <div class="text-[10px] text-slate-500 mt-1 space-y-0.5">
-                  <div><span class="text-red-700 font-semibold">Réalité terrain :</span> Capture l'encombrement des bancs d'essai (Bruxelles) et des tours 5 axes quand les pièces font la queue.</div>
-                  <div><span class="text-slate-500">Usage MRO :</span> Alerte précoce d'engorgement et arbitrage du planning de charge avant d'accepter de nouveaux moteurs.</div>
+                  <div><span class="text-red-700 font-semibold">Principe :</span> Prise en compte physique des goulots et files d'attente quand l'atelier approche de la saturation.</div>
+                  <div><span class="text-slate-500">Usage MRO :</span> Alerte précoce d'encombrement & arbitrage de capacité d'accueil.</div>
                 </div>
                 <div class="text-[9px] text-red-700 font-mono mt-1 font-semibold"><code>DIVIDE(Temps_Usinage, 1 - RELATED(DIM_SITE[Taux_Charge]))</code></div>
               </div>
@@ -393,26 +395,24 @@
               class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex items-center justify-between gap-3">
               <div class="flex-1 min-w-0">
                 <div class="text-xs font-bold text-slate-900 mb-0.5 flex items-center gap-1.5">
-                  <span class="text-sm">📈</span> D. Percentiles réels DAX (Distribution empirique $P_{50}, P_{85}, P_{95}$)
+                  <span class="text-sm">📈</span> D. Modélisation avancée
                 </div>
                 <p class="text-[10.5px] text-slate-600 leading-snug">
-                  <strong>Principe métier :</strong> Calcul statistique direct sur l'historique réel des visites atelier : médiane opérationnelle ($P_{50}$), engagement contractuel garanti ($P_{85}$) et queue de distribution ($P_{95}$).
+                  Table des délais de traitement dynamiques selon une modélisation avancée (probabiliste multi-factorielle).
                 </p>
                 <div class="text-[10px] text-slate-500 mt-1 space-y-0.5">
-                  <div><span class="text-emerald-700 font-semibold">Réalité terrain :</span> Ne repose sur aucune hypothèse théorique ; reflète la performance exacte observée sur les 500 dernières révisions.</div>
-                  <div><span class="text-slate-500">Usage MRO :</span> Standard Power BI pour négocier les clauses contractuelles et garantir 85% à 95% de livraisons à l'heure.</div>
+                  <div><span class="text-emerald-700 font-semibold">Principe :</span> Simulation prédictive intégrant les facteurs contextuels et aléas multiples d'usure.</div>
+                  <div><span class="text-slate-500">Usage MRO :</span> Pilotage prédictif fin et optimisation dynamique des plannings.</div>
                 </div>
-                <div class="text-[9px] text-emerald-700 font-mono mt-1 font-semibold"><code>PERCENTILEX.INC(FAIT, FAIT[Duree_Reelle], 0.85)</code></div>
+                <div class="text-[9px] text-emerald-700 font-mono mt-1 font-semibold"><code>SIMULATE_TAT_ADVANCED(FAIT, CONTEXT)</code></div>
               </div>
               <div
                 class="w-14 h-14 bg-white rounded-lg p-1 border border-slate-200 shadow-sm flex items-center justify-center shrink-0">
                 <svg class="w-full h-full" viewBox="0 0 50 50">
-                  <rect x="6" y="28" width="6" height="14" fill="#93c5fd" />
-                  <rect x="15" y="18" width="6" height="24" fill="#93c5fd" />
-                  <rect x="24" y="10" width="6" height="32" fill="#2563eb" />
-                  <rect x="33" y="14" width="6" height="28" fill="#93c5fd" />
-                  <line x1="27" y1="6" x2="27" y2="42" stroke="#059669" stroke-width="1.5" />
-                  <text x="27" y="48" font-size="6" font-weight="bold" text-anchor="middle" fill="#059669">P50</text>
+                  <path d="M 5 40 Q 18 40, 25 12 Q 32 40, 45 40" fill="none" stroke="#2563eb" stroke-width="2" />
+                  <line x1="25" y1="12" x2="25" y2="40" stroke="#d97706" stroke-dasharray="2,2" />
+                  <circle cx="25" cy="12" r="2.5" fill="#d97706" />
+                  <text x="25" y="47" font-size="6.5" font-weight="bold" text-anchor="middle" fill="#d97706">m</text>
                 </svg>
               </div>
             </div>
@@ -789,7 +789,7 @@
                 class="bg-white text-slate-800 font-medium text-[11px] rounded border border-slate-300 px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm">
                 <option value="A">📦 A. Dossier Moteur (Macro)</option>
                 <option value="B">🏢 B. Package par Site (Méso)</option>
-                <option value="C">🔧 C. Opération Slot (Micro)</option>
+                <option value="C">🔧 C. Opérations Réparations (Micro)</option>
               </select>
               <div id="sum-q2-desc" class="text-[9px] text-slate-500 mt-1 truncate">1 lig / dossier moteur</div>
             </div>
@@ -803,12 +803,12 @@
               </label>
               <select id="select-q3" onchange="onSummarySelectChange(3, this.value)"
                 class="bg-white text-slate-800 font-medium text-[11px] rounded border border-slate-300 px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm">
-                <option value="A">➕ A. Modèle Additif</option>
-                <option value="B">📊 B. Méthode PERT</option>
-                <option value="C">🚦 C. Files d'attente (Little)</option>
-                <option value="D">📈 D. Percentiles DAX</option>
+                <option value="A">➕ A. Délais théoriques</option>
+                <option value="B">📊 B. Délais moyens (5%, 95%, Médian)</option>
+                <option value="C">🚦 C. Taux d'occupation atelier</option>
+                <option value="D">📈 D. Modélisation avancée</option>
               </select>
-              <div id="sum-q3-desc" class="text-[9px] text-slate-500 mt-1 truncate">Pondération 3 points</div>
+              <div id="sum-q3-desc" class="text-[9px] text-slate-500 mt-1 truncate">Délais moyens (5%, 95%, Médian)</div>
             </div>
 
             <!-- Dropdown Q4 -->
@@ -920,7 +920,7 @@
         <div class="truncate">
           <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Sélection en cours</div>
           <div id="recap-text" class="text-[11px] text-slate-700 font-medium truncate">
-            Q1: A (Urgence) • Q2: A (Demande Globale) • Q3: B (PERT) • Q4: B (Barres vs Cible) • Q5: A (Charge 85%)
+            Q1: A (Urgence) • Q2: A (Demande Globale) • Q3: B (Délais Moyens) • Q4: B (Barres vs Cible) • Q5: A (Charge 85%)
           </div>
         </div>
         <div class="flex gap-1.5 shrink-0">
@@ -950,13 +950,13 @@
       2: {
         'A': { title: "Demande Globale (Macro)", desc: "1 ligne = 1 dossier / ESN moteur (FAIT_DEMANDES_MRO)", icon: "📦" },
         'B': { title: "Packages / Sites (Méso)", desc: "1 ligne = 1 lot d'opérations par site (FAIT_PACKAGES_SITE)", icon: "🏢" },
-        'C': { title: "Opérations Unitaires (Micro)", desc: "1 ligne = 1 slot machine d'atelier (FAIT_OPERATIONS_SLOTS)", icon: "🔧" }
+        'C': { title: "Opérations & Réparations (Micro)", desc: "1 ligne = 1 type de réparation par type de moteur", icon: "🔧" }
       },
       3: {
-        'A': { title: "Modèle Additif Déterministe", desc: "Somme des standards constructeur Safran + forfait transit (Devis initial)", icon: "➕" },
-        'B': { title: "Méthode Probabiliste PERT", desc: "Pondération 3 points (o, 4m, p)/6 absorbant l'aléa technique d'usure", icon: "📊" },
-        'C': { title: "Théorie des Files d'Attente", desc: "Loi de Little (M/M/1) modélisant l'explosion du buffer au-delà de 85%", icon: "🚦" },
-        'D': { title: "Percentiles Réels DAX", desc: "Distribution empirique exacte (P50 médiane, P85 cible SLA, P95 risque)", icon: "📈" }
+        'A': { title: "Délais Théoriques de Traitement", desc: "Temps standards par type de moteur (gamme & transit)", icon: "➕" },
+        'B': { title: "Table des Délais Moyens (5%, Médian, 95%)", desc: "Distribution statistique réelle (percentiles 5%, 50%, 95%)", icon: "📊" },
+        'C': { title: "Délais selon Occupation Atelier", desc: "Temps moyens pondérés par le taux de charge / goulots", icon: "🚦" },
+        'D': { title: "Modélisation Avancée", desc: "Délai dynamique par simulation probabiliste multi-factorielle", icon: "📈" }
       },
       4: {
         'A': { title: "Cartes KPIs Clés", desc: "TAT moyen glissant, % SLA et écart standard", icon: "⏱️" },
@@ -1638,18 +1638,18 @@
         // Granularité C (Opérations unitaires)
         schemaModel = {
           fact: {
-            title: "FAIT_OPERATIONS_SLOTS",
-            sub: "Grain : 1 ligne = 1 Slot Intervention Machine / Poste",
+            title: "FAIT_OPERATIONS_REPARATION",
+            sub: "Grain : 1 ligne = 1 Type de Réparation par Type de Moteur",
             grainColor: "#f59e0b",
             rows: [
-              { type: 'PK', name: 'ID_Slot_Op', desc: 'Ordre de fabrication unitaire' },
-              { type: 'FK', name: 'FK_Poste_Machine', desc: '-> DIM_POSTE.ID_Poste' },
-              { type: 'FK', name: 'FK_Tache_Gamme', desc: '-> DIM_GAMME.ID_Operation' },
+              { type: 'PK', name: 'ID_Op_Reparation', desc: 'Identifiant unique opération' },
+              { type: 'FK', name: 'FK_Type_Reparation', desc: '-> DIM_TYPE_REPARATION.ID_Reparation' },
+              { type: 'FK', name: 'FK_Moteur', desc: '-> DIM_MOTEUR.ESN_Moteur' },
               { type: 'FK', name: 'FK_Lot_Package', desc: '-> DIM_PACKAGE.ID_Lot' },
-              { type: 'FK', name: 'FK_Date_Shift', desc: '-> DIM_TEMPS_SLOT.Slot_Key' },
-              { type: 'M',  name: 'Temps_Gamme_Heures', desc: 'Usinage / Contrôle pur' },
-              { type: 'M',  name: 'Temps_Reglage_Heures', desc: 'Préparation régleur' },
-              { type: 'M',  name: 'Temps_Attente_File_h', desc: 'Attente avant passage' }
+              { type: 'FK', name: 'FK_Date', desc: '-> DIM_CALENDRIER.Date_Key' },
+              { type: 'M',  name: 'Temps_Reparation_h', desc: 'Durée moyenne réparation' },
+              { type: 'M',  name: 'Cout_Maint_EUR', desc: 'Coût unitaire opération' },
+              { type: 'M',  name: 'Temps_Attente_h', desc: 'Attente avant réparation' }
             ]
           },
           dims: [
@@ -1905,20 +1905,20 @@
       const granNames = {
         'A': 'Demande Globale (1 ligne = 1 moteur ESN)',
         'B': 'Packages Maintenance (1 ligne = 1 sous-ensemble site)',
-        'C': 'Opérations Unitaires (1 ligne = 1 slot machine)'
+        'C': 'Opérations & Réparations (1 ligne = 1 type de réparation par type de moteur)'
       };
 
       const tableNames = {
         'A': 'FAIT_DEMANDES_MRO',
         'B': 'FAIT_PACKAGES_SITE',
-        'C': 'FAIT_OPERATIONS_SLOTS'
+        'C': 'FAIT_OPERATIONS_REPARATION'
       };
 
       const methNames = {
-        'A': 'Additif standard (Somme déterministe)',
-        'B': 'PERT probabiliste (Distribution 3-points)',
-        'C': 'Files d\'attente Little (Saturation M/M/1)',
-        'D': 'Percentiles réels DAX (Distribution empirique)'
+        'A': 'Délais théoriques de traitement (Standard)',
+        'B': 'Table des délais moyens (5%, Médian, 95%)',
+        'C': 'Délais selon le taux d\'occupation atelier',
+        'D': 'Modélisation avancée (Probabiliste multi-factorielle)'
       };
 
       if (titleEl) {
@@ -1944,36 +1944,36 @@
             ['DEM-2024-094', 'ESN-773412', 'Lufthansa', '22.0', '+ 3.0', '<span class="text-blue-700 font-bold font-mono">25.0 j</span>'],
             ['DEM-2024-102', 'ESN-651098', 'Ryanair', '14.0', '+ 1.5', '<span class="text-blue-700 font-bold font-mono">15.5 j</span>']
           ];
-          formulaNote = "<strong>Diagnostic métier (Devis théorique) :</strong> Calcul rigide basé sur les barèmes constructeur. Utilisé pour les devis commerciaux initiaux, mais ignore la saturation atelier et sous-estime le délai réel de 25%.";
-          daxSnippet = "TAT_Additif = SUMX(FAIT_DEMANDES_MRO, [Duree_Theorique] + [Forfait_Transit])";
+          formulaNote = "<strong>Délais théoriques de traitement :</strong> Calcul basé sur les barèmes constructeur Safran et forfaits logistiques.";
+          daxSnippet = "TAT_Theorique = SUMX(FAIT_DEMANDES_MRO, [Duree_Theorique] + [Forfait_Transit])";
         } else if (q3 === 'B') {
-          cols = ['ID_Demande', 'ESN_Moteur', 'Type_Moteur', 'Duree_Opt (o)', 'Duree_Nom (m)', 'Duree_Pess (p)', 'TAT_PERT_Attendu'];
+          cols = ['ID_Demande', 'ESN_Moteur', 'Famille', 'Délai à 5% (Opt)', 'Délai Médian (50%)', 'Délai à 95% (Pess)', 'Écart_Type'];
           rows = [
-            ['DEM-2024-089', 'ESN-884210', 'CFM56-7B', '15.0 j', '18.0 j', '32.0 j', '<span class="text-amber-700 font-bold font-mono">19.8 j</span>'],
-            ['DEM-2024-094', 'ESN-773412', 'LEAP-1A', '19.0 j', '22.0 j', '41.0 j', '<span class="text-amber-700 font-bold font-mono">24.7 j</span>'],
-            ['DEM-2024-102', 'ESN-651098', 'CFM56-5B', '11.0 j', '14.0 j', '23.0 j', '<span class="text-amber-700 font-bold font-mono">15.0 j</span>']
+            ['DEM-2024-089', 'ESN-884210', 'CFM56-7B', '14.5 j', '<span class="text-amber-700 font-bold font-mono">18.2 j</span>', '27.0 j', '3.8 j'],
+            ['DEM-2024-094', 'ESN-773412', 'LEAP-1A', '18.0 j', '<span class="text-amber-700 font-bold font-mono">22.5 j</span>', '34.5 j', '4.2 j'],
+            ['DEM-2024-102', 'ESN-651098', 'CFM56-5B', '11.0 j', '<span class="text-amber-700 font-bold font-mono">14.0 j</span>', '21.0 j', '2.5 j']
           ];
-          formulaNote = "<strong>Diagnostic métier (Scénarios d'aléas) :</strong> La loi Bêta intègre le risque de corrosion ou de dépose imprévue d'aubes (scénario pessimiste à fort impact), fiabilisant la date d'engagement client.";
-          daxSnippet = "TAT_PERT = DIVIDE([Duree_Opt] + 4*[Duree_Nom] + [Duree_Pess], 6)";
+          formulaNote = "<strong>Table des délais moyens (5%, Médian, 95%) :</strong> Distribution empirique mesurée sur l'historique des visites atelier.";
+          daxSnippet = "TAT_Median = PERCENTILEX.INC(FAIT_DEMANDES_MRO, [Duree_Reelle_Jours], 0.50)";
         } else if (q3 === 'C') {
-          cols = ['ID_Demande', 'ESN_Moteur', 'Charge_MRO_Globale', 'Tps_Usinage_j', 'File_Attente_Little', 'TAT_Total_Estime'];
+          cols = ['ID_Demande', 'ESN_Moteur', 'Charge_MRO_Globale', 'Tps_Usinage_j', 'Attente_Occupation_j', 'TAT_Total_Moyen'];
           rows = [
             ['DEM-2024-089', 'ESN-884210', '<span class="text-emerald-700 font-bold">78 %</span> (Normal)', '18.0 j', '+ 3.8 j', '<span class="text-blue-700 font-bold font-mono">21.8 j</span>'],
             ['DEM-2024-094', 'ESN-773412', '<span class="text-red-700 font-bold">92 %</span> (Saturé)', '22.0 j', '+ 16.5 j', '<span class="text-red-700 font-bold font-mono">38.5 j ⚠️</span>'],
             ['DEM-2024-102', 'ESN-651098', '<span class="text-amber-700 font-bold">84 %</span> (Tendu)', '14.0 j', '+ 5.2 j', '<span class="text-amber-700 font-bold font-mono">19.2 j</span>']
           ];
-          formulaNote = "<strong>Diagnostic métier (Effet goulot usine) :</strong> Lorsque le taux de charge usine dépasse 85%, le délai d'attente s'envole de manière non-linéaire (+16.5j pour 92% de charge !), déclenchant l'alerte pénalité.";
-          daxSnippet = "TAT_Little = DIVIDE([Tps_Usinage], 1 - [Taux_Charge_Global])";
+          formulaNote = "<strong>Délais selon le taux d'occupation :</strong> Modélisation de l'attente générée par l'encombrement et la saturation des ateliers.";
+          daxSnippet = "TAT_Ajuste_Charge = DIVIDE([Tps_Usinage], 1 - [Taux_Charge_Global])";
         } else {
           // 3D
-          cols = ['ID_Demande', 'ESN_Moteur', 'Famille', 'TAT_P50 (Médiane)', 'TAT_P85 (Cible)', 'TAT_P95 (Pess)', 'Statut_Engagement'];
+          cols = ['ID_Demande', 'ESN_Moteur', 'Famille', 'Facteur_Complexité', 'Aléa_Technique', 'TAT_Dynamique_Estime'];
           rows = [
-            ['DEM-2024-089', 'ESN-884210', 'CFM56-7B', '17.2 j', '21.0 j', '28.4 j', '<span class="px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold text-[9px]">SLA 95% Atteint</span>'],
-            ['DEM-2024-094', 'ESN-773412', 'LEAP-1A', '21.8 j', '26.5 j', '36.0 j', '<span class="px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200 font-bold text-[9px]">Sous Surveillance</span>'],
-            ['DEM-2024-102', 'ESN-651098', 'CFM56-5B', '13.5 j', '16.0 j', '22.1 j', '<span class="px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold text-[9px]">SLA 95% Atteint</span>']
+            ['DEM-2024-089', 'ESN-884210', 'CFM56-7B', '1.05', 'Faible (+1.2j)', '<span class="text-emerald-700 font-bold font-mono">19.8 j</span>'],
+            ['DEM-2024-094', 'ESN-773412', 'LEAP-1A', '1.30', 'Élevé (+6.5j)', '<span class="text-amber-700 font-bold font-mono">28.5 j</span>'],
+            ['DEM-2024-102', 'ESN-651098', 'CFM56-5B', '0.95', 'Nul (+0.0j)', '<span class="text-emerald-700 font-bold font-mono">14.2 j</span>']
           ];
-          formulaNote = "<strong>Diagnostic métier (Engagement contractuel robuste) :</strong> Les seuils réels P85 et P95 calculés sur l'historique permettent au Comex de calibrer les engagements SLA et d'anticiper le budget de pénalités.";
-          daxSnippet = "TAT_P85 = PERCENTILEX.INC(FAIT_DEMANDES_MRO, [Duree_Reelle_Jours], 0.85)";
+          formulaNote = "<strong>Modélisation avancée :</strong> Estimation dynamique basée sur une simulation probabiliste multi-factorielle.";
+          daxSnippet = "TAT_Avance = SIMULATE_TAT_ADVANCED(FAIT_DEMANDES_MRO, CONTEXT)";
         }
       } else if (q2 === 'B') {
         // Packages / Sites
@@ -1984,36 +1984,36 @@
             ['PKG-701-COM', 'Villaroche', 'Compresseur BP', '12.0', '+ 1.5', '<span class="text-blue-700 font-bold font-mono">13.5 j</span>'],
             ['PKG-701-TST', 'Bruxelles (Banc)', 'Passage Banc Essai', '2.5', '+ 0.5', '<span class="text-blue-700 font-bold font-mono">3.0 j</span>']
           ];
-          formulaNote = "<strong>Diagnostic métier (Planification navettes) :</strong> Chaque sous-ensemble additionne son temps de passage atelier et sa rotation logistique planifiée (camion navette entre Villaroche et Montereau).";
-          daxSnippet = "TAT_Package = SUMX(FAIT_PACKAGES_SITE, [Duree_Atelier] + [Duree_Navette])";
+          formulaNote = "<strong>Délais théoriques de traitement :</strong> Temps standards de passage atelier par package et navettes logistiques.";
+          daxSnippet = "TAT_Package_Theorique = SUMX(FAIT_PACKAGES_SITE, [Duree_Atelier] + [Duree_Navette])";
         } else if (q3 === 'B') {
-          cols = ['ID_Package', 'Site_Safran', 'Module', 'Duree_Opt (o)', 'Duree_Nom (m)', 'Duree_Pess (p)', 'TAT_PERT_Package'];
+          cols = ['ID_Package', 'Site_Safran', 'Sous_Ensemble', 'Délai à 5%', 'Délai Médian', 'Délai à 95%', 'Dispersion'];
           rows = [
-            ['PKG-701-AUB', 'Montereau', 'Aubes HP (Revêtement)', '5.0 j', '6.5 j', '14.0 j', '<span class="text-amber-700 font-bold font-mono">7.5 j</span>'],
-            ['PKG-701-COM', 'Villaroche', 'Compresseur BP', '9.5 j', '12.0 j', '21.0 j', '<span class="text-amber-700 font-bold font-mono">13.1 j</span>'],
-            ['PKG-701-TST', 'Bruxelles', 'Banc Essai & Recette', '2.0 j', '2.5 j', '6.0 j', '<span class="text-amber-700 font-bold font-mono">3.0 j</span>']
+            ['PKG-701-AUB', 'Montereau', 'Aubes HP', '5.0 j', '<span class="text-amber-700 font-bold font-mono">6.8 j</span>', '12.0 j', 'Modérée'],
+            ['PKG-701-COM', 'Villaroche', 'Compresseur BP', '9.5 j', '<span class="text-amber-700 font-bold font-mono">12.5 j</span>', '18.0 j', 'Faible'],
+            ['PKG-701-TST', 'Bruxelles', 'Banc Essai', '2.0 j', '<span class="text-amber-700 font-bold font-mono">3.2 j</span>', '8.5 j', 'Forte (Goulot)']
           ];
-          formulaNote = "<strong>Diagnostic métier (Dispersion contrôle non destructif) :</strong> Les opérations de ressuage chimique et de re-revêtement thermique présentent de fortes variations (pessimiste à 14j) absorbées par le PERT.";
-          daxSnippet = "PERT_Package = DIVIDE([o_site] + 4*[m_site] + [p_site], 6)";
+          formulaNote = "<strong>Table des délais moyens (5%, Médian, 95%) :</strong> Distribution observée par package sous-ensemble.";
+          daxSnippet = "Median_Package = CALCULATE(PERCENTILEX.INC(FAIT_PACKAGES_SITE, [Duree_Reelle], 0.50))";
         } else if (q3 === 'C') {
-          cols = ['ID_Package', 'Site_Safran', 'Taux_Charge_Site', 'Tps_Atelier_j', 'Attente_File_j', 'TAT_Total_Site'];
+          cols = ['ID_Package', 'Site_Safran', 'Taux_Charge_Site', 'Tps_Atelier_j', 'Attente_Saturation_j', 'TAT_Total_Site'];
           rows = [
             ['PKG-701-AUB', 'Montereau', '<span class="text-emerald-700 font-bold">72 %</span>', '6.5 j', '+ 1.2 j', '<span class="text-blue-700 font-bold font-mono">7.7 j</span>'],
             ['PKG-701-COM', 'Villaroche', '<span class="text-amber-700 font-bold">86 %</span>', '12.0 j', '+ 4.8 j', '<span class="text-amber-700 font-bold font-mono">16.8 j</span>'],
             ['PKG-701-TST', 'Bruxelles', '<span class="text-red-700 font-bold">94 %</span> (Goulot)', '2.5 j', '+ 7.4 j', '<span class="text-red-700 font-bold font-mono">9.9 j ⚠️</span>']
           ];
-          formulaNote = "<strong>Diagnostic métier (Isolement du goulot banc d'essai) :</strong> Met en lumière l'engorgement spécifique du banc d'essai à Bruxelles (94% de charge = +7.4j de file d'attente passive avant essai).";
-          daxSnippet = "TAT_Site_Queue = [Tps_Atelier] / (1 - RELATED(DIM_SITE[Taux_Charge]))";
+          formulaNote = "<strong>Délais selon le taux d'occupation :</strong> Impact de la charge du site industriel sur le délai de traitement du package.";
+          daxSnippet = "TAT_Site_Charge = [Tps_Atelier] / (1 - RELATED(DIM_SITE[Taux_Charge]))";
         } else {
           // 3D
-          cols = ['ID_Package', 'Site_Safran', 'Sous_Ensemble', 'P50_Historique', 'P85_Engagement', 'P95_Risque', 'Alerte_Dérive'];
+          cols = ['ID_Package', 'Site_Safran', 'Sous_Ensemble', 'Profil_Usure', 'Alea_Contextuel', 'TAT_Dynamique_Package'];
           rows = [
-            ['PKG-701-AUB', 'Montereau', 'Aubes HP', '6.2 j', '8.0 j', '12.5 j', '<span class="text-emerald-700 font-bold">Conforme</span>'],
-            ['PKG-701-COM', 'Villaroche', 'Compresseur BP', '11.8 j', '14.5 j', '19.2 j', '<span class="text-emerald-700 font-bold">Conforme</span>'],
-            ['PKG-701-TST', 'Bruxelles', 'Banc Essai', '2.4 j', '3.5 j', '7.8 j', '<span class="text-amber-700 font-bold">Dérive P85</span>']
+            ['PKG-701-AUB', 'Montereau', 'Aubes HP', 'Sévère (Criques)', '+2.5 j (Re-revetement)', '<span class="text-amber-700 font-bold font-mono">9.3 j</span>'],
+            ['PKG-701-COM', 'Villaroche', 'Compresseur BP', 'Nominal', '0.0 j', '<span class="text-emerald-700 font-bold font-mono">12.5 j</span>'],
+            ['PKG-701-TST', 'Bruxelles', 'Banc Essai', 'Passage Complexe', '+1.2 j (Repasse)', '<span class="text-amber-700 font-bold font-mono">4.4 j</span>']
           ];
-          formulaNote = "<strong>Diagnostic métier (Benchmark inter-ateliers) :</strong> Permet aux directeurs de sites de comparer la dispersion statistique de leurs ateliers respectifs et de corriger les dérives locales.";
-          daxSnippet = "P85_Package = CALCULATE(PERCENTILEX.INC(FAIT_PACKAGES_SITE, [Duree_Reelle], 0.85))";
+          formulaNote = "<strong>Modélisation avancée :</strong> Simulation dynamique intégrant les caractéristiques d'usure du package.";
+          daxSnippet = "SIMULATE_PKG_ADVANCED(FAIT_PACKAGES_SITE, CONTEXT)";
         }
       } else {
         // Opérations unitaires
@@ -2024,36 +2024,36 @@
             ['OP-9081-13', 'CND-02 (Ressuage)', 'Contrôle criques & ressuage', '2.0 h', '+ 0.5 h', '<span class="text-blue-700 font-bold font-mono">2.5 h</span>'],
             ['OP-9081-14', 'EQU-01 (Équilibrage)', 'Équilibrage dynamique rotor', '3.5 h', '+ 0.5 h', '<span class="text-blue-700 font-bold font-mono">4.0 h</span>']
           ];
-          formulaNote = "<strong>Diagnostic métier (Ordonnancement machine théorique) :</strong> Somme du temps pièce gamé et du temps de préparation outillage. Base rigide pour l'affectation sur poste de travail.";
-          daxSnippet = "Total_Heures_Slot = SUMX(FAIT_OPERATIONS_SLOTS, [Temps_Gamme] + [Temps_Reglage])";
+          formulaNote = "<strong>Délais théoriques de traitement :</strong> Temps de gamme alloué et préparation machine.";
+          daxSnippet = "Total_Heures_Theoriques = SUMX(FAIT_OPERATIONS_SLOTS, [Temps_Gamme] + [Temps_Reglage])";
         } else if (q3 === 'B') {
-          cols = ['ID_Slot_Op', 'Poste_Machine', 'Opération', 'Duree_Opt (o)', 'Duree_Nom (m)', 'Duree_Pess (p)', 'Duree_PERT_Estimee'];
+          cols = ['ID_Slot_Op', 'Poste_Machine', 'Opération', 'Délai à 5%', 'Délai Médian', 'Délai à 95%', 'Dispersion'];
           rows = [
-            ['OP-9081-12', 'USI-04', 'Usinage aube', '3.5 h', '4.5 h', '9.0 h', '<span class="text-amber-700 font-bold font-mono">5.1 h</span>'],
-            ['OP-9081-13', 'CND-02', 'Ressuage resines', '1.5 h', '2.0 h', '4.5 h', '<span class="text-amber-700 font-bold font-mono">2.3 h</span>'],
-            ['OP-9081-14', 'EQU-01', 'Équilibrage rotor', '2.5 h', '3.5 h', '7.0 h', '<span class="text-amber-700 font-bold font-mono">3.9 h</span>']
+            ['OP-9081-12', 'USI-04', 'Usinage aube', '3.8 h', '<span class="text-amber-700 font-bold font-mono">4.8 h</span>', '8.5 h', 'Faible'],
+            ['OP-9081-13', 'CND-02', 'Ressuage résines', '1.8 h', '<span class="text-amber-700 font-bold font-mono">2.2 h</span>', '4.2 h', 'Moyenne'],
+            ['OP-9081-14', 'EQU-01', 'Équilibrage rotor', '2.8 h', '<span class="text-amber-700 font-bold font-mono">3.8 h</span>', '7.5 h', 'Modérée']
           ];
-          formulaNote = "<strong>Diagnostic métier (Aléas de reprise pièce) :</strong> Capture les reprises d'usinage, les usures prématurées de plaquette carbure ou les temps de séchage prolongés en CND.";
-          daxSnippet = "Duree_Slot_PERT = DIVIDE([o_op] + 4*[m_op] + [p_op], 6)";
+          formulaNote = "<strong>Table des délais moyens (5%, Médian, 95%) :</strong> Statistique d'exécution unitaire par poste machine.";
+          daxSnippet = "Median_Slot = PERCENTILEX.INC(FAIT_OPERATIONS_SLOTS, [Duree_Reelle_Heures], 0.50)";
         } else if (q3 === 'C') {
-          cols = ['ID_Slot_Op', 'Machine_Ressource', 'Charge_Machine', 'Usinage_Pur', 'Attente_Bac_Tampon', 'Temps_Cycle_Total'];
+          cols = ['ID_Slot_Op', 'Machine_Ressource', 'Charge_Machine', 'Usinage_Pur', 'Attente_Tampon_h', 'Temps_Cycle_Machine'];
           rows = [
             ['OP-9081-12', 'USI-04 (5 axes)', '<span class="text-amber-700 font-bold">85 %</span>', '4.5 h', '+ 3.5 h', '<span class="text-amber-700 font-bold font-mono">8.0 h</span>'],
             ['OP-9081-13', 'CND-02 (Bain)', '<span class="text-emerald-700 font-bold">60 %</span>', '2.0 h', '+ 0.5 h', '<span class="text-blue-700 font-bold font-mono">2.5 h</span>'],
             ['OP-9081-14', 'EQU-01 (Banc rotor)', '<span class="text-red-700 font-bold">95 %</span>', '3.5 h', '+ 12.0 h', '<span class="text-red-700 font-bold font-mono">15.5 h ⚠️</span>']
           ];
-          formulaNote = "<strong>Diagnostic métier (Attente physique dans les bacs tampons) :</strong> Modélise le temps où la pièce attend sur chariot devant le tour CN ou le banc d'équilibrage saturé à 95% (+12h de buffer perdu).";
-          daxSnippet = "Cycle_Slot_Little = [Usinage] / (1 - RELATED(DIM_MACHINE[Taux_Occupation]))";
+          formulaNote = "<strong>Délais selon le taux d'occupation :</strong> Encombrement et attente en bac tampon devant le poste de travail.";
+          daxSnippet = "Cycle_Slot_Charge = [Usinage] / (1 - RELATED(DIM_MACHINE[Taux_Occupation]))";
         } else {
           // 3D
-          cols = ['ID_Slot_Op', 'Poste_Machine', 'Famille_Piece', 'P50_Machine', 'P85_Standard', 'P95_Alea_Grave', 'Conformite_Gamme'];
+          cols = ['ID_Slot_Op', 'Poste_Machine', 'Famille_Piece', 'Complexite_Usinage', 'Alea_Outillage', 'TAT_Dynamique_Slot'];
           rows = [
-            ['OP-9081-12', 'USI-04', 'Carter Titane', '4.2 h', '5.5 h', '8.5 h', '<span class="text-emerald-700 font-bold">Normal</span>'],
-            ['OP-9081-13', 'CND-02', 'Aubes Monocristal', '1.9 h', '2.5 h', '4.8 h', '<span class="text-emerald-700 font-bold">Normal</span>'],
-            ['OP-9081-14', 'EQU-01', 'Arbre HP', '3.4 h', '4.5 h', '11.0 h', '<span class="text-red-700 font-bold">Hors Gabarit P85</span>']
+            ['OP-9081-12', 'USI-04', 'Carter Titane', 'Élevée', '+1.2 h (Usure plaquette)', '<span class="text-amber-700 font-bold font-mono">6.7 h</span>'],
+            ['OP-9081-13', 'CND-02', 'Aubes Monocristal', 'Standard', '0.0 h', '<span class="text-emerald-700 font-bold font-mono">2.2 h</span>'],
+            ['OP-9081-14', 'EQU-01', 'Arbre HP', 'Haute Précision', '+2.1 h (Reprise balourd)', '<span class="text-amber-700 font-bold font-mono">6.1 h</span>']
           ];
-          formulaNote = "<strong>Diagnostic métier (Maîtrise statistique des gammes de production) :</strong> Détection immédiate des écarts anormaux par rapport aux temps de gamme et recalibrage des standards Safran Part-145.";
-          daxSnippet = "P85_Slot = PERCENTILEX.INC(FAIT_OPERATIONS_SLOTS, [Duree_Reelle_Heures], 0.85)";
+          formulaNote = "<strong>Modélisation avancée :</strong> Prédiction unitaire du slot intégrant les facteurs matériels et outillage.";
+          daxSnippet = "SIMULATE_SLOT_ADVANCED(FAIT_OPERATIONS_SLOTS, CONTEXT)";
         }
       }
 
