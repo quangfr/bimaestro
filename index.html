@@ -1,0 +1,2102 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Assistant de Cadrage MRO - Architecture & Décisions BI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .glass-card {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(51, 65, 85, 0.6);
+    }
+
+    .option-card {
+      transition: all 0.2s ease-in-out;
+    }
+
+    .option-card:hover {
+      border-color: #3b82f6;
+      transform: translateY(-2px);
+    }
+
+    .option-card.active {
+      border-color: #3b82f6;
+      background: rgba(30, 58, 138, 0.35);
+      box-shadow: 0 0 0 1px #3b82f6;
+    }
+  </style>
+</head>
+
+<body
+  class="bg-slate-950 text-slate-100 font-sans h-screen flex flex-col items-center justify-between p-2 md:p-3 overflow-y-auto md:overflow-hidden select-none">
+
+  <!-- En-tête Compact -->
+  <header class="w-full max-w-6xl text-center shrink-0 mb-1.5">
+    <div class="flex items-center justify-center gap-2">
+      <span
+        class="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-blue-500/10 border border-blue-500/30 rounded-full text-blue-400 text-[10px] font-bold uppercase tracking-wider">
+        ✈️ SAFRAN MRO DATA CADRAGE
+      </span>
+      <h1 class="text-sm md:text-base font-black text-white tracking-tight">Cadrage Décisionnel & Architecture BI</h1>
+    </div>
+  </header>
+
+  <!-- Navigation par Onglets (1 Page par Question) - Ultra Compacte -->
+  <nav class="w-full max-w-6xl flex justify-center gap-1.5 shrink-0 mb-2 overflow-x-auto pb-1" id="nav-tabs">
+    <button onclick="switchStep(1)" id="tab-1"
+      class="px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-blue-600 text-white shadow-md shadow-blue-500/20">
+      <span>1️⃣</span> Objectif Métier
+    </button>
+    <button onclick="switchStep(2)" id="tab-2"
+      class="px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-slate-900 text-slate-400 border border-slate-800 hover:text-white">
+      <span>2️⃣</span> Schéma Données
+    </button>
+    <button onclick="switchStep(3)" id="tab-3"
+      class="px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-slate-900 text-slate-400 border border-slate-800 hover:text-white">
+      <span>3️⃣</span> Modèle TAT
+    </button>
+    <button onclick="switchStep(4)" id="tab-4"
+      class="px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-slate-900 text-slate-400 border border-slate-800 hover:text-white">
+      <span>4️⃣</span> Visuel Délai
+    </button>
+    <button onclick="switchStep(5)" id="tab-5"
+      class="px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-slate-900 text-slate-400 border border-slate-800 hover:text-white">
+      <span>5️⃣</span> Visuel Saturation
+    </button>
+    <button onclick="switchStep(6)" id="tab-6"
+      class="px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-slate-900 text-slate-400 border border-slate-800 hover:text-white">
+      <span>🏁</span> Synthèse & Dashboard
+    </button>
+  </nav>
+
+  <!-- Contenu Principal (Prend toute la place disponible) -->
+  <main class="w-full max-w-6xl flex-1 flex flex-col justify-center min-h-0 overflow-hidden">
+
+    <!-- ================= PAGE 1 ================= -->
+    <div id="step-1" class="step-page flex flex-col h-full justify-between">
+      <div class="glass-card p-3.5 rounded-xl flex flex-col justify-between flex-1">
+        <div class="mb-2">
+          <h2 class="text-sm md:text-base font-bold text-blue-400">Étape 1 : Cadrer la question métier prioritaire</h2>
+          <p class="text-[11px] text-slate-400">Quel est le premier problème que le tableau de bord doit résoudre ?</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 flex-1 items-stretch">
+          <!-- 1A -->
+          <div onclick="selectOption(1, 'A')" id="opt-1-A"
+            class="option-card active glass-card p-3.5 rounded-xl border border-slate-800 cursor-pointer flex flex-col justify-between items-stretch">
+            <div>
+              <div class="text-sm font-bold text-white mb-1.5 flex items-center gap-2">
+                <span class="text-base">🚨</span> A. Urgence opérationnelle
+              </div>
+              <p class="text-xs text-slate-300 leading-relaxed mb-1.5">
+                Alerter en direct sur les moteurs à risque d'immobilisation avion (<strong>AOG</strong>). Escalade
+                automatique vers les chefs d'atelier dès dépassement critique.
+              </p>
+              <div class="text-[10px] text-slate-400 bg-slate-900/80 rounded px-2 py-1 border border-slate-800 mb-2">
+                <span class="text-red-400 font-semibold">Impact BI :</span> Modèle temps réel ou alertes DirectQuery J-3
+                / J-1 avant rupture.
+              </div>
+            </div>
+            <div
+              class="w-full aspect-square max-h-[140px] bg-slate-950/90 rounded-lg p-2 border border-slate-800 flex flex-col items-center justify-between mx-auto">
+              <svg class="w-full h-full" viewBox="0 0 100 85">
+                <rect x="5" y="5" width="90" height="75" rx="8" fill="#1e1b4b" stroke="#dc2626" stroke-width="1.8" />
+                <circle cx="50" cy="28" r="16" fill="#ef4444" opacity="0.25" />
+                <text x="50" y="35" font-size="20" text-anchor="middle" fill="#ef4444">🚨</text>
+                <text x="50" y="54" font-size="8.5" font-weight="black" text-anchor="middle" fill="#fca5a5">AOG
+                  CRITIQUE</text>
+                <text x="50" y="66" font-size="7" text-anchor="middle" fill="#94a3b8">ESN-9842 • Retard > 5j</text>
+                <line x1="20" y1="72" x2="80" y2="72" stroke="#dc2626" stroke-width="1" stroke-dasharray="2,2" />
+              </svg>
+              <span class="text-[9.5px] text-red-400 font-mono font-bold mt-1">Escalade Immédiate</span>
+            </div>
+          </div>
+
+          <!-- 1B -->
+          <div onclick="selectOption(1, 'B')" id="opt-1-B"
+            class="option-card glass-card p-3.5 rounded-xl border border-slate-800 cursor-pointer flex flex-col justify-between items-stretch">
+            <div>
+              <div class="text-sm font-bold text-white mb-1.5 flex items-center gap-2">
+                <span class="text-base">⏱️</span> B. Engagements contractuels
+              </div>
+              <p class="text-xs text-slate-300 leading-relaxed mb-1.5">
+                Garantir le respect des <strong>SLA</strong> et du Turn Around Time (TAT) moyen par compagnie aérienne
+                et typologie de contrat (Power-by-the-Hour vs T&M).
+              </p>
+              <div class="text-[10px] text-slate-400 bg-slate-900/80 rounded px-2 py-1 border border-slate-800 mb-2">
+                <span class="text-emerald-400 font-semibold">Impact BI :</span> Taux de conformité global, dérive par
+                compagnie et benchmark flottes.
+              </div>
+            </div>
+            <div
+              class="w-full aspect-square max-h-[140px] bg-slate-950/90 rounded-lg p-2 border border-slate-800 flex flex-col items-center justify-between mx-auto">
+              <svg class="w-full h-full" viewBox="0 0 100 85">
+                <circle cx="50" cy="40" r="30" fill="none" stroke="#1e293b" stroke-width="7" />
+                <circle cx="50" cy="40" r="30" fill="none" stroke="#10b981" stroke-width="7" stroke-dasharray="188"
+                  stroke-dashoffset="24" stroke-linecap="round" />
+                <text x="50" y="43" font-size="14" font-weight="black" text-anchor="middle" fill="#ffffff">94.2%</text>
+                <text x="50" y="55" font-size="7.5" font-weight="semibold" text-anchor="middle"
+                  fill="#10b981">Conformité SLA</text>
+                <circle cx="50" cy="10" r="3.5" fill="#10b981" />
+              </svg>
+              <span class="text-[9.5px] text-emerald-400 font-mono font-bold mt-1">Vision Client & SLA</span>
+            </div>
+          </div>
+
+          <!-- 1C -->
+          <div onclick="selectOption(1, 'C')" id="opt-1-C"
+            class="option-card glass-card p-3.5 rounded-xl border border-slate-800 cursor-pointer flex flex-col justify-between items-stretch">
+            <div>
+              <div class="text-sm font-bold text-white mb-1.5 flex items-center gap-2">
+                <span class="text-base">🏢</span> C. Optimisation des capacités
+              </div>
+              <p class="text-xs text-slate-300 leading-relaxed mb-1.5">
+                Équilibrer les charges inter-sites (Montereau, Villaroche, Bruxelles, etc.), lisser les goulets et
+                anticiper les embouteillages d'ateliers d'usinage.
+              </p>
+              <div class="text-[10px] text-slate-400 bg-slate-900/80 rounded px-2 py-1 border border-slate-800 mb-2">
+                <span class="text-blue-400 font-semibold">Impact BI :</span> Suivi saturation machines, charge/capacité
+                et transferts inter-sites.
+              </div>
+            </div>
+            <div
+              class="w-full aspect-square max-h-[140px] bg-slate-950/90 rounded-lg p-2 border border-slate-800 flex flex-col items-center justify-between mx-auto">
+              <svg class="w-full h-full" viewBox="0 0 100 85">
+                <rect x="8" y="10" width="38" height="26" rx="4" fill="#1e293b" stroke="#3b82f6" stroke-width="1.2" />
+                <text x="27" y="24" font-size="8.5" font-weight="bold" text-anchor="middle" fill="#93c5fd">VIL</text>
+                <text x="27" y="33" font-size="6.5" text-anchor="middle" fill="#64748b">Charge 72%</text>
+
+                <rect x="54" y="10" width="38" height="26" rx="4" fill="#1e293b" stroke="#3b82f6" stroke-width="1.2" />
+                <text x="73" y="24" font-size="8.5" font-weight="bold" text-anchor="middle" fill="#93c5fd">CHL</text>
+                <text x="73" y="33" font-size="6.5" text-anchor="middle" fill="#64748b">Charge 68%</text>
+
+                <rect x="8" y="44" width="38" height="28" rx="4" fill="#7f1d1d" stroke="#ef4444" stroke-width="1.8" />
+                <text x="27" y="58" font-size="8.5" font-weight="black" text-anchor="middle" fill="#fca5a5">MON
+                  ⚠️</text>
+                <text x="27" y="68" font-size="6.5" font-weight="bold" text-anchor="middle" fill="#ef4444">Saturation
+                  94%</text>
+
+                <rect x="54" y="44" width="38" height="28" rx="4" fill="#1e293b" stroke="#3b82f6" stroke-width="1.2" />
+                <text x="73" y="58" font-size="8.5" font-weight="bold" text-anchor="middle" fill="#93c5fd">BRU</text>
+                <text x="73" y="68" font-size="6.5" text-anchor="middle" fill="#64748b">Charge 81%</text>
+              </svg>
+              <span class="text-[9.5px] text-amber-400 font-mono font-bold mt-1">Goulot Ateliers Identifié</span>
+            </div>
+          </div>
+
+          <!-- 1D -->
+          <div onclick="selectOption(1, 'D')" id="opt-1-D"
+            class="option-card glass-card p-3.5 rounded-xl border border-slate-800 cursor-pointer flex flex-col justify-between items-stretch">
+            <div>
+              <div class="text-sm font-bold text-white mb-1.5 flex items-center gap-2">
+                <span class="text-base">💰</span> D. Suivi Retard & Pénalités
+              </div>
+              <p class="text-xs text-slate-300 leading-relaxed mb-1.5">
+                Mesurer finement le dérapage en <strong>jours ouvrés</strong> au-delà du SLA contractuel et chiffrer
+                l'exposition financière (pénalités journalières).
+              </p>
+              <div class="text-[10px] text-slate-400 bg-slate-900/80 rounded px-2 py-1 border border-slate-800 mb-2">
+                <span class="text-amber-400 font-semibold">Impact BI :</span> Mesures DAX de cumul pénalités =
+                <code>Jours * Barème</code> par compagnie.
+              </div>
+            </div>
+            <div
+              class="w-full aspect-square max-h-[140px] bg-slate-950/90 rounded-lg p-2 border border-slate-800 flex flex-col items-center justify-between mx-auto">
+              <svg class="w-full h-full" viewBox="0 0 100 85">
+                <rect x="6" y="6" width="88" height="34" rx="5" fill="#1e293b" stroke="#f59e0b" stroke-width="1.5" />
+                <text x="50" y="18" font-size="7" font-bold text-anchor="middle" fill="#94a3b8">DÉPASSEMENT MOYEN</text>
+                <text x="50" y="32" font-size="13" font-weight="black" text-anchor="middle" fill="#fbbf24">+7.5
+                  jours</text>
+
+                <rect x="6" y="44" width="88" height="35" rx="5" fill="#1e293b" stroke="#ef4444" stroke-width="1.5" />
+                <text x="50" y="56" font-size="7" font-bold text-anchor="middle" fill="#94a3b8">PÉNALITÉS ENCOURS</text>
+                <text x="50" y="71" font-size="13" font-weight="black" text-anchor="middle" fill="#f87171">142 500
+                  €</text>
+              </svg>
+              <span class="text-[9.5px] text-amber-400 font-mono font-bold mt-1">Exposition Financière</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= PAGE 2 (Modèle Canvas Conservé & Compacté) ================= -->
+    <div id="step-2" class="step-page hidden flex flex-col h-full justify-between">
+      <div class="glass-card p-3.5 rounded-xl flex flex-col justify-between flex-1">
+        <div class="flex justify-between items-center mb-2">
+          <div>
+            <h2 class="text-sm md:text-base font-bold text-blue-400">Étape 2 : Définir la granularité de la Table des
+              Faits</h2>
+            <p class="text-[11px] text-slate-400">À quel niveau de détail enregistrer les données au cœur de l'étoile ?
+            </p>
+          </div>
+          <span id="canvas-badge"
+            class="px-2 py-0.5 bg-blue-600/30 border border-blue-500/50 text-blue-300 text-[11px] font-bold rounded-lg">
+            Demande Globale (Macro)
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 flex-1 items-stretch">
+          <div class="lg:col-span-4 flex flex-col justify-between space-y-2">
+            <div onclick="selectGranularity('A')" id="opt-2-A"
+              class="option-card active glass-card p-2.5 rounded-xl border border-slate-800 cursor-pointer flex-1 flex flex-col justify-center">
+              <div class="text-xs md:text-sm font-bold text-white flex items-center gap-2"><span>📦</span> A. Demande globale ESN (Macro)</div>
+              <p class="text-[11px] text-slate-300 mt-1 leading-snug"><strong>1 ligne = 1 visite atelier / ESN moteur.</strong> Analyse globale du TAT contractuel et pénalités de restitution.</p>
+              <div class="text-[9.5px] text-slate-400 mt-1.5 bg-slate-900/90 rounded p-1.5 border border-slate-800 font-mono space-y-0.5">
+                <div><span class="text-blue-400 font-bold">FAIT_DEMANDES_MRO</span> (~1,5k lig/an)</div>
+                <div class="text-slate-500">PK: ID_Demande | FK: Client, Moteur, Contrat, Date_Entree</div>
+                <div class="text-emerald-400">Dimensions : DIM_CLIENT, DIM_MOTEUR, DIM_CALENDRIER, DIM_CONTRAT_SLA</div>
+              </div>
+            </div>
+            <div onclick="selectGranularity('B')" id="opt-2-B"
+              class="option-card glass-card p-2.5 rounded-xl border border-slate-800 cursor-pointer flex-1 flex flex-col justify-center">
+              <div class="text-xs md:text-sm font-bold text-white flex items-center gap-2"><span>🏢</span> B. Packages & Sites (Méso)</div>
+              <p class="text-[11px] text-slate-300 mt-1 leading-snug"><strong>1 ligne = 1 lot sous-ensemble expédié vers un site.</strong> Pilote la logistique inter-sites (Villaroche, Montereau, Bruxelles).</p>
+              <div class="text-[9.5px] text-slate-400 mt-1.5 bg-slate-900/90 rounded p-1.5 border border-slate-800 font-mono space-y-0.5">
+                <div><span class="text-emerald-400 font-bold">FAIT_PACKAGES_SITE</span> (~15k lig/an)</div>
+                <div class="text-slate-500">PK: ID_Lot_Package | FK: Demande, Module, Site, Date_Transfert</div>
+                <div class="text-emerald-400">Dimensions : DIM_SOUS_ENSEMBLE, DIM_SITE_SAFRAN, DIM_DEMANDE_MRO, DIM_CALENDRIER</div>
+              </div>
+            </div>
+            <div onclick="selectGranularity('C')" id="opt-2-C"
+              class="option-card glass-card p-2.5 rounded-xl border border-slate-800 cursor-pointer flex-1 flex flex-col justify-center">
+              <div class="text-xs md:text-sm font-bold text-white flex items-center gap-2"><span>🔧</span> C. Opérations Unitaires & Postes (Micro)</div>
+              <p class="text-[11px] text-slate-300 mt-1 leading-snug"><strong>1 ligne = 1 slot machine d'atelier.</strong> Gammes opératoires unitaires (usinage 5 axes, ressuage CND, équilibrage rotor, banc).</p>
+              <div class="text-[9.5px] text-slate-400 mt-1.5 bg-slate-900/90 rounded p-1.5 border border-slate-800 font-mono space-y-0.5">
+                <div><span class="text-amber-400 font-bold">FAIT_OPERATIONS_SLOTS</span> (>250k lig/an)</div>
+                <div class="text-slate-500">PK: ID_Slot_Op | FK: Poste_Machine, Gamme_Tache, Package, Date_Shift</div>
+                <div class="text-emerald-400">Dimensions : DIM_POSTE_MACHINE, DIM_TACHE_GAMME, DIM_PACKAGE, DIM_CALENDRIER_HORAIRE</div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="lg:col-span-8 bg-slate-950 rounded-xl p-2.5 border border-slate-800 flex flex-col items-center justify-between">
+            <canvas id="schemaCanvas" width="600" height="340"
+              class="w-full max-w-[600px] max-h-[340px] h-auto"></canvas>
+            <div class="w-full text-center mt-1.5 text-[10.5px] text-slate-400 flex flex-wrap justify-center gap-4 border-t border-slate-900 pt-1">
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-blue-500"></span> Table de Faits (Centrale)</span>
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-emerald-500"></span> Tables de Dimensions (1 : N)</span>
+              <span class="flex items-center gap-1.5"><span class="text-amber-400 font-bold text-xs">🔑 PK</span> Clé Primaire</span>
+              <span class="flex items-center gap-1.5"><span class="text-sky-400 font-bold text-xs">🔗 FK</span> Clé Étrangère</span>
+              <span class="flex items-center gap-1.5"><span class="text-purple-400 font-bold text-xs">📐</span> Mesures / Métriques</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= PAGE 3 ================= -->
+    <div id="step-3" class="step-page hidden flex flex-col h-full justify-between">
+      <div class="glass-card p-3.5 rounded-xl flex flex-col justify-between flex-1">
+        <div class="mb-2">
+          <h2 class="text-sm md:text-base font-bold text-blue-400">Étape 3 : Choisir la méthode de calcul du délai (TAT)
+          </h2>
+          <p class="text-[11px] text-slate-400">Quel niveau de complexité mathématique et d'hypothèse adopter ?</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 flex-1 items-stretch overflow-hidden">
+          <!-- Moitié Gauche : Sélection des 4 méthodes TAT -->
+          <div class="lg:col-span-6 flex flex-col justify-between space-y-2 overflow-y-auto pr-1">
+            <!-- 3A -->
+            <div onclick="selectOption(3, 'A')" id="opt-3-A"
+              class="option-card glass-card p-2.5 rounded-xl border border-slate-800 cursor-pointer flex items-center justify-between gap-3">
+              <div class="flex-1 min-w-0">
+                <div class="text-xs font-bold text-white mb-0.5 flex items-center gap-1.5">
+                  <span class="text-sm">➕</span> A. Modèle additif standard
+                </div>
+                <p class="text-[11px] text-slate-300 leading-snug">
+                  Somme arithmétique rigide : $TAT = \sum Duree\_Standard + Transit$. Hypothèse déterministe (zéro aléa,
+                  zéro attente).
+                </p>
+                <div class="text-[9.5px] text-blue-400 font-mono mt-0.5"><code>SUMX(FAIT, FAIT[Duree_Theorique])</code>
+                </div>
+              </div>
+              <div
+                class="w-14 h-14 bg-slate-950/90 rounded-lg p-1 border border-slate-800 flex items-center justify-center shrink-0">
+                <svg class="w-full h-full" viewBox="0 0 50 50">
+                  <rect x="5" y="6" width="40" height="10" rx="2" fill="#1e3a8a" stroke="#3b82f6" />
+                  <text x="25" y="14" font-size="7" text-anchor="middle" fill="#ffffff">3j + 12j</text>
+                  <text x="25" y="27" font-size="10" font-weight="black" text-anchor="middle" fill="#94a3b8">+</text>
+                  <rect x="5" y="32" width="40" height="10" rx="2" fill="#065f46" stroke="#10b981" />
+                  <text x="25" y="40" font-size="7" text-anchor="middle" fill="#ffffff">TR 1j</text>
+                </svg>
+              </div>
+            </div>
+
+            <!-- 3B -->
+            <div onclick="selectOption(3, 'B')" id="opt-3-B"
+              class="option-card active glass-card p-2.5 rounded-xl border border-slate-800 cursor-pointer flex items-center justify-between gap-3">
+              <div class="flex-1 min-w-0">
+                <div class="text-xs font-bold text-white mb-0.5 flex items-center gap-1.5">
+                  <span class="text-sm">📊</span> B. Méthode probabiliste PERT
+                </div>
+                <p class="text-[11px] text-slate-300 leading-snug">
+                  Pondération 3 points : $E = \frac{o + 4m + p}{6}$. Distribution Bêta paramétrée par famille moteur
+                  (nominal, optimiste, pessimiste).
+                </p>
+                <div class="text-[9.5px] text-amber-400 font-mono mt-0.5">
+                  <code>(Duree_Opt + 4*Duree_Nom + Duree_Pess)/6</code></div>
+              </div>
+              <div
+                class="w-14 h-14 bg-slate-950/90 rounded-lg p-1 border border-slate-800 flex items-center justify-center shrink-0">
+                <svg class="w-full h-full" viewBox="0 0 50 50">
+                  <path d="M 5 40 Q 18 40, 25 12 Q 32 40, 45 40" fill="none" stroke="#3b82f6" stroke-width="2" />
+                  <line x1="25" y1="12" x2="25" y2="40" stroke="#f59e0b" stroke-dasharray="2,2" />
+                  <circle cx="25" cy="12" r="2.5" fill="#f59e0b" />
+                  <text x="25" y="47" font-size="6.5" font-weight="bold" text-anchor="middle" fill="#f59e0b">m</text>
+                </svg>
+              </div>
+            </div>
+
+            <!-- 3C -->
+            <div onclick="selectOption(3, 'C')" id="opt-3-C"
+              class="option-card glass-card p-2.5 rounded-xl border border-slate-800 cursor-pointer flex items-center justify-between gap-3">
+              <div class="flex-1 min-w-0">
+                <div class="text-xs font-bold text-white mb-0.5 flex items-center gap-1.5">
+                  <span class="text-sm">🚦</span> C. Modélisation Files d'Attente
+                </div>
+                <p class="text-[11px] text-slate-300 leading-snug">
+                  Loi de Little (M/M/1) : le temps d'attente explose dès que la charge dépasse 85%. Modélise
+                  l'engorgement physique avant slot.
+                </p>
+                <div class="text-[9.5px] text-red-400 font-mono mt-0.5">
+                  <code>Duree_Usinage / (1 - Taux_Charge_Atelier)</code></div>
+              </div>
+              <div
+                class="w-14 h-14 bg-slate-950/90 rounded-lg p-1 border border-slate-800 flex items-center justify-center shrink-0">
+                <svg class="w-full h-full" viewBox="0 0 50 50">
+                  <line x1="8" y1="40" x2="44" y2="40" stroke="#475569" stroke-width="1.2" />
+                  <line x1="8" y1="8" x2="8" y2="40" stroke="#475569" stroke-width="1.2" />
+                  <path d="M 8 38 Q 30 36, 40 8" fill="none" stroke="#ef4444" stroke-width="2" />
+                  <line x1="34" y1="8" x2="34" y2="40" stroke="#f59e0b" stroke-dasharray="1.5,1.5" />
+                  <text x="34" y="47" font-size="6" text-anchor="middle" fill="#f59e0b">85%</text>
+                </svg>
+              </div>
+            </div>
+
+            <!-- 3D -->
+            <div onclick="selectOption(3, 'D')" id="opt-3-D"
+              class="option-card glass-card p-2.5 rounded-xl border border-slate-800 cursor-pointer flex items-center justify-between gap-3">
+              <div class="flex-1 min-w-0">
+                <div class="text-xs font-bold text-white mb-0.5 flex items-center gap-1.5">
+                  <span class="text-sm">📈</span> D. Percentiles réels DAX
+                </div>
+                <p class="text-[11px] text-slate-300 leading-snug">
+                  Distribution historique : $P_{50}$ (médiane opérationnelle), $P_{85}$ et $P_{95}$ pour le pilotage
+                  contractuel robuste.
+                </p>
+                <div class="text-[9.5px] text-emerald-400 font-mono mt-0.5">
+                  <code>PERCENTILEX.INC(FAIT, FAIT[Duree_Reelle], 0.85)</code></div>
+              </div>
+              <div
+                class="w-14 h-14 bg-slate-950/90 rounded-lg p-1 border border-slate-800 flex items-center justify-center shrink-0">
+                <svg class="w-full h-full" viewBox="0 0 50 50">
+                  <rect x="6" y="28" width="6" height="14" fill="#1e3a8a" />
+                  <rect x="15" y="18" width="6" height="24" fill="#1e3a8a" />
+                  <rect x="24" y="10" width="6" height="32" fill="#3b82f6" />
+                  <rect x="33" y="14" width="6" height="28" fill="#1e3a8a" />
+                  <line x1="27" y1="6" x2="27" y2="42" stroke="#10b981" stroke-width="1.5" />
+                  <text x="27" y="48" font-size="6" text-anchor="middle" fill="#10b981">P50</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Moitié Droite : Extrait Illustré de la Table de Données Calculée (Dépend de Q2 & Q3) -->
+          <div
+            class="lg:col-span-6 bg-slate-950 rounded-xl p-3 border border-slate-800 flex flex-col justify-between overflow-hidden shadow-xl">
+            <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-800/80 shrink-0">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse"></span>
+                <h3 class="text-xs font-bold text-white flex items-center gap-1.5" id="step3-table-title">
+                  📋 Extrait Table de Faits Calculée
+                </h3>
+              </div>
+              <span id="step3-combo-badge"
+                class="text-[10px] px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-mono border border-blue-500/30">
+                Demande Globale + PERT
+              </span>
+            </div>
+
+            <!-- Conteneur du tableau dynamique de données -->
+            <div id="step3-table-container" class="flex-1 overflow-x-auto min-h-0 flex flex-col justify-center">
+              <!-- Rempli par renderStep3TablePreview() -->
+            </div>
+
+            <!-- Explication technique combinée (Granularité Étape 2 x Méthode Étape 3) -->
+            <div id="step3-table-note"
+              class="mt-2 p-2 bg-slate-900/80 rounded-lg border border-slate-800 text-[10px] text-slate-300 shrink-0 flex items-center justify-between">
+              <!-- Note dynamique -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= PAGE 4 ================= -->
+    <div id="step-4" class="step-page hidden flex flex-col h-full justify-between">
+      <div class="glass-card p-3.5 rounded-xl flex flex-col justify-between flex-1">
+        <div class="mb-2">
+          <h2 class="text-sm md:text-base font-bold text-blue-400">Étape 4 : Sélectionner les visuels pour le Délai
+            (TAT)</h2>
+          <p class="text-[11px] text-slate-400">Quels visuels utiliser pour piloter les délais et les engagements
+            clients ?</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 flex-1 items-stretch">
+          <!-- 4A -->
+          <div onclick="selectOption(4, 'A')" id="opt-4-A"
+            class="option-card glass-card p-3 rounded-xl border border-slate-800 cursor-pointer flex flex-col justify-between items-stretch">
+            <div>
+              <div class="text-sm font-bold text-white mb-1.5 flex items-center gap-2">
+                <span class="text-base">⏱️</span> A. Cartes KPIs Synthétiques
+              </div>
+              <p class="text-xs text-slate-300 leading-relaxed mb-1.5">
+                Indicateurs phares en gros chiffres : TAT moyen glissant, taux de respect des engagements contractuels
+                et écart-type de dérive.
+              </p>
+              <div class="text-[10px] text-slate-400 bg-slate-900/80 rounded px-2 py-1 border border-slate-800 mb-2">
+                <span class="text-sky-400 font-semibold">Usage :</span> Vue de niveau Direction / Management. Clarté
+                maximale en un coup d'œil.
+              </div>
+            </div>
+            <div
+              class="w-full aspect-square max-h-[140px] bg-slate-950/90 rounded-lg p-2 border border-slate-800 flex flex-col items-center justify-center mx-auto">
+              <svg class="w-full h-full" viewBox="0 0 100 85">
+                <rect x="6" y="6" width="88" height="34" rx="4" fill="#0f172a" stroke="#334155" stroke-width="1.2" />
+                <text x="50" y="18" font-size="7" font-bold text-anchor="middle" fill="#94a3b8">TAT MOYEN RÉEL</text>
+                <text x="50" y="32" font-size="13" font-weight="black" text-anchor="middle" fill="#38bdf8">18.4
+                  jours</text>
+
+                <rect x="6" y="44" width="88" height="35" rx="4" fill="#0f172a" stroke="#334155" stroke-width="1.2" />
+                <text x="50" y="56" font-size="7" font-bold text-anchor="middle" fill="#94a3b8">RESPECT SLA
+                  GLOBAL</text>
+                <text x="50" y="71" font-size="13" font-weight="black" text-anchor="middle" fill="#4ade80">96.2 %</text>
+              </svg>
+            </div>
+          </div>
+
+          <!-- 4B -->
+          <div onclick="selectOption(4, 'B')" id="opt-4-B"
+            class="option-card active glass-card p-3 rounded-xl border border-slate-800 cursor-pointer flex flex-col justify-between items-stretch">
+            <div>
+              <div class="text-sm font-bold text-white mb-1.5 flex items-center gap-2">
+                <span class="text-base">📊</span> B. Barres vs Seuils Cibles
+              </div>
+              <p class="text-xs text-slate-300 leading-relaxed mb-1.5">
+                Comparaison visuelle directe de la durée réelle par sous-ensemble face aux barres de tolérance
+                contractuelles ($P_{50}$ et $P_{85}$).
+              </p>
+              <div class="text-[10px] text-slate-400 bg-slate-900/80 rounded px-2 py-1 border border-slate-800 mb-2">
+                <span class="text-blue-400 font-semibold">Usage :</span> Met immédiatement en évidence les packages qui
+                dérapent au-delà du seuil.
+              </div>
+            </div>
+            <div
+              class="w-full aspect-square max-h-[140px] bg-slate-950/90 rounded-lg p-2 border border-slate-800 flex flex-col items-center justify-center mx-auto">
+              <svg class="w-full h-full" viewBox="0 0 100 85">
+                <text x="8" y="18" font-size="7.5" font-semibold fill="#94a3b8">Aubes</text>
+                <rect x="32" y="9" width="46" height="13" rx="2" fill="#3b82f6" />
+                <line x1="68" y1="5" x2="68" y2="25" stroke="#ef4444" stroke-width="2" />
+
+                <text x="8" y="44" font-size="7.5" font-semibold fill="#94a3b8">Révis.</text>
+                <rect x="32" y="35" width="58" height="13" rx="2" fill="#3b82f6" />
+                <line x1="78" y1="31" x2="78" y2="51" stroke="#ef4444" stroke-width="2" />
+
+                <text x="8" y="70" font-size="7.5" font-semibold fill="#94a3b8">Banc</text>
+                <rect x="32" y="61" width="38" height="13" rx="2" fill="#3b82f6" />
+                <line x1="60" y1="57" x2="60" y2="77" stroke="#ef4444" stroke-width="2" />
+
+                <text x="68" y="83" font-size="6.5" font-bold text-anchor="middle" fill="#ef4444">| Seuil P85</text>
+              </svg>
+            </div>
+          </div>
+
+          <!-- 4C -->
+          <div onclick="selectOption(4, 'C')" id="opt-4-C"
+            class="option-card glass-card p-3 rounded-xl border border-slate-800 cursor-pointer flex flex-col justify-between items-stretch">
+            <div>
+              <div class="text-sm font-bold text-white mb-1.5 flex items-center gap-2">
+                <span class="text-base">🚚</span> C. Barres Empilées Usinage vs Transit
+              </div>
+              <p class="text-xs text-slate-300 leading-relaxed mb-1.5">
+                Décomposition du Turn Around Time pour isoler le temps de valeur ajoutée (usinage/réparation) du temps
+                logistique inter-sites.
+              </p>
+              <div class="text-[10px] text-slate-400 bg-slate-900/80 rounded px-2 py-1 border border-slate-800 mb-2">
+                <span class="text-amber-400 font-semibold">Usage :</span> Démontre aux clients si un retard vient des
+                ateliers ou des transferts.
+              </div>
+            </div>
+            <div
+              class="w-full aspect-square max-h-[140px] bg-slate-950/90 rounded-lg p-2 border border-slate-800 flex flex-col items-center justify-center mx-auto">
+              <svg class="w-full h-full" viewBox="0 0 100 85">
+                <text x="6" y="20" font-size="7.5" font-bold fill="#94a3b8">Lot 1</text>
+                <rect x="26" y="10" width="42" height="13" rx="2" fill="#3b82f6" />
+                <rect x="68" y="10" width="24" height="13" rx="2" fill="#f59e0b" />
+
+                <text x="6" y="46" font-size="7.5" font-bold fill="#94a3b8">Lot 2</text>
+                <rect x="26" y="36" width="34" height="13" rx="2" fill="#3b82f6" />
+                <rect x="60" y="36" width="32" height="13" rx="2" fill="#f59e0b" />
+
+                <circle cx="28" cy="70" r="3.5" fill="#3b82f6" />
+                <text x="35" y="73" font-size="7" fill="#94a3b8">Atelier</text>
+                <circle cx="62" cy="70" r="3.5" fill="#f59e0b" />
+                <text x="69" y="73" font-size="7" fill="#94a3b8">Transit</text>
+              </svg>
+            </div>
+          </div>
+
+          <!-- 4D -->
+          <div onclick="selectOption(4, 'D')" id="opt-4-D"
+            class="option-card glass-card p-3 rounded-xl border border-slate-800 cursor-pointer flex flex-col justify-between items-stretch">
+            <div>
+              <div class="text-sm font-bold text-white mb-1.5 flex items-center gap-2">
+                <span class="text-base">📋</span> D. Tableau d'Alertes Nominatives
+              </div>
+              <p class="text-xs text-slate-300 leading-relaxed mb-1.5">
+                Listing opérationnel détaillé avec statut couleur (vert/orange/rouge), ESN moteur, client, jours d'écart
+                et action requise.
+              </p>
+              <div class="text-[10px] text-slate-400 bg-slate-900/80 rounded px-2 py-1 border border-slate-800 mb-2">
+                <span class="text-red-400 font-semibold">Usage :</span> Support quotidien des réunions de production et
+                de crise MRO.
+              </div>
+            </div>
+            <div
+              class="w-full aspect-square max-h-[140px] bg-slate-950/90 rounded-lg p-2 border border-slate-800 flex flex-col items-center justify-center mx-auto">
+              <svg class="w-full h-full" viewBox="0 0 100 85">
+                <rect x="4" y="6" width="92" height="20" rx="3" fill="#1e293b" />
+                <circle cx="12" cy="16" r="3" fill="#10b981" />
+                <text x="20" y="19" font-size="7" font-bold fill="#cbd5e1">9842 • AFR • Conforme</text>
+
+                <rect x="4" y="32" width="92" height="20" rx="3" fill="#1e293b" />
+                <circle cx="12" cy="42" r="3" fill="#f59e0b" />
+                <text x="20" y="45" font-size="7" font-bold fill="#cbd5e1">7731 • DLH • Aléas +2j</text>
+
+                <rect x="4" y="58" width="92" height="20" rx="3" fill="#1e293b" />
+                <circle cx="12" cy="68" r="3" fill="#ef4444" />
+                <text x="20" y="71" font-size="7" font-bold fill="#fca5a5">6510 • RYR • AOG Critique</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= PAGE 5 ================= -->
+    <div id="step-5" class="step-page hidden flex flex-col h-full justify-between">
+      <div class="glass-card p-3.5 rounded-xl flex flex-col justify-between flex-1">
+        <div class="mb-2">
+          <h2 class="text-sm md:text-base font-bold text-blue-400">Étape 5 : Sélectionner les visuels pour la Saturation
+            des Ateliers</h2>
+          <p class="text-[11px] text-slate-400">Quels visuels choisir pour repérer les goulots d'étranglement et la
+            surcharge ?</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 flex-1 items-stretch">
+          <!-- 5A -->
+          <div onclick="selectOption(5, 'A')" id="opt-5-A"
+            class="option-card active glass-card p-3 rounded-xl border border-slate-800 cursor-pointer flex flex-col justify-between items-stretch">
+            <div>
+              <div class="text-sm font-bold text-white mb-1.5 flex items-center gap-2">
+                <span class="text-base">🚦</span> A. Barres de Charge vs Seuil 85%
+              </div>
+              <p class="text-xs text-slate-300 leading-relaxed mb-1.5">
+                Taux d'occupation machine/banc face à la ligne rouge critique des 85% au-delà de laquelle l'encombrement
+                explose.
+              </p>
+              <div class="text-[10px] text-slate-400 bg-slate-900/80 rounded px-2 py-1 border border-slate-800 mb-2">
+                <span class="text-amber-400 font-semibold">Seuil :</span> Changement de couleur dynamique (bleu < 85%,
+                  rouge clignotant au-delà). </div>
+              </div>
+              <div
+                class="w-full aspect-square max-h-[140px] bg-slate-950/90 rounded-lg p-2 border border-slate-800 flex flex-col items-center justify-center mx-auto">
+                <svg class="w-full h-full" viewBox="0 0 100 85">
+                  <text x="8" y="20" font-size="7.5" font-semibold fill="#94a3b8">VIL-01</text>
+                  <rect x="32" y="10" width="45" height="13" rx="2" fill="#3b82f6" />
+
+                  <text x="8" y="46" font-size="7.5" font-semibold fill="#94a3b8">MON-01</text>
+                  <rect x="32" y="36" width="62" height="13" rx="2" fill="#ef4444" />
+
+                  <line x1="68" y1="5" x2="68" y2="58" stroke="#f59e0b" stroke-dasharray="2.5,2.5" stroke-width="1.8" />
+                  <text x="68" y="70" font-size="7" font-bold text-anchor="middle" fill="#f59e0b">Seuil Critique
+                    85%</text>
+                </svg>
+              </div>
+            </div>
+
+            <!-- 5B -->
+            <div onclick="selectOption(5, 'B')" id="opt-5-B"
+              class="option-card glass-card p-3 rounded-xl border border-slate-800 cursor-pointer flex flex-col justify-between items-stretch">
+              <div>
+                <div class="text-sm font-bold text-white mb-1.5 flex items-center gap-2">
+                  <span class="text-base">🗓️</span> B. Heatmap Hebdomadaire / Site
+                </div>
+                <p class="text-xs text-slate-300 leading-relaxed mb-1.5">
+                  Matrice croisant sites industriels et semaines calendaires pour repérer les pics saisonniers d'entrées
+                  moteurs.
+                </p>
+                <div class="text-[10px] text-slate-400 bg-slate-900/80 rounded px-2 py-1 border border-slate-800 mb-2">
+                  <span class="text-rose-400 font-semibold">Visualisation :</span> Gradient thermique de bleu (fluide) à
+                  rouge vif (goulot d'étranglement).
+                </div>
+              </div>
+              <div
+                class="w-full aspect-square max-h-[140px] bg-slate-950/90 rounded-lg p-2 border border-slate-800 flex flex-col items-center justify-center mx-auto">
+                <svg class="w-full h-full" viewBox="0 0 100 85">
+                  <rect x="10" y="10" width="16" height="16" rx="2.5" fill="#1e3a8a" />
+                  <rect x="31" y="10" width="16" height="16" rx="2.5" fill="#2563eb" />
+                  <rect x="52" y="10" width="16" height="16" rx="2.5" fill="#dc2626" />
+                  <rect x="73" y="10" width="16" height="16" rx="2.5" fill="#1e3a8a" />
+
+                  <rect x="10" y="32" width="16" height="16" rx="2.5" fill="#1e3a8a" />
+                  <rect x="31" y="32" width="16" height="16" rx="2.5" fill="#dc2626" />
+                  <rect x="52" y="32" width="16" height="16" rx="2.5" fill="#b91c1c" />
+                  <rect x="73" y="32" width="16" height="16" rx="2.5" fill="#2563eb" />
+
+                  <text x="50" y="66" font-size="8" font-bold text-anchor="middle" fill="#fca5a5">Pic Semaine 38
+                    (Rouge)</text>
+                </svg>
+              </div>
+            </div>
+
+            <!-- 5C -->
+            <div onclick="selectOption(5, 'C')" id="opt-5-C"
+              class="option-card glass-card p-3 rounded-xl border border-slate-800 cursor-pointer flex flex-col justify-between items-stretch">
+              <div>
+                <div class="text-sm font-bold text-white mb-1.5 flex items-center gap-2">
+                  <span class="text-base">📈</span> C. Courbes Entrées vs Sorties (WIP)
+                </div>
+                <p class="text-xs text-slate-300 leading-relaxed mb-1.5">
+                  Diagramme de flux cumulé mesurant l'écart entre arrivées et restitutions. Détecte l'accumulation
+                  anormale d'en-cours.
+                </p>
+                <div class="text-[10px] text-slate-400 bg-slate-900/80 rounded px-2 py-1 border border-slate-800 mb-2">
+                  <span class="text-blue-400 font-semibold">Alerte :</span> Si courbe bleue s'écarte de la verte, le
+                  Work-In-Progress enfle.
+                </div>
+              </div>
+              <div
+                class="w-full aspect-square max-h-[140px] bg-slate-950/90 rounded-lg p-2 border border-slate-800 flex flex-col items-center justify-center mx-auto">
+                <svg class="w-full h-full" viewBox="0 0 100 85">
+                  <path d="M 10 58 Q 40 50, 60 22 Q 80 16, 92 12" fill="none" stroke="#3b82f6" stroke-width="2.2" />
+                  <path d="M 10 60 Q 40 56, 60 52 Q 80 48, 92 46" fill="none" stroke="#10b981" stroke-width="2.2" />
+                  <text x="82" y="10" font-size="7.5" font-bold fill="#3b82f6">In (Entrées)</text>
+                  <text x="82" y="58" font-size="7.5" font-bold fill="#10b981">Out (Sorties)</text>
+                  <text x="50" y="75" font-size="7.5" font-bold text-anchor="middle" fill="#fca5a5">Zone Dérive
+                    WIP</text>
+                </svg>
+              </div>
+            </div>
+
+            <!-- 5D -->
+            <div onclick="selectOption(5, 'D')" id="opt-5-D"
+              class="option-card glass-card p-3 rounded-xl border border-slate-800 cursor-pointer flex flex-col justify-between items-stretch">
+              <div>
+                <div class="text-sm font-bold text-white mb-1.5 flex items-center gap-2">
+                  <span class="text-base">⏳</span> D. Ratio Attente vs Travail Effectif
+                </div>
+                <p class="text-xs text-slate-300 leading-relaxed mb-1.5">
+                  Donut d'efficience mesurant la proportion du cycle de vie passée en attente passive d'un technicien ou
+                  d'un slot disponible.
+                </p>
+                <div class="text-[10px] text-slate-400 bg-slate-900/80 rounded px-2 py-1 border border-slate-800 mb-2">
+                  <span class="text-emerald-400 font-semibold">Levier :</span> Démontre que fluidifier les files
+                  d'attente est plus rentable qu'accélérer l'usinage.
+                </div>
+              </div>
+              <div
+                class="w-full aspect-square max-h-[140px] bg-slate-950/90 rounded-lg p-2 border border-slate-800 flex flex-col items-center justify-center mx-auto">
+                <svg class="w-full h-full" viewBox="0 0 100 85">
+                  <circle cx="36" cy="38" r="22" fill="none" stroke="#3b82f6" stroke-width="6.5" />
+                  <circle cx="36" cy="38" r="22" fill="none" stroke="#ef4444" stroke-width="6.5" stroke-dasharray="138"
+                    stroke-dashoffset="80" />
+                  <text x="68" y="30" font-size="8" font-bold fill="#ef4444">42% Attente</text>
+                  <text x="68" y="46" font-size="8" font-bold fill="#3b82f6">58% Usinage</text>
+                  <text x="50" y="73" font-size="7.5" font-semibold text-anchor="middle" fill="#94a3b8">Ratio Lead Time
+                    Réel</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= PAGE 6 (Slide Récapitulatif & Dashboard Dérivé) ================= -->
+      <div id="step-6" class="step-page hidden flex flex-col h-full justify-between overflow-hidden">
+        <!-- Fiche Récapitulative des Choix -->
+        <div
+          class="glass-card p-3 rounded-xl border border-blue-500/30 bg-gradient-to-b from-blue-950/20 to-slate-950/80 flex flex-col justify-between flex-1 overflow-hidden">
+          <div class="flex justify-between items-center pb-1.5 mb-1.5 border-b border-slate-800 shrink-0">
+            <div class="flex items-center gap-2">
+              <span
+                class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 text-[10px] font-bold uppercase tracking-wider">
+                ✨ Fiche Architecture
+              </span>
+              <h2 class="text-xs md:text-sm font-black text-white">Slide de Synthèse Décisionnel & Dashboard Projeté
+              </h2>
+            </div>
+            <div class="flex items-center gap-1.5 bg-slate-900/90 border border-slate-800 px-2.5 py-1 rounded-lg">
+              <span class="text-[10px] text-slate-400 font-mono">Profil :</span>
+              <span id="summary-badge" class="text-[11px] font-bold text-blue-400 font-mono">Urgence & Pénalités</span>
+            </div>
+          </div>
+
+          <!-- Grille des 5 choix récapitulés sous forme de Dropdowns interactifs -->
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-2 shrink-0" id="summary-cards">
+            <!-- Dropdown Q1 -->
+            <div
+              class="bg-slate-900/90 border border-slate-700/80 p-2 rounded-lg flex flex-col justify-between hover:border-blue-500 transition">
+              <label for="select-q1"
+                class="text-[9px] text-blue-400 font-bold uppercase tracking-wider mb-1 flex items-center gap-1">
+                <span>1️⃣</span> Objectif Métier
+              </label>
+              <select id="select-q1" onchange="onSummarySelectChange(1, this.value)"
+                class="bg-slate-950 text-white font-medium text-[11px] rounded border border-slate-700 px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer">
+                <option value="A">🚨 A. Urgence AOG</option>
+                <option value="B">⏱️ B. SLA & Contrats</option>
+                <option value="C">🏢 C. Optim. Capacité</option>
+                <option value="D">💰 D. Retard & Pénalités</option>
+              </select>
+              <div id="sum-q1-desc" class="text-[9px] text-slate-400 mt-1 truncate">Temps réel AOG & escalade</div>
+            </div>
+
+            <!-- Dropdown Q2 -->
+            <div
+              class="bg-slate-900/90 border border-slate-700/80 p-2 rounded-lg flex flex-col justify-between hover:border-blue-500 transition">
+              <label for="select-q2"
+                class="text-[9px] text-blue-400 font-bold uppercase tracking-wider mb-1 flex items-center gap-1">
+                <span>2️⃣</span> Granularité Fait
+              </label>
+              <select id="select-q2" onchange="onSummarySelectChange(2, this.value)"
+                class="bg-slate-950 text-white font-medium text-[11px] rounded border border-slate-700 px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer">
+                <option value="A">📦 A. Dossier Moteur (Macro)</option>
+                <option value="B">🏢 B. Package par Site (Méso)</option>
+                <option value="C">🔧 C. Opération Slot (Micro)</option>
+              </select>
+              <div id="sum-q2-desc" class="text-[9px] text-slate-400 mt-1 truncate">1 lig / dossier moteur</div>
+            </div>
+
+            <!-- Dropdown Q3 -->
+            <div
+              class="bg-slate-900/90 border border-slate-700/80 p-2 rounded-lg flex flex-col justify-between hover:border-blue-500 transition">
+              <label for="select-q3"
+                class="text-[9px] text-blue-400 font-bold uppercase tracking-wider mb-1 flex items-center gap-1">
+                <span>3️⃣</span> Méthode TAT
+              </label>
+              <select id="select-q3" onchange="onSummarySelectChange(3, this.value)"
+                class="bg-slate-950 text-white font-medium text-[11px] rounded border border-slate-700 px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer">
+                <option value="A">➕ A. Modèle Additif</option>
+                <option value="B">📊 B. Méthode PERT</option>
+                <option value="C">🚦 C. Files d'attente (Little)</option>
+                <option value="D">📈 D. Percentiles DAX</option>
+              </select>
+              <div id="sum-q3-desc" class="text-[9px] text-slate-400 mt-1 truncate">Pondération 3 points</div>
+            </div>
+
+            <!-- Dropdown Q4 -->
+            <div
+              class="bg-slate-900/90 border border-slate-700/80 p-2 rounded-lg flex flex-col justify-between hover:border-blue-500 transition">
+              <label for="select-q4"
+                class="text-[9px] text-blue-400 font-bold uppercase tracking-wider mb-1 flex items-center gap-1">
+                <span>4️⃣</span> Visuel Délai
+              </label>
+              <select id="select-q4" onchange="onSummarySelectChange(4, this.value)"
+                class="bg-slate-950 text-white font-medium text-[11px] rounded border border-slate-700 px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer">
+                <option value="A">⏱️ A. Cartes KPIs</option>
+                <option value="B">📊 B. Barres vs Cible</option>
+                <option value="C">🚚 C. Barres Empilées</option>
+                <option value="D">📋 D. Tableau d'alertes</option>
+              </select>
+              <div id="sum-q4-desc" class="text-[9px] text-slate-400 mt-1 truncate">Comparatif vs seuils SLA</div>
+            </div>
+
+            <!-- Dropdown Q5 -->
+            <div
+              class="bg-slate-900/90 border border-slate-700/80 p-2 rounded-lg col-span-2 sm:col-span-1 flex flex-col justify-between hover:border-blue-500 transition">
+              <label for="select-q5"
+                class="text-[9px] text-blue-400 font-bold uppercase tracking-wider mb-1 flex items-center gap-1">
+                <span>5️⃣</span> Visuel Saturation
+              </label>
+              <select id="select-q5" onchange="onSummarySelectChange(5, this.value)"
+                class="bg-slate-950 text-white font-medium text-[11px] rounded border border-slate-700 px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer">
+                <option value="A">🚦 A. Charge Ateliers (85%)</option>
+                <option value="B">🗓️ B. Heatmap Hebdo</option>
+                <option value="C">📈 C. Entrées vs Sorties</option>
+                <option value="D">⏳ D. Ratio Attente/Travail</option>
+              </select>
+              <div id="sum-q5-desc" class="text-[9px] text-slate-400 mt-1 truncate">Taux d'occupation ateliers</div>
+            </div>
+          </div>
+
+          <!-- Mockup Interactif du Dashboard Résultant -->
+          <div
+            class="bg-slate-950 rounded-xl border border-slate-800 p-2.5 flex-1 flex flex-col justify-between overflow-hidden shadow-xl">
+            <div class="flex items-center justify-between gap-2 pb-1.5 mb-1.5 border-b border-slate-800/80 shrink-0">
+              <div class="flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-red-500"></span>
+                <span class="w-2 h-2 rounded-full bg-yellow-500"></span>
+                <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                <span class="text-[11px] font-bold text-slate-300 ml-1">MOCKUP DYNAMIQUE BI EN TEMPS RÉEL</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span id="dashboard-tag"
+                  class="text-[10px] px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30 font-mono">Modèle
+                  PERT + Fait Macro</span>
+              </div>
+            </div>
+
+            <!-- Section Haut du Dashboard : Bandeau KPIs / Suivi Métier (Dépend de Q1 & Q3) -->
+            <div id="mock-kpis" class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-1.5 shrink-0">
+              <!-- Rempli dynamiquement -->
+            </div>
+
+            <!-- Section Centrale : Graphique Délai (Q4) + Graphique Saturation (Q5) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-2 flex-1 items-stretch min-h-0 overflow-hidden">
+              <!-- Visualisation Q4 (Délai & TAT) -->
+              <div
+                class="lg:col-span-6 bg-slate-900/60 rounded-lg p-2 border border-slate-800/80 flex flex-col justify-between overflow-hidden">
+                <div class="flex justify-between items-center mb-1 shrink-0">
+                  <h3 class="text-[11px] font-bold text-white flex items-center gap-1" id="mock-chart-q4-title">
+                    <span>⏱️</span> Suivi Délai & Engagements
+                  </h3>
+                  <span class="text-[9px] text-slate-400" id="mock-chart-q4-sub">Choix Q4</span>
+                </div>
+                <div id="mock-chart-q4-container" class="flex-1 flex items-center justify-center overflow-hidden">
+                  <!-- SVG Dynamique Q4 -->
+                </div>
+              </div>
+
+              <!-- Visualisation Q5 (Saturation & Capacité) -->
+              <div
+                class="lg:col-span-6 bg-slate-900/60 rounded-lg p-2 border border-slate-800/80 flex flex-col justify-between overflow-hidden">
+                <div class="flex justify-between items-center mb-1 shrink-0">
+                  <h3 class="text-[11px] font-bold text-white flex items-center gap-1" id="mock-chart-q5-title">
+                    <span>🏭</span> Charge & Saturation Ateliers
+                  </h3>
+                  <span class="text-[9px] text-slate-400" id="mock-chart-q5-sub">Choix Q5</span>
+                </div>
+                <div id="mock-chart-q5-container" class="flex-1 flex items-center justify-center overflow-hidden">
+                  <!-- SVG Dynamique Q5 -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Recommandation Architecture & DAX déduite de la combinaison -->
+            <div
+              class="mt-1.5 p-1.5 bg-blue-950/30 rounded-lg border border-blue-900/50 flex items-center justify-between gap-2 text-[10px] shrink-0">
+              <p class="text-slate-300 truncate" id="mock-reco-text">
+                Calcul des pénalités via colonne calculée dans la table de faits, liaison 1:N avec Calendrier d'ouvrés.
+              </p>
+              <button onclick="switchStep(1)"
+                class="px-2 py-0.5 rounded bg-blue-600/80 hover:bg-blue-600 text-white font-medium text-[10px] whitespace-nowrap">
+                Modifier 🔄
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Récapitulatif de Configuration Globale (Toujours visible & ultra compact) -->
+      <div
+        class="glass-card px-3 py-2 rounded-xl border border-slate-800 mt-2 flex items-center justify-between gap-2 shrink-0">
+        <div class="truncate">
+          <div class="text-[9px] text-slate-500 font-bold uppercase tracking-wider">Sélection en cours</div>
+          <div id="recap-text" class="text-[11px] text-slate-300 font-medium truncate">
+            Q1: A (Urgence) • Q2: A (Demande Globale) • Q3: B (PERT) • Q4: B (Barres vs Cible) • Q5: A (Charge 85%)
+          </div>
+        </div>
+        <div class="flex gap-1.5 shrink-0">
+          <button onclick="prevStep()"
+            class="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 text-slate-300 text-[11px] hover:bg-slate-800 transition">◀
+            Précédent</button>
+          <button onclick="nextStep()" id="btn-next"
+            class="px-2.5 py-1 rounded-lg bg-blue-600 text-white text-[11px] hover:bg-blue-500 transition">Suivant
+            ▶</button>
+        </div>
+      </div>
+
+  </main>
+
+  <script>
+    let currentStep = 1;
+    const TOTAL_STEPS = 6;
+    const selections = { 1: 'A', 2: 'A', 3: 'B', 4: 'B', 5: 'A' };
+
+    const metaInfo = {
+      1: {
+        'A': { title: "Urgence Opérationnelle", desc: "Alerte temps réel AOG & escalade immédiate", icon: "🚨" },
+        'B': { title: "Engagements Contractuels", desc: "Respect des SLA & vision globale par compagnie", icon: "⏱️" },
+        'C': { title: "Optimisation Capacités", desc: "Lissage de charge & élimination des goulets ateliers", icon: "🏢" },
+        'D': { title: "Suivi Retard & Pénalités", desc: "Jours de dérapage ouvrés & exposition financière (€)", icon: "💰" }
+      },
+      2: {
+        'A': { title: "Demande Globale (Macro)", desc: "1 ligne = 1 dossier / ESN moteur (FAIT_DEMANDES_MRO)", icon: "📦" },
+        'B': { title: "Packages / Sites (Méso)", desc: "1 ligne = 1 lot d'opérations par site (FAIT_PACKAGES_SITE)", icon: "🏢" },
+        'C': { title: "Opérations Unitaires (Micro)", desc: "1 ligne = 1 slot machine d'atelier (FAIT_OPERATIONS_SLOTS)", icon: "🔧" }
+      },
+      3: {
+        'A': { title: "Modèle Additif", desc: "Somme déterministe des standards sans aléa", icon: "➕" },
+        'B': { title: "Méthode PERT", desc: "Pondération 3 points (o, 4m, p) / 6 & loi Bêta", icon: "📊" },
+        'C': { title: "Files d'attente (Little)", desc: "Saturation non-linéaire au-delà du seuil de 85%", icon: "🚦" },
+        'D': { title: "Percentiles DAX", desc: "Distribution réelle calibrée sur P50, P85 et P95", icon: "📈" }
+      },
+      4: {
+        'A': { title: "Cartes KPIs Clés", desc: "TAT moyen glissant, % SLA et écart standard", icon: "⏱️" },
+        'B': { title: "Barres vs Cible", desc: "Durée réelle vs cible P85 par sous-ensemble", icon: "📊" },
+        'C': { title: "Barres Empilées", desc: "Décomposition Usinage / Valeur vs Transit inter-sites", icon: "🚚" },
+        'D': { title: "Tableau d'Alertes", desc: "Listing opérationnel nominatif ESN trié par criticité", icon: "📋" }
+      },
+      5: {
+        'A': { title: "Barres Charge (85%)", desc: "Taux d'occupation machine face au seuil d'engorgement", icon: "🚦" },
+        'B': { title: "Heatmap / Semaine", desc: "Matrice thermique des volumes par site et semaine", icon: "🗓️" },
+        'C': { title: "Courbes Entrées / Sorties", desc: "Différentiel de flux et suivi de l'en-cours WIP", icon: "📈" },
+        'D': { title: "Ratio Attente / Travail", desc: "Part du lead time passée en attente passive", icon: "⏳" }
+      }
+    };
+
+    function switchStep(step) {
+      currentStep = step;
+      document.querySelectorAll('.step-page').forEach((el, index) => {
+        el.classList.toggle('hidden', index + 1 !== step);
+      });
+
+      for (let i = 1; i <= TOTAL_STEPS; i++) {
+        const tab = document.getElementById(`tab-${i}`);
+        if (!tab) continue;
+        if (i === step) {
+          tab.className = "px-4 py-2 rounded-xl text-xs md:text-sm font-bold transition flex items-center gap-2 bg-blue-600 text-white shadow-lg shadow-blue-500/20";
+        } else {
+          tab.className = "px-4 py-2 rounded-xl text-xs md:text-sm font-bold transition flex items-center gap-2 bg-slate-900 text-slate-400 border border-slate-800 hover:text-white";
+        }
+      }
+
+      // Mise à jour du bouton suivant/fin
+      const btnNext = document.getElementById('btn-next');
+      if (btnNext) {
+        if (step === TOTAL_STEPS) {
+          btnNext.textContent = "🏁 Terminé (Haut)";
+          btnNext.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          btnNext.textContent = "Suivant ▶";
+          btnNext.onclick = nextStep;
+        }
+      }
+
+      if (step === 2) {
+        setTimeout(() => drawSchema(selections[2]), 50);
+      }
+      if (step === 3) {
+        renderStep3TablePreview();
+      }
+      if (step === 6) {
+        renderFinalDashboard();
+      }
+    }
+
+    function nextStep() {
+      if (currentStep < TOTAL_STEPS) switchStep(currentStep + 1);
+    }
+
+    function prevStep() {
+      if (currentStep > 1) switchStep(currentStep - 1);
+    }
+
+    function onSummarySelectChange(q, val) {
+      selectOption(q, val);
+      if (q === 2) {
+        selectGranularity(val);
+      }
+      renderFinalDashboard();
+    }
+
+    function selectOption(q, opt) {
+      selections[q] = opt;
+      const parent = document.getElementById(`step-${q}`);
+      if (parent) {
+        parent.querySelectorAll('.option-card').forEach(el => el.classList.remove('active'));
+        const target = document.getElementById(`opt-${q}-${opt}`);
+        if (target) target.classList.add('active');
+      }
+      if (q === 2 || q === 3) {
+        renderStep3TablePreview();
+      }
+      updateRecap();
+      if (currentStep === 6) {
+        renderFinalDashboard();
+      }
+    }
+
+    function selectGranularity(opt) {
+      selections[2] = opt;
+      const parent = document.getElementById(`step-2`);
+      if (parent) {
+        parent.querySelectorAll('.option-card').forEach(el => el.classList.remove('active'));
+        const target = document.getElementById(`opt-2-${opt}`);
+        if (target) target.classList.add('active');
+      }
+      const badge = document.getElementById('canvas-badge');
+      if (badge) {
+        if (opt === 'A') badge.textContent = "Demande Globale (Macro)";
+        else if (opt === 'B') badge.textContent = "Packages / Sites (Méso)";
+        else badge.textContent = "Opérations Unitaires (Micro)";
+      }
+      drawSchema(opt);
+      renderStep3TablePreview();
+      updateRecap();
+      if (currentStep === 6) {
+        renderFinalDashboard();
+      }
+    }
+
+    function updateRecap() {
+      const q1 = selections[1], q2 = selections[2], q3 = selections[3], q4 = selections[4], q5 = selections[5];
+      document.getElementById('recap-text').textContent =
+        `Q1: ${q1} (${metaInfo[1][q1]?.title || ''}) • Q2: ${q2} • Q3: ${q3} • Q4: ${q4} • Q5: ${q5}`;
+    }
+
+    function renderFinalDashboard() {
+      const q1 = selections[1];
+      const q2 = selections[2];
+      const q3 = selections[3];
+      const q4 = selections[4];
+      const q5 = selections[5];
+
+      // Synchronisation des selects et textes explicatifs de l'étape 6
+      for (let i = 1; i <= 5; i++) {
+        const choice = selections[i];
+        const info = metaInfo[i][choice] || { title: choice, desc: "" };
+        const selectEl = document.getElementById(`select-q${i}`);
+        if (selectEl && selectEl.value !== choice) {
+          selectEl.value = choice;
+        }
+        const descEl = document.getElementById(`sum-q${i}-desc`);
+        if (descEl) descEl.textContent = info.desc;
+      }
+
+      // Badge profil
+      const badge = document.getElementById('summary-badge');
+      const tag = document.getElementById('dashboard-tag');
+      if (q1 === 'D') {
+        badge.textContent = "💰 Pilotage Retards & Pénalités";
+        badge.className = "text-xs font-bold text-amber-400 font-mono";
+      } else if (q1 === 'A') {
+        badge.textContent = "🚨 Tour de Contrôle Urgence";
+        badge.className = "text-xs font-bold text-red-400 font-mono";
+      } else if (q1 === 'B') {
+        badge.textContent = "⏱️ Pilotage SLA & Contrats";
+        badge.className = "text-xs font-bold text-emerald-400 font-mono";
+      } else {
+        badge.textContent = "🏢 Équilibrage Ateliers & Flux";
+        badge.className = "text-xs font-bold text-blue-400 font-mono";
+      }
+
+      tag.textContent = `Granularité: ${q2} • Calcul: ${q3}`;
+
+      // Recommandation technique
+      const recoEl = document.getElementById('mock-reco-text');
+      let reco = "";
+      if (q1 === 'D') {
+        reco = `Table de faits <strong>${q2 === 'A' ? 'FAIT_DEMANDES_MRO' : (q2 === 'B' ? 'FAIT_PACKAGES_SITE' : 'FAIT_OPERATIONS')}</strong> enrichie avec les colonnes <code>Jours_Retard = MAX(0, Date_Livraison_Reelle - Date_SLA_Contractuelle)</code> et <code>Montant_Penalite = Jours_Retard * Bareme_Journalier</code>. Modélisation temporelle calibrée selon la méthode <strong>${metaInfo[3][q3].title}</strong>.`;
+      } else if (q1 === 'A') {
+        reco = `Mise en place d'alertes DirectQuery / alertes Power Automate sur les dossiers à J-3 du délai critique SLA avec seuil de déviation calculé via <strong>${metaInfo[3][q3].title}</strong>.`;
+      } else {
+        reco = `Dashboard analytique optimisé en mode Import avec agrégations automatiques pour la granularité <strong>${metaInfo[2][q2].title}</strong> et mesures DAX dynamiques pour le calcul <strong>${metaInfo[3][q3].title}</strong>.`;
+      }
+      if (recoEl) recoEl.innerHTML = reco;
+
+      // Génération des 4 KPI Cards du haut (influencées par Q1 et Q3)
+      renderKpis(q1, q3);
+
+      // Génération du Chart Délai (Q4)
+      renderChartQ4(q4, q1, q3, q2);
+
+      // Génération du Chart Saturation (Q5)
+      renderChartQ5(q5, q2);
+    }
+
+    function renderKpis(q1, q3) {
+      const container = document.getElementById('mock-kpis');
+      if (!container) return;
+
+      let kpis = [];
+      if (q1 === 'D') {
+        kpis = [
+          { label: "MOTEURS EN RETARD", val: "14", sub: "dont 6 sous pénalités", color: "text-amber-400", border: "border-amber-500/30" },
+          { label: "RETARD MOYEN CONSTATÉ", val: "+6.8 j", sub: "vs cible SLA contractuelle", color: "text-amber-300", border: "border-amber-500/30" },
+          { label: "EXPOSITION PÉNALITÉS", val: "184 500 €", sub: "Risque estimé au MTD", color: "text-red-400", border: "border-red-500/30" },
+          { label: "TAT MOYEN (" + q3 + ")", val: "24.2 j", sub: "Méthode: " + metaInfo[3][q3].title, color: "text-blue-400", border: "border-blue-500/30" }
+        ];
+      } else if (q1 === 'A') {
+        kpis = [
+          { label: "ALERTE AOG CRITIQUE", val: "3", sub: "Blocage avion actif", color: "text-red-400", border: "border-red-500/30" },
+          { label: "DOSSIERS EN SURSIS", val: "8", sub: "Dérive > 48h détectée", color: "text-amber-400", border: "border-amber-500/30" },
+          { label: "TAUX D'INTERVENTION", val: "91 %", sub: "Dossiers pris en charge", color: "text-emerald-400", border: "border-emerald-500/30" },
+          { label: "TAT MOYEN ESTIMÉ", val: "19.1 j", sub: "Méthode: " + metaInfo[3][q3].title, color: "text-blue-400", border: "border-blue-500/30" }
+        ];
+      } else if (q1 === 'B') {
+        kpis = [
+          { label: "CONFORMITÉ SLA GLOBALE", val: "94.6 %", sub: "Objectif contractuel: 95 %", color: "text-emerald-400", border: "border-emerald-500/30" },
+          { label: "TAT CONTRACTUEL MOYEN", val: "18.5 j", sub: "Objectif: 18 j", color: "text-blue-400", border: "border-blue-500/30" },
+          { label: "DOSSIERS LIVRÉS À L'HEURE", val: "142", sub: "Sur 150 dossiers clôturés", color: "text-emerald-300", border: "border-emerald-500/30" },
+          { label: "INDICE DE CONFIANCE", val: "98 %", sub: "Modèle: " + metaInfo[3][q3].title, color: "text-purple-400", border: "border-purple-500/30" }
+        ];
+      } else {
+        kpis = [
+          { label: "CHARGE GLOBALE USINES", val: "83 %", sub: "Seuil critique à 85 %", color: "text-amber-400", border: "border-amber-500/30" },
+          { label: "ATELIERS EN GOULOT", val: "2", sub: "Montereau & Villaroche", color: "text-red-400", border: "border-red-500/30" },
+          { label: "ENCOURS TOTAL (WIP)", val: "68", sub: "Moteurs en traitement", color: "text-blue-400", border: "border-blue-500/30" },
+          { label: "TAT USINAGE PUR", val: "14.8 j", sub: "Hors files d'attente", color: "text-cyan-400", border: "border-cyan-500/30" }
+        ];
+      }
+
+      container.innerHTML = kpis.map(k => `
+        <div class="bg-slate-900/90 rounded-lg p-2 border ${k.border}">
+          <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider truncate">${k.label}</div>
+          <div class="text-base md:text-lg font-black ${k.color} my-0.5 leading-tight">${k.val}</div>
+          <div class="text-[9px] text-slate-400 truncate">${k.sub}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderChartQ4(q4, q1, q3, q2) {
+      const container = document.getElementById('mock-chart-q4-container');
+      const title = document.getElementById('mock-chart-q4-title');
+      const sub = document.getElementById('mock-chart-q4-sub');
+      if (!container) return;
+
+      q2 = q2 || selections[2] || 'A';
+      const granLabel = q2 === 'A' ? "Grain Demande ESN" : (q2 === 'B' ? "Grain Packages Site" : "Grain Opérations Slots");
+      sub.textContent = `Option 4.${q4} : ${metaInfo[4][q4].title} • ${granLabel}`;
+
+      let svg = "";
+      if (q4 === 'A') {
+        title.innerHTML = `<span>⏱️</span> Cartes KPIs & Jauge de Performance`;
+        const metric1 = q2 === 'A' ? "TAT GLOBAL ESN" : (q2 === 'B' ? "TAT LOT PACKAGE" : "TEMPS OPÉRATION");
+        const val1 = q2 === 'A' ? "19.3 j" : (q2 === 'B' ? "6.8 j" : "4.2 h");
+        const val2 = q1 === 'D' ? (q2 === 'A' ? '+95 jours' : (q2 === 'B' ? '+38 jours' : '+214 heures')) : (q2 === 'A' ? '22.0 j' : (q2 === 'B' ? '8.0 j' : '5.5 h'));
+        svg = `
+          <svg class="w-full h-28 md:h-32 max-h-[130px]" viewBox="0 0 320 145">
+            <!-- Jauge SLA -->
+            <circle cx="90" cy="80" r="42" fill="none" stroke="#1e293b" stroke-width="11" />
+            <circle cx="90" cy="80" r="42" fill="none" stroke="#3b82f6" stroke-width="11" stroke-dasharray="264" stroke-dashoffset="55" stroke-linecap="round" />
+            <text x="90" y="78" font-size="15" font-weight="bold" text-anchor="middle" fill="#ffffff">93.8%</text>
+            <text x="90" y="93" font-size="8" text-anchor="middle" fill="#93c5fd">Conformité ${q2 === 'C' ? 'Gamme' : 'SLA'}</text>
+
+            <!-- Card TAT Réel -->
+            <rect x="170" y="24" width="135" height="44" rx="7" fill="#1e293b" stroke="#334155" />
+            <text x="182" y="40" font-size="8.5" fill="#94a3b8">${metric1}</text>
+            <text x="182" y="58" font-size="15" font-weight="bold" fill="#38bdf8">${val1}</text>
+
+            <!-- Card Dépassement / P85 -->
+            <rect x="170" y="76" width="135" height="44" rx="7" fill="#1e293b" stroke="${q1 === 'D' ? '#f59e0b' : '#334155'}" />
+            <text x="182" y="92" font-size="8.5" fill="#94a3b8">${q1 === 'D' ? 'RETARD CUMULÉ' : 'SEUIL ENGAGÉ P85'}</text>
+            <text x="182" y="110" font-size="15" font-weight="bold" fill="${q1 === 'D' ? '#fbbf24' : '#4ade80'}">${val2}</text>
+          </svg>
+        `;
+      } else if (q4 === 'B') {
+        const item1 = q2 === 'A' ? "Air France" : (q2 === 'B' ? "Aubes HP (MON)" : "USI-04 (Tour CN)");
+        const item2 = q2 === 'A' ? "Lufthansa" : (q2 === 'B' ? "Compresseur BP" : "CND-02 (Ressuage)");
+        const item3 = q2 === 'A' ? "Delta Air Lines" : (q2 === 'B' ? "Turbine BP (VIL)" : "EQU-01 (Équilibrage)");
+        const item4 = q2 === 'A' ? "Ryanair" : (q2 === 'B' ? "Banc Essai (BRU)" : "BANC-03 (Recette)");
+
+        const w1 = q2 === 'A' ? 105 : (q2 === 'B' ? 120 : 95);
+        const w2 = q2 === 'A' ? 175 : (q2 === 'B' ? 165 : 180);
+        const w3 = q2 === 'A' ? 135 : (q2 === 'B' ? 130 : 120);
+        const w4 = q2 === 'A' ? 65 : (q2 === 'B' ? 75 : 60);
+
+        const v1 = q2 === 'A' ? "14j" : (q2 === 'B' ? "6.5j" : "3.5h");
+        const v2 = q2 === 'A' ? "23j (+3j)" : (q2 === 'B' ? "12j (+2j)" : "6.8h (+1.8h)");
+        const v3 = q2 === 'A' ? "18j" : (q2 === 'B' ? "9j" : "4.0h");
+        const v4 = q2 === 'A' ? "8j" : (q2 === 'B' ? "2.5j" : "2.0h");
+
+        const target = q2 === 'A' ? "Cible SLA (20j)" : (q2 === 'B' ? "Cible Lot (10j)" : "Gamme Allouée (5h)");
+
+        title.innerHTML = `<span>📊</span> Durée Réelle vs Cible par ${q2 === 'A' ? 'Client' : (q2 === 'B' ? 'Package Site' : 'Poste Machine')}`;
+        svg = `
+          <svg class="w-full h-28 md:h-32 max-h-[130px]" viewBox="0 0 320 145">
+            <!-- Ligne de seuil P85 -->
+            <line x1="210" y1="18" x2="210" y2="135" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="3,3" />
+            <text x="210" y="13" font-size="8" text-anchor="middle" fill="#f87171">${target}</text>
+
+            <!-- Bar 1 -->
+            <text x="10" y="34" font-size="8" fill="#94a3b8">${item1}</text>
+            <rect x="95" y="24" width="${w1}" height="13" rx="3" fill="#3b82f6" />
+            <text x="${95 + w1 + 6}" y="34" font-size="8.5" fill="#93c5fd">${v1}</text>
+
+            <!-- Bar 2 -->
+            <text x="10" y="65" font-size="8" fill="#94a3b8">${item2}</text>
+            <rect x="95" y="55" width="${w2}" height="13" rx="3" fill="#ef4444" />
+            <text x="${95 + w2 + 6}" y="65" font-size="8.5" font-weight="bold" fill="#fca5a5">${v2}</text>
+
+            <!-- Bar 3 -->
+            <text x="10" y="96" font-size="8" fill="#94a3b8">${item3}</text>
+            <rect x="95" y="86" width="${w3}" height="13" rx="3" fill="#3b82f6" />
+            <text x="${95 + w3 + 6}" y="96" font-size="8.5" fill="#93c5fd">${v3}</text>
+
+            <!-- Bar 4 -->
+            <text x="10" y="127" font-size="8" fill="#94a3b8">${item4}</text>
+            <rect x="95" y="117" width="${w4}" height="13" rx="3" fill="#10b981" />
+            <text x="${95 + w4 + 6}" y="127" font-size="8.5" fill="#6ee7b7">${v4}</text>
+          </svg>
+        `;
+      } else if (q4 === 'C') {
+        const ent1 = q2 === 'A' ? "CFM56-7B" : (q2 === 'B' ? "Aubes Turbine" : "Usinage Carter");
+        const ent2 = q2 === 'A' ? "LEAP-1A" : (q2 === 'B' ? "Compresseur" : "Ressuage Chimique");
+        const ent3 = q2 === 'A' ? "LEAP-1B" : (q2 === 'B' ? "Banc Essai" : "Équilibrage Rotor");
+
+        const lblProd = q2 === 'C' ? "Temps Gamme" : "Usinage/Atelier";
+        const lblLog = q2 === 'C' ? "Réglage Machine" : "Transit Inter-sites";
+        const lblWait = "Attente/Buffer";
+
+        const unit = q2 === 'C' ? "h" : "j";
+
+        title.innerHTML = `<span>🚚</span> Décomposition TAT : ${lblProd} vs ${lblLog} vs ${lblWait}`;
+        svg = `
+          <svg class="w-full h-28 md:h-32 max-h-[130px]" viewBox="0 0 320 145">
+            <!-- Légende -->
+            <rect x="65" y="10" width="8" height="8" rx="2" fill="#3b82f6" />
+            <text x="76" y="17" font-size="7.5" fill="#cbd5e1">${lblProd}</text>
+            <rect x="150" y="10" width="8" height="8" rx="2" fill="#f59e0b" />
+            <text x="161" y="17" font-size="7.5" fill="#cbd5e1">${lblLog}</text>
+            <rect x="235" y="10" width="8" height="8" rx="2" fill="#ef4444" />
+            <text x="246" y="17" font-size="7.5" fill="#cbd5e1">${lblWait}</text>
+
+            <!-- Bar 1 -->
+            <text x="10" y="48" font-size="8" fill="#94a3b8">${ent1}</text>
+            <rect x="85" y="38" width="95" height="15" rx="2" fill="#3b82f6" />
+            <rect x="180" y="38" width="35" height="15" rx="2" fill="#f59e0b" />
+            <rect x="215" y="38" width="45" height="15" rx="2" fill="#ef4444" />
+            <text x="268" y="49" font-size="8.5" fill="#cbd5e1">26${unit}</text>
+
+            <!-- Bar 2 -->
+            <text x="10" y="81" font-size="8" fill="#94a3b8">${ent2}</text>
+            <rect x="85" y="71" width="115" height="15" rx="2" fill="#3b82f6" />
+            <rect x="200" y="71" width="25" height="15" rx="2" fill="#f59e0b" />
+            <rect x="225" y="71" width="60" height="15" rx="2" fill="#ef4444" />
+            <text x="292" y="82" font-size="8.5" fill="#cbd5e1">31${unit}</text>
+
+            <!-- Bar 3 -->
+            <text x="10" y="114" font-size="8" fill="#94a3b8">${ent3}</text>
+            <rect x="85" y="104" width="80" height="15" rx="2" fill="#3b82f6" />
+            <rect x="165" y="104" width="20" height="15" rx="2" fill="#f59e0b" />
+            <rect x="185" y="104" width="30" height="15" rx="2" fill="#ef4444" />
+            <text x="223" y="115" font-size="8.5" fill="#cbd5e1">19${unit}</text>
+          </svg>
+        `;
+      } else {
+        // 4D : Tableau d'alertes nominatives
+        title.innerHTML = `<span>📋</span> Registre d'Alertes Nominatif (${q2 === 'A' ? 'ESN Moteurs' : (q2 === 'B' ? 'Packages Sous-Ensembles' : 'Postes & Opérations')})`;
+        const isPenalties = (q1 === 'D');
+
+        let col1 = "ESN MOTEUR", col2 = "CLIENT";
+        let r1 = ["ESN-984210", "Air France", "+8 j (32 k€)", "Retard Critique"];
+        let r2 = ["ESN-773192", "Lufthansa", "+4 j (16 k€)", "Seuil P85 dépassé"];
+        let r3 = ["ESN-449103", "Delta", "+1 j (4 k€)", "En attente banc"];
+        let r4 = ["ESN-651084", "Ryanair", "0 j (Conforme)", "Livraison conforme"];
+
+        if (q2 === 'B') {
+          col1 = "LOT PACKAGE"; col2 = "SITE SAFRAN";
+          r1 = ["PKG-701-AUB", "Montereau", isPenalties ? "+3 j (12 k€)" : "Dérive usinage", "Retard"];
+          r2 = ["PKG-701-COM", "Villaroche", isPenalties ? "+2 j (8 k€)" : "En attente contrôle", "Sous contrôle"];
+          r3 = ["PKG-701-TST", "Bruxelles", isPenalties ? "+4 j (16 k€)" : "Banc saturé", "Critique"];
+          r4 = ["PKG-701-ECH", "Châtellerault", isPenalties ? "0 j" : "Conforme", "OK"];
+        } else if (q2 === 'C') {
+          col1 = "SLOT MACHINE"; col2 = "POSTE TRAVAIL";
+          r1 = ["OP-9081-12", "USI-04 (Tour CN)", isPenalties ? "+12 h (3 k€)" : "File saturée (92%)", "Critique"];
+          r2 = ["OP-9081-13", "CND-02 (Ressuage)", isPenalties ? "+4 h (1 k€)" : "Attente bain", "Attention"];
+          r3 = ["OP-9081-14", "EQU-01 (Banc rotor)", isPenalties ? "+18 h (5 k€)" : "Aléa balourd", "Goulot"];
+          r4 = ["OP-9081-15", "BANC-03 (Recette)", isPenalties ? "0 h" : "Cadence tenue", "OK"];
+        }
+
+        svg = `
+          <div class="w-full text-[10px] overflow-hidden">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="text-slate-400 border-b border-slate-800 text-[9px]">
+                  <th class="py-1">${col1}</th>
+                  <th class="py-1">${col2}</th>
+                  <th class="py-1">ÉTAT</th>
+                  <th class="py-1 text-right">${isPenalties ? 'RETARD / PÉNALITÉ' : 'STATUT PILOTAGE'}</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-800/60 font-mono">
+                <tr>
+                  <td class="py-1 text-white font-bold">${r1[0]}</td>
+                  <td class="text-slate-300">${r1[1]}</td>
+                  <td><span class="px-1 py-0.5 rounded text-[8.5px] bg-red-500/20 text-red-400 border border-red-500/30">🚨 AOG</span></td>
+                  <td class="text-right ${isPenalties ? 'text-amber-400 font-bold' : 'text-red-400'}">${isPenalties ? r1[2] : r1[3]}</td>
+                </tr>
+                <tr>
+                  <td class="py-1 text-white font-bold">${r2[0]}</td>
+                  <td class="text-slate-300">${r2[1]}</td>
+                  <td><span class="px-1 py-0.5 rounded text-[8.5px] bg-amber-500/20 text-amber-400 border border-amber-500/30">⚠️ Dérive</span></td>
+                  <td class="text-right ${isPenalties ? 'text-amber-300 font-bold' : 'text-amber-400'}">${isPenalties ? r2[2] : r2[3]}</td>
+                </tr>
+                <tr>
+                  <td class="py-1 text-white font-bold">${r3[0]}</td>
+                  <td class="text-slate-300">${r3[1]}</td>
+                  <td><span class="px-1 py-0.5 rounded text-[8.5px] bg-blue-500/20 text-blue-400 border border-blue-500/30">🔧 Goulot</span></td>
+                  <td class="text-right ${isPenalties ? 'text-slate-300' : 'text-blue-400'}">${isPenalties ? r3[2] : r3[3]}</td>
+                </tr>
+                <tr>
+                  <td class="py-1 text-white font-bold">${r4[0]}</td>
+                  <td class="text-slate-300">${r4[1]}</td>
+                  <td><span class="px-1 py-0.5 rounded text-[8.5px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">✅ OK</span></td>
+                  <td class="text-right text-emerald-400">${isPenalties ? r4[2] : r4[3]}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+      container.innerHTML = svg;
+    }
+
+    function renderChartQ5(q5, q2) {
+      const container = document.getElementById('mock-chart-q5-container');
+      const title = document.getElementById('mock-chart-q5-title');
+      const sub = document.getElementById('mock-chart-q5-sub');
+      if (!container) return;
+
+      q2 = q2 || selections[2] || 'A';
+      const granLabel = q2 === 'A' ? "Grain Global Safran MRO" : (q2 === 'B' ? "Grain Sites Industriels" : "Grain Postes Machines");
+      sub.textContent = `Option 5.${q5} : ${metaInfo[5][q5].title} • ${granLabel}`;
+
+      let svg = "";
+      if (q5 === 'A') {
+        const titleTarget = q2 === 'A' ? "Lignes de Maintenance" : (q2 === 'B' ? "Sites Industriels" : "Postes de Travail Machine");
+        title.innerHTML = `<span>🚦</span> Taux de Charge par ${titleTarget} vs Seuil 85%`;
+
+        const name1 = q2 === 'A' ? "Ligne LEAP (VIL)" : (q2 === 'B' ? "Villaroche (VIL)" : "USI-04 (Tour 5 axes)");
+        const name2 = q2 === 'A' ? "Ligne CFM56 (CHL)" : (q2 === 'B' ? "Châtellerault (CHL)" : "CND-02 (Ressuage)");
+        const name3 = q2 === 'A' ? "Ligne Aubes (MON)" : (q2 === 'B' ? "Montereau (MON)" : "EQU-01 (Équilibrage)");
+        const name4 = q2 === 'A' ? "Pôle Bancs (BRU)" : (q2 === 'B' ? "Bruxelles (BRU)" : "BANC-03 (Banc Test)");
+
+        svg = `
+          <svg class="w-full h-28 md:h-32 max-h-[130px]" viewBox="0 0 320 145">
+            <!-- Ligne de seuil 85% -->
+            <line x1="225" y1="18" x2="225" y2="135" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="3,3" />
+            <text x="225" y="13" font-size="8" text-anchor="middle" fill="#fbbf24">Seuil Saturation (85%)</text>
+
+            <!-- Bar 1 -->
+            <text x="10" y="35" font-size="8" fill="#94a3b8">${name1}</text>
+            <rect x="110" y="25" width="105" height="13" rx="2" fill="#3b82f6" />
+            <text x="222" y="35" font-size="8.5" fill="#93c5fd">76%</text>
+
+            <!-- Bar 2 -->
+            <text x="10" y="66" font-size="8" fill="#94a3b8">${name2}</text>
+            <rect x="110" y="56" width="90" height="13" rx="2" fill="#3b82f6" />
+            <text x="208" y="66" font-size="8.5" fill="#93c5fd">65%</text>
+
+            <!-- Bar 3 -->
+            <text x="10" y="97" font-size="8" fill="#94a3b8">${name3}</text>
+            <rect x="110" y="87" width="145" height="13" rx="2" fill="#ef4444" />
+            <text x="262" y="97" font-size="8.5" font-weight="bold" fill="#fca5a5">94% 🚨</text>
+
+            <!-- Bar 4 -->
+            <text x="10" y="128" font-size="8" fill="#94a3b8">${name4}</text>
+            <rect x="110" y="118" width="118" height="13" rx="2" fill="#10b981" />
+            <text x="235" y="128" font-size="8.5" fill="#6ee7b7">82%</text>
+          </svg>
+        `;
+      } else if (q5 === 'B') {
+        const headerUnit = q2 === 'C' ? "Postes Machines" : (q2 === 'B' ? "Sites Safran" : "Familles Moteurs");
+        title.innerHTML = `<span>🗓️</span> Heatmap Hebdo d'Occupation par ${headerUnit}`;
+
+        const row1 = q2 === 'A' ? "CFM56" : (q2 === 'B' ? "Villaroche" : "USI-04");
+        const row2 = q2 === 'A' ? "LEAP-1A" : (q2 === 'B' ? "Montereau" : "CND-02");
+        const row3 = q2 === 'A' ? "LEAP-1B" : (q2 === 'B' ? "Châtellerault" : "EQU-01");
+
+        svg = `
+          <svg class="w-full h-28 md:h-32 max-h-[130px]" viewBox="0 0 320 145">
+            <!-- Colonnes Semaines -->
+            <text x="100" y="14" font-size="8" text-anchor="middle" fill="#94a3b8">S36</text>
+            <text x="155" y="14" font-size="8" text-anchor="middle" fill="#94a3b8">S37</text>
+            <text x="210" y="14" font-size="8" text-anchor="middle" fill="#94a3b8">S38</text>
+            <text x="265" y="14" font-size="8" text-anchor="middle" fill="#94a3b8">S39</text>
+
+            <!-- Ligne 1 -->
+            <text x="10" y="38" font-size="8" fill="#94a3b8">${row1}</text>
+            <rect x="80" y="24" width="40" height="20" rx="3" fill="#1e3a8a" />
+            <rect x="135" y="24" width="40" height="20" rx="3" fill="#2563eb" />
+            <rect x="190" y="24" width="40" height="20" rx="3" fill="#ef4444" />
+            <rect x="245" y="24" width="40" height="20" rx="3" fill="#2563eb" />
+
+            <!-- Ligne 2 -->
+            <text x="10" y="68" font-size="8" fill="#94a3b8">${row2}</text>
+            <rect x="80" y="54" width="40" height="20" rx="3" fill="#2563eb" />
+            <rect x="135" y="54" width="40" height="20" rx="3" fill="#ef4444" />
+            <rect x="190" y="54" width="40" height="20" rx="3" fill="#b91c1c" />
+            <rect x="245" y="54" width="40" height="20" rx="3" fill="#ef4444" />
+
+            <!-- Ligne 3 -->
+            <text x="10" y="98" font-size="8" fill="#94a3b8">${row3}</text>
+            <rect x="80" y="84" width="40" height="20" rx="3" fill="#1e293b" />
+            <rect x="135" y="84" width="40" height="20" rx="3" fill="#1e3a8a" />
+            <rect x="190" y="84" width="40" height="20" rx="3" fill="#2563eb" />
+            <rect x="245" y="84" width="40" height="20" rx="3" fill="#1e3a8a" />
+
+            <!-- Légende -->
+            <text x="180" y="125" font-size="7.5" text-anchor="middle" fill="#fca5a5">■ Pic de charge critique S38 (${row2})</text>
+          </svg>
+        `;
+      } else if (q5 === 'C') {
+        const wipSubject = q2 === 'A' ? "Moteurs ESN en Révision" : (q2 === 'B' ? "Lots Sous-Ensembles en Transit" : "Ordres de Fabrication / Pièces");
+        title.innerHTML = `<span>📈</span> Flux Entrées vs Sorties & Accumulation WIP (${wipSubject})`;
+        svg = `
+          <svg class="w-full h-28 md:h-32 max-h-[130px]" viewBox="0 0 320 145">
+            <!-- Axes -->
+            <line x1="30" y1="120" x2="300" y2="120" stroke="#334155" stroke-width="1.5" />
+            <line x1="30" y1="15" x2="30" y2="120" stroke="#334155" stroke-width="1.5" />
+
+            <!-- Entrées (Bleu) -->
+            <path d="M 30 90 Q 110 75, 160 30 T 300 20" fill="none" stroke="#3b82f6" stroke-width="2" />
+            <!-- Sorties (Vert) -->
+            <path d="M 30 95 Q 110 90, 160 85 T 300 80" fill="none" stroke="#10b981" stroke-width="2" />
+
+            <!-- Zone de divergence WIP -->
+            <path d="M 160 30 Q 230 25, 300 20 L 300 80 Q 230 83, 160 85 Z" fill="#ef4444" opacity="0.15" />
+
+            <text x="240" y="48" font-size="8.5" font-weight="bold" fill="#fca5a5">Écart WIP (+18 ${q2 === 'A' ? 'moteurs' : (q2 === 'B' ? 'lots' : 'OF')})</text>
+            <text x="280" y="16" font-size="7.5" fill="#60a5fa">Entrées</text>
+            <text x="280" y="93" font-size="7.5" fill="#4ade80">Sorties</text>
+            <text x="160" y="134" font-size="7.5" text-anchor="middle" fill="#94a3b8">Semaines (Accumulation en amont des postes clés)</text>
+          </svg>
+        `;
+      } else {
+        // 5D
+        const t1 = q2 === 'A' ? "44% Attente / transit inter-sites" : (q2 === 'B' ? "42% Navette route & attente quai" : "48% Attente bacs tampons machine");
+        const subT1 = q2 === 'A' ? "~ 8.2 jours sans travail physique" : (q2 === 'B' ? "~ 3.1 jours de transport" : "~ 2.1 heures en file d'attente");
+        const t2 = q2 === 'A' ? "56% Usinage, révision & essai" : (q2 === 'B' ? "58% Réparation atelier site" : "52% Usinage copeaux & contrôle");
+        const subT2 = q2 === 'A' ? "~ 10.5 jours de travail à valeur" : (q2 === 'B' ? "~ 4.3 jours d'atelier pur" : "~ 2.3 heures de temps machine");
+
+        title.innerHTML = `<span>⏳</span> Répartition du Lead Time : Valeur Ajoutée vs Attente`;
+        svg = `
+          <svg class="w-full h-28 md:h-32 max-h-[130px]" viewBox="0 0 320 145">
+            <!-- Donut -->
+            <circle cx="90" cy="72" r="44" fill="none" stroke="#3b82f6" stroke-width="14" />
+            <circle cx="90" cy="72" r="44" fill="none" stroke="#ef4444" stroke-width="14" stroke-dasharray="276" stroke-dashoffset="155" stroke-linecap="round" />
+            <text x="90" y="69" font-size="13" font-weight="bold" text-anchor="middle" fill="#ffffff">44%</text>
+            <text x="90" y="82" font-size="7.5" text-anchor="middle" fill="#fca5a5">Temps Perdu</text>
+
+            <!-- Détails droite -->
+            <rect x="160" y="32" width="10" height="10" rx="2" fill="#ef4444" />
+            <text x="177" y="40" font-size="8.5" font-weight="bold" fill="#fca5a5">${t1}</text>
+            <text x="177" y="51" font-size="7.5" fill="#94a3b8">${subT1}</text>
+
+            <rect x="160" y="70" width="10" height="10" rx="2" fill="#3b82f6" />
+            <text x="177" y="78" font-size="8.5" font-weight="bold" fill="#93c5fd">${t2}</text>
+            <text x="177" y="89" font-size="7.5" fill="#94a3b8">${subT2}</text>
+
+            <text x="160" y="115" font-size="8" fill="#cbd5e1">🎯 Levier : fluidifier le goulet ${q2 === 'A' ? 'global' : (q2 === 'B' ? 'logistique' : 'machine')}</text>
+          </svg>
+        `;
+      }
+      container.innerHTML = svg;
+    }
+
+    function drawSchema(granularity) {
+      const canvas = document.getElementById('schemaCanvas');
+      if (!canvas || !canvas.getContext) return;
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Définition rigoureuse du modèle dimensionnel selon la granularité
+      let schemaModel = {};
+
+      if (granularity === 'A') {
+        schemaModel = {
+          fact: {
+            title: "FAIT_DEMANDES_MRO",
+            sub: "Grain : 1 ligne = 1 Demande / ESN Moteur",
+            grainColor: "#3b82f6",
+            rows: [
+              { type: 'PK', name: 'ID_Demande', desc: 'Identifiant unique visite' },
+              { type: 'FK', name: 'FK_Client', desc: '-> DIM_CLIENT.ID_Client' },
+              { type: 'FK', name: 'FK_Moteur', desc: '-> DIM_MOTEUR.ESN_Moteur' },
+              { type: 'FK', name: 'FK_Contrat', desc: '-> DIM_CONTRAT_SLA.ID_Contrat' },
+              { type: 'FK', name: 'FK_Date_Entree', desc: '-> DIM_CALENDRIER.Date_Key' },
+              { type: 'M',  name: 'Duree_Reelle_Jours', desc: 'Mesure TAT global (jours)' },
+              { type: 'M',  name: 'Jours_Retard_SLA', desc: 'Mesure dépassement SLA' },
+              { type: 'M',  name: 'Montant_Penalite_EUR', desc: 'Pénalités de retard' }
+            ]
+          },
+          dims: [
+            {
+              title: "DIM_CLIENT", icon: "🏢", color: "#f59e0b", x: 14, y: 15, w: 168, h: 125,
+              rows: [
+                { type: 'PK', name: 'ID_Client', desc: 'Code IATA (AFR, DLH, RYR)' },
+                { type: 'A',  name: 'Compagnie_Aerienne', desc: 'Nom compagnie' },
+                { type: 'A',  name: 'Segment_Marche', desc: 'Major / Low-Cost / Cargo' },
+                { type: 'A',  name: 'Taux_Penalite_Jour', desc: 'Barème contractuel €/j' }
+              ]
+            },
+            {
+              title: "DIM_MOTEUR", icon: "✈️", color: "#8b5cf6", x: 418, y: 15, w: 168, h: 125,
+              rows: [
+                { type: 'PK', name: 'ESN_Moteur', desc: 'Numéro de série moteur' },
+                { type: 'A',  name: 'Famille_Moteur', desc: 'CFM56-7B / LEAP-1A / 1B' },
+                { type: 'A',  name: 'Heures_Vol_TSN', desc: 'Time Since New' },
+                { type: 'A',  name: 'Cycles_Vol_CSN', desc: 'Cycles de vol' }
+              ]
+            },
+            {
+              title: "DIM_CONTRAT_SLA", icon: "📜", color: "#10b981", x: 14, y: 195, w: 168, h: 125,
+              rows: [
+                { type: 'PK', name: 'ID_Contrat', desc: 'Code accord cadre' },
+                { type: 'A',  name: 'Type_Engagement', desc: 'Flight Hour Agreement' },
+                { type: 'A',  name: 'SLA_Cible_Jours', desc: 'TAT standard convenu' },
+                { type: 'A',  name: 'Seuil_Alerte_P85', desc: 'Seuil déclenchement crise' }
+              ]
+            },
+            {
+              title: "DIM_CALENDRIER", icon: "📅", color: "#ec4899", x: 418, y: 195, w: 168, h: 125,
+              rows: [
+                { type: 'PK', name: 'Date_Key', desc: 'Format YYYYMMDD' },
+                { type: 'A',  name: 'Semaine_Fiscale', desc: 'S36, S37, S38...' },
+                { type: 'A',  name: 'Mois_Annee', desc: 'Septembre 2026' },
+                { type: 'A',  name: 'Est_Ouvre_Safran', desc: 'Filtre jours ouvrés MRO' }
+              ]
+            }
+          ]
+        };
+      } else if (granularity === 'B') {
+        schemaModel = {
+          fact: {
+            title: "FAIT_PACKAGES_SITE",
+            sub: "Grain : 1 ligne = 1 Lot Sous-Ensemble expédié sur Site",
+            grainColor: "#10b981",
+            rows: [
+              { type: 'PK', name: 'ID_Lot_Package', desc: 'Lot unique sous-ensemble' },
+              { type: 'FK', name: 'FK_Demande_MRO', desc: '-> DIM_DEMANDE_MRO.ID_Demande' },
+              { type: 'FK', name: 'FK_Sous_Ensemble', desc: '-> DIM_MODULE.ID_Module' },
+              { type: 'FK', name: 'FK_Site_Safran', desc: '-> DIM_SITE.ID_Site' },
+              { type: 'FK', name: 'FK_Date_Envoi', desc: '-> DIM_CALENDRIER.Date_Key' },
+              { type: 'M',  name: 'Duree_Atelier_Jours', desc: 'Usinage sur site local' },
+              { type: 'M',  name: 'Duree_Navette_Jours', desc: 'Temps transit inter-sites' },
+              { type: 'M',  name: 'TAT_Package_Total', desc: 'Somme cycle package' }
+            ]
+          },
+          dims: [
+            {
+              title: "DIM_DEMANDE_MRO", icon: "📦", color: "#3b82f6", x: 14, y: 15, w: 168, h: 125,
+              rows: [
+                { type: 'PK', name: 'ID_Demande', desc: 'Visite parente MRO' },
+                { type: 'A',  name: 'ESN_Moteur', desc: 'Réf révision moteur' },
+                { type: 'A',  name: 'Client_Nom', desc: 'Compagnie donneuse d\'ordre' },
+                { type: 'A',  name: 'Date_Promesse_SLA', desc: 'Date cible globale' }
+              ]
+            },
+            {
+              title: "DIM_SOUS_ENSEMBLE", icon: "⚙️", color: "#8b5cf6", x: 418, y: 15, w: 168, h: 125,
+              rows: [
+                { type: 'PK', name: 'ID_Module', desc: 'Code module moteur' },
+                { type: 'A',  name: 'Nom_Sous_Ensemble', desc: 'Aubes Fan / Compresseur HP' },
+                { type: 'A',  name: 'Famille_Technologique', desc: 'Aubes monocristal, carter' },
+                { type: 'A',  name: 'Criticite_Maint', desc: 'Niveau d\'inspection' }
+              ]
+            },
+            {
+              title: "DIM_SITE_SAFRAN", icon: "🏭", color: "#f59e0b", x: 14, y: 195, w: 168, h: 125,
+              rows: [
+                { type: 'PK', name: 'ID_Site', desc: 'Code site industriel' },
+                { type: 'A',  name: 'Nom_Site', desc: 'Villaroche / Montereau / BRU' },
+                { type: 'A',  name: 'Specialite_Atelier', desc: 'Pôle Aubes / Bancs Essai' },
+                { type: 'A',  name: 'Capacite_Lots_Hebdo', desc: 'Capacité nominale' }
+              ]
+            },
+            {
+              title: "DIM_CALENDRIER", icon: "📅", color: "#ec4899", x: 418, y: 195, w: 168, h: 125,
+              rows: [
+                { type: 'PK', name: 'Date_Key', desc: 'Format YYYYMMDD' },
+                { type: 'A',  name: 'Semaine_Fiscale', desc: 'S36, S37, S38...' },
+                { type: 'A',  name: 'Navette_Planifiee', desc: 'Jour de rotation camion' },
+                { type: 'A',  name: 'Est_Ouvre_Atelier', desc: 'Calendrier équipe 2x8' }
+              ]
+            }
+          ]
+        };
+      } else {
+        // Granularité C (Opérations unitaires)
+        schemaModel = {
+          fact: {
+            title: "FAIT_OPERATIONS_SLOTS",
+            sub: "Grain : 1 ligne = 1 Slot Intervention Machine / Poste",
+            grainColor: "#f59e0b",
+            rows: [
+              { type: 'PK', name: 'ID_Slot_Op', desc: 'Ordre de fabrication unitaire' },
+              { type: 'FK', name: 'FK_Poste_Machine', desc: '-> DIM_POSTE.ID_Poste' },
+              { type: 'FK', name: 'FK_Tache_Gamme', desc: '-> DIM_GAMME.ID_Operation' },
+              { type: 'FK', name: 'FK_Lot_Package', desc: '-> DIM_PACKAGE.ID_Lot' },
+              { type: 'FK', name: 'FK_Date_Shift', desc: '-> DIM_TEMPS_SLOT.Slot_Key' },
+              { type: 'M',  name: 'Temps_Gamme_Heures', desc: 'Usinage / Contrôle pur' },
+              { type: 'M',  name: 'Temps_Reglage_Heures', desc: 'Préparation régleur' },
+              { type: 'M',  name: 'Temps_Attente_File_h', desc: 'Attente avant passage' }
+            ]
+          },
+          dims: [
+            {
+              title: "DIM_POSTE_MACHINE", icon: "🤖", color: "#3b82f6", x: 14, y: 15, w: 168, h: 125,
+              rows: [
+                { type: 'PK', name: 'ID_Poste', desc: 'Identifiant centre usinage' },
+                { type: 'A',  name: 'Nom_Machine', desc: 'USI-04 / CND-02 / EQU-01' },
+                { type: 'A',  name: 'Ilot_Atelier', desc: 'Ligne Usinage / Ligne Contrôle' },
+                { type: 'A',  name: 'Taux_Charge_Cible', desc: 'Seuil d\'alerte 85%' }
+              ]
+            },
+            {
+              title: "DIM_TACHE_GAMME", icon: "📋", color: "#8b5cf6", x: 418, y: 15, w: 168, h: 125,
+              rows: [
+                { type: 'PK', name: 'ID_Operation', desc: 'Numéro d\'opération gamme' },
+                { type: 'A',  name: 'Libelle_Operation', desc: 'Tournage, Ressuage, Banc' },
+                { type: 'A',  name: 'Code_Gamme_MRO', desc: 'Gamme standard Safran' },
+                { type: 'A',  name: 'Qualif_Requise', desc: 'Certificat opérateur Part-145' }
+              ]
+            },
+            {
+              title: "DIM_PACKAGE", icon: "🏢", color: "#10b981", x: 14, y: 195, w: 168, h: 125,
+              rows: [
+                { type: 'PK', name: 'ID_Lot', desc: 'Lot parent sous-ensemble' },
+                { type: 'A',  name: 'ESN_Moteur_Ref', desc: 'Moteur CFM56 / LEAP rattaché' },
+                { type: 'A',  name: 'Module_Concerne', desc: 'Aubes HP / Compresseur' },
+                { type: 'A',  name: 'Statut_Avancement', desc: 'En cours / Clôturé' }
+              ]
+            },
+            {
+              title: "DIM_TEMPS_SLOT", icon: "⏱️", color: "#ec4899", x: 418, y: 195, w: 168, h: 125,
+              rows: [
+                { type: 'PK', name: 'Slot_Key', desc: 'Horodatage créneau horaire' },
+                { type: 'A',  name: 'Date_Jour', desc: 'Date calendaire' },
+                { type: 'A',  name: 'Equipe_Shift', desc: 'Matin (5h-13h) / Soir (13h-21h)' },
+                { type: 'A',  name: 'Creneau_Heure', desc: 'Plage 1h de production' }
+              ]
+            }
+          ]
+        };
+      }
+
+      // 1. Dessin des liaisons relationnelles avec cardinalités 1 : N
+      const factBox = { x: 200, y: 18, w: 200, h: 302 };
+
+      schemaModel.dims.forEach(dim => {
+        // Points d'ancrage
+        let startX, startY, endX, endY, card1X, card1Y, cardNX, cardNY;
+
+        if (dim.x < factBox.x) {
+          // Dimension à gauche
+          startX = dim.x + dim.w;
+          startY = dim.y + dim.h / 2;
+          endX = factBox.x;
+          endY = dim.y < 150 ? factBox.y + 60 : factBox.y + factBox.h - 60;
+          card1X = startX + 12;
+          card1Y = startY - 6;
+          cardNX = endX - 18;
+          cardNY = endY - 6;
+        } else {
+          // Dimension à droite
+          startX = dim.x;
+          startY = dim.y + dim.h / 2;
+          endX = factBox.x + factBox.w;
+          endY = dim.y < 150 ? factBox.y + 60 : factBox.y + factBox.h - 60;
+          card1X = startX - 18;
+          card1Y = startY - 6;
+          cardNX = endX + 8;
+          cardNY = endY - 6;
+        }
+
+        ctx.beginPath();
+        ctx.moveTo(startX, startY);
+        ctx.bezierCurveTo((startX + endX)/2, startY, (startX + endX)/2, endY, endX, endY);
+        ctx.strokeStyle = '#334155';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Flèche / Crow's foot vers la table de faits (côté N)
+        ctx.beginPath();
+        if (dim.x < factBox.x) {
+          ctx.moveTo(endX - 8, endY - 6);
+          ctx.lineTo(endX, endY);
+          ctx.lineTo(endX - 8, endY + 6);
+        } else {
+          ctx.moveTo(endX + 8, endY - 6);
+          ctx.lineTo(endX, endY);
+          ctx.lineTo(endX + 8, endY + 6);
+        }
+        ctx.strokeStyle = dim.color;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Badge Cardinalité '1' côté dimension
+        ctx.fillStyle = '#10b981';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText("1", card1X, card1Y);
+
+        // Badge Cardinalité 'N' côté fait
+        ctx.fillStyle = '#3b82f6';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText("N", cardNX, cardNY);
+      });
+
+      // 2. Dessin de la Table de Faits Centrale (style table relationnelle Power BI)
+      ctx.save();
+      // Ombre portée
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
+      ctx.shadowBlur = 12;
+      ctx.fillStyle = '#0f172a';
+      ctx.strokeStyle = schemaModel.fact.grainColor;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.roundRect(factBox.x, factBox.y, factBox.w, factBox.h, 8);
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+
+      // En-tête de la table de faits
+      ctx.fillStyle = schemaModel.fact.grainColor;
+      ctx.beginPath();
+      ctx.roundRect(factBox.x, factBox.y, factBox.w, 36, [8, 8, 0, 0]);
+      ctx.fill();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 11.5px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(schemaModel.fact.title, factBox.x + factBox.w / 2, factBox.y + 17);
+
+      ctx.fillStyle = '#0f172a';
+      ctx.font = '9px sans-serif';
+      ctx.fillText("TABLE DE FAITS CENTRALE", factBox.x + factBox.w / 2, factBox.y + 29);
+
+      // Sous-titre grain
+      ctx.fillStyle = '#1e293b';
+      ctx.fillRect(factBox.x, factBox.y + 36, factBox.w, 18);
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = 'italic 8.5px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(schemaModel.fact.sub, factBox.x + factBox.w / 2, factBox.y + 48);
+
+      // Lignes d'attributs de la table de faits
+      let curY = factBox.y + 60;
+      const rowHeight = 29;
+
+      schemaModel.fact.rows.forEach((row, i) => {
+        ctx.fillStyle = (i % 2 === 0) ? '#131e33' : '#0c1322';
+        ctx.fillRect(factBox.x + 1, curY - 2, factBox.w - 2, rowHeight);
+
+        // Badge Type (PK / FK / M)
+        let badgeColor = '#3b82f6';
+        let badgeText = 'FK';
+        if (row.type === 'PK') {
+          badgeColor = '#f59e0b';
+          badgeText = 'PK';
+        } else if (row.type === 'M') {
+          badgeColor = '#a855f7';
+          badgeText = '📐';
+        }
+
+        ctx.fillStyle = badgeColor;
+        ctx.font = 'bold 9px monospace';
+        ctx.textAlign = 'left';
+        ctx.fillText(badgeText, factBox.x + 6, curY + 11);
+
+        // Nom du champ
+        ctx.fillStyle = (row.type === 'M') ? '#e2e8f0' : (row.type === 'PK' ? '#fbbf24' : '#60a5fa');
+        ctx.font = (row.type === 'PK' || row.type === 'M') ? 'bold 10px monospace' : '9.5px monospace';
+        ctx.fillText(row.name, factBox.x + 28, curY + 11);
+
+        // Description / Relation
+        ctx.fillStyle = '#64748b';
+        ctx.font = '8px sans-serif';
+        ctx.fillText(row.desc, factBox.x + 28, curY + 22);
+
+        curY += rowHeight;
+      });
+
+      // 3. Dessin des 4 Tables de Dimensions (style Power BI exact)
+      schemaModel.dims.forEach(dim => {
+        ctx.save();
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
+        ctx.shadowBlur = 8;
+        ctx.fillStyle = '#0f172a';
+        ctx.strokeStyle = dim.color;
+        ctx.lineWidth = 1.6;
+        ctx.beginPath();
+        ctx.roundRect(dim.x, dim.y, dim.w, dim.h, 6);
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+
+        // En-tête Dimension
+        ctx.fillStyle = dim.color;
+        ctx.beginPath();
+        ctx.roundRect(dim.x, dim.y, dim.w, 24, [6, 6, 0, 0]);
+        ctx.fill();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 10px sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText(`${dim.icon} ${dim.title}`, dim.x + 6, dim.y + 16);
+
+        // Lignes d'attributs de la dimension
+        let dY = dim.y + 28;
+        dim.rows.forEach((r, idx) => {
+          ctx.fillStyle = (idx % 2 === 0) ? '#111c30' : '#0a101d';
+          ctx.fillRect(dim.x + 1, dY - 1, dim.w - 2, 23);
+
+          if (r.type === 'PK') {
+            ctx.fillStyle = '#f59e0b';
+            ctx.font = 'bold 8.5px monospace';
+            ctx.textAlign = 'left';
+            ctx.fillText("PK", dim.x + 5, dY + 10);
+
+            ctx.fillStyle = '#fbbf24';
+            ctx.font = 'bold 9.5px monospace';
+            ctx.fillText(r.name, dim.x + 24, dY + 10);
+          } else {
+            ctx.fillStyle = '#64748b';
+            ctx.font = '8px monospace';
+            ctx.textAlign = 'left';
+            ctx.fillText("•", dim.x + 7, dY + 10);
+
+            ctx.fillStyle = '#cbd5e1';
+            ctx.font = '9px sans-serif';
+            ctx.fillText(r.name, dim.x + 16, dY + 10);
+          }
+
+          ctx.fillStyle = '#64748b';
+          ctx.font = '7.5px sans-serif';
+          ctx.fillText(r.desc, dim.x + 16, dY + 19);
+
+          dY += 23;
+        });
+      });
+    }
+
+    function renderStep3TablePreview() {
+      const q2 = selections[2] || 'A';
+      const q3 = selections[3] || 'B';
+
+      const titleEl = document.getElementById('step3-table-title');
+      const badgeEl = document.getElementById('step3-combo-badge');
+      const container = document.getElementById('step3-table-container');
+      const noteEl = document.getElementById('step3-table-note');
+
+      if (!container) return;
+
+      const granNames = {
+        'A': 'Demande Globale (1 ligne = 1 moteur ESN)',
+        'B': 'Packages Maintenance (1 ligne = 1 sous-ensemble site)',
+        'C': 'Opérations Unitaires (1 ligne = 1 slot machine)'
+      };
+
+      const tableNames = {
+        'A': 'FAIT_DEMANDES_MRO',
+        'B': 'FAIT_PACKAGES_SITE',
+        'C': 'FAIT_OPERATIONS_SLOTS'
+      };
+
+      const methNames = {
+        'A': 'Additif standard (Somme déterministe)',
+        'B': 'PERT probabiliste (Distribution 3-points)',
+        'C': 'Files d\'attente Little (Saturation M/M/1)',
+        'D': 'Percentiles réels DAX (Distribution empirique)'
+      };
+
+      if (titleEl) {
+        titleEl.innerHTML = `📋 Extrait de <span class="font-mono text-blue-400 font-bold ml-1">${tableNames[q2]}</span>`;
+      }
+      if (badgeEl) {
+        badgeEl.textContent = `Niveau ${q2} (${q2 === 'A' ? 'Macro' : q2 === 'B' ? 'Méso' : 'Micro'}) + Méthode 3${q3}`;
+      }
+
+      // Structure des colonnes et données d'exemple selon la combinaison
+      let cols = [];
+      let rows = [];
+      let formulaNote = "";
+      let daxSnippet = "";
+
+      // 1. Colonnes d'entités selon Q2
+      if (q2 === 'A') {
+        // Demande globale ESN
+        if (q3 === 'A') {
+          cols = ['ID_Demande', 'ESN_Moteur', 'Client', 'Duree_Theorique_j', 'Forfait_Transit_j', 'TAT_Total_j'];
+          rows = [
+            ['DEM-2024-089', 'ESN-884210', 'Air France', '18.0', '+ 2.0', '<span class="text-blue-400 font-bold font-mono">20.0 j</span>'],
+            ['DEM-2024-094', 'ESN-773412', 'Lufthansa', '22.0', '+ 3.0', '<span class="text-blue-400 font-bold font-mono">25.0 j</span>'],
+            ['DEM-2024-102', 'ESN-651098', 'Ryanair', '14.0', '+ 1.5', '<span class="text-blue-400 font-bold font-mono">15.5 j</span>']
+          ];
+          formulaNote = "Modèle additif rigide : TAT moteur = Somme des temps nominaux constructeur + transit logistique forfaitaire.";
+          daxSnippet = "TAT_Additif = SUMX(FAIT_DEMANDES_MRO, [Duree_Theorique] + [Forfait_Transit])";
+        } else if (q3 === 'B') {
+          cols = ['ID_Demande', 'ESN_Moteur', 'Type_Moteur', 'Duree_Opt (o)', 'Duree_Nom (m)', 'Duree_Pess (p)', 'TAT_PERT_Attendu'];
+          rows = [
+            ['DEM-2024-089', 'ESN-884210', 'CFM56-7B', '15.0 j', '18.0 j', '32.0 j', '<span class="text-amber-400 font-bold font-mono">19.8 j</span>'],
+            ['DEM-2024-094', 'ESN-773412', 'LEAP-1A', '19.0 j', '22.0 j', '41.0 j', '<span class="text-amber-400 font-bold font-mono">24.7 j</span>'],
+            ['DEM-2024-102', 'ESN-651098', 'CFM56-5B', '11.0 j', '14.0 j', '23.0 j', '<span class="text-amber-400 font-bold font-mono">15.0 j</span>']
+          ];
+          formulaNote = "Pondération PERT 3-points au niveau moteur global : absorbe le risque d'aléa de démontage lourd.";
+          daxSnippet = "TAT_PERT = DIVIDE([Duree_Opt] + 4*[Duree_Nom] + [Duree_Pess], 6)";
+        } else if (q3 === 'C') {
+          cols = ['ID_Demande', 'ESN_Moteur', 'Charge_MRO_Globale', 'Tps_Usinage_j', 'File_Attente_Little', 'TAT_Total_Estime'];
+          rows = [
+            ['DEM-2024-089', 'ESN-884210', '<span class="text-emerald-400 font-bold">78 %</span> (Normal)', '18.0 j', '+ 3.8 j', '<span class="text-blue-400 font-bold font-mono">21.8 j</span>'],
+            ['DEM-2024-094', 'ESN-773412', '<span class="text-red-400 font-bold">92 %</span> (Saturé)', '22.0 j', '+ 16.5 j', '<span class="text-red-400 font-bold font-mono">38.5 j ⚠️</span>'],
+            ['DEM-2024-102', 'ESN-651098', '<span class="text-amber-400 font-bold">84 %</span> (Tendu)', '14.0 j', '+ 5.2 j', '<span class="text-amber-400 font-bold font-mono">19.2 j</span>']
+          ];
+          formulaNote = "Loi de Little globale : le délai global du moteur s'allonge de manière non linéaire avec la charge de l'usine.";
+          daxSnippet = "TAT_Little = DIVIDE([Tps_Usinage], 1 - [Taux_Charge_Global])";
+        } else {
+          // 3D
+          cols = ['ID_Demande', 'ESN_Moteur', 'Famille', 'TAT_P50 (Médiane)', 'TAT_P85 (Cible)', 'TAT_P95 (Pess)', 'Statut_Engagement'];
+          rows = [
+            ['DEM-2024-089', 'ESN-884210', 'CFM56-7B', '17.2 j', '21.0 j', '28.4 j', '<span class="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold text-[9px]">SLA 95% Atteint</span>'],
+            ['DEM-2024-094', 'ESN-773412', 'LEAP-1A', '21.8 j', '26.5 j', '36.0 j', '<span class="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold text-[9px]">Sous Surveillance</span>'],
+            ['DEM-2024-102', 'ESN-651098', 'CFM56-5B', '13.5 j', '16.0 j', '22.1 j', '<span class="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold text-[9px]">SLA 95% Atteint</span>']
+          ];
+          formulaNote = "Distribution empirique Power BI : seuils $P_{85}$ calculés sur l'historique des 500 dernières demandes moteur.";
+          daxSnippet = "TAT_P85 = PERCENTILEX.INC(FAIT_DEMANDES_MRO, [Duree_Reelle_Jours], 0.85)";
+        }
+      } else if (q2 === 'B') {
+        // Packages / Sites
+        if (q3 === 'A') {
+          cols = ['ID_Package', 'Site_Safran', 'Sous_Ensemble', 'Duree_Theorique_j', 'Transfert_Navette_j', 'TAT_Package_j'];
+          rows = [
+            ['PKG-701-AUB', 'Montereau', 'Aubes Turbine HP', '6.5', '+ 1.0', '<span class="text-blue-400 font-bold font-mono">7.5 j</span>'],
+            ['PKG-701-COM', 'Villaroche', 'Compresseur BP', '12.0', '+ 1.5', '<span class="text-blue-400 font-bold font-mono">13.5 j</span>'],
+            ['PKG-701-TST', 'Bruxelles (Banc)', 'Passage Banc Essai', '2.5', '+ 0.5', '<span class="text-blue-400 font-bold font-mono">3.0 j</span>']
+          ];
+          formulaNote = "Additif intermédiaire : chaque package de maintenance accumule son temps de révision d'atelier et sa navette.";
+          daxSnippet = "TAT_Package = SUMX(FAIT_PACKAGES_SITE, [Duree_Atelier] + [Duree_Navette])";
+        } else if (q3 === 'B') {
+          cols = ['ID_Package', 'Site_Safran', 'Module', 'Duree_Opt (o)', 'Duree_Nom (m)', 'Duree_Pess (p)', 'TAT_PERT_Package'];
+          rows = [
+            ['PKG-701-AUB', 'Montereau', 'Aubes HP (Revêtement)', '5.0 j', '6.5 j', '14.0 j', '<span class="text-amber-400 font-bold font-mono">7.5 j</span>'],
+            ['PKG-701-COM', 'Villaroche', 'Compresseur BP', '9.5 j', '12.0 j', '21.0 j', '<span class="text-amber-400 font-bold font-mono">13.1 j</span>'],
+            ['PKG-701-TST', 'Bruxelles', 'Banc Essai & Recette', '2.0 j', '2.5 j', '6.0 j', '<span class="text-amber-400 font-bold font-mono">3.0 j</span>']
+          ];
+          formulaNote = "PERT par lot de sous-ensemble : reflète la variabilité propre aux contrôles non destructifs de chaque site.";
+          daxSnippet = "PERT_Package = DIVIDE([o_site] + 4*[m_site] + [p_site], 6)";
+        } else if (q3 === 'C') {
+          cols = ['ID_Package', 'Site_Safran', 'Taux_Charge_Site', 'Tps_Atelier_j', 'Attente_File_j', 'TAT_Total_Site'];
+          rows = [
+            ['PKG-701-AUB', 'Montereau', '<span class="text-emerald-400 font-bold">72 %</span>', '6.5 j', '+ 1.2 j', '<span class="text-blue-400 font-bold font-mono">7.7 j</span>'],
+            ['PKG-701-COM', 'Villaroche', '<span class="text-amber-400 font-bold">86 %</span>', '12.0 j', '+ 4.8 j', '<span class="text-amber-400 font-bold font-mono">16.8 j</span>'],
+            ['PKG-701-TST', 'Bruxelles', '<span class="text-red-400 font-bold">94 %</span> (Goulot)', '2.5 j', '+ 7.4 j', '<span class="text-red-400 font-bold font-mono">9.9 j ⚠️</span>']
+          ];
+          formulaNote = "File d'attente M/M/1 par atelier : isole les goulots d'étranglement spécifiques (ex: saturation des bancs d'essai).";
+          daxSnippet = "TAT_Site_Queue = [Tps_Atelier] / (1 - RELATED(DIM_SITE[Taux_Charge]))";
+        } else {
+          // 3D
+          cols = ['ID_Package', 'Site_Safran', 'Sous_Ensemble', 'P50_Historique', 'P85_Engagement', 'P95_Risque', 'Alerte_Dérive'];
+          rows = [
+            ['PKG-701-AUB', 'Montereau', 'Aubes HP', '6.2 j', '8.0 j', '12.5 j', '<span class="text-emerald-400 font-bold">Conforme</span>'],
+            ['PKG-701-COM', 'Villaroche', 'Compresseur BP', '11.8 j', '14.5 j', '19.2 j', '<span class="text-emerald-400 font-bold">Conforme</span>'],
+            ['PKG-701-TST', 'Bruxelles', 'Banc Essai', '2.4 j', '3.5 j', '7.8 j', '<span class="text-amber-400 font-bold">Dérive P85</span>']
+          ];
+          formulaNote = "Percentiles réels calculés par ligne de sous-ensemble : benchmark précis entre sites industriels.";
+          daxSnippet = "P85_Package = CALCULATE(PERCENTILEX.INC(FAIT_PACKAGES_SITE, [Duree_Reelle], 0.85))";
+        }
+      } else {
+        // Opérations unitaires
+        if (q3 === 'A') {
+          cols = ['ID_Slot_Op', 'Poste_Atelier', 'Tâche_Gammes', 'Temps_Gamme_h', 'Temps_Reglage_h', 'Total_Slot_h'];
+          rows = [
+            ['OP-9081-12', 'USI-04 (Tour CN)', 'Tournage carter turbine', '4.5 h', '+ 1.0 h', '<span class="text-blue-400 font-bold font-mono">5.5 h</span>'],
+            ['OP-9081-13', 'CND-02 (Ressuage)', 'Contrôle criques & ressuage', '2.0 h', '+ 0.5 h', '<span class="text-blue-400 font-bold font-mono">2.5 h</span>'],
+            ['OP-9081-14', 'EQU-01 (Équilibrage)', 'Équilibrage dynamique rotor', '3.5 h', '+ 0.5 h', '<span class="text-blue-400 font-bold font-mono">4.0 h</span>']
+          ];
+          formulaNote = "Somme élémentaire au niveau machine : cumule le temps standard de gamme et le temps de préparation régleur.";
+          daxSnippet = "Total_Heures_Slot = SUMX(FAIT_OPERATIONS_SLOTS, [Temps_Gamme] + [Temps_Reglage])";
+        } else if (q3 === 'B') {
+          cols = ['ID_Slot_Op', 'Poste_Machine', 'Opération', 'Duree_Opt (o)', 'Duree_Nom (m)', 'Duree_Pess (p)', 'Duree_PERT_Estimee'];
+          rows = [
+            ['OP-9081-12', 'USI-04', 'Usinage aube', '3.5 h', '4.5 h', '9.0 h', '<span class="text-amber-400 font-bold font-mono">5.1 h</span>'],
+            ['OP-9081-13', 'CND-02', 'Ressuage resines', '1.5 h', '2.0 h', '4.5 h', '<span class="text-amber-400 font-bold font-mono">2.3 h</span>'],
+            ['OP-9081-14', 'EQU-01', 'Équilibrage rotor', '2.5 h', '3.5 h', '7.0 h', '<span class="text-amber-400 font-bold font-mono">3.9 h</span>']
+          ];
+          formulaNote = "PERT micro-opérationnel : quantifie les aléas unitaires de reprise machine et d'usure d'outillage.";
+          daxSnippet = "Duree_Slot_PERT = DIVIDE([o_op] + 4*[m_op] + [p_op], 6)";
+        } else if (q3 === 'C') {
+          cols = ['ID_Slot_Op', 'Machine_Ressource', 'Charge_Machine', 'Usinage_Pur', 'Attente_Bac_Tampon', 'Temps_Cycle_Total'];
+          rows = [
+            ['OP-9081-12', 'USI-04 (5 axes)', '<span class="text-amber-400 font-bold">85 %</span>', '4.5 h', '+ 3.5 h', '<span class="text-amber-400 font-bold font-mono">8.0 h</span>'],
+            ['OP-9081-13', 'CND-02 (Bain)', '<span class="text-emerald-400 font-bold">60 %</span>', '2.0 h', '+ 0.5 h', '<span class="text-blue-400 font-bold font-mono">2.5 h</span>'],
+            ['OP-9081-14', 'EQU-01 (Banc rotor)', '<span class="text-red-400 font-bold">95 %</span>', '3.5 h', '+ 12.0 h', '<span class="text-red-400 font-bold font-mono">15.5 h ⚠️</span>']
+          ];
+          formulaNote = "Files d'attente physiques devant machines : capture la saturation des îlots de production critiques.";
+          daxSnippet = "Cycle_Slot_Little = [Usinage] / (1 - RELATED(DIM_MACHINE[Taux_Occupation]))";
+        } else {
+          // 3D
+          cols = ['ID_Slot_Op', 'Poste_Machine', 'Famille_Piece', 'P50_Machine', 'P85_Standard', 'P95_Alea_Grave', 'Conformite_Gamme'];
+          rows = [
+            ['OP-9081-12', 'USI-04', 'Carter Titane', '4.2 h', '5.5 h', '8.5 h', '<span class="text-emerald-400 font-bold">Normal</span>'],
+            ['OP-9081-13', 'CND-02', 'Aubes Monocristal', '1.9 h', '2.5 h', '4.8 h', '<span class="text-emerald-400 font-bold">Normal</span>'],
+            ['OP-9081-14', 'EQU-01', 'Arbre HP', '3.4 h', '4.5 h', '11.0 h', '<span class="text-red-400 font-bold">Hors Gabarit P85</span>']
+          ];
+          formulaNote = "Percentiles réels par machine/opérateur : détection fine des écarts de productivité d'atelier.";
+          daxSnippet = "P85_Slot = PERCENTILEX.INC(FAIT_OPERATIONS_SLOTS, [Duree_Reelle_Heures], 0.85)";
+        }
+      }
+
+      // Construction du tableau HTML
+      let html = `
+        <table class="w-full text-left text-xs border-collapse font-mono">
+          <thead>
+            <tr class="border-b border-slate-700 bg-slate-900/90 text-[10px] text-slate-300">
+      `;
+      cols.forEach((col, idx) => {
+        const isCalc = idx >= cols.length - (q3 === 'B' ? 4 : 2);
+        html += `<th class="py-1.5 px-2 font-semibold ${isCalc ? 'text-blue-300 bg-blue-950/40' : ''}">${col}</th>`;
+      });
+      html += `
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800/80 text-[11px]">
+      `;
+
+      rows.forEach((r, rowIdx) => {
+        html += `<tr class="hover:bg-slate-900/50 transition-colors ${rowIdx % 2 === 0 ? 'bg-slate-950' : 'bg-slate-900/30'}">`;
+        r.forEach((cell, cellIdx) => {
+          const isKey = cellIdx === 0;
+          const isCalc = cellIdx >= cols.length - (q3 === 'B' ? 4 : 2);
+          html += `<td class="py-2 px-2 whitespace-nowrap ${isKey ? 'text-slate-400 font-semibold' : ''} ${isCalc ? 'bg-blue-950/20' : 'text-slate-200'}">${cell}</td>`;
+        });
+        html += `</tr>`;
+      });
+
+      html += `
+          </tbody>
+        </table>
+      `;
+
+      container.innerHTML = html;
+
+      if (noteEl) {
+        noteEl.innerHTML = `
+          <div class="flex flex-col gap-1 w-full">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-slate-200">💡 Logique de calcul :</span>
+              <span class="text-blue-400 font-mono text-[9px] truncate max-w-[280px]">${daxSnippet}</span>
+            </div>
+            <p class="text-slate-400 text-[10.5px] leading-snug">${formulaNote}</p>
+          </div>
+        `;
+      }
+    }
+
+    window.addEventListener('load', () => {
+      drawSchema('A');
+      renderStep3TablePreview();
+      updateRecap();
+    });
+  </script>
+</body>
+
+</html>
