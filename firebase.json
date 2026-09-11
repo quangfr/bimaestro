@@ -1,0 +1,12 @@
+{
+  "hosting": {
+    "site": "maestro-safran",
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**",
+      "readme.md"
+    ]
+  }
+}
