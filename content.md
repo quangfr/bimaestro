@@ -607,6 +607,107 @@ Le tableau ci-dessous explicite le comportement du calcul selon la granularité 
 
 ---
 
+### Option 4.E : Histogramme Distribution TAT
+- **Icône / Emoji :** 📶
+- **Sous-titre :** Distribution statistique par tranches de délais (<20j, 20-30j, 30-40j, >40j)
+- **Description métier :**
+  Distribution par tranches de délais pour débusquer la traîne d'anomalies et valider la capabilité Six Sigma du processus de maintenance.
+- **Illustration SVG :**
+```xml
+<svg class="w-full h-full" viewBox="0 0 100 85">
+  <line x1="10" y1="70" x2="90" y2="70" stroke="#cbd5e1" stroke-width="1.2" />
+  <rect x="14" y="46" width="14" height="24" rx="2" fill="#93c5fd" />
+  <rect x="32" y="20" width="14" height="50" rx="2" fill="#2563eb" />
+  <rect x="50" y="32" width="14" height="38" rx="2" fill="#60a5fa" />
+  <rect x="68" y="52" width="14" height="18" rx="2" fill="#f87171" />
+  <text x="39" y="15" font-size="6.5" font-weight="bold" fill="#1d4ed8" text-anchor="middle">Pic P50</text>
+  <text x="75" y="47" font-size="6" font-weight="bold" fill="#dc2626" text-anchor="middle">>SLA</text>
+  <text x="50" y="80" font-size="6.5" fill="#64748b" text-anchor="middle">Tranches de jours TAT</text>
+</svg>
+```
+
+---
+
+### Option 4.F : Box-Plot & Dispersion
+- **Icône / Emoji :** 📉
+- **Sous-titre :** Boîtes à moustaches révélant médiane, quartiles et valeurs extrêmes
+- **Description métier :**
+  Boîtes à moustaches révélant la médiane, quartiles Q1/Q3 et valeurs extrêmes par famille moteur (CFM56 vs LEAP). Mesure la variabilité et le risque contractuel.
+- **Illustration SVG :**
+```xml
+<svg class="w-full h-full" viewBox="0 0 100 85">
+  <line x1="28" y1="12" x2="28" y2="68" stroke="#64748b" stroke-width="1.2" />
+  <line x1="22" y1="12" x2="34" y2="12" stroke="#64748b" stroke-width="1.2" />
+  <line x1="22" y1="68" x2="34" y2="68" stroke="#64748b" stroke-width="1.2" />
+  <rect x="18" y="24" width="20" height="30" rx="2" fill="#dbeafe" stroke="#2563eb" stroke-width="1.2" />
+  <line x1="18" y1="36" x2="38" y2="36" stroke="#1e40af" stroke-width="2" />
+  <text x="28" y="80" font-size="6.5" font-weight="bold" fill="#475569" text-anchor="middle">CFM56</text>
+
+  <line x1="72" y1="8" x2="72" y2="72" stroke="#64748b" stroke-width="1.2" />
+  <line x1="66" y1="8" x2="78" y2="8" stroke="#64748b" stroke-width="1.2" />
+  <line x1="66" y1="72" x2="78" y2="72" stroke="#64748b" stroke-width="1.2" />
+  <rect x="62" y="20" width="20" height="38" rx="2" fill="#fef3c7" stroke="#d97706" stroke-width="1.2" />
+  <line x1="62" y1="34" x2="82" y2="34" stroke="#b45309" stroke-width="2" />
+  <circle cx="72" cy="6" r="2" fill="#dc2626" />
+  <text x="72" y="80" font-size="6.5" font-weight="bold" fill="#475569" text-anchor="middle">LEAP-1A</text>
+</svg>
+```
+
+---
+
+### Option 4.G : Waterfall des Dérives
+- **Icône / Emoji :** 🌊
+- **Sous-titre :** Cascade cumulative expliquant l'écart entre TAT contractuel et TAT réel
+- **Description métier :**
+  Cascade cumulative expliquant l'écart entre TAT contractuel convenu et TAT réel final (+attente pièce, +aléa contrôle, -gain fast track). Clé pour la négociation de litiges.
+- **Illustration SVG :**
+```xml
+<svg class="w-full h-full" viewBox="0 0 100 85">
+  <line x1="8" y1="72" x2="94" y2="72" stroke="#cbd5e1" stroke-width="1.2" />
+  <rect x="10" y="32" width="14" height="40" rx="1.5" fill="#3b82f6" />
+  <text x="17" y="28" font-size="6" font-bold fill="#1d4ed8" text-anchor="middle">18j Cible</text>
+  <rect x="28" y="20" width="13" height="12" rx="1.5" fill="#ef4444" />
+  <text x="34" y="16" font-size="6" font-bold fill="#dc2626" text-anchor="middle">+3j Pièce</text>
+  <rect x="45" y="12" width="13" height="8" rx="1.5" fill="#f59e0b" />
+  <text x="51" y="8" font-size="6" font-bold fill="#b45309" text-anchor="middle">+2j CND</text>
+  <rect x="62" y="16" width="13" height="6" rx="1.5" fill="#10b981" />
+  <text x="68" y="27" font-size="5.5" font-bold fill="#059669" text-anchor="middle">-1j Shift</text>
+  <rect x="79" y="16" width="14" height="56" rx="1.5" fill="#1e40af" />
+  <text x="86" y="12" font-size="6" font-bold fill="#1e3a8a" text-anchor="middle">22j Réel</text>
+</svg>
+```
+
+---
+
+### Option 4.H : Jalons de Traversée (Gates)
+- **Icône / Emoji :** 🚩
+- **Sous-titre :** Suivi des passages de jalons industriels (Gates G1, G2, G3, G4)
+- **Description métier :**
+  Gantt simplifié suivant le passage des portes industrielles (Gate 1 Démontage, Gate 2 Contrôle, Gate 3 Remontage, Gate 4 Banc). Alerte sur le chemin critique actif.
+- **Illustration SVG :**
+```xml
+<svg class="w-full h-full" viewBox="0 0 100 85">
+  <line x1="10" y1="18" x2="88" y2="18" stroke="#cbd5e1" stroke-width="2" />
+  <circle cx="20" cy="18" r="6" fill="#10b981" />
+  <text x="20" y="21" font-size="6" font-weight="bold" fill="#ffffff" text-anchor="middle">G1</text>
+  <text x="20" y="32" font-size="6" fill="#059669" text-anchor="middle">Démont.</text>
+
+  <circle cx="50" cy="18" r="6" fill="#3b82f6" />
+  <text x="50" y="21" font-size="6" font-weight="bold" fill="#ffffff" text-anchor="middle">G2</text>
+  <text x="50" y="32" font-size="6" fill="#1d4ed8" text-anchor="middle">Usinage</text>
+
+  <circle cx="80" cy="18" r="6" fill="#ef4444" />
+  <text x="80" y="21" font-size="6" font-weight="bold" fill="#ffffff" text-anchor="middle">G3</text>
+  <text x="80" y="32" font-size="6" fill="#dc2626" text-anchor="middle">Banc Test</text>
+
+  <rect x="15" y="44" width="70" height="28" rx="4" fill="#f8fafc" stroke="#e2e8f0" />
+  <text x="50" y="57" font-size="7" font-weight="bold" fill="#334155" text-anchor="middle">Chemin Critique Actif</text>
+  <text x="50" y="66" font-size="6" fill="#dc2626" text-anchor="middle">Retard +2j sur Gate 3</text>
+</svg>
+```
+
+---
+
 ## Étape 5 : Visualisation de la Capacité & Charge Atelier
 
 > **Question :** Quel visuel privilégier pour piloter l'adéquation entre le plan de travail et les moyens disponibles ?
@@ -690,6 +791,106 @@ Le tableau ci-dessous explicite le comportement du calcul selon la granularité 
   <text x="68" y="30" font-size="8" font-bold fill="#dc2626">42% Attente</text>
   <text x="68" y="46" font-size="8" font-bold fill="#2563eb">58% Usinage</text>
   <text x="50" y="73" font-size="7.5" font-semibold text-anchor="middle" fill="#64748b">Ratio Lead Time Réel</text>
+</svg>
+```
+
+---
+
+### Option 5.E : Jauge Tachymètre de Saturation
+- **Icône / Emoji :** 🎯
+- **Sous-titre :** Cadran à aiguille avec seuils vert (<70%), orange (70-85%) et rouge (>85%)
+- **Description métier :**
+  Cadran à aiguille avec zones d'alerte pour lecture instantanée. Permet aux chefs d'ateliers de repérer immédiatement le franchissement de la zone rouge de saturation.
+- **Illustration SVG :**
+```xml
+<svg class="w-full h-full" viewBox="0 0 100 85">
+  <path d="M 18 62 A 38 38 0 0 1 50 16" fill="none" stroke="#10b981" stroke-width="8" stroke-linecap="round" />
+  <path d="M 50 16 A 38 38 0 0 1 74 30" fill="none" stroke="#f59e0b" stroke-width="8" />
+  <path d="M 74 30 A 38 38 0 0 1 82 62" fill="none" stroke="#ef4444" stroke-width="8" stroke-linecap="round" />
+  <circle cx="50" cy="62" r="5" fill="#1e293b" />
+  <line x1="50" y1="62" x2="72" y2="34" stroke="#1e293b" stroke-width="2.5" stroke-linecap="round" />
+  <circle cx="50" cy="62" r="2.5" fill="#ffffff" />
+  <text x="50" y="78" font-size="9" font-weight="black" text-anchor="middle" fill="#dc2626">88 %</text>
+</svg>
+```
+
+---
+
+### Option 5.F : Radar Poly-compétences & Postes Clés
+- **Icône / Emoji :** 🕸️
+- **Sous-titre :** Diagramme radar comparant la capacité qualifiée Part-145 face à la charge réelle
+- **Description métier :**
+  Diagramme radar comparant la capacité qualifiée (techniciens certifiés Part-145) face à la charge réelle pointée par spécialité technique (CND, usinage, équilibrage, banc test).
+- **Illustration SVG :**
+```xml
+<svg class="w-full h-full" viewBox="0 0 100 85">
+  <polygon points="50,15 80,35 70,68 30,68 20,35" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1" />
+  <polygon points="50,26 69,39 63,60 37,60 31,39" fill="none" stroke="#e2e8f0" stroke-width="1" />
+  <line x1="50" y1="45" x2="50" y2="15" stroke="#94a3b8" stroke-width="0.8" />
+  <line x1="50" y1="45" x2="80" y2="35" stroke="#94a3b8" stroke-width="0.8" />
+  <line x1="50" y1="45" x2="70" y2="68" stroke="#94a3b8" stroke-width="0.8" />
+  <line x1="50" y1="45" x2="30" y2="68" stroke="#94a3b8" stroke-width="0.8" />
+  <line x1="50" y1="45" x2="20" y2="35" stroke="#94a3b8" stroke-width="0.8" />
+  <polygon points="50,18 76,37 66,54 34,64 24,37" fill="#3b82f6" fill-opacity="0.3" stroke="#2563eb" stroke-width="1.8" />
+  <text x="50" y="11" font-size="5.5" font-weight="bold" fill="#475569" text-anchor="middle">CND</text>
+  <text x="86" y="36" font-size="5.5" font-weight="bold" fill="#475569">Usinage</text>
+  <text x="73" y="75" font-size="5.5" font-weight="bold" fill="#475569">Banc</text>
+  <text x="27" y="75" font-size="5.5" font-weight="bold" fill="#475569">Montage</text>
+  <text x="14" y="36" font-size="5.5" font-weight="bold" fill="#475569">Contrôle</text>
+</svg>
+```
+
+---
+
+### Option 5.G : Diagramme Spaghetti / Flux de Transfert
+- **Icône / Emoji :** 🔄
+- **Sous-titre :** Visualisation cartographique des flux physiques et intensité des navettes
+- **Description métier :**
+  Visualisation cartographique des flux physiques et intensité des rotations de navettes entre sites Safran (Villaroche, Montereau, Châtellerault, Bruxelles) pour dimensionner la logistique.
+- **Illustration SVG :**
+```xml
+<svg class="w-full h-full" viewBox="0 0 100 85">
+  <circle cx="25" cy="30" r="10" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5" />
+  <text x="25" y="33" font-size="6" font-weight="bold" fill="#1e40af" text-anchor="middle">VIL</text>
+
+  <circle cx="75" cy="24" r="10" fill="#fef3c7" stroke="#d97706" stroke-width="1.5" />
+  <text x="75" y="27" font-size="6" font-weight="bold" fill="#b45309" text-anchor="middle">MON</text>
+
+  <circle cx="50" cy="65" r="10" fill="#fee2e2" stroke="#dc2626" stroke-width="1.5" />
+  <text x="50" y="68" font-size="6" font-weight="bold" fill="#991b1b" text-anchor="middle">CHL</text>
+
+  <path d="M 35 28 Q 50 18, 65 24" fill="none" stroke="#2563eb" stroke-width="2.5" />
+  <path d="M 70 34 Q 65 52, 57 58" fill="none" stroke="#ef4444" stroke-width="3" stroke-dasharray="3,2" />
+  <path d="M 43 59 Q 32 48, 27 40" fill="none" stroke="#10b981" stroke-width="1.8" />
+  <text x="50" y="14" font-size="6" font-weight="bold" fill="#2563eb" text-anchor="middle">Flux Dense (14/j)</text>
+</svg>
+```
+
+---
+
+### Option 5.H : Treemap des Goulots d'Atelier
+- **Icône / Emoji :** 🗂️
+- **Sous-titre :** Surfaces proportionnelles au volume d'en-cours WIP bloqué
+- **Description métier :**
+  Surfaces proportionnelles au volume d'en-cours bloqué, colorées par sévérité de saturation. Permet d'identifier immédiatement la ressource critique à débloquer en priorité.
+- **Illustration SVG :**
+```xml
+<svg class="w-full h-full" viewBox="0 0 100 85">
+  <rect x="8" y="8" width="52" height="42" rx="2" fill="#ef4444" />
+  <text x="34" y="26" font-size="7" font-weight="bold" fill="#ffffff" text-anchor="middle">Tour CN 5A</text>
+  <text x="34" y="36" font-size="6" fill="#fee2e2" text-anchor="middle">94% (48h WIP)</text>
+
+  <rect x="62" y="8" width="30" height="42" rx="2" fill="#f59e0b" />
+  <text x="77" y="26" font-size="6.5" font-weight="bold" fill="#ffffff" text-anchor="middle">CND</text>
+  <text x="77" y="36" font-size="5.5" fill="#fef3c7" text-anchor="middle">86%</text>
+
+  <rect x="8" y="52" width="40" height="25" rx="2" fill="#3b82f6" />
+  <text x="28" y="66" font-size="6.5" font-weight="bold" fill="#ffffff" text-anchor="middle">Banc Test</text>
+  <text x="28" y="73" font-size="5.5" fill="#dbeafe" text-anchor="middle">74%</text>
+
+  <rect x="50" y="52" width="42" height="25" rx="2" fill="#10b981" />
+  <text x="71" y="66" font-size="6.5" font-weight="bold" fill="#ffffff" text-anchor="middle">Équilibrage</text>
+  <text x="71" y="73" font-size="5.5" fill="#d1fae5" text-anchor="middle">62%</text>
 </svg>
 ```
 

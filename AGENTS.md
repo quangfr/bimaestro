@@ -46,12 +46,20 @@
    - `4.B` : Barres vs Seuils Cibles (Durée réelle vs barres $P_{50}$ / $P_{85}$).
    - `4.C` : Barres Empilées (Décomposition Usinage / Valeur vs Transit inter-sites).
    - `4.D` : Tableau d'Alertes Nominatives (Listing nominatif ESN / Packages / Postes).
+   - `4.E` : Histogramme Distribution TAT (Tranches de jours <20j, 20-30j, 30-40j, >40j).
+   - `4.F` : Box-Plot & Dispersion (Médiane, quartiles Q1/Q3 et moustaches par famille moteur).
+   - `4.G` : Waterfall des Dérives (Cascade cumulative des retards pièces/CND vs SLA).
+   - `4.H` : Jalons de Traversée Gates (Jalons industriels Gate 1 Démontage, Gate 2 Contrôle, Gate 3 Banc).
 
 5. **Étape 5 : Visualisation de la Saturation / Capacité**
    - `5.A` : Barres de Charge vs Seuil 85%.
    - `5.B` : Heatmap Hebdomadaire / Site.
    - `5.C` : Courbes Entrées vs Sorties (Dérive en-cours WIP).
    - `5.D` : Ratio Attente vs Travail Effectif (Donut lead time).
+   - `5.E` : Jauge Tachymètre de Saturation Globale (Cadran à aiguille avec seuils vert/jaune/rouge).
+   - `5.F` : Radar Poly-compétences & Postes Clés (Adéquation charge pointée vs capacité Part-145).
+   - `5.G` : Diagramme Spaghetti / Flux de Transfert (Trajets et intensité des navettes inter-sites).
+   - `5.H` : Treemap des Goulots par Atelier/Machine (Surfaces proportionnelles au WIP bloqué).
 
 6. **Étape 6 : Synthèse & Dashboard Dérivé**
    - Tableau de bord en temps réel alimenté par l'objet global `selections = { 1, 2, 3, 4, 5 }`.

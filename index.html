@@ -458,34 +458,30 @@
             clients ?</p>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 flex-1 items-stretch">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 flex-1 items-stretch overflow-y-auto pr-1">
           <!-- 4A -->
           <div onclick="selectOption(4, 'A')" id="opt-4-A"
-            class="option-card glass-card p-3 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
+            class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
             <div>
-              <div class="text-sm font-bold text-slate-900 mb-1.5 flex items-center gap-2">
-                <span class="text-base">⏱️</span> A. Cartes KPIs Synthétiques
+              <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                <span class="text-sm">⏱️</span> A. Cartes KPIs Synthétiques
               </div>
-              <p class="text-xs text-slate-600 leading-relaxed mb-1.5">
-                Indicateurs phares en gros chiffres : TAT moyen glissant, taux de respect des engagements contractuels
-                et écart-type de dérive.
+              <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                Indicateurs phares en gros chiffres : TAT moyen glissant, respect SLA et dérive.
               </p>
-              <div class="text-[10px] text-slate-500 bg-slate-50 rounded px-2 py-1 border border-slate-200 mb-2">
-                <span class="text-blue-600 font-semibold">Usage :</span> Vue de niveau Direction / Management. Clarté
-                maximale en un coup d'œil.
+              <div class="text-[9px] text-slate-500 bg-slate-50 rounded px-1.5 py-0.5 border border-slate-200 mb-1">
+                <span class="text-blue-600 font-semibold">Usage :</span> Direction & comités exécutifs.
               </div>
             </div>
             <div
-              class="w-full aspect-square max-h-[140px] bg-white rounded-lg p-2 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
+              class="w-full aspect-square max-h-[105px] bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
               <svg class="w-full h-full" viewBox="0 0 100 85">
                 <rect x="6" y="6" width="88" height="34" rx="4" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2" />
                 <text x="50" y="18" font-size="7" font-bold text-anchor="middle" fill="#64748b">TAT MOYEN RÉEL</text>
-                <text x="50" y="32" font-size="13" font-weight="black" text-anchor="middle" fill="#0284c7">18.4
-                  jours</text>
+                <text x="50" y="32" font-size="13" font-weight="black" text-anchor="middle" fill="#0284c7">18.4 jours</text>
 
                 <rect x="6" y="44" width="88" height="35" rx="4" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2" />
-                <text x="50" y="56" font-size="7" font-bold text-anchor="middle" fill="#64748b">RESPECT SLA
-                  GLOBAL</text>
+                <text x="50" y="56" font-size="7" font-bold text-anchor="middle" fill="#64748b">RESPECT SLA GLOBAL</text>
                 <text x="50" y="71" font-size="13" font-weight="black" text-anchor="middle" fill="#16a34a">96.2 %</text>
               </svg>
             </div>
@@ -493,22 +489,20 @@
 
           <!-- 4B -->
           <div onclick="selectOption(4, 'B')" id="opt-4-B"
-            class="option-card active glass-card p-3 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
+            class="option-card active glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
             <div>
-              <div class="text-sm font-bold text-slate-900 mb-1.5 flex items-center gap-2">
-                <span class="text-base">📊</span> B. Barres vs Seuils Cibles
+              <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                <span class="text-sm">📊</span> B. Barres vs Seuils Cibles
               </div>
-              <p class="text-xs text-slate-600 leading-relaxed mb-1.5">
-                Comparaison visuelle directe de la durée réelle par sous-ensemble face aux barres de tolérance
-                contractuelles ($P_{50}$ et $P_{85}$).
+              <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                Durée réelle par sous-ensemble face aux barres de tolérance contractuelles ($P_{50}$ et $P_{85}$).
               </p>
-              <div class="text-[10px] text-slate-500 bg-slate-50 rounded px-2 py-1 border border-slate-200 mb-2">
-                <span class="text-blue-600 font-semibold">Usage :</span> Met immédiatement en évidence les packages qui
-                dérapent au-delà du seuil.
+              <div class="text-[9px] text-slate-500 bg-slate-50 rounded px-1.5 py-0.5 border border-slate-200 mb-1">
+                <span class="text-blue-600 font-semibold">Usage :</span> Alerte sur les dérives unitaires.
               </div>
             </div>
             <div
-              class="w-full aspect-square max-h-[140px] bg-white rounded-lg p-2 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
+              class="w-full aspect-square max-h-[105px] bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
               <svg class="w-full h-full" viewBox="0 0 100 85">
                 <text x="8" y="18" font-size="7.5" font-semibold fill="#64748b">Aubes</text>
                 <rect x="32" y="9" width="46" height="13" rx="2" fill="#3b82f6" />
@@ -529,22 +523,20 @@
 
           <!-- 4C -->
           <div onclick="selectOption(4, 'C')" id="opt-4-C"
-            class="option-card glass-card p-3 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
+            class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
             <div>
-              <div class="text-sm font-bold text-slate-900 mb-1.5 flex items-center gap-2">
-                <span class="text-base">🚚</span> C. Barres Empilées Usinage vs Transit
+              <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                <span class="text-sm">🚚</span> C. Barres Empilées Usinage vs Transit
               </div>
-              <p class="text-xs text-slate-600 leading-relaxed mb-1.5">
-                Décomposition du Turn Around Time pour isoler le temps de valeur ajoutée (usinage/réparation) du temps
-                logistique inter-sites.
+              <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                Décomposition du TAT pour isoler la valeur ajoutée atelier des transports logistiques inter-sites.
               </p>
-              <div class="text-[10px] text-slate-500 bg-slate-50 rounded px-2 py-1 border border-slate-200 mb-2">
-                <span class="text-amber-600 font-semibold">Usage :</span> Démontre aux clients si un retard vient des
-                ateliers ou des transferts.
+              <div class="text-[9px] text-slate-500 bg-slate-50 rounded px-1.5 py-0.5 border border-slate-200 mb-1">
+                <span class="text-amber-600 font-semibold">Usage :</span> Imputation de responsabilité atelier / logistique.
               </div>
             </div>
             <div
-              class="w-full aspect-square max-h-[140px] bg-white rounded-lg p-2 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
+              class="w-full aspect-square max-h-[105px] bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
               <svg class="w-full h-full" viewBox="0 0 100 85">
                 <text x="6" y="20" font-size="7.5" font-bold fill="#64748b">Lot 1</text>
                 <rect x="26" y="10" width="42" height="13" rx="2" fill="#3b82f6" />
@@ -564,22 +556,20 @@
 
           <!-- 4D -->
           <div onclick="selectOption(4, 'D')" id="opt-4-D"
-            class="option-card glass-card p-3 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
+            class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
             <div>
-              <div class="text-sm font-bold text-slate-900 mb-1.5 flex items-center gap-2">
-                <span class="text-base">📋</span> D. Tableau d'Alertes Nominatives
+              <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                <span class="text-sm">📋</span> D. Tableau d'Alertes Nominatives
               </div>
-              <p class="text-xs text-slate-600 leading-relaxed mb-1.5">
-                Listing opérationnel détaillé avec statut couleur (vert/orange/rouge), ESN moteur, client, jours d'écart
-                et action requise.
+              <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                Listing opérationnel détaillé avec statut couleur (vert/orange/rouge), ESN moteur, client et écart.
               </p>
-              <div class="text-[10px] text-slate-500 bg-slate-50 rounded px-2 py-1 border border-slate-200 mb-2">
-                <span class="text-red-600 font-semibold">Usage :</span> Support quotidien des réunions de production et
-                de crise MRO.
+              <div class="text-[9px] text-slate-500 bg-slate-50 rounded px-1.5 py-0.5 border border-slate-200 mb-1">
+                <span class="text-red-600 font-semibold">Usage :</span> Réunions quotidiennes de crise & production.
               </div>
             </div>
             <div
-              class="w-full aspect-square max-h-[140px] bg-white rounded-lg p-2 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
+              class="w-full aspect-square max-h-[105px] bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
               <svg class="w-full h-full" viewBox="0 0 100 85">
                 <rect x="4" y="6" width="92" height="20" rx="3" fill="#f8fafc" stroke="#e2e8f0" />
                 <circle cx="12" cy="16" r="3" fill="#10b981" />
@@ -592,6 +582,141 @@
                 <rect x="4" y="58" width="92" height="20" rx="3" fill="#fef2f2" stroke="#fecaca" />
                 <circle cx="12" cy="68" r="3" fill="#ef4444" />
                 <text x="20" y="71" font-size="7" font-bold fill="#dc2626">6510 • RYR • AOG Critique</text>
+              </svg>
+            </div>
+          </div>
+
+          <!-- 4E -->
+          <div onclick="selectOption(4, 'E')" id="opt-4-E"
+            class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
+            <div>
+              <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                <span class="text-sm">📶</span> E. Histogramme Distribution TAT
+              </div>
+              <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                Distribution par tranches de délais (<20j, 20-30j, 30-40j, >40j) pour débusquer la traîne d'anomalies.
+              </p>
+              <div class="text-[9px] text-slate-500 bg-slate-50 rounded px-1.5 py-0.5 border border-slate-200 mb-1">
+                <span class="text-blue-600 font-semibold">Usage :</span> Contrôle qualité & capabilité statistique Six Sigma.
+              </div>
+            </div>
+            <div
+              class="w-full aspect-square max-h-[105px] bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
+              <svg class="w-full h-full" viewBox="0 0 100 85">
+                <line x1="10" y1="70" x2="90" y2="70" stroke="#cbd5e1" stroke-width="1.2" />
+                <rect x="14" y="46" width="14" height="24" rx="2" fill="#93c5fd" />
+                <rect x="32" y="20" width="14" height="50" rx="2" fill="#2563eb" />
+                <rect x="50" y="32" width="14" height="38" rx="2" fill="#60a5fa" />
+                <rect x="68" y="52" width="14" height="18" rx="2" fill="#f87171" />
+                <text x="39" y="15" font-size="6.5" font-weight="bold" fill="#1d4ed8" text-anchor="middle">Pic P50</text>
+                <text x="75" y="47" font-size="6" font-weight="bold" fill="#dc2626" text-anchor="middle">>SLA</text>
+                <text x="50" y="80" font-size="6.5" fill="#64748b" text-anchor="middle">Tranches de jours TAT</text>
+              </svg>
+            </div>
+          </div>
+
+          <!-- 4F -->
+          <div onclick="selectOption(4, 'F')" id="opt-4-F"
+            class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
+            <div>
+              <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                <span class="text-sm">📉</span> F. Box-Plot & Dispersion
+              </div>
+              <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                Boîtes à moustaches révélant la médiane, quartiles Q1/Q3 et valeurs extrêmes par famille moteur.
+              </p>
+              <div class="text-[9px] text-slate-500 bg-slate-50 rounded px-1.5 py-0.5 border border-slate-200 mb-1">
+                <span class="text-purple-600 font-semibold">Usage :</span> Mesure de la variabilité et risque contractuel.
+              </div>
+            </div>
+            <div
+              class="w-full aspect-square max-h-[105px] bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
+              <svg class="w-full h-full" viewBox="0 0 100 85">
+                <!-- Box 1 CFM56 -->
+                <line x1="28" y1="12" x2="28" y2="68" stroke="#64748b" stroke-width="1.2" />
+                <line x1="22" y1="12" x2="34" y2="12" stroke="#64748b" stroke-width="1.2" />
+                <line x1="22" y1="68" x2="34" y2="68" stroke="#64748b" stroke-width="1.2" />
+                <rect x="18" y="24" width="20" height="30" rx="2" fill="#dbeafe" stroke="#2563eb" stroke-width="1.2" />
+                <line x1="18" y1="36" x2="38" y2="36" stroke="#1e40af" stroke-width="2" />
+                <text x="28" y="80" font-size="6.5" font-weight="bold" fill="#475569" text-anchor="middle">CFM56</text>
+
+                <!-- Box 2 LEAP -->
+                <line x1="72" y1="8" x2="72" y2="72" stroke="#64748b" stroke-width="1.2" />
+                <line x1="66" y1="8" x2="78" y2="8" stroke="#64748b" stroke-width="1.2" />
+                <line x1="66" y1="72" x2="78" y2="72" stroke="#64748b" stroke-width="1.2" />
+                <rect x="62" y="20" width="20" height="38" rx="2" fill="#fef3c7" stroke="#d97706" stroke-width="1.2" />
+                <line x1="62" y1="34" x2="82" y2="34" stroke="#b45309" stroke-width="2" />
+                <circle cx="72" cy="6" r="2" fill="#dc2626" />
+                <text x="72" y="80" font-size="6.5" font-weight="bold" fill="#475569" text-anchor="middle">LEAP-1A</text>
+              </svg>
+            </div>
+          </div>
+
+          <!-- 4G -->
+          <div onclick="selectOption(4, 'G')" id="opt-4-G"
+            class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
+            <div>
+              <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                <span class="text-sm">🌊</span> G. Waterfall des Dérives
+              </div>
+              <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                Cascade cumulative expliquant l'écart entre TAT contractuel convenu et TAT réel final (+attente pièce, +aléa).
+              </p>
+              <div class="text-[9px] text-slate-500 bg-slate-50 rounded px-1.5 py-0.5 border border-slate-200 mb-1">
+                <span class="text-emerald-600 font-semibold">Usage :</span> Négociation litiges & transparence client.
+              </div>
+            </div>
+            <div
+              class="w-full aspect-square max-h-[105px] bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
+              <svg class="w-full h-full" viewBox="0 0 100 85">
+                <line x1="8" y1="72" x2="94" y2="72" stroke="#cbd5e1" stroke-width="1.2" />
+                <rect x="10" y="32" width="14" height="40" rx="1.5" fill="#3b82f6" />
+                <text x="17" y="28" font-size="6" font-bold fill="#1d4ed8" text-anchor="middle">18j Cible</text>
+                <rect x="28" y="20" width="13" height="12" rx="1.5" fill="#ef4444" />
+                <text x="34" y="16" font-size="6" font-bold fill="#dc2626" text-anchor="middle">+3j Pièce</text>
+                <rect x="45" y="12" width="13" height="8" rx="1.5" fill="#f59e0b" />
+                <text x="51" y="8" font-size="6" font-bold fill="#b45309" text-anchor="middle">+2j CND</text>
+                <rect x="62" y="16" width="13" height="6" rx="1.5" fill="#10b981" />
+                <text x="68" y="27" font-size="5.5" font-bold fill="#059669" text-anchor="middle">-1j Shift</text>
+                <rect x="79" y="16" width="14" height="56" rx="1.5" fill="#1e40af" />
+                <text x="86" y="12" font-size="6" font-bold fill="#1e3a8a" text-anchor="middle">22j Réel</text>
+              </svg>
+            </div>
+          </div>
+
+          <!-- 4H -->
+          <div onclick="selectOption(4, 'H')" id="opt-4-H"
+            class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
+            <div>
+              <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                <span class="text-sm">🚩</span> H. Jalons de Traversée (Gates)
+              </div>
+              <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                Gantt simplifié suivant le passage des portes industrielles (Gate 1 Démontage, Gate 2 Contrôle, Gate 3 Banc).
+              </p>
+              <div class="text-[9px] text-slate-500 bg-slate-50 rounded px-1.5 py-0.5 border border-slate-200 mb-1">
+                <span class="text-blue-600 font-semibold">Usage :</span> Pilotage de ligne et synchronisation des équipes.
+              </div>
+            </div>
+            <div
+              class="w-full aspect-square max-h-[105px] bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
+              <svg class="w-full h-full" viewBox="0 0 100 85">
+                <line x1="10" y1="18" x2="88" y2="18" stroke="#cbd5e1" stroke-width="2" />
+                <circle cx="20" cy="18" r="6" fill="#10b981" />
+                <text x="20" y="21" font-size="6" font-weight="bold" fill="#ffffff" text-anchor="middle">G1</text>
+                <text x="20" y="32" font-size="6" fill="#059669" text-anchor="middle">Démont.</text>
+
+                <circle cx="50" cy="18" r="6" fill="#3b82f6" />
+                <text x="50" y="21" font-size="6" font-weight="bold" fill="#ffffff" text-anchor="middle">G2</text>
+                <text x="50" y="32" font-size="6" fill="#1d4ed8" text-anchor="middle">Usinage</text>
+
+                <circle cx="80" cy="18" r="6" fill="#ef4444" />
+                <text x="80" y="21" font-size="6" font-weight="bold" fill="#ffffff" text-anchor="middle">G3</text>
+                <text x="80" y="32" font-size="6" fill="#dc2626" text-anchor="middle">Banc Test</text>
+
+                <rect x="15" y="44" width="70" height="28" rx="4" fill="#f8fafc" stroke="#e2e8f0" />
+                <text x="50" y="57" font-size="7" font-weight="bold" fill="#334155" text-anchor="middle">Chemin Critique Actif</text>
+                <text x="50" y="66" font-size="6" fill="#dc2626" text-anchor="middle">Retard +2j sur Gate 3</text>
               </svg>
             </div>
           </div>
@@ -609,134 +734,261 @@
             surcharge ?</p>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 flex-1 items-stretch">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 flex-1 items-stretch overflow-y-auto pr-1">
           <!-- 5A -->
           <div onclick="selectOption(5, 'A')" id="opt-5-A"
-            class="option-card active glass-card p-3 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
+            class="option-card active glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
             <div>
-              <div class="text-sm font-bold text-slate-900 mb-1.5 flex items-center gap-2">
-                <span class="text-base">🚦</span> A. Barres de Charge vs Seuil 85%
+              <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                <span class="text-sm">🚦</span> A. Barres de Charge vs Seuil 85%
               </div>
-              <p class="text-xs text-slate-600 leading-relaxed mb-1.5">
-                Taux d'occupation machine/banc face à la ligne rouge critique des 85% au-delà de laquelle l'encombrement
-                explose.
+              <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                Taux d'occupation machine/banc face à la ligne critique 85% où l'encombrement explose.
               </p>
-              <div class="text-[10px] text-slate-500 bg-slate-50 rounded px-2 py-1 border border-slate-200 mb-2">
-                <span class="text-amber-600 font-semibold">Seuil :</span> Changement de couleur dynamique (bleu < 85%,
-                  rouge clignotant au-delà). </div>
-              </div>
-              <div
-                class="w-full aspect-square max-h-[140px] bg-white rounded-lg p-2 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
-                <svg class="w-full h-full" viewBox="0 0 100 85">
-                  <text x="8" y="20" font-size="7.5" font-semibold fill="#64748b">VIL-01</text>
-                  <rect x="32" y="10" width="45" height="13" rx="2" fill="#3b82f6" />
-
-                  <text x="8" y="46" font-size="7.5" font-semibold fill="#64748b">MON-01</text>
-                  <rect x="32" y="36" width="62" height="13" rx="2" fill="#ef4444" />
-
-                  <line x1="68" y1="5" x2="68" y2="58" stroke="#d97706" stroke-dasharray="2.5,2.5" stroke-width="1.8" />
-                  <text x="68" y="70" font-size="7" font-bold text-anchor="middle" fill="#d97706">Seuil Critique
-                    85%</text>
-                </svg>
+              <div class="text-[9px] text-slate-500 bg-slate-50 rounded px-1.5 py-0.5 border border-slate-200 mb-1">
+                <span class="text-amber-600 font-semibold">Seuil :</span> Changement de couleur dynamique (<85% bleu, >85% rouge).
               </div>
             </div>
+            <div
+              class="w-full aspect-square max-h-[105px] bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
+              <svg class="w-full h-full" viewBox="0 0 100 85">
+                <text x="8" y="20" font-size="7.5" font-semibold fill="#64748b">VIL-01</text>
+                <rect x="32" y="10" width="45" height="13" rx="2" fill="#3b82f6" />
 
-            <!-- 5B -->
-            <div onclick="selectOption(5, 'B')" id="opt-5-B"
-              class="option-card glass-card p-3 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
-              <div>
-                <div class="text-sm font-bold text-slate-900 mb-1.5 flex items-center gap-2">
-                  <span class="text-base">🗓️</span> B. Heatmap Hebdomadaire / Site
-                </div>
-                <p class="text-xs text-slate-600 leading-relaxed mb-1.5">
-                  Matrice croisant sites industriels et semaines calendaires pour repérer les pics saisonniers d'entrées
-                  moteurs.
-                </p>
-                <div class="text-[10px] text-slate-500 bg-slate-50 rounded px-2 py-1 border border-slate-200 mb-2">
-                  <span class="text-rose-600 font-semibold">Visualisation :</span> Gradient thermique de bleu (fluide) à
-                  rouge vif (goulot d'étranglement).
-                </div>
+                <text x="8" y="46" font-size="7.5" font-semibold fill="#64748b">MON-01</text>
+                <rect x="32" y="36" width="62" height="13" rx="2" fill="#ef4444" />
+
+                <line x1="68" y1="5" x2="68" y2="58" stroke="#d97706" stroke-dasharray="2.5,2.5" stroke-width="1.8" />
+                <text x="68" y="70" font-size="7" font-bold text-anchor="middle" fill="#d97706">Seuil 85%</text>
+              </svg>
+            </div>
+          </div>
+
+          <!-- 5B -->
+          <div onclick="selectOption(5, 'B')" id="opt-5-B"
+            class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
+            <div>
+              <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                <span class="text-sm">🗓️</span> B. Heatmap Hebdomadaire / Site
               </div>
-              <div
-                class="w-full aspect-square max-h-[140px] bg-white rounded-lg p-2 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
-                <svg class="w-full h-full" viewBox="0 0 100 85">
-                  <rect x="10" y="10" width="16" height="16" rx="2.5" fill="#dbeafe" stroke="#93c5fd" />
-                  <rect x="31" y="10" width="16" height="16" rx="2.5" fill="#3b82f6" />
-                  <rect x="52" y="10" width="16" height="16" rx="2.5" fill="#ef4444" />
-                  <rect x="73" y="10" width="16" height="16" rx="2.5" fill="#dbeafe" stroke="#93c5fd" />
-
-                  <rect x="10" y="32" width="16" height="16" rx="2.5" fill="#dbeafe" stroke="#93c5fd" />
-                  <rect x="31" y="32" width="16" height="16" rx="2.5" fill="#ef4444" />
-                  <rect x="52" y="32" width="16" height="16" rx="2.5" fill="#b91c1c" />
-                  <rect x="73" y="32" width="16" height="16" rx="2.5" fill="#3b82f6" />
-
-                  <text x="50" y="66" font-size="8" font-bold text-anchor="middle" fill="#dc2626">Pic Semaine 38
-                    (Rouge)</text>
-                </svg>
+              <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                Matrice croisant sites et semaines calendaires pour repérer les pics saisonniers d'entrées.
+              </p>
+              <div class="text-[9px] text-slate-500 bg-slate-50 rounded px-1.5 py-0.5 border border-slate-200 mb-1">
+                <span class="text-rose-600 font-semibold">Visualisation :</span> Gradient de bleu (fluide) à rouge vif (goulot).
               </div>
             </div>
+            <div
+              class="w-full aspect-square max-h-[105px] bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
+              <svg class="w-full h-full" viewBox="0 0 100 85">
+                <rect x="10" y="10" width="16" height="16" rx="2.5" fill="#dbeafe" stroke="#93c5fd" />
+                <rect x="31" y="10" width="16" height="16" rx="2.5" fill="#3b82f6" />
+                <rect x="52" y="10" width="16" height="16" rx="2.5" fill="#ef4444" />
+                <rect x="73" y="10" width="16" height="16" rx="2.5" fill="#dbeafe" stroke="#93c5fd" />
 
-            <!-- 5C -->
-            <div onclick="selectOption(5, 'C')" id="opt-5-C"
-              class="option-card glass-card p-3 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
-              <div>
-                <div class="text-sm font-bold text-slate-900 mb-1.5 flex items-center gap-2">
-                  <span class="text-base">📈</span> C. Courbes Entrées vs Sorties (WIP)
-                </div>
-                <p class="text-xs text-slate-600 leading-relaxed mb-1.5">
-                  Diagramme de flux cumulé mesurant l'écart entre arrivées et restitutions. Détecte l'accumulation
-                  anormale d'en-cours.
-                </p>
-                <div class="text-[10px] text-slate-500 bg-slate-50 rounded px-2 py-1 border border-slate-200 mb-2">
-                  <span class="text-blue-600 font-semibold">Alerte :</span> Si courbe bleue s'écarte de la verte, le
-                  Work-In-Progress enfle.
-                </div>
+                <rect x="10" y="32" width="16" height="16" rx="2.5" fill="#dbeafe" stroke="#93c5fd" />
+                <rect x="31" y="32" width="16" height="16" rx="2.5" fill="#ef4444" />
+                <rect x="52" y="32" width="16" height="16" rx="2.5" fill="#b91c1c" />
+                <rect x="73" y="32" width="16" height="16" rx="2.5" fill="#3b82f6" />
+
+                <text x="50" y="66" font-size="8" font-bold text-anchor="middle" fill="#dc2626">Pic S38 (Rouge)</text>
+              </svg>
+            </div>
+          </div>
+
+          <!-- 5C -->
+          <div onclick="selectOption(5, 'C')" id="opt-5-C"
+            class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
+            <div>
+              <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                <span class="text-sm">📈</span> C. Courbes Entrées vs Sorties (WIP)
               </div>
-              <div
-                class="w-full aspect-square max-h-[140px] bg-white rounded-lg p-2 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
-                <svg class="w-full h-full" viewBox="0 0 100 85">
-                  <path d="M 10 58 Q 40 50, 60 22 Q 80 16, 92 12" fill="none" stroke="#2563eb" stroke-width="2.2" />
-                  <path d="M 10 60 Q 40 56, 60 52 Q 80 48, 92 46" fill="none" stroke="#059669" stroke-width="2.2" />
-                  <text x="82" y="10" font-size="7.5" font-bold fill="#2563eb">In (Entrées)</text>
-                  <text x="82" y="58" font-size="7.5" font-bold fill="#059669">Out (Sorties)</text>
-                  <text x="50" y="75" font-size="7.5" font-bold text-anchor="middle" fill="#dc2626">Zone Dérive
-                    WIP</text>
-                </svg>
+              <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                Diagramme de flux cumulé mesurant l'écart arrivées / restitutions et la dérive d'en-cours.
+              </p>
+              <div class="text-[9px] text-slate-500 bg-slate-50 rounded px-1.5 py-0.5 border border-slate-200 mb-1">
+                <span class="text-blue-600 font-semibold">Alerte :</span> Écartement des courbes = accumulation WIP.
               </div>
             </div>
+            <div
+              class="w-full aspect-square max-h-[105px] bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
+              <svg class="w-full h-full" viewBox="0 0 100 85">
+                <path d="M 10 58 Q 40 50, 60 22 Q 80 16, 92 12" fill="none" stroke="#2563eb" stroke-width="2.2" />
+                <path d="M 10 60 Q 40 56, 60 52 Q 80 48, 92 46" fill="none" stroke="#059669" stroke-width="2.2" />
+                <text x="82" y="10" font-size="7.5" font-bold fill="#2563eb">In</text>
+                <text x="82" y="58" font-size="7.5" font-bold fill="#059669">Out</text>
+                <text x="50" y="75" font-size="7.5" font-bold text-anchor="middle" fill="#dc2626">Dérive WIP</text>
+              </svg>
+            </div>
+          </div>
 
-            <!-- 5D -->
-            <div onclick="selectOption(5, 'D')" id="opt-5-D"
-              class="option-card glass-card p-3 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
-              <div>
-                <div class="text-sm font-bold text-slate-900 mb-1.5 flex items-center gap-2">
-                  <span class="text-base">⏳</span> D. Ratio Attente vs Travail Effectif
-                </div>
-                <p class="text-xs text-slate-600 leading-relaxed mb-1.5">
-                  Donut d'efficience mesurant la proportion du cycle de vie passée en attente passive d'un technicien ou
-                  d'un slot disponible.
-                </p>
-                <div class="text-[10px] text-slate-500 bg-slate-50 rounded px-2 py-1 border border-slate-200 mb-2">
-                  <span class="text-emerald-600 font-semibold">Levier :</span> Démontre que fluidifier les files
-                  d'attente est plus rentable qu'accélérer l'usinage.
-                </div>
+          <!-- 5D -->
+          <div onclick="selectOption(5, 'D')" id="opt-5-D"
+            class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
+            <div>
+              <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                <span class="text-sm">⏳</span> D. Ratio Attente vs Travail Effectif
               </div>
-              <div
-                class="w-full aspect-square max-h-[140px] bg-white rounded-lg p-2 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
-                <svg class="w-full h-full" viewBox="0 0 100 85">
-                  <circle cx="36" cy="38" r="22" fill="none" stroke="#3b82f6" stroke-width="6.5" />
-                  <circle cx="36" cy="38" r="22" fill="none" stroke="#ef4444" stroke-width="6.5" stroke-dasharray="138"
-                    stroke-dashoffset="80" />
-                  <text x="68" y="30" font-size="8" font-bold fill="#dc2626">42% Attente</text>
-                  <text x="68" y="46" font-size="8" font-bold fill="#2563eb">58% Usinage</text>
-                  <text x="50" y="73" font-size="7.5" font-semibold text-anchor="middle" fill="#64748b">Ratio Lead Time
-                    Réel</text>
-                </svg>
+              <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                Donut mesurant le temps passé en attente passive d'un technicien, d'une machine ou navette.
+              </p>
+              <div class="text-[9px] text-slate-500 bg-slate-50 rounded px-1.5 py-0.5 border border-slate-200 mb-1">
+                <span class="text-emerald-600 font-semibold">Levier :</span> Fluidifier les files d'attente.
               </div>
             </div>
+            <div
+              class="w-full aspect-square max-h-[105px] bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
+              <svg class="w-full h-full" viewBox="0 0 100 85">
+                <circle cx="36" cy="38" r="22" fill="none" stroke="#3b82f6" stroke-width="6.5" />
+                <circle cx="36" cy="38" r="22" fill="none" stroke="#ef4444" stroke-width="6.5" stroke-dasharray="138"
+                  stroke-dashoffset="80" />
+                <text x="68" y="30" font-size="8" font-bold fill="#dc2626">42% Attente</text>
+                <text x="68" y="46" font-size="8" font-bold fill="#2563eb">58% Usinage</text>
+                <text x="50" y="73" font-size="7.5" font-semibold text-anchor="middle" fill="#64748b">Lead Time</text>
+              </svg>
+            </div>
+          </div>
+
+          <!-- 5E -->
+          <div onclick="selectOption(5, 'E')" id="opt-5-E"
+            class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
+            <div>
+              <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                <span class="text-sm">🎯</span> E. Jauge Tachymètre de Saturation
+              </div>
+              <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                Cadran à aiguille avec zones verte (<70%), orange (70-85%) et rouge (>85%) pour lecture instantanée.
+              </p>
+              <div class="text-[9px] text-slate-500 bg-slate-50 rounded px-1.5 py-0.5 border border-slate-200 mb-1">
+                <span class="text-red-600 font-semibold">Alerte :</span> Surveillance du franchissement de la zone rouge.
+              </div>
+            </div>
+            <div
+              class="w-full aspect-square max-h-[105px] bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
+              <svg class="w-full h-full" viewBox="0 0 100 85">
+                <!-- Arc de jauge -->
+                <path d="M 18 62 A 38 38 0 0 1 50 16" fill="none" stroke="#10b981" stroke-width="8" stroke-linecap="round" />
+                <path d="M 50 16 A 38 38 0 0 1 74 30" fill="none" stroke="#f59e0b" stroke-width="8" />
+                <path d="M 74 30 A 38 38 0 0 1 82 62" fill="none" stroke="#ef4444" stroke-width="8" stroke-linecap="round" />
+                <!-- Aiguille -->
+                <circle cx="50" cy="62" r="5" fill="#1e293b" />
+                <line x1="50" y1="62" x2="72" y2="34" stroke="#1e293b" stroke-width="2.5" stroke-linecap="round" />
+                <circle cx="50" cy="62" r="2.5" fill="#ffffff" />
+                <text x="50" y="78" font-size="9" font-weight="black" text-anchor="middle" fill="#dc2626">88 %</text>
+              </svg>
+            </div>
+          </div>
+
+          <!-- 5F -->
+          <div onclick="selectOption(5, 'F')" id="opt-5-F"
+            class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
+            <div>
+              <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                <span class="text-sm">🕸️</span> F. Radar Poly-compétences & Postes
+              </div>
+              <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                Diagramme radar comparant la capacité qualifiée (Part-145) face à la charge réelle par métier.
+              </p>
+              <div class="text-[9px] text-slate-500 bg-slate-50 rounded px-1.5 py-0.5 border border-slate-200 mb-1">
+                <span class="text-purple-600 font-semibold">Usage :</span> Adéquation charge/capacité techniciens & postes.
+              </div>
+            </div>
+            <div
+              class="w-full aspect-square max-h-[105px] bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
+              <svg class="w-full h-full" viewBox="0 0 100 85">
+                <!-- Polygones radar fond -->
+                <polygon points="50,15 80,35 70,68 30,68 20,35" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1" />
+                <polygon points="50,26 69,39 63,60 37,60 31,39" fill="none" stroke="#e2e8f0" stroke-width="1" />
+                <!-- Axes -->
+                <line x1="50" y1="45" x2="50" y2="15" stroke="#94a3b8" stroke-width="0.8" />
+                <line x1="50" y1="45" x2="80" y2="35" stroke="#94a3b8" stroke-width="0.8" />
+                <line x1="50" y1="45" x2="70" y2="68" stroke="#94a3b8" stroke-width="0.8" />
+                <line x1="50" y1="45" x2="30" y2="68" stroke="#94a3b8" stroke-width="0.8" />
+                <line x1="50" y1="45" x2="20" y2="35" stroke="#94a3b8" stroke-width="0.8" />
+                <!-- Polygone de charge réelle -->
+                <polygon points="50,18 76,37 66,54 34,64 24,37" fill="#3b82f6" fill-opacity="0.3" stroke="#2563eb" stroke-width="1.8" />
+                <text x="50" y="11" font-size="5.5" font-weight="bold" fill="#475569" text-anchor="middle">CND</text>
+                <text x="86" y="36" font-size="5.5" font-weight="bold" fill="#475569">Usinage</text>
+                <text x="73" y="75" font-size="5.5" font-weight="bold" fill="#475569">Banc</text>
+                <text x="27" y="75" font-size="5.5" font-weight="bold" fill="#475569">Montage</text>
+                <text x="14" y="36" font-size="5.5" font-weight="bold" fill="#475569">Contrôle</text>
+              </svg>
+            </div>
+          </div>
+
+          <!-- 5G -->
+          <div onclick="selectOption(5, 'G')" id="opt-5-G"
+            class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
+            <div>
+              <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                <span class="text-sm">🔄</span> G. Diagramme Spaghetti & Navettes
+              </div>
+              <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                Visualisation cartographique des flux physiques et intensité des navettes entre sites Safran.
+              </p>
+              <div class="text-[9px] text-slate-500 bg-slate-50 rounded px-1.5 py-0.5 border border-slate-200 mb-1">
+                <span class="text-amber-600 font-semibold">Usage :</span> Optimisation des rotations et saturation navettes.
+              </div>
+            </div>
+            <div
+              class="w-full aspect-square max-h-[105px] bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
+              <svg class="w-full h-full" viewBox="0 0 100 85">
+                <!-- Noeuds sites -->
+                <circle cx="25" cy="30" r="10" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5" />
+                <text x="25" y="33" font-size="6" font-weight="bold" fill="#1e40af" text-anchor="middle">VIL</text>
+
+                <circle cx="75" cy="24" r="10" fill="#fef3c7" stroke="#d97706" stroke-width="1.5" />
+                <text x="75" y="27" font-size="6" font-weight="bold" fill="#b45309" text-anchor="middle">MON</text>
+
+                <circle cx="50" cy="65" r="10" fill="#fee2e2" stroke="#dc2626" stroke-width="1.5" />
+                <text x="50" y="68" font-size="6" font-weight="bold" fill="#991b1b" text-anchor="middle">CHL</text>
+
+                <!-- Arcs navettes -->
+                <path d="M 35 28 Q 50 18, 65 24" fill="none" stroke="#2563eb" stroke-width="2.5" marker-end="url(#arrow)" />
+                <path d="M 70 34 Q 65 52, 57 58" fill="none" stroke="#ef4444" stroke-width="3" stroke-dasharray="3,2" />
+                <path d="M 43 59 Q 32 48, 27 40" fill="none" stroke="#10b981" stroke-width="1.8" />
+                <text x="50" y="14" font-size="6" font-weight="bold" fill="#2563eb" text-anchor="middle">Flux Dense (14/j)</text>
+              </svg>
+            </div>
+          </div>
+
+          <!-- 5H -->
+          <div onclick="selectOption(5, 'H')" id="opt-5-H"
+            class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
+            <div>
+              <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                <span class="text-sm">🗂️</span> H. Treemap des Goulots d'Atelier
+              </div>
+              <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                Surfaces proportionnelles au volume d'en-cours WIP bloqué, colorées par sévérité de saturation.
+              </p>
+              <div class="text-[9px] text-slate-500 bg-slate-50 rounded px-1.5 py-0.5 border border-slate-200 mb-1">
+                <span class="text-blue-600 font-semibold">Usage :</span> Identification rapide des postes à débloquer en priorité.
+              </div>
+            </div>
+            <div
+              class="w-full aspect-square max-h-[105px] bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
+              <svg class="w-full h-full" viewBox="0 0 100 85">
+                <rect x="8" y="8" width="52" height="42" rx="2" fill="#ef4444" />
+                <text x="34" y="26" font-size="7" font-weight="bold" fill="#ffffff" text-anchor="middle">Tour CN 5A</text>
+                <text x="34" y="36" font-size="6" fill="#fee2e2" text-anchor="middle">94% (48h WIP)</text>
+
+                <rect x="62" y="8" width="30" height="42" rx="2" fill="#f59e0b" />
+                <text x="77" y="26" font-size="6.5" font-weight="bold" fill="#ffffff" text-anchor="middle">CND</text>
+                <text x="77" y="36" font-size="5.5" fill="#fef3c7" text-anchor="middle">86%</text>
+
+                <rect x="8" y="52" width="40" height="25" rx="2" fill="#3b82f6" />
+                <text x="28" y="66" font-size="6.5" font-weight="bold" fill="#ffffff" text-anchor="middle">Banc Test</text>
+                <text x="28" y="73" font-size="5.5" fill="#dbeafe" text-anchor="middle">74%</text>
+
+                <rect x="50" y="52" width="42" height="25" rx="2" fill="#10b981" />
+                <text x="71" y="66" font-size="6.5" font-weight="bold" fill="#ffffff" text-anchor="middle">Équilibrage</text>
+                <text x="71" y="73" font-size="5.5" fill="#d1fae5" text-anchor="middle">62%</text>
+              </svg>
           </div>
         </div>
       </div>
+    </div>
 
       <!-- ================= PAGE 6 (Slide Récapitulatif & Dashboard Dérivé) ================= -->
       <div id="step-6" class="step-page hidden flex flex-col min-h-full md:h-full justify-between md:overflow-hidden">
@@ -823,6 +1075,10 @@
                 <option value="B">📊 B. Barres vs Cible</option>
                 <option value="C">🚚 C. Barres Empilées</option>
                 <option value="D">📋 D. Tableau d'alertes</option>
+                <option value="E">📶 E. Histogramme TAT</option>
+                <option value="F">📉 F. Box-Plot & Dispersion</option>
+                <option value="G">🌊 G. Waterfall Dérives</option>
+                <option value="H">🚩 H. Jalons Gates</option>
               </select>
               <div id="sum-q4-desc" class="text-[9px] text-slate-500 mt-1 truncate">Comparatif vs seuils SLA</div>
             </div>
@@ -840,6 +1096,10 @@
                 <option value="B">🗓️ B. Heatmap Hebdo</option>
                 <option value="C">📈 C. Entrées vs Sorties</option>
                 <option value="D">⏳ D. Ratio Attente/Travail</option>
+                <option value="E">🎯 E. Jauge Tachymètre</option>
+                <option value="F">🕸️ F. Radar Compétences</option>
+                <option value="G">🔄 G. Spaghetti & Navettes</option>
+                <option value="H">🗂️ H. Treemap Goulots</option>
               </select>
               <div id="sum-q5-desc" class="text-[9px] text-slate-500 mt-1 truncate">Taux d'occupation ateliers</div>
             </div>
@@ -961,13 +1221,21 @@
         'A': { title: "Cartes KPIs Clés", desc: "TAT moyen glissant, % SLA et écart standard", icon: "⏱️" },
         'B': { title: "Barres vs Cible", desc: "Durée réelle vs cible P85 par sous-ensemble", icon: "📊" },
         'C': { title: "Barres Empilées", desc: "Décomposition Usinage / Valeur vs Transit inter-sites", icon: "🚚" },
-        'D': { title: "Tableau d'Alertes", desc: "Listing opérationnel nominatif ESN trié par criticité", icon: "📋" }
+        'D': { title: "Tableau d'Alertes", desc: "Listing opérationnel nominatif ESN trié par criticité", icon: "📋" },
+        'E': { title: "Histogramme TAT", desc: "Distribution statistique par tranches de délais", icon: "📶" },
+        'F': { title: "Box-Plot Dispersion", desc: "Médiane, quartiles et moustaches par famille moteur", icon: "📉" },
+        'G': { title: "Waterfall Dérives", desc: "Cascade des retards cumulés pièces/aléa vs contrat", icon: "🌊" },
+        'H': { title: "Jalons Gates", desc: "Suivi des portes industrielles et chemin critique", icon: "🚩" }
       },
       5: {
         'A': { title: "Barres Charge (85%)", desc: "Taux d'occupation machine face au seuil d'engorgement", icon: "🚦" },
         'B': { title: "Heatmap / Semaine", desc: "Matrice thermique des volumes par site et semaine", icon: "🗓️" },
         'C': { title: "Courbes Entrées / Sorties", desc: "Différentiel de flux et suivi de l'en-cours WIP", icon: "📈" },
-        'D': { title: "Ratio Attente / Travail", desc: "Part du lead time passée en attente passive", icon: "⏳" }
+        'D': { title: "Ratio Attente / Travail", desc: "Part du lead time passée en attente passive", icon: "⏳" },
+        'E': { title: "Jauge Tachymètre", desc: "Cadran aiguille vert/orange/rouge avec seuil 85%", icon: "🎯" },
+        'F': { title: "Radar Compétences", desc: "Adéquation charge/capacité Part-145 par métier", icon: "🕸️" },
+        'G': { title: "Spaghetti & Navettes", desc: "Intensité des transferts physiques inter-ateliers", icon: "🔄" },
+        'H': { title: "Treemap Goulots", desc: "Cartographie proportionnelle des postes engorgés", icon: "🗂️" }
       }
     };
 
@@ -1339,7 +1607,7 @@
             <text x="223" y="115" font-size="8.5" fill="#334155">19${unit}</text>
           </svg>
         `;
-      } else {
+      } else if (q4 === 'D') {
         // 4D : Tableau d'alertes nominatives
         title.innerHTML = `<span>📋</span> Registre d'Alertes Nominatif (${q2 === 'A' ? 'ESN Moteurs' : (q2 === 'B' ? 'Packages Sous-Ensembles' : 'Postes & Opérations')})`;
         const isPenalties = (q1 === 'D');
@@ -1386,7 +1654,7 @@
                   <td class="py-1 px-1.5 text-slate-900 font-bold">${r2[0]}</td>
                   <td class="text-slate-600 px-1.5">${r2[1]}</td>
                   <td class="px-1.5"><span class="px-1.5 py-0.5 rounded text-[8.5px] bg-amber-50 text-amber-700 border border-amber-200 font-bold">⚠️ Dérive</span></td>
-                  <td class="text-right px-1.5 ${isPenalties ? 'text-amber-700 font-bold' : 'text-amber-700 font-bold'}">${isPenalties ? r2[2] : r2[3]}</td>
+                  <td class="text-right px-1.5 ${isPenalties ? 'text-amber-700 font-bold' : 'text-red-700 font-bold'}">${isPenalties ? r2[2] : r2[3]}</td>
                 </tr>
                 <tr class="hover:bg-slate-50">
                   <td class="py-1 px-1.5 text-slate-900 font-bold">${r3[0]}</td>
@@ -1403,6 +1671,159 @@
               </tbody>
             </table>
           </div>
+        `;
+      } else if (q4 === 'E') {
+        // 4E : Histogramme Distribution TAT
+        title.innerHTML = `<span>📶</span> Histogramme de Distribution du TAT (${q2 === 'C' ? 'Heures Réalisées' : 'Jours Calendaires'})`;
+        const unit = q2 === 'C' ? "h" : "j";
+        const b1 = q2 === 'C' ? "<2h" : "<15j";
+        const b2 = q2 === 'C' ? "2-4h" : "15-20j";
+        const b3 = q2 === 'C' ? "4-6h" : "20-25j";
+        const b4 = q2 === 'C' ? "6-8h" : "25-30j";
+        const b5 = q2 === 'C' ? ">8h" : ">30j";
+        svg = `
+          <svg class="w-full h-28 md:h-32 max-h-[130px]" viewBox="0 0 320 145">
+            <!-- Axe horizontal -->
+            <line x1="25" y1="120" x2="305" y2="120" stroke="#cbd5e1" stroke-width="1.5" />
+            <!-- Barres -->
+            <rect x="35" y="75" width="40" height="45" rx="3" fill="#93c5fd" />
+            <text x="55" y="68" font-size="8.5" font-weight="bold" fill="#1d4ed8" text-anchor="middle">18</text>
+            <text x="55" y="132" font-size="7.5" fill="#64748b" text-anchor="middle">${b1}</text>
+
+            <rect x="90" y="28" width="40" height="92" rx="3" fill="#2563eb" />
+            <text x="110" y="22" font-size="8.5" font-weight="bold" fill="#1e40af" text-anchor="middle">54 (P50)</text>
+            <text x="110" y="132" font-size="7.5" fill="#64748b" text-anchor="middle">${b2}</text>
+
+            <rect x="145" y="48" width="40" height="72" rx="3" fill="#60a5fa" />
+            <text x="165" y="42" font-size="8.5" font-weight="bold" fill="#1d4ed8" text-anchor="middle">38</text>
+            <text x="165" y="132" font-size="7.5" fill="#64748b" text-anchor="middle">${b3}</text>
+
+            <rect x="200" y="82" width="40" height="38" rx="3" fill="#f59e0b" />
+            <text x="220" y="76" font-size="8.5" font-weight="bold" fill="#b45309" text-anchor="middle">14 (P85)</text>
+            <text x="220" y="132" font-size="7.5" fill="#64748b" text-anchor="middle">${b4}</text>
+
+            <rect x="255" y="98" width="40" height="22" rx="3" fill="#ef4444" />
+            <text x="275" y="92" font-size="8.5" font-weight="bold" fill="#dc2626" text-anchor="middle">6 (>SLA)</text>
+            <text x="275" y="132" font-size="7.5" fill="#dc2626" font-weight="bold" text-anchor="middle">${b5}</text>
+          </svg>
+        `;
+      } else if (q4 === 'F') {
+        // 4F : Box-Plot & Dispersion
+        const grp1 = q2 === 'A' ? "CFM56-7B" : (q2 === 'B' ? "Aubes Turbine" : "Usinage CNC");
+        const grp2 = q2 === 'A' ? "LEAP-1A" : (q2 === 'B' ? "Compresseur BP" : "Contrôle CND");
+        const grp3 = q2 === 'A' ? "LEAP-1B" : (q2 === 'B' ? "Banc d'Essai" : "Équilibrage");
+        title.innerHTML = `<span>📉</span> Dispersion du TAT (Médiane, Quartiles Q1/Q3 & Écarts)`;
+        svg = `
+          <svg class="w-full h-28 md:h-32 max-h-[130px]" viewBox="0 0 320 145">
+            <!-- Box 1 -->
+            <text x="60" y="18" font-size="8.5" font-weight="bold" fill="#334155" text-anchor="middle">${grp1}</text>
+            <line x1="60" y1="30" x2="60" y2="120" stroke="#64748b" stroke-width="1.2" />
+            <line x1="48" y1="30" x2="72" y2="30" stroke="#64748b" stroke-width="1.5" />
+            <line x1="48" y1="120" x2="72" y2="120" stroke="#64748b" stroke-width="1.5" />
+            <rect x="42" y="50" width="36" height="50" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5" />
+            <line x1="42" y1="72" x2="78" y2="72" stroke="#1d4ed8" stroke-width="2.5" />
+            <text x="60" y="70" font-size="7.5" font-weight="bold" fill="#1e40af" text-anchor="middle">Méd: 16j</text>
+
+            <!-- Box 2 -->
+            <text x="160" y="18" font-size="8.5" font-weight="bold" fill="#334155" text-anchor="middle">${grp2}</text>
+            <line x1="160" y1="24" x2="160" y2="125" stroke="#64748b" stroke-width="1.2" />
+            <line x1="148" y1="24" x2="172" y2="24" stroke="#64748b" stroke-width="1.5" />
+            <line x1="148" y1="125" x2="172" y2="125" stroke="#64748b" stroke-width="1.5" />
+            <rect x="142" y="42" width="36" height="62" rx="3" fill="#fef3c7" stroke="#d97706" stroke-width="1.5" />
+            <line x1="142" y1="68" x2="178" y2="68" stroke="#b45309" stroke-width="2.5" />
+            <text x="160" y="66" font-size="7.5" font-weight="bold" fill="#92400e" text-anchor="middle">Méd: 22j</text>
+            <!-- Outlier -->
+            <circle cx="160" cy="18" r="3" fill="#ef4444" />
+
+            <!-- Box 3 -->
+            <text x="260" y="18" font-size="8.5" font-weight="bold" fill="#334155" text-anchor="middle">${grp3}</text>
+            <line x1="260" y1="36" x2="260" y2="115" stroke="#64748b" stroke-width="1.2" />
+            <line x1="248" y1="36" x2="272" y2="36" stroke="#64748b" stroke-width="1.5" />
+            <line x1="248" y1="115" x2="272" y2="115" stroke="#64748b" stroke-width="1.5" />
+            <rect x="242" y="55" width="36" height="46" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5" />
+            <line x1="242" y1="76" x2="278" y2="76" stroke="#15803d" stroke-width="2.5" />
+            <text x="260" y="74" font-size="7.5" font-weight="bold" fill="#166534" text-anchor="middle">Méd: 18j</text>
+            <text x="160" y="138" font-size="7.5" fill="#64748b" text-anchor="middle">Moustaches = P5 / P95 • Boîte = Interquartile Q1-Q3</text>
+          </svg>
+        `;
+      } else if (q4 === 'G') {
+        // 4G : Waterfall des Dérives
+        title.innerHTML = `<span>🌊</span> Cascade Waterfall des Dérives du TAT (Contractuel vs Réel)`;
+        const c1 = q2 === 'C' ? "Gamme (4h)" : "SLA (18j)";
+        const c2 = q2 === 'C' ? "+1.2h Pièce" : "+3.5j Pièce";
+        const c3 = q2 === 'C' ? "+0.8h CND" : "+2.1j Aléa";
+        const c4 = q2 === 'C' ? "-0.5h Gain" : "-1.2j FastTrack";
+        const c5 = q2 === 'C' ? "5.5h Réel" : "22.4j Réel";
+        svg = `
+          <svg class="w-full h-28 md:h-32 max-h-[130px]" viewBox="0 0 320 145">
+            <line x1="20" y1="120" x2="300" y2="120" stroke="#cbd5e1" stroke-width="1.2" />
+            <!-- Bar 1 SLA base -->
+            <rect x="25" y="48" width="38" height="72" rx="2" fill="#3b82f6" />
+            <text x="44" y="42" font-size="8" font-weight="bold" fill="#1d4ed8" text-anchor="middle">${c1}</text>
+
+            <!-- Bar 2 Retard appro -->
+            <rect x="85" y="24" width="38" height="24" rx="2" fill="#ef4444" />
+            <line x1="63" y1="48" x2="85" y2="48" stroke="#94a3b8" stroke-dasharray="2,2" />
+            <text x="104" y="18" font-size="8" font-weight="bold" fill="#dc2626" text-anchor="middle">${c2}</text>
+
+            <!-- Bar 3 Retard aléa -->
+            <rect x="145" y="10" width="38" height="14" rx="2" fill="#f59e0b" />
+            <line x1="123" y1="24" x2="145" y2="24" stroke="#94a3b8" stroke-dasharray="2,2" />
+            <text x="164" y="6" font-size="8" font-weight="bold" fill="#b45309" text-anchor="middle">${c3}</text>
+
+            <!-- Bar 4 Rattrapage -->
+            <rect x="205" y="10" width="38" height="10" rx="2" fill="#10b981" />
+            <line x1="183" y1="10" x2="205" y2="10" stroke="#94a3b8" stroke-dasharray="2,2" />
+            <text x="224" y="26" font-size="7.5" font-weight="bold" fill="#059669" text-anchor="middle">${c4}</text>
+
+            <!-- Bar 5 Total réel -->
+            <rect x="260" y="20" width="42" height="100" rx="2" fill="#1e40af" />
+            <line x1="243" y1="20" x2="260" y2="20" stroke="#94a3b8" stroke-dasharray="2,2" />
+            <text x="281" y="14" font-size="8.5" font-weight="black" fill="#1e3a8a" text-anchor="middle">${c5}</text>
+            <text x="160" y="136" font-size="7.5" fill="#64748b" text-anchor="middle">Dérive globale imputable : +4.4 jours ouvrés</text>
+          </svg>
+        `;
+      } else {
+        // 4H : Jalons Gates
+        title.innerHTML = `<span>🚩</span> Jalons de Traversée Industrielle (Gates G1 ➔ G2 ➔ G3 ➔ G4)`;
+        const g1Name = q2 === 'C' ? "Prépa Outil" : "G1 Démontage";
+        const g2Name = q2 === 'C' ? "Usinage CNC" : "G2 Expertise/CND";
+        const g3Name = q2 === 'C' ? "Contrôle CMM" : "G3 Remontage";
+        const g4Name = q2 === 'C' ? "Conditionnem." : "G4 Banc Test";
+        svg = `
+          <svg class="w-full h-28 md:h-32 max-h-[130px]" viewBox="0 0 320 145">
+            <!-- Barre de progression continue -->
+            <line x1="40" y1="45" x2="280" y2="45" stroke="#e2e8f0" stroke-width="4" />
+            <line x1="40" y1="45" x2="200" y2="45" stroke="#3b82f6" stroke-width="4" />
+
+            <!-- Jalon 1 (Passé) -->
+            <circle cx="50" cy="45" r="12" fill="#10b981" />
+            <text x="50" y="49" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">✓</text>
+            <text x="50" y="68" font-size="8" font-weight="bold" fill="#0f172a" text-anchor="middle">${g1Name}</text>
+            <text x="50" y="78" font-size="7" fill="#16a34a" text-anchor="middle">Tenu (4j)</text>
+
+            <!-- Jalon 2 (Passé) -->
+            <circle cx="125" cy="45" r="12" fill="#10b981" />
+            <text x="125" y="49" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">✓</text>
+            <text x="125" y="68" font-size="8" font-weight="bold" fill="#0f172a" text-anchor="middle">${g2Name}</text>
+            <text x="125" y="78" font-size="7" fill="#16a34a" text-anchor="middle">Tenu (6j)</text>
+
+            <!-- Jalon 3 (En cours avec alerte) -->
+            <circle cx="200" cy="45" r="12" fill="#f59e0b" stroke="#fef3c7" stroke-width="3" />
+            <text x="200" y="49" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">⏳</text>
+            <text x="200" y="68" font-size="8" font-weight="bold" fill="#0f172a" text-anchor="middle">${g3Name}</text>
+            <text x="200" y="78" font-size="7" fill="#d97706" font-weight="bold" text-anchor="middle">+2j retard</text>
+
+            <!-- Jalon 4 (Futur) -->
+            <circle cx="275" cy="45" r="12" fill="#94a3b8" />
+            <text x="275" y="49" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">4</text>
+            <text x="275" y="68" font-size="8" font-weight="bold" fill="#64748b" text-anchor="middle">${g4Name}</text>
+            <text x="275" y="78" font-size="7" fill="#64748b" text-anchor="middle">Slot J+18</text>
+
+            <!-- Alerte chemin critique -->
+            <rect x="40" y="94" width="240" height="26" rx="5" fill="#fef2f2" stroke="#fecaca" />
+            <text x="160" y="111" font-size="8" font-weight="bold" fill="#dc2626" text-anchor="middle">⚠️ Alerte Chemin Critique : Gate 3 en tension sur appro sous-ensemble</text>
+          </svg>
         `;
       }
       container.innerHTML = svg;
@@ -1519,7 +1940,7 @@
             <text x="160" y="134" font-size="7.5" text-anchor="middle" fill="#64748b">Semaines (Accumulation en amont des postes clés)</text>
           </svg>
         `;
-      } else {
+      } else if (q5 === 'D') {
         // 5D
         const t1 = q2 === 'A' ? "44% Attente / transit inter-sites" : (q2 === 'B' ? "42% Navette route & attente quai" : "48% Attente bacs tampons machine");
         const subT1 = q2 === 'A' ? "~ 8.2 jours sans travail physique" : (q2 === 'B' ? "~ 3.1 jours de transport" : "~ 2.1 heures en file d'attente");
@@ -1545,6 +1966,144 @@
             <text x="177" y="89" font-size="7.5" fill="#64748b">${subT2}</text>
 
             <text x="160" y="115" font-size="8" fill="#334155" font-weight="semibold">🎯 Levier : fluidifier le goulet ${q2 === 'A' ? 'global' : (q2 === 'B' ? 'logistique' : 'machine')}</text>
+          </svg>
+        `;
+      } else if (q5 === 'E') {
+        // 5E : Jauge Tachymètre
+        const rateVal = q2 === 'C' ? "91 %" : (q2 === 'B' ? "88 %" : "84 %");
+        const statusText = q2 === 'C' ? "Zone Critique (>85%) : File saturée" : (q2 === 'B' ? "Zone d'Alerte : Montereau & Villaroche" : "Zone de Vigilance : Ligne LEAP");
+        title.innerHTML = `<span>🎯</span> Jauge Tachymètre de Saturation Globale (Seuil 85%)`;
+        svg = `
+          <svg class="w-full h-28 md:h-32 max-h-[130px]" viewBox="0 0 320 145">
+            <!-- Arcs de couleur -->
+            <!-- Zone Verte (0-70%) -->
+            <path d="M 60 110 A 75 75 0 0 1 125 38" fill="none" stroke="#10b981" stroke-width="16" stroke-linecap="round" />
+            <!-- Zone Orange (70-85%) -->
+            <path d="M 132 35 A 75 75 0 0 1 185 45" fill="none" stroke="#f59e0b" stroke-width="16" />
+            <!-- Zone Rouge (85-100%) -->
+            <path d="M 192 48 A 75 75 0 0 1 235 110" fill="none" stroke="#ef4444" stroke-width="16" stroke-linecap="round" />
+
+            <!-- Centre et Aiguille -->
+            <circle cx="150" cy="110" r="10" fill="#1e293b" />
+            <line x1="150" y1="110" x2="205" y2="60" stroke="#1e293b" stroke-width="3.5" stroke-linecap="round" />
+            <circle cx="150" cy="110" r="4" fill="#ffffff" />
+
+            <!-- Données textuelles -->
+            <text x="150" y="95" font-size="18" font-weight="black" text-anchor="middle" fill="#dc2626">${rateVal}</text>
+            <text x="150" y="132" font-size="8.5" font-weight="bold" text-anchor="middle" fill="#dc2626">${statusText}</text>
+
+            <!-- Repères -->
+            <text x="45" y="115" font-size="7" fill="#64748b">0%</text>
+            <text x="145" y="24" font-size="7" font-weight="bold" fill="#b45309">85%</text>
+            <text x="245" y="115" font-size="7" fill="#64748b">100%</text>
+          </svg>
+        `;
+      } else if (q5 === 'F') {
+        // 5F : Radar Poly-compétences
+        title.innerHTML = `<span>🕸️</span> Radar Adéquation Capacité Part-145 vs Charge Réelle`;
+        const centerName = q2 === 'C' ? "Slots Postes" : (q2 === 'B' ? "Ateliers Sites" : "Lignes Globales");
+        svg = `
+          <svg class="w-full h-28 md:h-32 max-h-[130px]" viewBox="0 0 320 145">
+            <!-- Polygones concentriques (Fond radar) -->
+            <polygon points="110,22 170,45 155,108 65,108 50,45" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1" />
+            <polygon points="110,40 152,56 142,98 78,98 68,56" fill="none" stroke="#e2e8f0" stroke-width="1" />
+            <!-- Axes radiaux -->
+            <line x1="110" y1="72" x2="110" y2="22" stroke="#94a3b8" stroke-width="1" />
+            <line x1="110" y1="72" x2="170" y2="45" stroke="#94a3b8" stroke-width="1" />
+            <line x1="110" y1="72" x2="155" y2="108" stroke="#94a3b8" stroke-width="1" />
+            <line x1="110" y1="72" x2="65" y2="108" stroke="#94a3b8" stroke-width="1" />
+            <line x1="110" y1="72" x2="50" y2="45" stroke="#94a3b8" stroke-width="1" />
+
+            <!-- Capacité théorique (Vert pointillé) -->
+            <polygon points="110,32 155,52 145,100 75,100 60,52" fill="none" stroke="#10b981" stroke-width="1.8" stroke-dasharray="3,2" />
+
+            <!-- Charge constatée (Bleu plein transparent) -->
+            <polygon points="110,24 168,46 138,92 72,106 52,48" fill="#3b82f6" fill-opacity="0.35" stroke="#2563eb" stroke-width="2" />
+
+            <!-- Labels axes -->
+            <text x="110" y="16" font-size="7" font-weight="bold" fill="#334155" text-anchor="middle">CND & Ressuage (96%)</text>
+            <text x="180" y="48" font-size="7" font-weight="bold" fill="#334155">Usinage (92%)</text>
+            <text x="165" y="118" font-size="7" font-weight="bold" fill="#334155">Banc Test (80%)</text>
+            <text x="50" y="118" font-size="7" font-weight="bold" fill="#334155">Montage (74%)</text>
+            <text x="32" y="48" font-size="7" font-weight="bold" fill="#334155">Contrôle (86%)</text>
+
+            <!-- Légende droite -->
+            <rect x="220" y="40" width="10" height="10" rx="2" fill="#3b82f6" fill-opacity="0.5" stroke="#2563eb" />
+            <text x="235" y="48" font-size="8" fill="#334155">Charge Réelle Pointée</text>
+            <line x1="220" y1="65" x2="230" y2="65" stroke="#10b981" stroke-width="2" stroke-dasharray="3,2" />
+            <text x="235" y="68" font-size="8" fill="#334155">Capacité Part-145 (Nominale)</text>
+            <text x="220" y="92" font-size="7.5" font-weight="bold" fill="#dc2626">🚨 Tension CND : +16% vs effectifs</text>
+          </svg>
+        `;
+      } else if (q5 === 'G') {
+        // 5G : Spaghetti & Navettes
+        title.innerHTML = `<span>🔄</span> Diagramme de Spaghetti des Flux & Rotations Navettes`;
+        svg = `
+          <svg class="w-full h-28 md:h-32 max-h-[130px]" viewBox="0 0 320 145">
+            <!-- Noeuds Ateliers Safran -->
+            <circle cx="65" cy="45" r="18" fill="#dbeafe" stroke="#2563eb" stroke-width="2" />
+            <text x="65" y="42" font-size="8" font-weight="bold" fill="#1e40af" text-anchor="middle">Villaroche</text>
+            <text x="65" y="52" font-size="6.5" fill="#3b82f6" text-anchor="middle">(VIL)</text>
+
+            <circle cx="160" cy="35" r="18" fill="#fef3c7" stroke="#d97706" stroke-width="2" />
+            <text x="160" y="32" font-size="8" font-weight="bold" fill="#92400e" text-anchor="middle">Montereau</text>
+            <text x="160" y="42" font-size="6.5" fill="#d97706" text-anchor="middle">(MON)</text>
+
+            <circle cx="120" cy="105" r="18" fill="#fee2e2" stroke="#dc2626" stroke-width="2" />
+            <text x="120" y="102" font-size="8" font-weight="bold" fill="#991b1b" text-anchor="middle">Châtellerault</text>
+            <text x="120" y="112" font-size="6.5" fill="#dc2626" text-anchor="middle">(CHL)</text>
+
+            <circle cx="240" cy="70" r="18" fill="#dcfce7" stroke="#16a34a" stroke-width="2" />
+            <text x="240" y="67" font-size="8" font-weight="bold" fill="#166534" text-anchor="middle">Bruxelles</text>
+            <text x="240" y="77" font-size="6.5" fill="#16a34a" text-anchor="middle">(BRU)</text>
+
+            <!-- Arcs de flux navettes -->
+            <path d="M 83 42 Q 120 25, 142 35" fill="none" stroke="#2563eb" stroke-width="3.5" />
+            <text x="115" y="24" font-size="7.5" font-weight="bold" fill="#1d4ed8">18 rot./sem</text>
+
+            <path d="M 152 52 Q 140 85, 128 92" fill="none" stroke="#ef4444" stroke-width="4.5" stroke-dasharray="4,2" />
+            <text x="155" y="80" font-size="7.5" font-weight="bold" fill="#dc2626">26 rot. (Goulot 🚨)</text>
+
+            <path d="M 136 100 Q 185 95, 222 78" fill="none" stroke="#10b981" stroke-width="2" />
+            <text x="185" y="102" font-size="7.5" fill="#059669">8 rot./sem</text>
+
+            <path d="M 178 38 Q 210 45, 224 60" fill="none" stroke="#f59e0b" stroke-width="2.5" />
+            <text x="205" y="42" font-size="7.5" fill="#b45309">12 rot./sem</text>
+          </svg>
+        `;
+      } else {
+        // 5H : Treemap des Goulots
+        title.innerHTML = `<span>🗂️</span> Treemap de Saturation : Surface Proportionnelle au WIP Bloqué`;
+        svg = `
+          <svg class="w-full h-28 md:h-32 max-h-[130px]" viewBox="0 0 320 145">
+            <!-- Bloc 1 (Majeur Goulot) -->
+            <rect x="15" y="15" width="135" height="75" rx="3" fill="#ef4444" stroke="#ffffff" stroke-width="1.5" />
+            <text x="82" y="44" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">Tour CN 5-Axes (VIL)</text>
+            <text x="82" y="58" font-size="8" fill="#fee2e2" text-anchor="middle">94% Saturation • 18 lots WIP</text>
+            <text x="82" y="72" font-size="7.5" font-weight="bold" fill="#fee2e2" text-anchor="middle">Temps d'attente moyen : 42h</text>
+
+            <!-- Bloc 2 (Secondaire Goulot) -->
+            <rect x="155" y="15" width="95" height="75" rx="3" fill="#f59e0b" stroke="#ffffff" stroke-width="1.5" />
+            <text x="202" y="46" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">Ressuage CND</text>
+            <text x="202" y="60" font-size="7.5" fill="#fef3c7" text-anchor="middle">88% • 11 lots WIP</text>
+
+            <!-- Bloc 3 (Équilibrage) -->
+            <rect x="255" y="15" width="55" height="75" rx="3" fill="#3b82f6" stroke="#ffffff" stroke-width="1.5" />
+            <text x="282" y="50" font-size="8" font-weight="bold" fill="#ffffff" text-anchor="middle">Banc Test</text>
+            <text x="282" y="63" font-size="7" fill="#dbeafe" text-anchor="middle">78% • 6 lots</text>
+
+            <!-- Blocs inférieurs fluides -->
+            <rect x="15" y="95" width="110" height="35" rx="3" fill="#10b981" stroke="#ffffff" stroke-width="1.5" />
+            <text x="70" y="114" font-size="8" font-weight="bold" fill="#ffffff" text-anchor="middle">Montage Modules (64%)</text>
+            <text x="70" y="124" font-size="6.5" fill="#d1fae5" text-anchor="middle">WIP fluide • 2 lots</text>
+
+            <rect x="130" y="95" width="90" height="35" rx="3" fill="#10b981" stroke="#ffffff" stroke-width="1.5" />
+            <text x="175" y="114" font-size="8" font-weight="bold" fill="#ffffff" text-anchor="middle">Lavage Chimique (58%)</text>
+            <text x="175" y="124" font-size="6.5" fill="#d1fae5" text-anchor="middle">Capacité disponible</text>
+
+            <rect x="225" y="95" width="85" height="35" rx="3" fill="#10b981" stroke="#ffffff" stroke-width="1.5" />
+            <text x="267" y="114" font-size="8" font-weight="bold" fill="#ffffff" text-anchor="middle">Expédition (52%)</text>
+            <text x="267" y="124" font-size="6.5" fill="#d1fae5" text-anchor="middle">Sous contrôle</text>
           </svg>
         `;
       }
