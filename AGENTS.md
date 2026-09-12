@@ -72,4 +72,4 @@ Structure :
    - Fournir un résumé concis des changements effectués.
    - Rappeler les deux URLs de consultation :
      - Firebase : [https://bimaestro.web.app](https://bimaestro.web.app) (ou [https://gomaestro-app.web.app](https://gomaestro-app.web.app))
-     - GitHub Pages : [https://quangfr.github.io/maestro/](https://quangfr.github.io/maestro/)
+     - GitHub Pages : [https://quangfr.github.io/bimaestro/](https://quangfr.github.io/bimaestro/)
