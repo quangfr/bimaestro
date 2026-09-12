@@ -58,7 +58,7 @@
     </button>
     <button onclick="switchStep(3)" id="tab-3"
       class="px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-slate-600 border border-slate-200 hover:text-blue-600 hover:bg-slate-50 shadow-sm">
-      <span>3️⃣</span> Calcul
+      <span>3️⃣</span> TAT
     </button>
     <button onclick="switchStep(4)" id="tab-4"
       class="px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-slate-600 border border-slate-200 hover:text-blue-600 hover:bg-slate-50 shadow-sm">
@@ -66,9 +66,13 @@
     </button>
     <button onclick="switchStep(5)" id="tab-5"
       class="px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-slate-600 border border-slate-200 hover:text-blue-600 hover:bg-slate-50 shadow-sm">
-      <span>5️⃣</span> Saturation
+      <span>5️⃣</span> Capacité
     </button>
     <button onclick="switchStep(6)" id="tab-6"
+      class="px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-slate-600 border border-slate-200 hover:text-blue-600 hover:bg-slate-50 shadow-sm">
+      <span>6️⃣</span> Saturation
+    </button>
+    <button onclick="switchStep(7)" id="tab-7"
       class="px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-slate-600 border border-slate-200 hover:text-blue-600 hover:bg-slate-50 shadow-sm">
       <span>🏁</span> Synthèse
     </button>
@@ -724,19 +728,180 @@
       </div>
     </div>
 
-    <!-- ================= PAGE 5 ================= -->
+    <!-- ================= PAGE 5 (Capacité) ================= -->
     <div id="step-5" class="step-page hidden flex flex-col min-h-full md:h-full justify-between">
       <div class="glass-card p-3.5 rounded-xl flex flex-col justify-between flex-1">
         <div class="mb-2">
-          <h2 class="text-sm md:text-base font-bold text-blue-700">Étape 5 : Sélectionner les visuels pour la Saturation
+          <h2 class="text-sm md:text-base font-bold text-blue-700">Étape 5 : Choisir la méthode d'évaluation de la Capacité Atelier
+          </h2>
+          <p class="text-[11px] text-slate-500">Sur quelle base dimensionner et projeter la capacité des ateliers (demandes effectives instantanées vs prévisions) ?</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 flex-1 items-stretch overflow-hidden">
+          <!-- Moitié Gauche : Sélection des 4 méthodes de Capacité -->
+          <div class="lg:col-span-6 flex flex-col justify-between space-y-2 overflow-y-auto pr-1">
+            <!-- 5A -->
+            <div onclick="selectOption(5, 'A')" id="opt-5-A"
+              class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex items-center justify-between gap-3">
+              <div class="flex-1 min-w-0">
+                <div class="text-xs font-bold text-slate-900 mb-0.5 flex items-center gap-1.5">
+                  <span class="text-sm">📐</span> A. Capacité Nominale Standard
+                </div>
+                <p class="text-[10.5px] text-slate-600 leading-snug">
+                  Temps d'ouverture standard des postes, horaires d'équipes et effectifs théoriques Part-145 sans aléas.
+                </p>
+                <div class="text-[10px] text-slate-500 mt-1 space-y-0.5">
+                  <div><span class="text-blue-700 font-semibold">Principe :</span> Référence théorique constructeur (heures disponibles par poste = postes x shifts x 7.5h).</div>
+                  <div><span class="text-slate-500">Usage MRO :</span> Étalon de comparaison initial & dimensionnement contractuel capacitaire.</div>
+                </div>
+                <div class="text-[9px] text-blue-700 font-mono mt-1 font-semibold"><code>Capacite_Nominale = SUMX(DIM_POSTE_MACHINE, [Heures_Ouverture_Jour] * [Effectif_Part145])</code></div>
+              </div>
+              <div
+                class="w-14 h-14 bg-white rounded-lg p-1 border border-slate-200 shadow-sm flex items-center justify-center shrink-0">
+                <svg class="w-full h-full" viewBox="0 0 50 50">
+                  <rect x="6" y="10" width="38" height="30" rx="3" fill="#f8fafc" stroke="#2563eb" stroke-width="1.2" />
+                  <line x1="6" y1="20" x2="44" y2="20" stroke="#cbd5e1" stroke-width="1" />
+                  <rect x="10" y="24" width="8" height="12" fill="#93c5fd" />
+                  <rect x="21" y="24" width="8" height="12" fill="#93c5fd" />
+                  <rect x="32" y="24" width="8" height="12" fill="#2563eb" />
+                  <text x="25" y="16" font-size="6" font-weight="bold" fill="#1e40af" text-anchor="middle">3x8 Shifts</text>
+                </svg>
+              </div>
+            </div>
+
+            <!-- 5B -->
+            <div onclick="selectOption(5, 'B')" id="opt-5-B"
+              class="option-card active glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex items-center justify-between gap-3">
+              <div class="flex-1 min-w-0">
+                <div class="text-xs font-bold text-slate-900 mb-0.5 flex items-center gap-1.5">
+                  <span class="text-sm">⚡</span> B. Demandes Effectives à l'Instant (WIP Réel)
+                </div>
+                <p class="text-[10.5px] text-slate-600 leading-snug">
+                  Charge instantanée calculée sur les moteurs et lots modules physiquement présents en atelier et pointés en temps réel.
+                </p>
+                <div class="text-[10px] text-slate-500 mt-1 space-y-0.5">
+                  <div><span class="text-amber-700 font-semibold">Principe :</span> Photographie exacte de l'en-cours actif (WIP) et des dossiers engagés sur les postes.</div>
+                  <div><span class="text-slate-500">Usage MRO :</span> Régulation opérationnelle quotidienne, pilotage goulots à chaud & réaffectation d'équipes.</div>
+                </div>
+                <div class="text-[9px] text-amber-700 font-mono mt-1 font-semibold"><code>Charge_WIP_Instant = CALCULATE(SUM(FAIT[Heures_Restantes]), FAIT[Statut_WIP] = "En_Cours")</code></div>
+              </div>
+              <div
+                class="w-14 h-14 bg-white rounded-lg p-1 border border-slate-200 shadow-sm flex items-center justify-center shrink-0">
+                <svg class="w-full h-full" viewBox="0 0 50 50">
+                  <circle cx="25" cy="25" r="18" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5" />
+                  <path d="M 25 12 L 25 25 L 34 25" fill="none" stroke="#d97706" stroke-width="2" stroke-linecap="round" />
+                  <circle cx="25" cy="25" r="3" fill="#d97706" />
+                  <text x="25" y="40" font-size="5.5" font-weight="bold" fill="#b45309" text-anchor="middle">LIVE WIP</text>
+                </svg>
+              </div>
+            </div>
+
+            <!-- 5C -->
+            <div onclick="selectOption(5, 'C')" id="opt-5-C"
+              class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex items-center justify-between gap-3">
+              <div class="flex-1 min-w-0">
+                <div class="text-xs font-bold text-slate-900 mb-0.5 flex items-center gap-1.5">
+                  <span class="text-sm">🗓️</span> C. Prévisions des Demandes (Plan de Charge S&OP)
+                </div>
+                <p class="text-[10.5px] text-slate-600 leading-snug">
+                  Projection déterministe basée sur le carnet de commandes fermes et les calendriers de déposes annoncés par les compagnies.
+                </p>
+                <div class="text-[10px] text-slate-500 mt-1 space-y-0.5">
+                  <div><span class="text-purple-700 font-semibold">Principe :</span> Croisement des slots de révision programmés et des engagements fermes à 3-6 mois.</div>
+                  <div><span class="text-slate-500">Usage MRO :</span> Équilibrage planifié, approvisionnement des pièces maîtresses et dimensionnement des sous-traitances.</div>
+                </div>
+                <div class="text-[9px] text-purple-700 font-mono mt-1 font-semibold"><code>Charge_SOP_Projetee = SUMX(PREV_DEPOSES_SOP, [Visites_Prevues] * [Heures_Gamme_Standard])</code></div>
+              </div>
+              <div
+                class="w-14 h-14 bg-white rounded-lg p-1 border border-slate-200 shadow-sm flex items-center justify-center shrink-0">
+                <svg class="w-full h-full" viewBox="0 0 50 50">
+                  <rect x="8" y="10" width="34" height="32" rx="3" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="1.2" />
+                  <line x1="8" y1="18" x2="42" y2="18" stroke="#8b5cf6" stroke-width="1.2" />
+                  <rect x="12" y="22" width="6" height="5" rx="1" fill="#c4b5fd" />
+                  <rect x="22" y="22" width="6" height="5" rx="1" fill="#c4b5fd" />
+                  <rect x="32" y="22" width="6" height="5" rx="1" fill="#7c3aed" />
+                  <rect x="12" y="30" width="6" height="5" rx="1" fill="#c4b5fd" />
+                  <rect x="22" y="30" width="6" height="5" rx="1" fill="#7c3aed" />
+                  <rect x="32" y="30" width="6" height="5" rx="1" fill="#c4b5fd" />
+                  <circle cx="15" cy="14" r="1.5" fill="#7c3aed" />
+                  <circle cx="35" cy="14" r="1.5" fill="#7c3aed" />
+                </svg>
+              </div>
+            </div>
+
+            <!-- 5D -->
+            <div onclick="selectOption(5, 'D')" id="opt-5-D"
+              class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex items-center justify-between gap-3">
+              <div class="flex-1 min-w-0">
+                <div class="text-xs font-bold text-slate-900 mb-0.5 flex items-center gap-1.5">
+                  <span class="text-sm">🔮</span> D. Prévisions Multi-factorielles Avancées
+                </div>
+                <p class="text-[10.5px] text-slate-600 leading-snug">
+                  Modélisation dynamique probabiliste croisant cycles de vol (TSN/CSN), météo, usure historique et aléas supply chain.
+                </p>
+                <div class="text-[10px] text-slate-500 mt-1 space-y-0.5">
+                  <div><span class="text-emerald-700 font-semibold">Principe :</span> Algorithmes prédictifs multi-variables avec intervalles de confiance sur l'afflux de déposes.</div>
+                  <div><span class="text-slate-500">Usage MRO :</span> Anticipation stratégique long terme, stress-tests capacitaires et gestion proactive de la saturation.</div>
+                </div>
+                <div class="text-[9px] text-emerald-700 font-mono mt-1 font-semibold"><code>SIMULATE_CAPACITY_ADVANCED(FAIT, FLEET_TSN_CSN, WEATHER, SUPPLY_BUFFER)</code></div>
+              </div>
+              <div
+                class="w-14 h-14 bg-white rounded-lg p-1 border border-slate-200 shadow-sm flex items-center justify-center shrink-0">
+                <svg class="w-full h-full" viewBox="0 0 50 50">
+                  <path d="M 8 36 Q 16 32, 24 24 T 42 12" fill="none" stroke="#10b981" stroke-width="2" />
+                  <path d="M 8 36 Q 16 36, 24 30 T 42 22" fill="none" stroke="#6ee7b7" stroke-width="1.2" stroke-dasharray="2,2" />
+                  <circle cx="24" cy="24" r="2.5" fill="#059669" />
+                  <circle cx="42" cy="12" r="2.5" fill="#059669" />
+                  <text x="35" y="44" font-size="5" font-weight="bold" fill="#059669" text-anchor="middle">ML & AI Predict</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Moitié Droite : Extrait Illustré du Bilan de Capacité (Dépend de Q2 & Q5) -->
+          <div
+            class="lg:col-span-6 bg-white rounded-xl p-3 border border-slate-200 flex flex-col justify-between overflow-hidden shadow-sm">
+            <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 shrink-0">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-blue-600 animate-pulse"></span>
+                <h3 class="text-xs font-bold text-slate-900 flex items-center gap-1.5" id="step5-table-title">
+                  📊 Adéquation Charge vs Capacité Projetée
+                </h3>
+              </div>
+              <span id="step5-combo-badge"
+                class="text-[10px] px-2.5 py-0.5 rounded bg-blue-50 text-blue-700 font-mono border border-blue-200 font-bold shadow-sm">
+                Demandes Effectives (Live WIP)
+              </span>
+            </div>
+
+            <!-- Conteneur du tableau dynamique de capacité -->
+            <div id="step5-table-container" class="flex-1 overflow-x-auto min-h-0 flex flex-col justify-center">
+              <!-- Rempli par renderStep5TablePreview() -->
+            </div>
+
+            <!-- Explication technique combinée -->
+            <div id="step5-table-note"
+              class="mt-2 p-2 bg-slate-50 rounded-lg border border-slate-200 text-[10px] text-slate-600 shrink-0 flex items-center justify-between">
+              <!-- Note dynamique -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= PAGE 6 (Saturation) ================= -->
+    <div id="step-6" class="step-page hidden flex flex-col min-h-full md:h-full justify-between">
+      <div class="glass-card p-3.5 rounded-xl flex flex-col justify-between flex-1">
+        <div class="mb-2">
+          <h2 class="text-sm md:text-base font-bold text-blue-700">Étape 6 : Sélectionner les visuels pour la Saturation
             des Ateliers</h2>
           <p class="text-[11px] text-slate-500">Quels visuels choisir pour repérer les goulots d'étranglement et la
             surcharge ?</p>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 flex-1 items-stretch overflow-y-auto pr-1">
-          <!-- 5A -->
-          <div onclick="selectOption(5, 'A')" id="opt-5-A"
+          <!-- 6A -->
+          <div onclick="selectOption(6, 'A')" id="opt-6-A"
             class="option-card active glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
             <div>
               <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
@@ -764,8 +929,8 @@
             </div>
           </div>
 
-          <!-- 5B -->
-          <div onclick="selectOption(5, 'B')" id="opt-5-B"
+          <!-- 6B -->
+          <div onclick="selectOption(6, 'B')" id="opt-6-B"
             class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
             <div>
               <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
@@ -796,8 +961,8 @@
             </div>
           </div>
 
-          <!-- 5C -->
-          <div onclick="selectOption(5, 'C')" id="opt-5-C"
+          <!-- 6C -->
+          <div onclick="selectOption(6, 'C')" id="opt-6-C"
             class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
             <div>
               <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
@@ -822,8 +987,8 @@
             </div>
           </div>
 
-          <!-- 5D -->
-          <div onclick="selectOption(5, 'D')" id="opt-5-D"
+          <!-- 6D -->
+          <div onclick="selectOption(6, 'D')" id="opt-6-D"
             class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
             <div>
               <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
@@ -849,8 +1014,8 @@
             </div>
           </div>
 
-          <!-- 5E -->
-          <div onclick="selectOption(5, 'E')" id="opt-5-E"
+          <!-- 6E -->
+          <div onclick="selectOption(6, 'E')" id="opt-6-E"
             class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
             <div>
               <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
@@ -879,8 +1044,8 @@
             </div>
           </div>
 
-          <!-- 5F -->
-          <div onclick="selectOption(5, 'F')" id="opt-5-F"
+          <!-- 6F -->
+          <div onclick="selectOption(6, 'F')" id="opt-6-F"
             class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
             <div>
               <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
@@ -916,8 +1081,8 @@
             </div>
           </div>
 
-          <!-- 5G -->
-          <div onclick="selectOption(5, 'G')" id="opt-5-G"
+          <!-- 6G -->
+          <div onclick="selectOption(6, 'G')" id="opt-6-G"
             class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
             <div>
               <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
@@ -952,8 +1117,8 @@
             </div>
           </div>
 
-          <!-- 5H -->
-          <div onclick="selectOption(5, 'H')" id="opt-5-H"
+          <!-- 6H -->
+          <div onclick="selectOption(6, 'H')" id="opt-6-H"
             class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
             <div>
               <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
@@ -985,13 +1150,14 @@
                 <text x="71" y="66" font-size="6.5" font-weight="bold" fill="#ffffff" text-anchor="middle">Équilibrage</text>
                 <text x="71" y="73" font-size="5.5" fill="#d1fae5" text-anchor="middle">62%</text>
               </svg>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-      <!-- ================= PAGE 6 (Slide Récapitulatif & Dashboard Dérivé) ================= -->
-      <div id="step-6" class="step-page hidden flex flex-col min-h-full md:h-full justify-between md:overflow-hidden">
+      <!-- ================= PAGE 7 (Slide Récapitulatif & Dashboard Dérivé) ================= -->
+      <div id="step-7" class="step-page hidden flex flex-col min-h-full md:h-full justify-between md:overflow-hidden">
         <!-- Fiche Récapitulative des Choix -->
         <div
           class="glass-card p-3 rounded-xl border border-blue-200 bg-white/95 flex flex-col justify-between flex-1 overflow-hidden shadow-sm">
@@ -1010,8 +1176,8 @@
             </div>
           </div>
 
-          <!-- Grille des 5 choix récapitulés sous forme de Dropdowns interactifs -->
-          <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-2 shrink-0" id="summary-cards">
+          <!-- Grille des 6 choix récapitulés sous forme de Dropdowns interactifs -->
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 mb-2 shrink-0" id="summary-cards">
             <!-- Dropdown Q1 -->
             <div
               class="bg-slate-50 border border-slate-200 p-2 rounded-lg flex flex-col justify-between hover:border-blue-500 transition shadow-sm">
@@ -1050,7 +1216,7 @@
               class="bg-slate-50 border border-slate-200 p-2 rounded-lg flex flex-col justify-between hover:border-blue-500 transition shadow-sm">
               <label for="select-q3"
                 class="text-[9px] text-blue-700 font-bold uppercase tracking-wider mb-1 flex items-center gap-1">
-                <span>3️⃣</span> Calcul
+                <span>3️⃣</span> TAT
               </label>
               <select id="select-q3" onchange="onSummarySelectChange(3, this.value)"
                 class="bg-white text-slate-800 font-medium text-[11px] rounded border border-slate-300 px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm">
@@ -1083,14 +1249,31 @@
               <div id="sum-q4-desc" class="text-[9px] text-slate-500 mt-1 truncate">Comparatif vs seuils SLA</div>
             </div>
 
-            <!-- Dropdown Q5 -->
+            <!-- Dropdown Q5 (Capacité) -->
             <div
-              class="bg-slate-50 border border-slate-200 p-2 rounded-lg col-span-1 sm:col-span-1 flex flex-col justify-between hover:border-blue-500 transition shadow-sm">
+              class="bg-slate-50 border border-slate-200 p-2 rounded-lg flex flex-col justify-between hover:border-blue-500 transition shadow-sm">
               <label for="select-q5"
                 class="text-[9px] text-blue-700 font-bold uppercase tracking-wider mb-1 flex items-center gap-1">
-                <span>5️⃣</span> Saturation
+                <span>5️⃣</span> Capacité
               </label>
               <select id="select-q5" onchange="onSummarySelectChange(5, this.value)"
+                class="bg-white text-slate-800 font-medium text-[11px] rounded border border-slate-300 px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm">
+                <option value="A">📐 A. Capacité Nominale Standard</option>
+                <option value="B">⚡ B. Demandes Effectives Instant (WIP)</option>
+                <option value="C">🗓️ C. Prévisions Demandes (S&OP)</option>
+                <option value="D">🔮 D. Prévisions Multi-factorielles</option>
+              </select>
+              <div id="sum-q5-desc" class="text-[9px] text-slate-500 mt-1 truncate">Demandes effectives (Live WIP)</div>
+            </div>
+
+            <!-- Dropdown Q6 (Saturation) -->
+            <div
+              class="bg-slate-50 border border-slate-200 p-2 rounded-lg flex flex-col justify-between hover:border-blue-500 transition shadow-sm">
+              <label for="select-q6"
+                class="text-[9px] text-blue-700 font-bold uppercase tracking-wider mb-1 flex items-center gap-1">
+                <span>6️⃣</span> Saturation
+              </label>
+              <select id="select-q6" onchange="onSummarySelectChange(6, this.value)"
                 class="bg-white text-slate-800 font-medium text-[11px] rounded border border-slate-300 px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm">
                 <option value="A">🚦 A. Charge Ateliers (85%)</option>
                 <option value="B">🗓️ B. Heatmap Hebdo</option>
@@ -1101,7 +1284,7 @@
                 <option value="G">🔄 G. Spaghetti & Navettes</option>
                 <option value="H">🗂️ H. Treemap Goulots</option>
               </select>
-              <div id="sum-q5-desc" class="text-[9px] text-slate-500 mt-1 truncate">Taux d'occupation ateliers</div>
+              <div id="sum-q6-desc" class="text-[9px] text-slate-500 mt-1 truncate">Taux d'occupation ateliers</div>
             </div>
           </div>
 
@@ -1127,7 +1310,7 @@
               <!-- Rempli dynamiquement -->
             </div>
 
-            <!-- Section Centrale : Graphique Délai (Q4) + Graphique Saturation (Q5) -->
+            <!-- Section Centrale : Graphique Délai (Q4) + Graphique Saturation (Q6) -->
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-2 flex-1 items-stretch min-h-0 overflow-hidden">
               <!-- Visualisation Q4 (Délai & TAT) -->
               <div
@@ -1143,17 +1326,17 @@
                 </div>
               </div>
 
-              <!-- Visualisation Q5 (Saturation & Capacité) -->
+              <!-- Visualisation Q6 (Saturation & Capacité) -->
               <div
                 class="lg:col-span-6 bg-white rounded-lg p-2 border border-slate-200 flex flex-col justify-between overflow-hidden shadow-sm">
                 <div class="flex justify-between items-center mb-1 shrink-0">
-                  <h3 class="text-[11px] font-bold text-slate-900 flex items-center gap-1" id="mock-chart-q5-title">
+                  <h3 class="text-[11px] font-bold text-slate-900 flex items-center gap-1" id="mock-chart-q6-title">
                     <span>🏭</span> Charge & Saturation Ateliers
                   </h3>
-                  <span class="text-[9px] text-slate-500" id="mock-chart-q5-sub">Choix Q5</span>
+                  <span class="text-[9px] text-slate-500" id="mock-chart-q6-sub">Choix Q6</span>
                 </div>
-                <div id="mock-chart-q5-container" class="flex-1 flex items-center justify-center overflow-hidden">
-                  <!-- SVG Dynamique Q5 -->
+                <div id="mock-chart-q6-container" class="flex-1 flex items-center justify-center overflow-hidden">
+                  <!-- SVG Dynamique Q6 -->
                 </div>
               </div>
             </div>
@@ -1179,7 +1362,7 @@
         <div class="truncate">
           <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Sélection en cours</div>
           <div id="recap-text" class="text-[11px] text-slate-700 font-medium truncate">
-            Q1: A (Urgence) • Q2: A (Demande Globale) • Q3: B (Délais Moyens) • Q4: B (Barres vs Cible) • Q5: A (Charge 85%)
+            Q1: A • Q2: A • Q3: B • Q4: B • Q5: B • Q6: A
           </div>
         </div>
         <div class="flex gap-1.5 shrink-0">
@@ -1196,8 +1379,8 @@
 
   <script>
     let currentStep = 1;
-    const TOTAL_STEPS = 6;
-    const selections = { 1: 'A', 2: 'A', 3: 'B', 4: 'B', 5: 'A' };
+    const TOTAL_STEPS = 7;
+    const selections = { 1: 'A', 2: 'A', 3: 'B', 4: 'B', 5: 'B', 6: 'A' };
 
     const metaInfo = {
       1: {
@@ -1228,6 +1411,12 @@
         'H': { title: "Jalons Gates", desc: "Suivi des portes industrielles et chemin critique", icon: "🚩" }
       },
       5: {
+        'A': { title: "Capacité Nominale Standard", desc: "Temps d'ouverture standard des postes & effectifs Part-145", icon: "📐" },
+        'B': { title: "Demandes Effectives à l'Instant (WIP)", desc: "Charge en temps réel sur dossiers physiquement pointés", icon: "⚡" },
+        'C': { title: "Prévisions des Demandes (Plan S&OP)", desc: "Projection déterministe basée sur le carnet de commandes", icon: "🗓️" },
+        'D': { title: "Prévisions Multi-factorielles", desc: "Modélisation dynamique croisant TSN/CSN, météo et usure", icon: "🔮" }
+      },
+      6: {
         'A': { title: "Barres Charge (85%)", desc: "Taux d'occupation machine face au seuil d'engorgement", icon: "🚦" },
         'B': { title: "Heatmap / Semaine", desc: "Matrice thermique des volumes par site et semaine", icon: "🗓️" },
         'C': { title: "Courbes Entrées / Sorties", desc: "Différentiel de flux et suivi de l'en-cours WIP", icon: "📈" },
@@ -1273,7 +1462,10 @@
       if (step === 3) {
         renderStep3TablePreview();
       }
-      if (step === 6) {
+      if (step === 5) {
+        renderStep5TablePreview();
+      }
+      if (step === 7) {
         renderFinalDashboard();
       }
     }
@@ -1305,8 +1497,11 @@
       if (q === 2 || q === 3) {
         renderStep3TablePreview();
       }
+      if (q === 2 || q === 5) {
+        renderStep5TablePreview();
+      }
       updateRecap();
-      if (currentStep === 6) {
+      if (currentStep === 7) {
         renderFinalDashboard();
       }
     }
@@ -1366,16 +1561,17 @@
 
       drawSchema(opt);
       renderStep3TablePreview();
+      renderStep5TablePreview();
       updateRecap();
-      if (currentStep === 6) {
+      if (currentStep === 7) {
         renderFinalDashboard();
       }
     }
 
     function updateRecap() {
-      const q1 = selections[1], q2 = selections[2], q3 = selections[3], q4 = selections[4], q5 = selections[5];
+      const q1 = selections[1], q2 = selections[2], q3 = selections[3], q4 = selections[4], q5 = selections[5], q6 = selections[6];
       document.getElementById('recap-text').textContent =
-        `Q1: ${q1} (${metaInfo[1][q1]?.title || ''}) • Q2: ${q2} • Q3: ${q3} • Q4: ${q4} • Q5: ${q5}`;
+        `Q1: ${q1} (${metaInfo[1][q1]?.title || ''}) • Q2: ${q2} • Q3: ${q3} • Q4: ${q4} • Q5: ${q5} • Q6: ${q6}`;
     }
 
     function renderFinalDashboard() {
@@ -1384,9 +1580,10 @@
       const q3 = selections[3];
       const q4 = selections[4];
       const q5 = selections[5];
+      const q6 = selections[6];
 
-      // Synchronisation des selects et textes explicatifs de l'étape 6
-      for (let i = 1; i <= 5; i++) {
+      // Synchronisation des selects et textes explicatifs de l'étape 7
+      for (let i = 1; i <= 6; i++) {
         const choice = selections[i];
         const info = metaInfo[i][choice] || { title: choice, desc: "" };
         const selectEl = document.getElementById(`select-q${i}`);
@@ -1414,19 +1611,19 @@
         badge.className = "text-xs font-bold text-blue-700 font-mono";
       }
 
-      tag.textContent = `Granularité: ${q2} • Calcul: ${q3}`;
+      tag.textContent = `Granularité: ${q2} • TAT: ${q3} • Capacité: ${q5}`;
 
       // Recommandation technique
       const recoEl = document.getElementById('mock-reco-text');
       let reco = "";
       if (q1 === 'D') {
-        reco = `Table de faits <strong>${q2 === 'A' ? 'FAIT_DEMANDES_MRO' : (q2 === 'B' ? 'FAIT_PACKAGES_SITE' : 'FAIT_OPERATIONS')}</strong> enrichie avec les colonnes <code>Jours_Retard = MAX(0, Date_Livraison_Reelle - Date_SLA_Contractuelle)</code> et <code>Montant_Penalite = Jours_Retard * Bareme_Journalier</code>. Modélisation temporelle calibrée selon la méthode <strong>${metaInfo[3][q3].title}</strong>.`;
+        reco = `Table de faits <strong>${q2 === 'A' ? 'FAIT_DEMANDES_MRO' : (q2 === 'B' ? 'FAIT_PACKAGES_SITE' : 'FAIT_OPERATIONS')}</strong> enrichie avec les colonnes <code>Jours_Retard = MAX(0, Date_Livraison_Reelle - Date_SLA_Contractuelle)</code> et <code>Montant_Penalite = Jours_Retard * Bareme_Journalier</code>. Modélisation temporelle calibrée selon la méthode <strong>${metaInfo[3][q3].title}</strong> et capacité pilotée par <strong>${metaInfo[5][q5].title}</strong>.`;
       } else if (q1 === 'A') {
-        reco = `Tour de contrôle temps réel : Modèle DirectQuery / rafraîchissement horaire sur <strong>${q2 === 'A' ? 'FAIT_DEMANDES_MRO' : (q2 === 'B' ? 'FAIT_PACKAGES_SITE' : 'FAIT_OPERATIONS')}</strong> avec alertes Power Automate sur dossiers critiques et calcul dynamique selon <strong>${metaInfo[3][q3].title}</strong>.`;
+        reco = `Tour de contrôle temps réel : Modèle DirectQuery / rafraîchissement horaire sur <strong>${q2 === 'A' ? 'FAIT_DEMANDES_MRO' : (q2 === 'B' ? 'FAIT_PACKAGES_SITE' : 'FAIT_OPERATIONS')}</strong> avec alertes Power Automate sur dossiers critiques, calcul dynamique selon <strong>${metaInfo[3][q3].title}</strong> et charge calibrée sur <strong>${metaInfo[5][q5].title}</strong>.`;
       } else if (q1 === 'B') {
-        reco = `Pilotage contractuel & SLA : Modèle tabulaire en étoile reliant les contrats cadres et statuts de gel chrono (pièces/appro) aux faits <strong>${q2 === 'A' ? 'FAIT_DEMANDES_MRO' : (q2 === 'B' ? 'FAIT_PACKAGES_SITE' : 'FAIT_OPERATIONS')}</strong> avec conformité évaluée via <strong>${metaInfo[3][q3].title}</strong>.`;
+        reco = `Pilotage contractuel & SLA : Modèle tabulaire en étoile reliant les contrats cadres et statuts de gel chrono aux faits <strong>${q2 === 'A' ? 'FAIT_DEMANDES_MRO' : (q2 === 'B' ? 'FAIT_PACKAGES_SITE' : 'FAIT_OPERATIONS')}</strong> avec conformité évaluée via <strong>${metaInfo[3][q3].title}</strong> et capacité dimensionnée par <strong>${metaInfo[5][q5].title}</strong>.`;
       } else {
-        reco = `Optimisation flux & capacités : Dashboard en mode Import avec agrégations automatiques pour la granularité <strong>${metaInfo[2][q2].title}</strong>, matrice de saturation ateliers / machines et mesures DAX de charge calibrées par <strong>${metaInfo[3][q3].title}</strong>.`;
+        reco = `Optimisation flux & capacités : Dashboard en mode Import avec agrégations automatiques pour la granularité <strong>${metaInfo[2][q2].title}</strong>, matrice de saturation ateliers / machines, mesures DAX de charge calibrées par <strong>${metaInfo[3][q3].title}</strong> et modèle capacitaire <strong>${metaInfo[5][q5].title}</strong>.`;
       }
       if (recoEl) recoEl.innerHTML = reco;
 
@@ -1436,8 +1633,8 @@
       // Génération du Chart Délai (Q4)
       renderChartQ4(q4, q1, q3, q2);
 
-      // Génération du Chart Saturation (Q5)
-      renderChartQ5(q5, q2);
+      // Génération du Chart Saturation (Q6)
+      renderChartQ6(q6, q2);
     }
 
     function renderKpis(q1, q3) {
@@ -1831,18 +2028,18 @@
       container.innerHTML = svg;
     }
 
-    function renderChartQ5(q5, q2) {
-      const container = document.getElementById('mock-chart-q5-container');
-      const title = document.getElementById('mock-chart-q5-title');
-      const sub = document.getElementById('mock-chart-q5-sub');
+    function renderChartQ6(q6, q2) {
+      const container = document.getElementById('mock-chart-q6-container');
+      const title = document.getElementById('mock-chart-q6-title');
+      const sub = document.getElementById('mock-chart-q6-sub');
       if (!container) return;
 
       q2 = q2 || selections[2] || 'A';
       const granLabel = q2 === 'A' ? "Grain Global Safran MRO" : (q2 === 'B' ? "Grain Sites Industriels" : "Grain Postes Machines");
-      sub.textContent = `Option 5.${q5} : ${metaInfo[5][q5].title} • ${granLabel}`;
+      sub.textContent = `Option 6.${q6} : ${metaInfo[6][q6].title} • ${granLabel}`;
 
       let svg = "";
-      if (q5 === 'A') {
+      if (q6 === 'A') {
         const titleTarget = q2 === 'A' ? "Lignes de Maintenance" : (q2 === 'B' ? "Sites Industriels" : "Postes de Travail Machine");
         title.innerHTML = `<span>🚦</span> Taux de Charge par ${titleTarget} vs Seuil 85%`;
 
@@ -1878,7 +2075,7 @@
             <text x="235" y="128" font-size="8.5" fill="#059669">82%</text>
           </svg>
         `;
-      } else if (q5 === 'B') {
+      } else if (q6 === 'B') {
         const headerUnit = q2 === 'C' ? "Postes Machines" : (q2 === 'B' ? "Sites Safran" : "Familles Moteurs");
         title.innerHTML = `<span>🗓️</span> Heatmap Hebdo d'Occupation par ${headerUnit}`;
 
@@ -1919,7 +2116,7 @@
             <text x="180" y="125" font-size="7.5" text-anchor="middle" fill="#dc2626" font-weight="bold">■ Pic de charge critique S38 (${row2})</text>
           </svg>
         `;
-      } else if (q5 === 'C') {
+      } else if (q6 === 'C') {
         const wipSubject = q2 === 'A' ? "Moteurs ESN en Révision" : (q2 === 'B' ? "Lots Sous-Ensembles en Transit" : "Ordres de Fabrication / Pièces");
         title.innerHTML = `<span>📈</span> Flux Entrées vs Sorties & Accumulation WIP (${wipSubject})`;
         svg = `
@@ -1942,8 +2139,8 @@
             <text x="160" y="134" font-size="7.5" text-anchor="middle" fill="#64748b">Semaines (Accumulation en amont des postes clés)</text>
           </svg>
         `;
-      } else if (q5 === 'D') {
-        // 5D
+      } else if (q6 === 'D') {
+        // 6D
         const t1 = q2 === 'A' ? "44% Attente / transit inter-sites" : (q2 === 'B' ? "42% Navette route & attente quai" : "48% Attente bacs tampons machine");
         const subT1 = q2 === 'A' ? "~ 8.2 jours sans travail physique" : (q2 === 'B' ? "~ 3.1 jours de transport" : "~ 2.1 heures en file d'attente");
         const t2 = q2 === 'A' ? "56% Usinage, révision & essai" : (q2 === 'B' ? "58% Réparation atelier site" : "52% Usinage copeaux & contrôle");
@@ -1970,8 +2167,8 @@
             <text x="160" y="115" font-size="8" fill="#334155" font-weight="semibold">🎯 Levier : fluidifier le goulet ${q2 === 'A' ? 'global' : (q2 === 'B' ? 'logistique' : 'machine')}</text>
           </svg>
         `;
-      } else if (q5 === 'E') {
-        // 5E : Jauge Tachymètre
+      } else if (q6 === 'E') {
+        // 6E : Jauge Tachymètre
         const rateVal = q2 === 'C' ? "91 %" : (q2 === 'B' ? "88 %" : "84 %");
         const statusText = q2 === 'C' ? "Zone Critique (>85%) : File saturée" : (q2 === 'B' ? "Zone d'Alerte : Montereau & Villaroche" : "Zone de Vigilance : Ligne LEAP");
         title.innerHTML = `<span>🎯</span> Jauge Tachymètre de Saturation Globale (Seuil 85%)`;
@@ -2000,8 +2197,8 @@
             <text x="245" y="115" font-size="7" fill="#64748b">100%</text>
           </svg>
         `;
-      } else if (q5 === 'F') {
-        // 5F : Radar Poly-compétences
+      } else if (q6 === 'F') {
+        // 6F : Radar Poly-compétences
         title.innerHTML = `<span>🕸️</span> Radar Adéquation Capacité Part-145 vs Charge Réelle`;
         const centerName = q2 === 'C' ? "Slots Postes" : (q2 === 'B' ? "Ateliers Sites" : "Lignes Globales");
         svg = `
@@ -2037,8 +2234,8 @@
             <text x="220" y="92" font-size="7.5" font-weight="bold" fill="#dc2626">🚨 Tension CND : +16% vs effectifs</text>
           </svg>
         `;
-      } else if (q5 === 'G') {
-        // 5G : Spaghetti & Navettes
+      } else if (q6 === 'G') {
+        // 6G : Spaghetti & Navettes
         title.innerHTML = `<span>🔄</span> Diagramme de Spaghetti des Flux & Rotations Navettes`;
         svg = `
           <svg class="w-full h-28 md:h-32 max-h-[130px]" viewBox="0 0 320 145">
@@ -2708,9 +2905,211 @@
       }
     }
 
+    function renderStep5TablePreview() {
+      const q2 = selections[2] || 'A';
+      const q5 = selections[5] || 'B';
+
+      const container = document.getElementById('step5-table-container');
+      const titleEl = document.getElementById('step5-table-title');
+      const badgeEl = document.getElementById('step5-combo-badge');
+      const noteEl = document.getElementById('step5-table-note');
+      if (!container) return;
+
+      const granCapTableNames = {
+        'A': 'FAIT_CAPACITE_DEMANDES',
+        'B': 'FAIT_CAPACITE_SITES',
+        'C': 'FAIT_CAPACITE_POSTES'
+      };
+
+      const levelLabels = {
+        'A': 'Shop Visit (Macro)',
+        'B': 'Shop Operation (Méso)',
+        'C': 'Shop Task (Micro)'
+      };
+
+      if (titleEl) {
+        titleEl.innerHTML = `📋 Extrait de <span class="font-mono text-purple-700 font-bold ml-1">${granCapTableNames[q2]}</span>`;
+      }
+      if (badgeEl) {
+        badgeEl.textContent = `${levelLabels[q2]} + Capacité 5.${q5}`;
+      }
+
+      let cols = [];
+      let rows = [];
+      let formulaNote = "";
+      let daxSnippet = "";
+
+      if (q2 === 'A') {
+        // Demande Globale ESN
+        if (q5 === 'A') {
+          cols = ['Ligne_MRO', 'Lignes_Ouvertes', 'Cadence_Nominale', 'Capacite_Theorique_Mois', 'SLA_Garantie'];
+          rows = [
+            ['LIGNE-CFM56', '4 baies', '12 visites / mois', '<span class="text-purple-700 font-bold font-mono">12.0 mot.</span>', '20.0 j'],
+            ['LIGNE-LEAP-1A', '3 baies', '8 visites / mois', '<span class="text-purple-700 font-bold font-mono">8.0 mot.</span>', '22.0 j'],
+            ['LIGNE-LEAP-1B', '2 baies', '6 visites / mois', '<span class="text-purple-700 font-bold font-mono">6.0 mot.</span>', '25.0 j']
+          ];
+          formulaNote = "<strong>Capacité Nominale Standard :</strong> Nombre de baies d'assemblage ouvertes calibrées sur les équipes Part-145.";
+          daxSnippet = "Capacite_Nominale = SUMX(DIM_LIGNE_MRO, [Baies_Ouvertes] * [Cadence_Standard])";
+        } else if (q5 === 'B') {
+          cols = ['Ligne_MRO', 'Demandes_Actives_WIP', 'Capacite_Disponible', 'Taux_Occupation_Instant', 'Statut'];
+          rows = [
+            ['LIGNE-CFM56', '10 moteurs', '12 baies max', '<span class="text-amber-700 font-bold font-mono">83.3 %</span>', '<span class="text-amber-600 font-bold">Charge Haute</span>'],
+            ['LIGNE-LEAP-1A', '8 moteurs', '8 baies max', '<span class="text-red-700 font-bold font-mono">100.0 %</span>', '<span class="text-red-600 font-bold">Saturé 🚨</span>'],
+            ['LIGNE-LEAP-1B', '3 moteurs', '6 baies max', '<span class="text-emerald-700 font-bold font-mono">50.0 %</span>', '<span class="text-emerald-600 font-bold">Fluide</span>']
+          ];
+          formulaNote = "<strong>Demandes Effectives à l'Instant (WIP Réel) :</strong> Moteurs physiquement engagés dans les baies d'atelier.";
+          daxSnippet = "Taux_Occupation_Live = DIVIDE(COUNTROWS(FILTER(FAIT_DEMANDES_MRO, [Statut] = \"EN_COURS\")), [Capacite_Baies])";
+        } else if (q5 === 'C') {
+          cols = ['Ligne_MRO', 'Mois_Cible', 'Déposes_Annoncées', 'Slots_Réservés', 'Couverture_Plan'];
+          rows = [
+            ['LIGNE-CFM56', 'M+1 (Octobre)', '14 visites fermes', '12 slots', '<span class="text-red-700 font-bold font-mono">116.7 % (Déficit)</span>'],
+            ['LIGNE-LEAP-1A', 'M+1 (Octobre)', '7 visites fermes', '8 slots', '<span class="text-emerald-700 font-bold font-mono">87.5 % (OK)</span>'],
+            ['LIGNE-LEAP-1B', 'M+1 (Octobre)', '5 visites fermes', '6 slots', '<span class="text-emerald-700 font-bold font-mono">83.3 % (OK)</span>']
+          ];
+          formulaNote = "<strong>Prévisions des Demandes (Plan de Charge S&OP) :</strong> Engagements contractuels fermes de déposes moteurs déclarés par les compagnies.";
+          daxSnippet = "Charge_Prevue_SOP = SUM(PLAN_CHARGE_SOP[Deposes_Fermes]) / [Capacite_Mensuelle]";
+        } else {
+          // 5D
+          cols = ['Ligne_MRO', 'Horizon', 'Demandes_IA_Multi', 'Facteur_Chaleur/Saison', 'Risque_Saturation'];
+          rows = [
+            ['LIGNE-CFM56', 'T4 2026', '38 visites estimées', 'Facteur 1.15 (Saison Golfe)', '<span class="text-amber-700 font-bold font-mono">Modéré (88%)</span>'],
+            ['LIGNE-LEAP-1A', 'T4 2026', '29 visites estimées', 'Facteur 1.28 (Cycles TSN/CSN)', '<span class="text-red-700 font-bold font-mono">Critique (104%) ⚠️</span>'],
+            ['LIGNE-LEAP-1B', 'T4 2026', '16 visites estimées', 'Facteur 0.95 (Flotte jeune)', '<span class="text-emerald-700 font-bold font-mono">Nominal (67%)</span>']
+          ];
+          formulaNote = "<strong>Prévisions Multi-factorielles Avancées :</strong> Simulation prédictive croisant cycles de vol (TSN/CSN), environnements chauds/poussiéreux et historique de déposes.";
+          daxSnippet = "Demande_Predictive = FORECAST_DEMANDS_MRO(CYCLES_VOL, CLIMAT, AGING_FACTORS)";
+        }
+      } else if (q2 === 'B') {
+        // Packages / Sites
+        if (q5 === 'A') {
+          cols = ['Site_Safran', 'Spécialité_Pôle', 'Capacité_Lots_Hebdo', 'Effectif_Homologué', 'Cadence_Cible'];
+          rows = [
+            ['Montereau', 'Aubes Turbine HP', '24 lots / sem', '18 techniciens', '<span class="text-purple-700 font-bold font-mono">1.33 lot/tech</span>'],
+            ['Villaroche', 'Compresseurs & Rotors', '16 lots / sem', '14 techniciens', '<span class="text-purple-700 font-bold font-mono">1.14 lot/tech</span>'],
+            ['Bruxelles', 'Bancs d\'Essais', '10 passages / sem', '8 ingénieurs banc', '<span class="text-purple-700 font-bold font-mono">1.25 test/tech</span>']
+          ];
+          formulaNote = "<strong>Capacité Nominale Standard :</strong> Capacité déclarée des pôles d'excellence en nombre de sous-ensembles traitables par semaine.";
+          daxSnippet = "Capacite_Lots_Site = SUMX(DIM_SITE_SAFRAN, [Capacite_Lots_Hebdo])";
+        } else if (q5 === 'B') {
+          cols = ['Site_Safran', 'Sous_Ensemble', 'Lots_En_Cours_WIP', 'Navettes_En_Transit', 'Taux_Charge_Site'];
+          rows = [
+            ['Montereau', 'Aubes Turbine HP', '22 lots', '3 navettes route', '<span class="text-amber-700 font-bold font-mono">91.7 % ⚠️</span>'],
+            ['Villaroche', 'Compresseurs', '11 lots', '1 navette', '<span class="text-emerald-700 font-bold font-mono">68.8 %</span>'],
+            ['Bruxelles', 'Banc Essai Recette', '10 lots', '2 en attente quai', '<span class="text-red-700 font-bold font-mono">100.0 % 🚨</span>']
+          ];
+          formulaNote = "<strong>Demandes Effectives à l'Instant (WIP Ateliers + Navettes) :</strong> Suivi des lots physiques pointés sur site et lots en cours de transfert routier.";
+          daxSnippet = "Charge_Site_Live = DIVIDE(COUNTROWS(FILTER(FAIT_PACKAGES_SITE, [Statut] IN {\"EN_ATELIER\", \"EN_TRANSIT\"})), [Capacite_Lots_Hebdo])";
+        } else if (q5 === 'C') {
+          cols = ['Site_Safran', 'Horizon_Semaine', 'Lots_S&OP_Planifiés', 'Capacité_Disponible', 'Tension_Prévisionnelle'];
+          rows = [
+            ['Montereau', 'S38-S40', '68 lots programmés', '72 lots max', '<span class="text-emerald-700 font-bold font-mono">94.4 % (Tendu)</span>'],
+            ['Villaroche', 'S38-S40', '42 lots programmés', '48 lots max', '<span class="text-emerald-700 font-bold font-mono">87.5 % (OK)</span>'],
+            ['Bruxelles', 'S38-S40', '35 passages', '30 slots max', '<span class="text-red-700 font-bold font-mono">116.7 % (Saturation)</span>']
+          ];
+          formulaNote = "<strong>Prévisions des Demandes (Plan S&OP par Site) :</strong> Volume de modules issus des déposes programmées affectés selon les spécialités d'ateliers.";
+          daxSnippet = "Tension_Site_SOP = DIVIDE(SUM(PREVISION_PACKAGES[Lots_Planifies]), [Capacite_Site_Periode])";
+        } else {
+          // 5D
+          cols = ['Site_Safran', 'Sous_Ensemble', 'Volume_Prédit_IA', 'Impact_Aléas_Contrôle', 'Saturation_Probabiliste'];
+          rows = [
+            ['Montereau', 'Aubes HP Monocristal', '28.4 lots / sem', '+3.8 lots (Rebuts CND)', '<span class="text-red-700 font-bold font-mono">98.2 % ⚠️</span>'],
+            ['Villaroche', 'Compresseurs BP/HP', '15.1 lots / sem', '+1.1 lot (Rétrofit)', '<span class="text-emerald-700 font-bold font-mono">75.5 %</span>'],
+            ['Bruxelles', 'Banc Essai', '11.8 passages / sem', '+2.0 repasses (Aléas banc)', '<span class="text-red-700 font-bold font-mono">105.0 % 🚨</span>']
+          ];
+          formulaNote = "<strong>Prévisions Multi-factorielles Avancées :</strong> Projection prenant en compte les taux de rebuts aux contrôles non destructifs et ré-interventions.";
+          daxSnippet = "Charge_Probabiliste_Site = PREDICT_SITE_DEMANDS(HISTORIQUE_LOTS, TAUX_REBUTS_CND, CONTEXT)";
+        }
+      } else {
+        // Opérations unitaires / Postes de travail (Micro 2.C)
+        if (q5 === 'A') {
+          cols = ['Poste_Machine', 'Atelier', 'Capacite_Heures_Sem', 'Equipes_Shifts', 'Taux_Dispo_Moy'];
+          rows = [
+            ['USI-04 (Tour CN 5-Axes)', 'Usinage Mécanique', '110 h / sem', '2x8h (Lundi-Vendredi)', '<span class="text-purple-700 font-bold font-mono">92 %</span>'],
+            ['CND-02 (Bain Ressuage)', 'Contrôle Non Destructif', '80 h / sem', '2x8h', '<span class="text-purple-700 font-bold font-mono">95 %</span>'],
+            ['EQU-01 (Banc Équilibrage)', 'Rotor / Dynamique', '70 h / sem', '1x8h (+ astreinte)', '<span class="text-purple-700 font-bold font-mono">88 %</span>']
+          ];
+          formulaNote = "<strong>Capacité Nominale Standard :</strong> Heures d'ouverture calendrier multipliées par le coefficient de disponibilité machine (TRS/OEE standard).";
+          daxSnippet = "Heures_Dispo_Poste = SUMX(DIM_MACHINE, [Heures_Ouverture_Semaine] * [TRS_Cible])";
+        } else if (q5 === 'B') {
+          cols = ['Poste_Machine', 'Pièces_En_Attente_Tampon', 'Heures_Charge_Live', 'Capacité_Restante_Sem', 'Statut_Goulot'];
+          rows = [
+            ['USI-04 (5-Axes)', '14 pièces en bac', '104 h de pointage', '6 h restantes', '<span class="text-red-700 font-bold font-mono">94.5 % (Goulot 🚨)</span>'],
+            ['CND-02 (Ressuage)', '5 pièces en bac', '48 h de pointage', '32 h restantes', '<span class="text-emerald-700 font-bold font-mono">60.0 % (Fluide)</span>'],
+            ['EQU-01 (Équilibrage)', '9 pièces en bac', '66 h de pointage', '4 h restantes', '<span class="text-amber-700 font-bold font-mono">94.3 % (Tendu ⚠️)</span>']
+          ];
+          formulaNote = "<strong>Demandes Effectives à l'Instant (En-cours Pointé) :</strong> Somme des gammes d'usinage des pièces en file d'attente immédiate devant la machine.";
+          daxSnippet = "Charge_Machine_Live = DIVIDE(SUM(FAIT_OPERATIONS_REPARATION[Temps_Gamme_Restant]), RELATED(DIM_MACHINE[Capacite_Heures_Sem]))";
+        } else if (q5 === 'C') {
+          cols = ['Poste_Machine', 'Semaine_Plan', 'Heures_Ordres_Fab (OF)', 'Capacité_Allouée', 'Taux_Engagement'];
+          rows = [
+            ['USI-04 (5-Axes)', 'Semaine S38', '118 h prévues', '110 h max', '<span class="text-red-700 font-bold font-mono">107.3 % (Heures Sup Requises)</span>'],
+            ['CND-02 (Ressuage)', 'Semaine S38', '62 h prévues', '80 h max', '<span class="text-emerald-700 font-bold font-mono">77.5 % (Équilibré)</span>'],
+            ['EQU-01 (Équilibrage)', 'Semaine S38', '74 h prévues', '70 h max', '<span class="text-amber-700 font-bold font-mono">105.7 % (Tendu)</span>']
+          ];
+          formulaNote = "<strong>Prévisions des Demandes (Génération automatique des OF) :</strong> Ordres de fabrication déversés par l'ERP/MES selon le plan directeur de production.";
+          daxSnippet = "Charge_Planifiee_OF = DIVIDE(SUM(PLAN_OF_CHARGE[Heures_Allouees]), [Capacite_Machine_Heures])";
+        } else {
+          // 5D
+          cols = ['Poste_Machine', 'Simulation_Horodatee', 'Charge_Prédite_Heures', 'Risque_Panne_Usure', 'Goulot_Probable'];
+          rows = [
+            ['USI-04 (5-Axes)', 'J+1 à J+7', '122.5 h probabilistes', 'Risque Broche 14%', '<span class="text-red-700 font-bold font-mono">Oui (P95 = 112%) 🚨</span>'],
+            ['CND-02 (Ressuage)', 'J+1 à J+7', '68.0 h probabilistes', 'Risque Bain 2%', '<span class="text-emerald-700 font-bold font-mono">Non (P95 = 85%)</span>'],
+            ['EQU-01 (Équilibrage)', 'J+1 à J+7', '76.2 h probabilistes', 'Calibrage Capteur 8%', '<span class="text-amber-700 font-bold font-mono">Modéré (P95 = 98%)</span>']
+          ];
+          formulaNote = "<strong>Prévisions Multi-factorielles Avancées :</strong> Modélisation fine croisant cadence d'usinage, usure des outils de coupe et risques de défaillance.";
+          daxSnippet = "PREDICT_MACHINE_BOTTLENECK(FAIT_OPERATIONS_HIST, TRS_HISTORIQUE, AI_PREDICTION)";
+        }
+      }
+
+      let html = `
+        <table class="w-full text-left text-xs border-collapse font-mono">
+          <thead>
+            <tr class="border-b border-purple-200 bg-purple-50/50 text-[10px] text-slate-600">
+      `;
+      cols.forEach((col, idx) => {
+        const isCalc = idx >= cols.length - 2;
+        html += `<th class="py-1.5 px-2 font-semibold ${isCalc ? 'text-purple-700 bg-purple-100/60' : ''}">${col}</th>`;
+      });
+      html += `
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 text-[11px]">
+      `;
+
+      rows.forEach((r, rowIdx) => {
+        html += `<tr class="hover:bg-purple-50/30 transition-colors ${rowIdx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}">`;
+        r.forEach((cell, cellIdx) => {
+          const isKey = cellIdx === 0;
+          const isCalc = cellIdx >= cols.length - 2;
+          html += `<td class="py-2 px-2 whitespace-nowrap ${isKey ? 'text-slate-600 font-semibold' : ''} ${isCalc ? 'bg-purple-50/40' : 'text-slate-800'}">${cell}</td>`;
+        });
+        html += `</tr>`;
+      });
+
+      html += `
+          </tbody>
+        </table>
+      `;
+
+      container.innerHTML = html;
+
+      if (noteEl) {
+        noteEl.innerHTML = `
+          <div class="flex flex-col gap-1 w-full">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-slate-800">💡 Méthode capacitaire :</span>
+              <span class="text-purple-700 font-mono text-[9px] truncate max-w-[280px] font-semibold">${daxSnippet}</span>
+            </div>
+            <p class="text-slate-600 text-[10.5px] leading-snug">${formulaNote}</p>
+          </div>
+        `;
+      }
+    }
+
     window.addEventListener('load', () => {
       drawSchema('A');
       renderStep3TablePreview();
+      renderStep5TablePreview();
       updateRecap();
     });
   </script>

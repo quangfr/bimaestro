@@ -22,7 +22,7 @@
 
 ## 2. Règles Fondamentales & Règles Métier
 
-### 2.1 Les 6 Étapes du Simulateur (Onglets 1 mot)
+### 2.1 Les 7 Étapes du Simulateur (Onglets 1 mot)
 1. **Étape 1 : Objectif** (Cadrage métier prioritaire)
    - `1.A` : Urgence opérationnelle (AOG temps réel).
    - `1.B` : Engagements contractuels (SLA globaux par compagnie).
@@ -34,7 +34,7 @@
    - `2.B` (Méso - Shop Operation) : 1 ligne = 1 lot module par site (`FAIT_PACKAGES_SITE`). **Données historiques d'atelier** + navettes physiques inter-ateliers (Villaroche, Montereau, Châtellerault, Bruxelles). Pas de barème théorique unitaire.
    - `2.C` (Micro - Shop Task) : 1 ligne = 1 tâche technique unitaire pointée (`FAIT_OPERATIONS_REPARATION`). **Seule option disposant de la table de référence des durées théoriques** (`REF_OPERATIONS_THEORIQUES`) croisant `Type_Moteur` et `Type_Reparation`.
 
-3. **Étape 3 : Calcul** (Méthode de calcul du Turn Around Time TAT)
+3. **Étape 3 : TAT** (Méthode de calcul du Turn Around Time TAT)
    - `3.A` : Délais théoriques de traitement (Gamme standard + forfaits transit).
      > ⚠️ **RÈGLE STRICTE :** L'option **3.A est INDISPONIBLE en 2.B** (car 2.B repose sur les données historiques d'atelier). En cas de sélection de 2.B, 3.A doit être grisée, désactivée et la sélection doit automatiquement basculer sur 3.B si 3.A était active.
    - `3.B` : Table des délais moyens (Percentiles réels $P_{5}$, $P_{50}$ médian, $P_{95}$).
@@ -51,19 +51,25 @@
    - `4.G` : Waterfall des Dérives (Cascade cumulative des retards pièces/CND vs SLA).
    - `4.H` : Jalons de Traversée Gates (Jalons industriels Gate 1 Démontage, Gate 2 Contrôle, Gate 3 Banc).
 
-5. **Étape 5 : Saturation** (Visualisation de la Saturation / Capacité)
-   - `5.A` : Barres de Charge vs Seuil 85%.
-   - `5.B` : Heatmap Hebdomadaire / Site.
-   - `5.C` : Courbes Entrées vs Sorties (Dérive en-cours WIP).
-   - `5.D` : Ratio Attente vs Travail Effectif (Donut lead time).
-   - `5.E` : Jauge Tachymètre de Saturation Globale (Cadran à aiguille avec seuils vert/jaune/rouge).
-   - `5.F` : Radar Poly-compétences & Postes Clés (Adéquation charge pointée vs capacité Part-145).
-   - `5.G` : Diagramme Spaghetti / Flux de Transfert (Trajets et intensité des navettes inter-sites).
-   - `5.H` : Treemap des Goulots par Atelier/Machine (Surfaces proportionnelles au WIP bloqué).
+5. **Étape 5 : Capacité** (Méthode d'évaluation de la Capacité & des Demandes)
+   - `5.A` : Capacité Nominale Standard (Heures d'ouverture calendrier et effectifs théoriques).
+   - `5.B` : Demandes Effectives à l'Instant (En-cours physique réel WIP et pièces pointées en direct).
+   - `5.C` : Prévisions des Demandes (Plan S&OP, déposes fermes annoncées & créneaux réservés).
+   - `5.D` : Prévisions Multi-factorielles Avancées (Modélisation prédictive IA, cycles TSN/CSN, météo & aléas).
 
-6. **Étape 6 : Synthèse** (Slide Décisionnel & Dashboard Projeté)
-   - Tableau de bord en temps réel alimenté par l'objet global `selections = { 1, 2, 3, 4, 5 }`.
-   - Menus déroulants interactifs de modification directe synchronisés avec les pages étapes.
+6. **Étape 6 : Saturation** (Visualisation de la Saturation / Capacité)
+   - `6.A` : Barres de Charge vs Seuil 85%.
+   - `6.B` : Heatmap Hebdomadaire / Site.
+   - `6.C` : Courbes Entrées vs Sorties (Dérive en-cours WIP).
+   - `6.D` : Ratio Attente vs Travail Effectif (Donut lead time).
+   - `6.E` : Jauge Tachymètre de Saturation Globale (Cadran à aiguille avec seuils vert/jaune/rouge).
+   - `6.F` : Radar Poly-compétences & Postes Clés (Adéquation charge pointée vs capacité Part-145).
+   - `6.G` : Diagramme Spaghetti / Flux de Transfert (Trajets et intensité des navettes inter-sites).
+   - `6.H` : Treemap des Goulots par Atelier/Machine (Surfaces proportionnelles au WIP bloqué).
+
+7. **Étape 7 : Synthèse** (Slide Décisionnel & Dashboard Projeté)
+   - Tableau de bord en temps réel alimenté par l'objet global `selections = { 1, 2, 3, 4, 5, 6 }`.
+   - Menus déroulants interactifs de modification directe (`#select-q1` à `#select-q6`) synchronisés avec les pages étapes.
    - Recommandations d'architecture BI et mesures DAX adaptées au profil choisi.
 
 ---

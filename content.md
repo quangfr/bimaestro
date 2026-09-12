@@ -10,8 +10,9 @@ Ce fichier centralise l'intégralité des contenus rédactionnels, explications 
 - [Étape 3 : Méthode de calcul du Turn Around Time (TAT)](#étape-3--méthode-de-calcul-du-turn-around-time-tat)
   - [Analyses croisées Étape 2 × Étape 3 (Diagnostics & Formules DAX)](#analyses-croisées-étape-2--étape-3)
 - [Étape 4 : Visualisation des Délais & Alertes MRO](#étape-4--visualisation-des-délais--alertes-mro)
-- [Étape 5 : Visualisation de la Capacité & Charge Atelier](#étape-5--visualisation-de-la-capacité--charge-atelier)
-- [Étape 6 : Synthèse, Profils & Recommandations](#étape-6--synthèse-profils--recommandations)
+- [Étape 5 : Méthode d'Évaluation de la Capacité Atelier](#étape-5--méthode-dévaluation-de-la-capacité-atelier)
+- [Étape 6 : Visualisation de la Saturation & Charge Atelier](#étape-6--visualisation-de-la-saturation--charge-atelier)
+- [Étape 7 : Synthèse, Profils & Recommandations](#étape-7--synthèse-profils--recommandations)
 
 ---
 
@@ -708,14 +709,97 @@ Le tableau ci-dessous explicite le comportement du calcul selon la granularité 
 
 ---
 
-## Étape 5 : Visualisation de la Capacité & Charge Atelier
+## Étape 5 : Méthode d'Évaluation de la Capacité Atelier
+
+> **Question :** Sur quelle base modéliser la capacité et la charge théorique ou prévisionnelle ?
+> **Description du besoin :** La capacité peut être calibrée selon les standards nominaux d'ouverture, le suivi en direct des demandes effectives dans l'instant (WIP réel pointé), le plan de charge contractuel prévisionnel (S&OP) ou une modélisation prédictive multi-factorielle.
+
+---
+
+### Option 5.A : Capacité Nominale Standard
+- **Icône / Emoji :** 🏗️
+- **Sous-titre :** Heures d'ouverture calendrier et effectifs théoriques
+- **Description métier :**
+  Modélisation sur barèmes fixes d'ouverture des postes ou lignes d'assemblage selon les équipes Part-145 déclarées. Référence théorique pour l'évaluation du capacitaire brut Safran.
+- **Formule DAX type :** `SUMX(DIM_POSTE, [Heures_Ouverture] * [Effectifs_Theoriques])`
+- **Illustration SVG :**
+```xml
+<svg class="w-full h-full" viewBox="0 0 50 50">
+  <rect x="6" y="8" width="38" height="14" rx="2" fill="#ede9fe" stroke="#8b5cf6" stroke-width="1.2" />
+  <text x="25" y="18" font-size="7" font-weight="bold" text-anchor="middle" fill="#5b21b6">35h / tech</text>
+  <line x1="12" y1="28" x2="38" y2="28" stroke="#cbd5e1" stroke-width="1.5" />
+  <rect x="10" y="32" width="12" height="12" rx="2" fill="#c4b5fd" />
+  <rect x="28" y="32" width="12" height="12" rx="2" fill="#c4b5fd" />
+</svg>
+```
+
+---
+
+### Option 5.B : Demandes Effectives à l'Instant
+- **Icône / Emoji :** 📍
+- **Sous-titre :** En-cours physique réel (WIP) et pièces pointées en direct
+- **Description métier :**
+  Mesure en direct de la charge générée par les demandes actuellement dans l'atelier : moteurs en cours de démontage, sous-ensembles en transit et opérations en attente immédiate devant les machines.
+- **Formule DAX type :** `COUNTROWS(FILTER(FAIT, [Statut] = "EN_COURS"))`
+- **Illustration SVG :**
+```xml
+<svg class="w-full h-full" viewBox="0 0 50 50">
+  <circle cx="25" cy="25" r="18" fill="none" stroke="#e2e8f0" stroke-width="4" />
+  <circle cx="25" cy="25" r="18" fill="none" stroke="#2563eb" stroke-width="4" stroke-dasharray="113" stroke-dashoffset="30" stroke-linecap="round" />
+  <text x="25" y="27" font-size="9" font-weight="black" text-anchor="middle" fill="#0f172a">WIP</text>
+  <text x="25" y="37" font-size="6" font-weight="bold" text-anchor="middle" fill="#2563eb">Live</text>
+</svg>
+```
+
+---
+
+### Option 5.C : Prévisions des Demandes (Plan S&OP)
+- **Icône / Emoji :** 📅
+- **Sous-titre :** Déposes fermes annoncées & créneaux réservés
+- **Description métier :**
+  Adéquation face au plan de charge prévisionnel consolidé à moyen terme (S&OP) : engagements fermes des compagnies aériennes, déposes programmées pour révision majeure et créneaux réservés.
+- **Formule DAX type :** `SUM(PLAN_CHARGE_SOP[Demandes_Previsionnelles_Heures])`
+- **Illustration SVG :**
+```xml
+<svg class="w-full h-full" viewBox="0 0 50 50">
+  <rect x="8" y="10" width="34" height="30" rx="3" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.2" />
+  <line x1="8" y1="18" x2="42" y2="18" stroke="#3b82f6" stroke-width="1.5" />
+  <circle cx="15" cy="25" r="2" fill="#2563eb" />
+  <circle cx="25" cy="25" r="2" fill="#2563eb" />
+  <circle cx="35" cy="25" r="2" fill="#93c5fd" />
+  <circle cx="15" cy="33" r="2" fill="#2563eb" />
+  <circle cx="25" cy="33" r="2" fill="#ef4444" />
+</svg>
+```
+
+---
+
+### Option 5.D : Prévisions Multi-factorielles Avancées
+- **Icône / Emoji :** 🧠
+- **Sous-titre :** Modélisation prédictive IA, cycles TSN/CSN, météo & aléas
+- **Description métier :**
+  Algorithme prédictif dynamique estimant les arrivées de moteurs et modules selon l'historique d'exploitation avion : taux d'usure des aubes, cycles vol (CSN), zones climatiques sévères (sable/chaleur) et probabilité d'aléas.
+- **Formule DAX / Algo type :** `FORECAST_CAPACITY_AI(CYCLES_VOL, CLIMAT, TAUX_REBUTS_HIST)`
+- **Illustration SVG :**
+```xml
+<svg class="w-full h-full" viewBox="0 0 50 50">
+  <path d="M 8 36 Q 18 16, 28 26 T 44 12" fill="none" stroke="#8b5cf6" stroke-width="2" />
+  <circle cx="44" cy="12" r="3" fill="#ef4444" />
+  <line x1="8" y1="42" x2="44" y2="42" stroke="#94a3b8" stroke-width="1" />
+  <text x="25" y="47" font-size="5.5" font-weight="bold" text-anchor="middle" fill="#64748b">IA Predictive</text>
+</svg>
+```
+
+---
+
+## Étape 6 : Visualisation de la Saturation & Charge Atelier
 
 > **Question :** Quel visuel privilégier pour piloter l'adéquation entre le plan de travail et les moyens disponibles ?
 > **Description du besoin :** Visualiser la saturation pour anticiper les embouteillages d'atelier ou les sous-charges d'équipes.
 
 ---
 
-### Option 5.A : Barres de Charge vs Seuil 85%
+### Option 6.A : Barres de Charge vs Seuil 85%
 - **Icône / Emoji :** 🚦
 - **Sous-titre :** Taux d'occupation machine/banc face à la ligne critique des 85%
 - **Description métier :**
@@ -736,7 +820,7 @@ Le tableau ci-dessous explicite le comportement du calcul selon la granularité 
 
 ---
 
-### Option 5.B : Heatmap Hebdomadaire / Site
+### Option 6.B : Heatmap Hebdomadaire / Site
 - **Icône / Emoji :** 🗓️
 - **Sous-titre :** Matrice thermique des volumes par site industriel et par semaine
 - **Description métier :**
@@ -760,7 +844,7 @@ Le tableau ci-dessous explicite le comportement du calcul selon la granularité 
 
 ---
 
-### Option 5.C : Courbes Entrées vs Sorties (WIP)
+### Option 6.C : Courbes Entrées vs Sorties (WIP)
 - **Icône / Emoji :** 📈
 - **Sous-titre :** Différentiel de flux et suivi de l'en-cours Work-In-Progress
 - **Description métier :**
@@ -778,7 +862,7 @@ Le tableau ci-dessous explicite le comportement du calcul selon la granularité 
 
 ---
 
-### Option 5.D : Ratio Attente vs Travail Effectif
+### Option 6.D : Ratio Attente vs Travail Effectif
 - **Icône / Emoji :** ⏳
 - **Sous-titre :** Donut d'efficience et part du lead time passée en attente passive
 - **Description métier :**
@@ -796,7 +880,7 @@ Le tableau ci-dessous explicite le comportement du calcul selon la granularité 
 
 ---
 
-### Option 5.E : Jauge Tachymètre de Saturation
+### Option 6.E : Jauge Tachymètre de Saturation
 - **Icône / Emoji :** 🎯
 - **Sous-titre :** Cadran à aiguille avec seuils vert (<70%), orange (70-85%) et rouge (>85%)
 - **Description métier :**
@@ -816,7 +900,7 @@ Le tableau ci-dessous explicite le comportement du calcul selon la granularité 
 
 ---
 
-### Option 5.F : Radar Poly-compétences & Postes Clés
+### Option 6.F : Radar Poly-compétences & Postes Clés
 - **Icône / Emoji :** 🕸️
 - **Sous-titre :** Diagramme radar comparant la capacité qualifiée Part-145 face à la charge réelle
 - **Description métier :**
@@ -842,7 +926,7 @@ Le tableau ci-dessous explicite le comportement du calcul selon la granularité 
 
 ---
 
-### Option 5.G : Diagramme Spaghetti / Flux de Transfert
+### Option 6.G : Diagramme Spaghetti / Flux de Transfert
 - **Icône / Emoji :** 🔄
 - **Sous-titre :** Visualisation cartographique des flux physiques et intensité des navettes
 - **Description métier :**
@@ -868,7 +952,7 @@ Le tableau ci-dessous explicite le comportement du calcul selon la granularité 
 
 ---
 
-### Option 5.H : Treemap des Goulots d'Atelier
+### Option 6.H : Treemap des Goulots d'Atelier
 - **Icône / Emoji :** 🗂️
 - **Sous-titre :** Surfaces proportionnelles au volume d'en-cours WIP bloqué
 - **Description métier :**
@@ -896,20 +980,20 @@ Le tableau ci-dessous explicite le comportement du calcul selon la granularité 
 
 ---
 
-## Étape 6 : Synthèse, Profils & Recommandations
+## Étape 7 : Synthèse, Profils & Recommandations
 
-En fonction de la combinaison des choix effectués aux étapes 1 à 5, le système déduit le **Profil Décisionnel MRO** :
+En fonction de la combinaison des choix effectués aux étapes 1 à 6, le système déduit le **Profil Décisionnel MRO** :
 
 ### Les 4 Grands Profils Décisionnels
 1. **Profil Exploitation Opérationnelle (Shop Floor Control)** :
-   - Dominante : Étape 1.A + Granularité 2.B ou 2.C + Visuels 4.A / 5.B.
+   - Dominante : Étape 1.A + Granularité 2.B ou 2.C + Visuels 4.A / 6.B.
    - Recommandation : Modèle en étoile avec DirectQuery ou rafraîchissement incrémentiel horaire.
 2. **Profil Contractuel & Relation Client (SLA Guardian)** :
    - Dominante : Étape 1.B + TAT Net 3.C + Alertes 4.D.
    - Recommandation : Modèle tabulaire avec historisation journalière des statuts de gel de chrono.
 3. **Profil Excellence Industrielle & Lean (Continuous Improvement)** :
-   - Dominante : Étape 1.C + TAT Actif 3.D + CFD 5.D / Dispersion 4.B.
+   - Dominante : Étape 1.C + TAT Actif 3.D + CFD 6.D / Dispersion 4.B.
    - Recommandation : Import complet avec tables de faits découpées par module et matrice de variance.
 4. **Profil Planification Stratégique & Capacitaire (S&OP Planner)** :
-   - Dominante : Étape 1.D + Granularité Macro 2.A + Charge/Capacité 5.A.
+   - Dominante : Étape 1.D + Granularité Macro 2.A + Capacité 5.C + Charge/Capacité 6.A.
    - Recommandation : Modélisation mixte associant le carnet de commandes fermes et les prévisions de déposes moteur.
