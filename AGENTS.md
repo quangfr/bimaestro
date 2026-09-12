@@ -24,7 +24,7 @@ Structure :
 ├── readme.md           # Contexte opérationnel & prompts IA (affiché en Étape 0)
 ├── gouvernance.md      # Référentiel Méthodologique Data & Gouvernance (modale et Étape 0)
 ├── AGENTS.md           # Le présent guide technique
-├── firebase.json       # Config Firebase Hosting (public: ".", site: "gomaestro-app")
+├── firebase.json       # Config Firebase Hosting (public: ".", site: "bimaestro")
 └── .firebaserc         # Projet Firebase (go-maestro / GoMaestro)
 ```
 
@@ -71,5 +71,5 @@ Structure :
 3. **Restitution à l'utilisateur :**
    - Fournir un résumé concis des changements effectués.
    - Rappeler les deux URLs de consultation :
-     - Firebase : [https://gomaestro-app.web.app](https://gomaestro-app.web.app)
+     - Firebase : [https://bimaestro.web.app](https://bimaestro.web.app) (ou [https://gomaestro-app.web.app](https://gomaestro-app.web.app))
      - GitHub Pages : [https://quangfr.github.io/maestro/](https://quangfr.github.io/maestro/)
