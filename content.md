@@ -167,6 +167,47 @@ erDiagram
     }
 ```
 
+##### 📋 Dictionnaire de Données — Option 2.A (Macro)
+
+| Table & Champ | Type / Format | Cardinalité | Rôle & Description | Exemple Concret |
+| :--- | :--- | :--- | :--- | :--- |
+| **`VISIT`** *(Table de faits)* | | **Fait central** | **1 ligne = 1 visite complète moteur en atelier MRO** | `D-09842` |
+| ↳ `id_visit` | `String` (`D-xxxxx`) | **PK** (1:1) | Identifiant unique de la demande d'intervention MRO | `"D-09842"` |
+| ↳ `id_moteur` | `String` (`ESN-xxxxxx`) | **FK** (N:1 → `ENGINE`) | Numéro de série constructeur de l'équipement (*Engine Serial Number*) | `"ESN-884210"` |
+| ↳ `priorite` | `String` (`Enum`) | Attribut de fait | Niveau d'urgence opérationnelle de la dépose moteur | `"AOG Critique"` / `"Normal"` |
+| ↳ `date_entree` | `Date` (`YYYY-MM-DD`) | Attribut temporel (`start`) | Date d'induction physique sur le site de révision | `"2026-03-01"` |
+| ↳ `date_livraison` | `Date` (`YYYY-MM-DD`) | Attribut temporel (`end`) | Date de remise à disposition client après essais au banc | `"2026-03-22"` |
+| ↳ `id_kit_pieces` | `String` (`Pxxxxx`) | **FK** (N:1 → `ENGINE_PARTS`)| Référence du kit d'approvisionnement majeur alloué | `"P01125"` |
+| ↳ `tat_realise_j` | `Float` (`#.0` jours) | Métrique / *Key Figure* | Durée totale de traversée constatée (*Turnaround Time*) | `21.0` jours |
+| ↳ `derapage_sla_j`| `Float` (`#.0` jours) | Métrique calculée | Retard constaté par rapport à l'engagement contractuel SLA | `+3.0` jours (ou `0.0`) |
+| ↳ `penalites_eur` | `Integer` (`€`) | Métrique financière | Coût financier induit par le dépassement des engagements SLA | `4 500` € |
+| **`ENGINE`** *(Dimension)* | | **1:N** avec `VISIT` | **Référentiel des moteurs et de la flotte cliente** | `LEAP-1A26` |
+| ↳ `id_moteur` | `String` (`ESN-xxxxxx`) | **PK** (1:1) | Identifiant unique de l'équipement | `"ESN-884210"` |
+| ↳ `type` | `String` | Attribut de regroupement | Famille majeure de motorisation aéronautique | `"LEAP-1A"` / `"CFM56-7B"` |
+| ↳ `modele` | `String` | Attribut technique | Variante spécifique de poussée et d'aéronef | `"LEAP-1A26 (A320neo)"` |
+| ↳ `client` | `String` (Code OACI/IATA)| Attribut commercial | Compagnie aérienne propriétaire ou opératrice | `"AFR"` (Air France) |
+| **`CONTRACT_SLA`** *(Dimension)* | | **1:N** avec `VISIT` | **Paramètres contractuels et engagements de service** | Contrat SLA Ryannair |
+| ↳ `id_contrat` | `String` (`CTR-xxxx`) | **PK** (1:1) | Identifiant unique de l'accord-cadre commercial | `"CTR-RYR-2025"` |
+| ↳ `client` | `String` (Code client) | Attribut contractuel | Compagnie aérienne sous contrat | `"RYR"` (Ryanair) |
+| ↳ `sla_cible_jours` | `Integer` (Jours) | Seuil de référence | Objectif contractuel de TAT négocié | `18` jours |
+| ↳ `penalite_jour_eur`| `Integer` (`€/jour`) | Barème contractuel | Pénalité financière journalière par jour de dérive | `2 000` €/jour |
+| **`TRANSITS`** *(Dimension)* | | **1:N** avec `VISIT` | **Forfait logistique moyen de transport inter-sites** | Villaroche ↔ Saint-Quentin |
+| ↳ `id_liaison` | `String` (`TR-xxx-xxx`) | **PK** (1:1) | Code de la liaison logistique | `"TR-VIL-STQ"` |
+| ↳ `site_depart` | `String` (Site code) | Dimension géographique | Site d'expédition d'origine | `"Villaroche (VIL)"` |
+| ↳ `site_arrivee` | `String` (Site code) | Dimension géographique | Site de destination industrielle | `"Saint-Quentin (STQ)"` |
+| ↳ `delai_transit_j`| `Float` (Jours) | Paramètre forfaitaire | Durée forfaitaire d'acheminement aller-retour | `2.5` jours |
+| **`ENGINE_PARTS`** *(Dimension)* | | **1:N** avec `VISIT` | **État de disponibilité des kits pièces pour la visite** | Kit Aubes Mobiles |
+| ↳ `id_piece_pn` | `String` (`Pxxxxx`) | **PK** (1:1) | Référence normalisée de la pièce / kit (*Part Number*) | `"P01125"` |
+| ↳ `modele_moteur` | `String` | Clé de compatibilité | Modèle moteur sur lequel le kit est installable | `"LEAP-1A"` |
+| ↳ `disponibilite_pct`| `Float` (`0.0 - 100.0%`)| Mesure de service | Taux de disponibilité à date de lancement | `84.5` % |
+| ↳ `confiance_appro_j`| `Float` (± Jours) | Intervalle de risque | Marge d'incertitude sur la date de réception du kit | `± 3.0` jours |
+| **`CALENDAR`** *(Dimension)* | | **1:N** avec `VISIT` | **Référentiel temporel d'atelier** | Calendrier industriel |
+| ↳ `date` | `Date` (`YYYY-MM-DD`) | **PK** (1:1) | Date du calendrier civil | `"2026-03-15"` |
+| ↳ `semaine` | `String` (`YYYY-Wxx`) | Attribut d'agrégation | Numéro de semaine ISO | `"2026-W11"` |
+| ↳ `jour_ouvre` | `Boolean` (`true/false`)| Filtre d'activité | Indicateur de jour travaillé ouvré en atelier | `true` |
+
+---
+
 #### Option 2.B : Méso — Réparation par Atelier (`repair`)
 - **Granularité :** 1 ligne = 1 réparation module par atelier `repair (type, visit, shop, start, end)`.
 - **Transits logistiques :** Navettes physiques mesurées via `durée des transits (shop, shop, length)`.
@@ -222,6 +263,42 @@ erDiagram
         number confiance_appro_j "Intervalle +/-"
     }
 ```
+
+##### 📋 Dictionnaire de Données — Option 2.B (Méso)
+
+| Table & Champ | Type / Format | Cardinalité | Rôle & Description | Exemple Concret |
+| :--- | :--- | :--- | :--- | :--- |
+| **`REPAIR`** *(Table de faits)*| | **Fait central** | **1 ligne = 1 passage/réparation de module dans un atelier spécifique** | `REP-2026-0881` |
+| ↳ `id_repair` | `String` (`REP-xxxx-xxxx`)| **PK** (1:1) | Identifiant unique de l'ordre de réparation modulaire | `"REP-2026-0881"` |
+| ↳ `id_visite` | `String` (`D-xxxxx`) | **FK** (N:1 → `VISIT`) | Visite moteur globale chapeautant cette opération | `"D-09842"` |
+| ↳ `id_shop` | `String` (`SHP-xx`) | **FK** (N:1 → `SHOP`) | Atelier spécialisé réalisant la révision | `"SHP-VIL-HP"` (Shop Haute Pression) |
+| ↳ `type_repair` | `String` | Type d'intervention | Gamme d'intervention appliquée sur le module | `"Turbine HP"` / `"Compresseur BP"` |
+| ↳ `date_debut` | `Date` (`YYYY-MM-DD`) | Attribut temporel (`start`) | Date d'entrée effective du module dans l'atelier | `"2026-03-05"` |
+| ↳ `date_fin` | `Date` (`YYYY-MM-DD`) | Attribut temporel (`end`) | Date de fin de contrôle et sortie d'atelier | `"2026-03-14"` |
+| ↳ `id_kit_module` | `String` (`Pxxxxx`) | **FK** (N:1 → `ENGINE_PARTS`)| Kit de pièces consommables dédié à ce type d'atelier | `"P02440"` |
+| ↳ `tat_atelier_j` | `Float` (Jours) | Métrique opérationnelle | Temps de passage net en atelier d'usinage/réparation | `9.0` jours |
+| ↳ `duree_navette_j`| `Float` (Jours) | Métrique logistique | Durée réelle de la navette physique vers le prochain atelier | `1.5` jours |
+| **`SHOP`** *(Dimension)* | | **1:N** avec `REPAIR` | **Référentiel des centres de compétence et ateliers industriels** | Atelier Aubes & Disques |
+| ↳ `id_shop` | `String` (`SHP-xx`) | **PK** (1:1) | Code unique de l'atelier de production | `"SHP-MON-BP"` (Shop Montereau BP) |
+| ↳ `nom` | `String` | Libellé usuel | Dénomination claire de l'unité de production | `"Atelier Modules BP Montereau"` |
+| ↳ `type_of_repairs`| `String` (CSV / Tags) | Attribut de compétence | Familles techniques prises en charge par l'atelier | `"Chambre Combustion, Turbine BP"` |
+| ↳ `stations` | `String` (Liste de codes)| Capacité installée | Postes de travail techniques rattachés à cet atelier | `"USI-01, USI-02, CND-01"` |
+| **`TRANSITS`** *(Dimension)* | | **1:N** avec `REPAIR` | **Matrice logistique dynamique des transferts physiques inter-ateliers** | Navette VIL ↔ MON |
+| ↳ `id_liaison` | `String` (`TR-xxx-xxx`) | **PK** (1:1) | Identifiant de la liaison inter-ateliers | `"TR-VIL-MON"` |
+| ↳ `shop_source` | `String` (`SHP-xx`) | Dimension origine | Atelier d'expédition amont | `"SHP-VIL-HP"` |
+| ↳ `shop_dest` | `String` (`SHP-xx`) | Dimension destination | Atelier récepteur aval | `"SHP-MON-BP"` |
+| ↳ `duree_transit_j`| `Float` (Jours) | Mesure logistique (*length*)| Durée moyenne constatée de transport par navette | `1.2` jours |
+| **`ENGINE_PARTS`** *(Dimension)* | | **1:N** avec `REPAIR` | **Disponibilité des kits de révision par type de réparation** | Kit Réparation HP |
+| ↳ `id_piece_pn` | `String` (`Pxxxxx`) | **PK** (1:1) | Part number du sous-ensemble / kit de révision | `"P02440"` |
+| ↳ `type_repair` | `String` | Clé d'affectation | Gamme de réparation consommatrice de ce kit | `"Turbine HP"` |
+| ↳ `disponibilite_pct`| `Float` (`%`) | Mesure d'approvisionnement | Pourcentage de complétude du kit à l'entrée atelier | `91.0` % |
+| ↳ `confiance_appro_j`| `Float` (± Jours) | Indice de fiabilité | Aléa sur le réapprovisionnement des pièces critiques | `± 1.5` jours |
+| **`VISIT`** *(Dimension parente)*| | **1:N** avec `REPAIR` | **Contexte général de la visite moteur parente** | Visite ESN-884210 |
+| ↳ `id_visit` | `String` (`D-xxxxx`) | **PK** (1:1) | Clé de la visite parente | `"D-09842"` |
+| ↳ `id_moteur` | `String` (`ESN-xxxxxx`) | Attribut d'identification | Moteur en cours de révision | `"ESN-884210"` |
+| ↳ `priorite` | `String` (`Enum`) | Priorité d'ordonnancement | Priorité globale répercutée sur les ateliers | `"AOG Critique"` |
+
+---
 
 #### Option 2.C : Micro — Tâche sur Poste (`task`)
 - **Granularité :** 1 ligne = 1 tâche technique pointée sur poste `task (visit, repair, station, type)`.
@@ -280,6 +357,45 @@ erDiagram
         number confiance_appro_j "Intervalle +/-"
     }
 ```
+
+##### 📋 Dictionnaire de Données — Option 2.C (Micro)
+
+| Table & Champ | Type / Format | Cardinalité | Rôle & Description | Exemple Concret |
+| :--- | :--- | :--- | :--- | :--- |
+| **`TASK`** *(Table de faits)* | | **Fait central** | **1 ligne = 1 pointage unitaire d'opération sur un poste de travail (MES)** | `TSK-109482` |
+| ↳ `id_task` | `String` (`TSK-xxxxxx`) | **PK** (1:1) | Numéro unique d'événement de pointage atelier | `"TSK-109482"` |
+| ↳ `id_visite` | `String` (`D-xxxxx`) | **FK** (N:1 → `VISIT`) | Visite globale de rattachement | `"D-09842"` |
+| ↳ `id_repair` | `String` (`REP-xxxx-xxxx`)| **FK** (N:1 → `REPAIR`) | Réparation modulaire parente | `"REP-2026-0881"` |
+| ↳ `id_station` | `String` (`STN-xx`) | **FK** (N:1 → `STATION`) | Poste de travail / machine où est réalisée la tâche | `"STN-USI-04"` (Fraiseuse 5-axes) |
+| ↳ `operation` | `String` (`Enum`) | Type d'intervention technique | Nature physique de l'opération technique pointée | `"Usinage Aubes"`, `"Contrôle CND Ressuage"` |
+| ↳ `horodatage_debut`| `DateTime` (`ISO-8601`) | Pointage temps (`start`) | Début effectif de travail par le technicien | `"2026-03-06T08:15:00Z"` |
+| ↳ `horodatage_fin` | `DateTime` (`ISO-8601`) | Pointage temps (`end`) | Fin effective de travail et libération du poste | `"2026-03-06T14:45:00Z"` |
+| ↳ `id_composant` | `String` (`Pxxxxx`) | **FK** (N:1 → `ENGINE_PARTS`)| Pièce ou consommable unitaire monté au poste | `"P09931"` |
+| ↳ `duree_pointee_h` | `Float` (Heures) | Métrique d'effort net | Heures effectives de travail productif enregistrées | `6.5` heures |
+| **`STATION`** *(Dimension)* | | **1:N** avec `TASK` | **Référentiel des machines, bancs et postes de travail unitaires** | Poste Usinage 5-axes |
+| ↳ `id_station` | `String` (`STN-xx`) | **PK** (1:1) | Identifiant unique de la station de travail | `"STN-USI-04"` |
+| ↳ `id_shop` | `String` (`SHP-xx`) | **FK** (N:1 → `SHOP`) | Atelier d'appartenance hiérarchique | `"SHP-VIL-HP"` |
+| ↳ `type_of_repairs`| `String` | Capacité technique | Gammes opérables sur cette machine | `"Usinage aubes titane & disques"` |
+| ↳ `seuil_saturation`| `Float` (`85.0%`) | Règle de gestion / Alerte | Seuil d'engorgement critique déclenchant un goulot | `85.0` % |
+| **`DUREE_TACHES`** *(Dimension)*| | **1:N** avec `TASK` | **Gamme standard et temps alloués théoriques constructeur** | Temps de gamme CFM56 / Usinage |
+| ↳ `type_engine` | `String` | **PK composite** (1/2) | Famille de moteur concernée | `"LEAP-1A"` |
+| ↳ `type_task` | `String` | **PK composite** (2/2) | Libellé standard de l'opération de gamme | `"Usinage Aubes"` |
+| ↳ `duree_gamme_h` | `Float` (Heures) | Standard théorique (*length*)| Temps standard alloué par le bureau des méthodes | `4.5` heures |
+| **`CAPACITY`** *(Dimension)* | | **1:1** avec `STATION` | **Suivi de la disponibilité machine et charge instantanée** | Charge journalière machine |
+| ↳ `id_station` | `String` (`STN-xx`) | **PK** (1:1) | Poste évalué | `"STN-USI-04"` |
+| ↳ `taux_occupation_reel`| `Float` (`%`) | Métrique d'utilisation | Taux d'occupation mesuré sur le cycle d'équipe | `92.4` % (Goulot actif) |
+| ↳ `heures_dispo` | `Float` (Heures) | Capacité résiduelle | Heures ouvrables restantes sur la vacation | `1.5` h disponibles |
+| **`SCHEDULE`** *(Dimension)* | | **1:N** avec `STATION` | **Organisation du travail et vacations d'équipes (shifts)** | Shift 2x8 Matin |
+| ↳ `id_station` | `String` (`STN-xx`) | **FK** (N:1 → `STATION`) | Poste concerné par le créneau | `"STN-USI-04"` |
+| ↳ `creneau` | `String` (`HH:MM-HH:MM`)| Plage horaire | Fenêtre temporelle d'ouverture | `"06:00 - 14:00"` |
+| ↳ `shift` | `String` (`Enum`) | Organisation d'équipe | Désignation du shift | `"Matin (2x8)"` / `"Nuit"` |
+| **`ENGINE_PARTS`** *(Dimension)* | | **1:N** avec `TASK` | **Disponibilité des références unitaires au bac poste** | Fraise carbure spécifique |
+| ↳ `id_piece_pn` | `String` (`Pxxxxx`) | **PK** (1:1) | Numéro de nomenclature unitaire | `"P09931"` |
+| ↳ `id_station` | `String` (`STN-xx`) | **FK** de localisation | Poste consommateur de la référence | `"STN-USI-04"` |
+| ↳ `disponibilite_pct`| `Float` (`%`) | Disponibilité locale | Taux de présence en bac de bord de ligne | `98.0` % |
+| ↳ `confiance_appro_j`| `Float` (± Jours) | Délai de réappro | Temps de réapprovisionnement magasin central | `± 0.5` jour |
+
+---
 
 ---
 
