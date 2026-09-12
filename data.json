@@ -1,7 +1,7 @@
 {
   "meta": {
     "source": "Simulateur Cadrage Décisionnel Maestro — Jeu de données de démonstration MRO",
-    "perimetre": "Flottes CFM56-7B / CFM56-5B / LEAP-1A / LEAP-1B / GE90-115B / M88-2 sur 10 centres Safran (FR-Villaroche, FR-Montereau, FR-Châtellerault, BE-Bruxelles, FR-Saint-Quentin, FR-Gennevilliers, FR-Bordeaux, FR-Toulouse, BE-Liège, FR-Le Creusot)",
+    "perimetre": "Flottes CFM56-7B / CFM56-5B / LEAP-1A / LEAP-1B / GE90-115B / M88-2 sur 10 centres Safron (FR-Villaroche, FR-Montereau, FR-Châtellerault, BE-Bruxelles, FR-Saint-Quentin, FR-Gennevilliers, FR-Bordeaux, FR-Toulouse, BE-Liège, FR-Le Creusot)",
     "actualise": "2026-09-12",
     "licence": "Données fictives à des fins de démonstration",
     "generation": "Ce fichier contient uniquement la structure des objets, les libellés et la donnée non chiffrée. Les valeurs chiffrées des graphiques Chart.js sont générées aléatoirement côté client selon des règles de cohérence, avec un seed stable (persistance entre sessions)."

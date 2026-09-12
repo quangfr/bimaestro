@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "maestro-safran",
+    "site": "gomaestro",
     "public": ".",
     "ignore": [
       "firebase.json",

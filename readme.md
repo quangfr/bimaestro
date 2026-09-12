@@ -1,7 +1,7 @@
-# MAESTRO - Framework & Guide de Prompts IA pour le Cadrage Décisionnel MRO (SAP IBP / Analytics Stories) ✈️
+# GO-MAESTRO - Prototype & Guide de Prompts IA pour le Cadrage Décisionnel MRO (vs MAESTRO SAP IBP) 🚀
 
 > **Guide Opérationnel & Catalogue de Prompts IA** pour concevoir, prototyper et éprouver des tableaux de bord industriels.  
-> **Contexte applicatif :** Maestro s'inscrit dans l'écosystème **SAP Integrated Business Planning (SAP IBP)** et cible des restitutions de type **SAP Analytics Cloud (Analytics Stories)**. L'application HTML/JS sert d'environnement agile de prototypage rapide piloté par l'IA avant implémentation dans les modules standards de SAP IBP.
+> **Distinction & Contexte applicatif :** **Go-Maestro** est le prototype agile interactif (SPA HTML/Chart.js) servant d'environnement d'idéation et de test rapide, à distinguer de l'outil industriel cible **MAESTRO** basé sur **SAP Integrated Business Planning (SAP IBP)** et ses **Analytics Stories (SAP Analytics Cloud)**. Il permet d'itérer à haute cadence avec l'IA avant d'engager les développements dans l'écosystème officiel SAP.
 
 ---
 
@@ -28,23 +28,42 @@ L'objectif de Maestro est de transformer une expression de besoin métier en sp�
 
 Cette section fournit le canevas exact de prompt pour interroger une IA lorsqu'il s'agit de choisir les types de graphiques, axes, dimensions et filtres selon le besoin.
 
-### Méthodologie d'Arbitrage Graphique
-- **Question d'alerte / escalade (ex: AOG, retards critiques) :** Cartes KPIs avec micro-alertes visuelles (statut rouge/ambre) et tables opérationnelles nominatives filtrables.
-- **Question d'analyse de distribution (ex: dispersion du TAT) :** Boxplot ou diagramme en barres avec percentiles ($P_5, P_{50}, P_{95}$) plutôt qu'une simple moyenne.
-- **Question de contribution / décomposition (ex: goulots par site) :** Barres horizontales empilées (Attente vs Réparation vs Transfert) ou Waterfall des écarts de révision.
-- **Question de corrélation temporelle & saturation (ex: charge machines) :** Heatmap 2D (Site × Semaine) ou graphiques croisés Barres/Lignes (flux vs délais).
+### Méthodologie d'Arbitrage Graphique (Catalogue SAC)
+- **Alerte & Escalade (AOG, retards) :** Numeric KPI Cards (avec badge de statut seuillé), Bullet Charts (réel vs objectif SLA), Tables opérationnelles nominatives avec mise en forme conditionnelle.
+- **Distribution & Dispersion statistique (TAT, variabilité des délais) :** Boxplot (médiane, $P_5, P_{95}$, quartiles), Histogramme de fréquences, Scatter Plot (durée vs coût).
+- **Contribution & Décomposition (Goulots, structure des coûts, étapes) :** Stacked Bar (barres 100% ou absolues empilées), Waterfall (cascade des dérives positives/négatives), Treemap (hiérarchie poste/atelier/composant).
+- **Comparaison & Objectifs (Performance sites, respect engagements) :** Bar / Column Chart avec ligne de référence ($P_{85}$, cible SLA), Radar / Spider Chart (matrice multi-critères qualité/délais/coûts).
+- **Évolution temporelle & Corrélation :** Line Chart (tendance avec zone d'intervalle de confiance), Combined Bar-Line (flux d'entrées en barres vs délai moyen en ligne), Area Chart / Cumulative Flow (CFD).
+- **Matrice de densité & Charge capacitaire :** Heatmap 2D (Site ou Poste × Période temporelle), Bubble Chart (Volume × TAT moyen × Taille = Pénalités).
+- **Séquencement & Suivi de projet :** Milestones Timeline / Gantt épuré (franchissement des jalons G1 à G5).
 
 ### Template de Prompt IA : Conception de Graphique Analytics Story
 ```markdown
-Agis en tant qu'architecte SAP IBP / SAC Analytics Stories.
-Je dois répondre à la question métier suivante : "[Insérer la question, ex: Quels réacteurs en atelier risquent de clouer un appareil au sol sous 48h ?]".
+Agis en tant qu'architecte de tableaux de bord SAP IBP / SAC Analytics Stories.
+Je dois répondre à la question métier suivante : "[Insérer la question, ex: Quels postes ou familles de moteurs concentrent les dérives de délai et menacent les engagements clients ?]".
 
-Recommande la configuration optimale pour SAP Analytics Cloud :
-1. Type de graphique standard SAC (Barres, Boxplot, KPI Card, Heatmap, Waterfall, Timeline).
-2. Axe X (Dimensions / Planning Level) et Axe Y (Key Figures / Mesures).
-3. Dimensions de fractionnement (Color/Legend) et seuils d'alertes visuels (Statuts Vert/Orange/Rouge).
-4. Filtres de Story pertinents (Site, Client, Modèle, Horizon temporel).
-5. Mesure calculée ou Key Figure SAP IBP associée (formule de calcul équivalente).
+En te basant sur le catalogue standard de visualisations de SAP Analytics Cloud (SAC) :
+1. Recommande le(s) type(s) de graphique(s) optimal(aux) parmi :
+   - Bar / Column Chart (Classique, Empilé, 100%, Groupé)
+   - Boxplot (Dispersion et percentiles P5/P50/P95)
+   - Numeric KPI Card avec micro-tendance Sparkline et statut dynamique
+   - Bullet Chart (Valeur réelle vs Objectif contractuel vs Seuil d'alerte)
+   - Waterfall / Variance Chart (Cascade cumulative des retards ou écarts)
+   - Heatmap Matrix (Charge 2D : Postes × Semaines)
+   - Treemap (Part de charge ou goulots hiérarchiques par atelier)
+   - Combined Bar & Line Chart (Volume d'en-cours en barres + Lead time moyen en courbe)
+   - Scatter / Bubble Plot (Corrélation Dérapage SLA vs Pénalités financières €)
+   - Milestones Timeline (Passage des jalons et franchissement des Gates)
+   - Radar / Spider Chart (Évaluation multi-dimensionnelle par site)
+2. Définis les dimensions d'axes :
+   - Axe X / Catégories (Planning Level, Granularité temporelle, Entité)
+   - Axe Y / Valeurs (Key Figures, Mesures de base ou agrégées)
+3. Spécifie les options visuelles avancées :
+   - Fractionnement couleur (Legend / Color Dimension)
+   - Lignes de référence / Seuils d'alerte conditionnels (Vert / Orange / Rouge)
+   - Règles de tri par défaut (ex: tri décroissant sur le montant d'exposition financière)
+4. Liste les filtres de Story et Input Controls nécessaires (Site, Compagnie cliente, Modèle moteur, Urgence).
+5. Propose la formule de Key Figure SAP IBP ou la mesure calculée SAC correspondante.
 ```
 
 ---
@@ -135,5 +154,5 @@ npx -y live-server --port=8080 --no-browser --entry-file=index.html
 URL locale : `http://localhost:8080`.
 
 ### Déploiement Cloud
-- **Firebase Hosting :** [https://maestro-safran.web.app](https://maestro-safran.web.app)
+- **Firebase Hosting :** [https://gomaestro.web.app](https://gomaestro.web.app)
 - **GitHub Pages :** [https://quangfr.github.io/maestro/](https://quangfr.github.io/maestro/)

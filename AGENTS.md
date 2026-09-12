@@ -11,8 +11,8 @@
 | :--- | :--- |
 | `index.html` | **Application SPA unique** : balisage, stylage (Tailwind CDN), SVG inline, Canvas 2D et scripts JS. Contient tout le code exécutable. |
 | `content.md` | **Référentiel métier & fonctionnel** synchronisé avec `index.html` : libellés, règles, formules DAX, schémas relationnels et diagrammes Mermaid. Source unique du contenu de l'application. |
-| `readme.md` | Contexte opérationnel Safran MRO affiché par défaut dans l'**Étape 0** (lecteur Markdown). |
-| `svg_illustrations.md` | Archive des snippets SVG des cartes d'options (étapes 1 à 6). |
+| `readme.md` | Contexte opérationnel Safron MRO affiché par défaut dans l'**Étape 0** (lecteur Markdown). |
+| `gouvernance.md` | Référentiel Méthodologique Data & Gouvernance chargé à la volée dans la modale d'information `(i)`. |
 | `AGENTS.md` | Le présent guide technique pour agents IA. |
 | `firebase.json` / `.firebaserc` | Configuration du déploiement Firebase Hosting (`public: "."`). |
 
@@ -21,11 +21,11 @@ Structure :
 ```text
 ├── index.html          # Application SPA (code exécutable)
 ├── content.md          # Référentiel métier synchronisé avec index.html
-├── readme.md           # Contexte opérationnel (affiché en Étape 0)
-├── svg_illustrations.md# Archive des snippets SVG d'illustration
+├── readme.md           # Contexte opérationnel & prompts IA (affiché en Étape 0)
+├── gouvernance.md      # Référentiel Méthodologique Data & Gouvernance (modale et Étape 0)
 ├── AGENTS.md           # Le présent guide technique
-├── firebase.json       # Config Firebase Hosting (public: ".")
-└── .firebaserc         # Projet Firebase (sherpa-5938b / maestro-safran)
+├── firebase.json       # Config Firebase Hosting (public: ".", site: "gomaestro")
+└── .firebaserc         # Projet Firebase (sherpa-5938b / gomaestro)
 ```
 
 ---
@@ -71,5 +71,5 @@ Structure :
 3. **Restitution à l'utilisateur :**
    - Fournir un résumé concis des changements effectués.
    - Rappeler les deux URLs de consultation :
-     - Firebase : [https://maestro-safran.web.app](https://maestro-safran.web.app)
+     - Firebase : [https://gomaestro.web.app](https://gomaestro.web.app)
      - GitHub Pages : [https://quangfr.github.io/maestro/](https://quangfr.github.io/maestro/)
