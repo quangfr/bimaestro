@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Assistant de Cadrage MRO - Architecture & Décisions BI</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
     .glass-card {
       background: rgba(255, 255, 255, 0.9);
@@ -29,6 +30,135 @@
       background: rgba(239, 246, 255, 0.95);
       box-shadow: 0 0 0 1.5px #2563eb, 0 4px 12px -2px rgba(37, 99, 235, 0.15);
     }
+
+    .markdown-body h1,
+    .markdown-body h2,
+    .markdown-body h3,
+    .markdown-body h4 {
+      font-weight: 700;
+      margin: 0.55rem 0 0.3rem;
+      line-height: 1.25;
+    }
+
+    .markdown-body h1 {
+      font-size: 1.05rem;
+      color: #1e3a8a;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 0.25rem;
+    }
+
+    .markdown-body h2 {
+      font-size: 0.95rem;
+      color: #1e3a8a;
+    }
+
+    .markdown-body h3 {
+      font-size: 0.85rem;
+      color: #2563eb;
+    }
+
+    .markdown-body h4 {
+      font-size: 0.8rem;
+      color: #2563eb;
+    }
+
+    .markdown-body p {
+      margin: 0.3rem 0;
+    }
+
+    .markdown-body ul,
+    .markdown-body ol {
+      margin: 0.3rem 0 0.3rem 1.1rem;
+    }
+
+    .markdown-body ul {
+      list-style: disc;
+    }
+
+    .markdown-body ol {
+      list-style: decimal;
+    }
+
+    .markdown-body li {
+      margin: 0.15rem 0;
+    }
+
+    .markdown-body code {
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      padding: 0 0.25rem;
+      border-radius: 0.25rem;
+      font-size: 0.85em;
+      color: #b91c1c;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    .markdown-body pre {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 0.6rem 0.75rem;
+      border-radius: 0.5rem;
+      overflow-x: auto;
+      margin: 0.45rem 0;
+      font-size: 10.5px;
+      line-height: 1.45;
+    }
+
+    .markdown-body pre code {
+      background: transparent;
+      border: none;
+      color: inherit;
+      padding: 0;
+      font-size: inherit;
+    }
+
+    .markdown-body blockquote {
+      border-left: 3px solid #2563eb;
+      background: #eff6ff;
+      padding: 0.4rem 0.6rem;
+      margin: 0.45rem 0;
+      border-radius: 0 0.5rem 0.5rem 0;
+      color: #334155;
+      font-size: 0.95em;
+    }
+
+    .markdown-body blockquote p {
+      margin: 0.15rem 0;
+    }
+
+    .markdown-body table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 0.45rem 0;
+      font-size: 0.9em;
+    }
+
+    .markdown-body th,
+    .markdown-body td {
+      border: 1px solid #e2e8f0;
+      padding: 0.3rem 0.5rem;
+      text-align: left;
+    }
+
+    .markdown-body th {
+      background: #f1f5f9;
+      font-weight: 600;
+    }
+
+    .markdown-body hr {
+      border: none;
+      border-top: 1px solid #e2e8f0;
+      margin: 0.75rem 0;
+    }
+
+    .markdown-body a {
+      color: #2563eb;
+      text-decoration: underline;
+    }
+
+    .markdown-body strong {
+      color: #0f172a;
+    }
   </style>
 </head>
 
@@ -47,13 +177,17 @@
 
     <!-- Navigation par Onglets (1 Page par Question) - Sur une seule ligne dans le header -->
     <nav class="flex items-center gap-1 shrink-0 overflow-x-auto py-0.5 whitespace-nowrap scrollbar-none" id="nav-tabs">
+      <button onclick="switchStep(0)" id="tab-0"
+        class="px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 bg-white text-slate-600 border border-slate-200 hover:text-blue-600 hover:bg-slate-50 shadow-sm">
+        <span>0️⃣</span> Contexte
+      </button>
       <button onclick="switchStep(1)" id="tab-1"
         class="px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 bg-blue-600 text-white shadow-sm shadow-blue-500/20">
-        <span>1️⃣</span> Objectif
+        <span>1️⃣</span> Question
       </button>
       <button onclick="switchStep(2)" id="tab-2"
         class="px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 bg-white text-slate-600 border border-slate-200 hover:text-blue-600 hover:bg-slate-50 shadow-sm">
-        <span>2️⃣</span> Données
+        <span>2️⃣</span> Modèle
       </button>
       <button onclick="switchStep(3)" id="tab-3"
         class="px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 bg-white text-slate-600 border border-slate-200 hover:text-blue-600 hover:bg-slate-50 shadow-sm">
@@ -80,6 +214,30 @@
 
   <!-- Contenu Principal (Prend toute la place disponible) -->
   <main class="w-full max-w-6xl flex-1 flex flex-col justify-between min-h-0 overflow-hidden">
+
+    <!-- ================= PAGE 0 (Contexte : Fichiers Markdown du Dossier Racine) ================= -->
+    <div id="step-0" class="step-page hidden flex flex-col min-h-full md:h-full justify-between">
+      <div class="glass-card p-3 rounded-xl flex flex-col flex-1 min-h-0 overflow-hidden">
+        <div class="mb-1.5 shrink-0">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+            <h2 class="text-sm md:text-base font-bold text-blue-700">Étape 0 : Contexte & Documentation</h2>
+            <span class="text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full self-start sm:self-auto">🧭 Cadrage Global & Rôles</span>
+          </div>
+          <p class="text-[11px] text-slate-500">Lecture des fichiers Markdown du dossier racine — contexte métier & documentation projet.</p>
+        </div>
+
+        <!-- Sélecteur de fichier Markdown + Aire de rendu (chargement à la volée, pas de copie) -->
+        <div class="flex items-center gap-2 mb-2 shrink-0">
+          <label for="md-file-select" class="text-[10px] font-bold text-blue-700 uppercase tracking-wider shrink-0">📄 Fichier :</label>
+          <select id="md-file-select" onchange="loadMarkdownFile(this.value)"
+            class="bg-white text-slate-800 font-medium text-[11px] rounded border border-slate-300 px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm"></select>
+          <span class="text-[10px] text-slate-400 italic truncate">Fichiers *.md de la racine</span>
+        </div>
+
+        <div id="md-render"
+          class="markdown-body select-text flex-1 min-h-0 overflow-y-auto pr-1 bg-white rounded-lg border border-slate-200 p-3 shadow-sm text-slate-700 leading-relaxed text-[11.5px]"></div>
+      </div>
+    </div>
 
     <!-- ================= PAGE 1 ================= -->
     <div id="step-1" class="step-page flex flex-col min-h-full md:h-full justify-between">
@@ -263,6 +421,52 @@
                 <text x="72" y="62" font-size="7.5" font-weight="bold" fill="#b45309">Lead: 18j ⚠️</text>
               </svg>
               <span class="text-[9px] text-indigo-700 font-mono font-bold mt-0.5">Disponibilité Pièces</span>
+            </div>
+          </div>
+
+          <!-- 1F : Data Gouvernance -->
+          <div onclick="selectOption(1, 'F')" id="opt-1-F"
+            class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
+            <div>
+              <div class="text-xs md:text-sm font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                <span class="text-base">🏛️</span> F. Data Gouvernance
+              </div>
+              <p class="text-[11px] text-slate-600 leading-snug mb-1">
+                Suivre les usages métiers, fiabiliser la donnée et s'assurer de la pertinence des modèles en mesurant l'écart prévisionnel vs effectif.
+              </p>
+              <div class="text-[9.5px] text-slate-500 bg-slate-50 rounded px-1.5 py-0.5 border border-slate-200 mb-1.5">
+                <span class="text-purple-600 font-semibold">Impact BI :</span> Dérive des algorithmes, adoption & contrôle qualité.
+              </div>
+            </div>
+            <div
+              class="w-full aspect-video sm:aspect-square max-h-[95px] bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex flex-col items-center justify-between mx-auto">
+              <svg class="w-full h-full" viewBox="0 0 100 85">
+                <!-- Axes -->
+                <line x1="10" y1="68" x2="92" y2="68" stroke="#cbd5e1" stroke-width="1.2" />
+                <line x1="10" y1="12" x2="10" y2="68" stroke="#cbd5e1" stroke-width="1.2" />
+
+                <!-- Aire d'écart / dérive entre prévisionnel et réel -->
+                <path d="M 12 55 Q 35 48, 55 32 T 90 20 L 90 35 Q 70 42, 55 46 T 12 55 Z" fill="#c084fc" opacity="0.25" />
+
+                <!-- Courbe Prévisionnelle (Pointillés bleus) -->
+                <path d="M 12 55 Q 35 48, 55 32 T 90 20" fill="none" stroke="#6366f1" stroke-width="1.8" stroke-dasharray="3,2" />
+
+                <!-- Courbe Réelle Constatée / Effectif (Trait continu violet) -->
+                <path d="M 12 55 Q 35 52, 55 46 T 90 35" fill="none" stroke="#9333ea" stroke-width="2" />
+
+                <!-- Point d'écart et étiquette -->
+                <circle cx="75" cy="24" r="2" fill="#6366f1" />
+                <circle cx="75" cy="40" r="2" fill="#9333ea" />
+                <line x1="75" y1="24" x2="75" y2="40" stroke="#dc2626" stroke-width="1.2" stroke-dasharray="1.5,1.5" />
+                <text x="80" y="34" font-size="6.5" font-weight="bold" fill="#dc2626">Δ -16%</text>
+
+                <!-- Légende -->
+                <line x1="16" y1="76" x2="28" y2="76" stroke="#6366f1" stroke-width="1.5" stroke-dasharray="2,2" />
+                <text x="31" y="78" font-size="5.5" font-semibold fill="#4338ca">Prévu</text>
+                <line x1="56" y1="76" x2="68" y2="76" stroke="#9333ea" stroke-width="1.5" />
+                <text x="71" y="78" font-size="5.5" font-semibold fill="#7e22ce">Effectif</text>
+              </svg>
+              <span class="text-[9px] text-purple-700 font-mono font-bold mt-0.5">Écart Prévision vs Réel</span>
             </div>
           </div>
         </div>
@@ -589,9 +793,26 @@
     <div id="step-4" class="step-page hidden flex flex-col min-h-full md:h-full justify-between">
       <div class="glass-card p-3.5 rounded-xl flex flex-col justify-between flex-1">
         <div class="mb-2">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
             <h2 class="text-sm md:text-base font-bold text-blue-700">Étape 4 : Sélectionner les visuels pour le Délai (TAT)</h2>
-            <span class="text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full self-start sm:self-auto">📊 Dataviz & Conception Graphique</span>
+            <div class="flex items-center gap-2 self-start sm:self-auto">
+              <!-- Sélecteur d'usage synchronisé avec l'Étape 1 -->
+              <div class="flex items-center gap-1.5 bg-white border border-slate-300 rounded-lg px-2 py-0.5 shadow-xs">
+                <label for="select-usage-step4" class="text-[9.5px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1">
+                  <span>🎯</span> Usage :
+                </label>
+                <select id="select-usage-step4" onchange="onUsageChange(this.value)"
+                  class="bg-transparent text-[10.5px] font-bold text-blue-700 outline-none cursor-pointer">
+                  <option value="A">⚡ Opérationnel (AOG)</option>
+                  <option value="B">⏱️ Contractuel (SLA)</option>
+                  <option value="C">🏢 Pilotage (Capacité)</option>
+                  <option value="D">💰 Financier (Pénalités)</option>
+                  <option value="E">📦 Logistique (Appro.)</option>
+                  <option value="F">🏛️ Gouvernance (Modèles)</option>
+                </select>
+              </div>
+              <span class="text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full hidden md:inline-block">📊 Dataviz & Conception</span>
+            </div>
           </div>
           <p class="text-[11px] text-slate-500">Quels visuels utiliser pour piloter les délais et les engagements clients ?</p>
           
@@ -611,148 +832,301 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 flex-1 items-stretch overflow-y-auto pr-1">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 flex-1 overflow-y-auto pr-1 max-h-[500px]">
           <!-- 4A -->
           <div onclick="selectOption(4, 'A')" id="opt-4-A"
-            class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
-            <div>
+            class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-row items-start gap-3">
+            <div class="flex-1 min-w-0">
               <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
-                <span class="text-sm">⏱️</span> A. Cartes KPIs Synthétiques
+                <span class="text-sm">⏱️</span> A. TAT Médian &amp; Bornes 5%-95%
               </div>
               <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
-                Indicateurs phares en gros chiffres : TAT moyen glissant, respect SLA et dérive.
+                Distribution du TAT par type de moteur avec valeur médiane P50 et barres de dispersion P5 - P95.
               </p>
-              <div class="text-[9px] text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
-                <div><span class="font-bold text-blue-700">Type :</span> Scorecard / Cartes KPIs & Jauge</div>
-                <div><span class="font-bold text-slate-700">Axes :</span> N/A (Indicateurs scalaires agrégés)</div>
-                <div><span class="font-bold text-slate-700">Dimensions :</span> Filtres globaux (Site, Flotte, Compagnie)</div>
-                <div><span class="font-bold text-emerald-700">Mesures :</span> TAT moyen glissant, % Respect SLA, Retard J+</div>
+              <div class="text-[9px] text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 space-y-0.5">
+                <div><span class="font-bold text-blue-700">Type :</span> Boxplot / Barres d'Erreur P5-P50-P95</div>
+                <div><span class="font-bold text-slate-700">Axes :</span> X = Familles moteurs • Y = TAT (Jours)</div>
+                <div><span class="font-bold text-slate-700">Dimensions :</span> CFM56-7B, LEAP-1A, LEAP-1B</div>
+                <div><span class="font-bold text-emerald-700">Mesures :</span> TAT Médian P50, Bornes P5 et P95</div>
               </div>
             </div>
-            <div
-              class="w-full aspect-square max-h-[105px] bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
+            <div class="w-[115px] h-[100px] shrink-0 bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex items-center justify-center">
               <svg class="w-full h-full" viewBox="0 0 100 85">
-                <rect x="6" y="6" width="88" height="34" rx="4" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2" />
-                <text x="50" y="18" font-size="7" font-bold text-anchor="middle" fill="#64748b">TAT MOYEN RÉEL</text>
-                <text x="50" y="32" font-size="13" font-weight="black" text-anchor="middle" fill="#0284c7">18.4 jours</text>
-
-                <rect x="6" y="44" width="88" height="35" rx="4" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2" />
-                <text x="50" y="56" font-size="7" font-bold text-anchor="middle" fill="#64748b">RESPECT SLA GLOBAL</text>
-                <text x="50" y="71" font-size="13" font-weight="black" text-anchor="middle" fill="#16a34a">96.2 %</text>
+                <line x1="8" y1="72" x2="92" y2="72" stroke="#cbd5e1" stroke-width="1" />
+                <!-- CFM56 -->
+                <line x1="24" y1="20" x2="24" y2="62" stroke="#64748b" stroke-width="1.5" />
+                <line x1="20" y1="20" x2="28" y2="20" stroke="#64748b" stroke-width="1.5" />
+                <line x1="20" y1="62" x2="28" y2="62" stroke="#64748b" stroke-width="1.5" />
+                <rect x="18" y="32" width="12" height="18" rx="1.5" fill="#3b82f6" />
+                <line x1="16" y1="41" x2="32" y2="41" stroke="#1e3a8a" stroke-width="2" />
+                <text x="24" y="80" font-size="6.5" text-anchor="middle" fill="#64748b">CFM56</text>
+                <!-- LEAP-1A -->
+                <line x1="50" y1="12" x2="50" y2="65" stroke="#64748b" stroke-width="1.5" />
+                <line x1="46" y1="12" x2="54" y2="12" stroke="#64748b" stroke-width="1.5" />
+                <line x1="46" y1="65" x2="54" y2="65" stroke="#64748b" stroke-width="1.5" />
+                <rect x="44" y="26" width="12" height="24" rx="1.5" fill="#6366f1" />
+                <line x1="42" y1="38" x2="58" y2="38" stroke="#312e81" stroke-width="2" />
+                <text x="50" y="80" font-size="6.5" text-anchor="middle" fill="#64748b">LEAP-1A</text>
+                <!-- LEAP-1B -->
+                <line x1="76" y1="16" x2="76" y2="64" stroke="#64748b" stroke-width="1.5" />
+                <line x1="72" y1="16" x2="80" y2="16" stroke="#64748b" stroke-width="1.5" />
+                <line x1="72" y1="64" x2="80" y2="64" stroke="#64748b" stroke-width="1.5" />
+                <rect x="70" y="29" width="12" height="22" rx="1.5" fill="#0284c7" />
+                <line x1="68" y1="40" x2="84" y2="40" stroke="#0c4a6e" stroke-width="2" />
+                <text x="76" y="80" font-size="6.5" text-anchor="middle" fill="#64748b">LEAP-1B</text>
               </svg>
             </div>
           </div>
 
           <!-- 4B -->
           <div onclick="selectOption(4, 'B')" id="opt-4-B"
-            class="option-card active glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
-            <div>
+            class="option-card active glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-row items-start gap-3">
+            <div class="flex-1 min-w-0">
               <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
-                <span class="text-sm">📊</span> B. Barres vs Seuils Cibles
+                <span class="text-sm">📊</span> B. Décomposition du TAT par Site
               </div>
               <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
-                Durée réelle par sous-ensemble face aux barres de tolérance contractuelles ($P_{50}$ et $P_{85}$).
+                Barres empilées par site : part d'attente, délai de réparation atelier et temps de transfert.
               </p>
-              <div class="text-[9px] text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
-                <div><span class="font-bold text-blue-700">Type :</span> Barres Horizontales avec Ligne de Mire</div>
-                <div><span class="font-bold text-slate-700">Axes :</span> X = Durée réelle (jours/h) • Y = Entité analysée</div>
-                <div><span class="font-bold text-slate-700">Dimensions :</span> Compagnies, Packages modules ou Postes</div>
-                <div><span class="font-bold text-emerald-700">Mesures :</span> TAT Réel vs Ligne de référence Seuil $P_{85}$ SLA</div>
+              <div class="text-[9px] text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 space-y-0.5">
+                <div><span class="font-bold text-blue-700">Type :</span> Barres Empilées Horizontales / Site</div>
+                <div><span class="font-bold text-slate-700">Axes :</span> X = TAT Décomposé • Y = Sites Safran</div>
+                <div><span class="font-bold text-slate-700">Dimensions :</span> Sites (VIL, MON, CHL, BRU)</div>
+                <div><span class="font-bold text-emerald-700">Mesures :</span> Attente, Réparation, Transfert</div>
               </div>
             </div>
-            <div
-              class="w-full aspect-square max-h-[105px] bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
+            <div class="w-[115px] h-[100px] shrink-0 bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex items-center justify-center">
               <svg class="w-full h-full" viewBox="0 0 100 85">
-                <text x="8" y="18" font-size="7.5" font-semibold fill="#64748b">Aubes</text>
-                <rect x="32" y="9" width="46" height="13" rx="2" fill="#3b82f6" />
-                <line x1="68" y1="5" x2="68" y2="25" stroke="#dc2626" stroke-width="2" />
-
-                <text x="8" y="44" font-size="7.5" font-semibold fill="#64748b">Révis.</text>
-                <rect x="32" y="35" width="58" height="13" rx="2" fill="#3b82f6" />
-                <line x1="78" y1="31" x2="78" y2="51" stroke="#dc2626" stroke-width="2" />
-
-                <text x="8" y="70" font-size="7.5" font-semibold fill="#64748b">Banc</text>
-                <rect x="32" y="61" width="38" height="13" rx="2" fill="#3b82f6" />
-                <line x1="60" y1="57" x2="60" y2="77" stroke="#dc2626" stroke-width="2" />
-                <text x="68" y="83" font-size="6.5" font-bold text-anchor="middle" fill="#dc2626">| Seuil P85</text>
+                <text x="5" y="16" font-size="6.5" font-weight="600" fill="#64748b">VIL</text>
+                <rect x="20" y="8" width="42" height="10" rx="1.5" fill="#3b82f6" />
+                <rect x="63" y="8" width="14" height="10" rx="1.5" fill="#f59e0b" />
+                <rect x="78" y="8" width="16" height="10" rx="1.5" fill="#ef4444" />
+                <text x="5" y="32" font-size="6.5" font-weight="600" fill="#64748b">MON</text>
+                <rect x="20" y="24" width="36" height="10" rx="1.5" fill="#3b82f6" />
+                <rect x="57" y="24" width="20" height="10" rx="1.5" fill="#f59e0b" />
+                <rect x="78" y="24" width="18" height="10" rx="1.5" fill="#ef4444" />
+                <text x="5" y="48" font-size="6.5" font-weight="600" fill="#64748b">CHL</text>
+                <rect x="20" y="40" width="46" height="10" rx="1.5" fill="#3b82f6" />
+                <rect x="67" y="40" width="12" height="10" rx="1.5" fill="#f59e0b" />
+                <rect x="80" y="40" width="10" height="10" rx="1.5" fill="#ef4444" />
+                <text x="5" y="64" font-size="6.5" font-weight="600" fill="#64748b">BRU</text>
+                <rect x="20" y="56" width="40" height="10" rx="1.5" fill="#3b82f6" />
+                <rect x="61" y="56" width="16" height="10" rx="1.5" fill="#f59e0b" />
+                <rect x="78" y="56" width="12" height="10" rx="1.5" fill="#ef4444" />
+                <rect x="14" y="74" width="5" height="5" rx="1" fill="#3b82f6" />
+                <text x="21" y="79" font-size="5.5" fill="#64748b">Répar.</text>
+                <rect x="42" y="74" width="5" height="5" rx="1" fill="#f59e0b" />
+                <text x="49" y="79" font-size="5.5" fill="#64748b">Transf.</text>
+                <rect x="71" y="74" width="5" height="5" rx="1" fill="#ef4444" />
+                <text x="78" y="79" font-size="5.5" fill="#64748b">Attente</text>
               </svg>
             </div>
           </div>
 
           <!-- 4C -->
           <div onclick="selectOption(4, 'C')" id="opt-4-C"
-            class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
-            <div>
+            class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-row items-start gap-3">
+            <div class="flex-1 min-w-0">
               <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
-                <span class="text-sm">🚚</span> C. Barres Décomposées
+                <span class="text-sm">🤝</span> C. Respect Délais par Client &amp; Moteur
               </div>
               <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
-                Décomposition physique en 3 blocs : Attente passive, Transfert navette et Réparation atelier.
+                Écart moyen TAT contractuel vs effectif couplé au taux de non-respect SLA par client et moteur.
               </p>
-              <div class="text-[9px] text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
-                <div><span class="font-bold text-blue-700">Type :</span> Barres Empilées 100% ou Valeur Absolue</div>
-                <div><span class="font-bold text-slate-700">Axes :</span> X = Jours cumulés • Y = Familles moteurs / Lignes</div>
-                <div><span class="font-bold text-slate-700">Dimensions :</span> Catégorie de délai (Usinage, Navette, Attente)</div>
-                <div><span class="font-bold text-emerald-700">Mesures :</span> Somme des temps par composante de traversée</div>
+              <div class="text-[9px] text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 space-y-0.5">
+                <div><span class="font-bold text-blue-700">Type :</span> Barres Groupées &amp; Ligne % Écart</div>
+                <div><span class="font-bold text-slate-700">Axes :</span> X = Client / Moteur • Y1 = TAT • Y2 = % Retard</div>
+                <div><span class="font-bold text-slate-700">Dimensions :</span> Compagnies (AFR, DLH, DAL, RYR)</div>
+                <div><span class="font-bold text-emerald-700">Mesures :</span> Écart TAT Moyen, % Non-Respect SLA</div>
               </div>
             </div>
-            <div
-              class="w-full aspect-square max-h-[105px] bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
+            <div class="w-[115px] h-[100px] shrink-0 bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex items-center justify-center">
               <svg class="w-full h-full" viewBox="0 0 100 85">
-                <!-- Bar 1 -->
-                <text x="6" y="20" font-size="7.5" font-bold fill="#64748b">CFM</text>
-                <rect x="26" y="10" width="32" height="13" rx="1.5" fill="#3b82f6" />
-                <rect x="59" y="10" width="18" height="13" rx="1.5" fill="#f59e0b" />
-                <rect x="78" y="10" width="16" height="13" rx="1.5" fill="#ef4444" />
-
-                <!-- Bar 2 -->
-                <text x="6" y="44" font-size="7.5" font-bold fill="#64748b">LEAP</text>
-                <rect x="26" y="34" width="38" height="13" rx="1.5" fill="#3b82f6" />
-                <rect x="65" y="34" width="14" height="13" rx="1.5" fill="#f59e0b" />
-                <rect x="80" y="34" width="16" height="13" rx="1.5" fill="#ef4444" />
-
-                <!-- Legend -->
-                <rect x="8" y="66" width="6" height="6" rx="1" fill="#3b82f6" />
-                <text x="16" y="72" font-size="6" fill="#64748b">Répar.</text>
-                <rect x="40" y="66" width="6" height="6" rx="1" fill="#f59e0b" />
-                <text x="48" y="72" font-size="6" fill="#64748b">Transf.</text>
-                <rect x="74" y="66" width="6" height="6" rx="1" fill="#ef4444" />
-                <text x="82" y="72" font-size="6" fill="#64748b">Attente</text>
+                <text x="12" y="70" font-size="6" font-weight="600" fill="#64748b">AFR</text>
+                <rect x="8" y="26" width="6" height="38" rx="1" fill="#3b82f6" />
+                <rect x="15" y="22" width="6" height="42" rx="1" fill="#93c5fd" />
+                <text x="35" y="70" font-size="6" font-weight="600" fill="#64748b">DLH</text>
+                <rect x="31" y="30" width="6" height="34" rx="1" fill="#3b82f6" />
+                <rect x="38" y="28" width="6" height="36" rx="1" fill="#93c5fd" />
+                <text x="58" y="70" font-size="6" font-weight="600" fill="#64748b">DAL</text>
+                <rect x="54" y="24" width="6" height="40" rx="1" fill="#3b82f6" />
+                <rect x="61" y="22" width="6" height="42" rx="1" fill="#93c5fd" />
+                <text x="80" y="70" font-size="6" font-weight="600" fill="#64748b">RYR</text>
+                <rect x="76" y="34" width="6" height="30" rx="1" fill="#3b82f6" />
+                <rect x="83" y="20" width="6" height="44" rx="1" fill="#ef4444" />
+                <polyline points="14,35 37,42 60,38 83,18" fill="none" stroke="#dc2626" stroke-width="1.8" />
+                <circle cx="83" cy="18" r="2" fill="#dc2626" />
+                <text x="83" y="14" font-size="5.5" font-weight="bold" text-anchor="middle" fill="#dc2626">14%</text>
+                <rect x="12" y="76" width="5" height="4" fill="#3b82f6" />
+                <text x="19" y="80" font-size="5" fill="#64748b">Contractuel</text>
+                <rect x="47" y="76" width="5" height="4" fill="#93c5fd" />
+                <text x="54" y="80" font-size="5" fill="#64748b">Effectif</text>
+                <line x1="73" y1="78" x2="81" y2="78" stroke="#dc2626" stroke-width="1.5" />
+                <text x="83" y="80" font-size="5" fill="#dc2626">% Écart</text>
               </svg>
             </div>
           </div>
 
           <!-- 4D -->
           <div onclick="selectOption(4, 'D')" id="opt-4-D"
-            class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
-            <div>
+            class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-row items-start gap-3">
+            <div class="flex-1 min-w-0">
               <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
                 <span class="text-sm">📋</span> D. Tableau d'Alertes Nominatives
               </div>
               <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
                 Listing opérationnel détaillé avec statut couleur (vert/orange/rouge), ESN moteur, client et écart.
               </p>
-              <div class="text-[9px] text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
+              <div class="text-[9px] text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 space-y-0.5">
                 <div><span class="font-bold text-blue-700">Type :</span> Table / Matrice avec Mise en Forme Conditionnelle</div>
                 <div><span class="font-bold text-slate-700">Axes :</span> Lignes = Dossiers unitaires ESN • Colonnes = Attributs</div>
                 <div><span class="font-bold text-slate-700">Dimensions :</span> ESN Moteur, Compagnie, Atelier, Criticité AOG</div>
                 <div><span class="font-bold text-emerald-700">Mesures :</span> Jours de retard, Pénalités encourues (€)</div>
               </div>
             </div>
-            <div
-              class="w-full aspect-square max-h-[105px] bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
+            <div class="w-[115px] h-[100px] shrink-0 bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex items-center justify-center">
               <svg class="w-full h-full" viewBox="0 0 100 85">
                 <rect x="4" y="6" width="92" height="20" rx="3" fill="#f8fafc" stroke="#e2e8f0" />
                 <circle cx="12" cy="16" r="3" fill="#10b981" />
-                <text x="20" y="19" font-size="7" font-bold fill="#334155">9842 • AFR • Conforme</text>
-
+                <text x="20" y="19" font-size="7" font-weight="bold" fill="#334155">9842 • AFR • Conforme</text>
                 <rect x="4" y="32" width="92" height="20" rx="3" fill="#f8fafc" stroke="#e2e8f0" />
                 <circle cx="12" cy="42" r="3" fill="#f59e0b" />
-                <text x="20" y="45" font-size="7" font-bold fill="#334155">7731 • DLH • Aléas +2j</text>
-
+                <text x="20" y="45" font-size="7" font-weight="bold" fill="#334155">7731 • DLH • Aléas +2j</text>
                 <rect x="4" y="58" width="92" height="20" rx="3" fill="#fef2f2" stroke="#fecaca" />
                 <circle cx="12" cy="68" r="3" fill="#ef4444" />
-                <text x="20" y="71" font-size="7" font-bold fill="#dc2626">6510 • RYR • AOG Critique</text>
+                <text x="20" y="71" font-size="7" font-weight="bold" fill="#dc2626">6510 • RYR • AOG Critique</text>
+              </svg>
+            </div>
+          </div>
+
+          <!-- 4E -->
+          <div onclick="selectOption(4, 'E')" id="opt-4-E"
+            class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-row items-start gap-3">
+            <div class="flex-1 min-w-0">
+              <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                <span class="text-sm">⏱️</span> E. Cartes KPIs Synthétiques
+              </div>
+              <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                Indicateurs phares en gros chiffres : TAT moyen glissant, respect SLA global et dérive d'en-cours.
+              </p>
+              <div class="text-[9px] text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 space-y-0.5">
+                <div><span class="font-bold text-blue-700">Type :</span> Multi-Card KPI Synthétique</div>
+                <div><span class="font-bold text-slate-700">Axes :</span> N/A (Indicateurs scalaires agrégés)</div>
+                <div><span class="font-bold text-slate-700">Dimensions :</span> Tous moteurs &amp; Tous contrats</div>
+                <div><span class="font-bold text-emerald-700">Mesures :</span> TAT Moyen Réel (j), Taux SLA Global (%)</div>
+              </div>
+            </div>
+            <div class="w-[115px] h-[100px] shrink-0 bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex items-center justify-center">
+              <svg class="w-full h-full" viewBox="0 0 100 85">
+                <rect x="6" y="6" width="88" height="34" rx="4" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2" />
+                <text x="50" y="18" font-size="7" font-weight="bold" text-anchor="middle" fill="#64748b">TAT MOYEN RÉEL</text>
+                <text x="50" y="32" font-size="13" font-weight="900" text-anchor="middle" fill="#0284c7">18.4 jours</text>
+                <rect x="6" y="44" width="88" height="35" rx="4" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2" />
+                <text x="50" y="56" font-size="7" font-weight="bold" text-anchor="middle" fill="#64748b">RESPECT SLA GLOBAL</text>
+                <text x="50" y="71" font-size="13" font-weight="900" text-anchor="middle" fill="#16a34a">96.2 %</text>
+              </svg>
+            </div>
+          </div>
+
+          <!-- 4F -->
+          <div onclick="selectOption(4, 'F')" id="opt-4-F"
+            class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-row items-start gap-3">
+            <div class="flex-1 min-w-0">
+              <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                <span class="text-sm">🎯</span> F. Barres vs Seuils Cibles P85
+              </div>
+              <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                Durée réelle par sous-ensemble face aux barres de tolérance contractuelles (lignes seuil P85).
+              </p>
+              <div class="text-[9px] text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 space-y-0.5">
+                <div><span class="font-bold text-blue-700">Type :</span> Barres Horizontales avec Ligne Seuil Cible</div>
+                <div><span class="font-bold text-slate-700">Axes :</span> X = TAT Réalisé • Y = Modules &amp; Packages</div>
+                <div><span class="font-bold text-slate-700">Dimensions :</span> Aubes HP, Révision Générale, Recette Banc</div>
+                <div><span class="font-bold text-emerald-700">Mesures :</span> TAT Module vs Seuil Critique P85</div>
+              </div>
+            </div>
+            <div class="w-[115px] h-[100px] shrink-0 bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex items-center justify-center">
+              <svg class="w-full h-full" viewBox="0 0 100 85">
+                <text x="8" y="18" font-size="7.5" font-weight="600" fill="#64748b">Aubes</text>
+                <rect x="32" y="9" width="46" height="13" rx="2" fill="#3b82f6" />
+                <line x1="68" y1="5" x2="68" y2="25" stroke="#dc2626" stroke-width="2" />
+                <text x="8" y="44" font-size="7.5" font-weight="600" fill="#64748b">Révis.</text>
+                <rect x="32" y="35" width="58" height="13" rx="2" fill="#3b82f6" />
+                <line x1="78" y1="31" x2="78" y2="51" stroke="#dc2626" stroke-width="2" />
+                <text x="8" y="70" font-size="7.5" font-weight="600" fill="#64748b">Banc</text>
+                <rect x="32" y="61" width="38" height="13" rx="2" fill="#3b82f6" />
+                <line x1="60" y1="57" x2="60" y2="77" stroke="#dc2626" stroke-width="2" />
+                <text x="68" y="83" font-size="6.5" font-weight="bold" text-anchor="middle" fill="#dc2626">| Seuil P85</text>
+              </svg>
+            </div>
+          </div>
+
+          <!-- 4G -->
+          <div onclick="selectOption(4, 'G')" id="opt-4-G"
+            class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-row items-start gap-3">
+            <div class="flex-1 min-w-0">
+              <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                <span class="text-sm">🌊</span> G. Waterfall des Dérives TAT
+              </div>
+              <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                Cascade cumulative expliquant l'écart entre TAT contractuel convenu et TAT réel (+pièces, +aléa).
+              </p>
+              <div class="text-[9px] text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 space-y-0.5">
+                <div><span class="font-bold text-blue-700">Type :</span> Graphique Waterfall / Cascade Déviations</div>
+                <div><span class="font-bold text-slate-700">Axes :</span> X = Causes de Dérive • Y = Jours Cumulés</div>
+                <div><span class="font-bold text-slate-700">Dimensions :</span> Cible, Attente Pièce, Aléa CND, Fast Track</div>
+                <div><span class="font-bold text-emerald-700">Mesures :</span> Jours ajoutés / retranchés vs SLA</div>
+              </div>
+            </div>
+            <div class="w-[115px] h-[100px] shrink-0 bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex items-center justify-center">
+              <svg class="w-full h-full" viewBox="0 0 100 85">
+                <line x1="8" y1="72" x2="94" y2="72" stroke="#cbd5e1" stroke-width="1.2" />
+                <rect x="10" y="32" width="14" height="40" rx="1.5" fill="#3b82f6" />
+                <text x="17" y="28" font-size="6" font-weight="bold" fill="#1d4ed8" text-anchor="middle">18j Cible</text>
+                <rect x="28" y="20" width="13" height="12" rx="1.5" fill="#ef4444" />
+                <text x="34" y="16" font-size="6" font-weight="bold" fill="#dc2626" text-anchor="middle">+3j Pièce</text>
+                <rect x="45" y="12" width="13" height="8" rx="1.5" fill="#f59e0b" />
+                <text x="51" y="8" font-size="6" font-weight="bold" fill="#b45309" text-anchor="middle">+2j CND</text>
+                <rect x="62" y="16" width="13" height="6" rx="1.5" fill="#10b981" />
+                <text x="68" y="27" font-size="5.5" font-weight="bold" fill="#059669" text-anchor="middle">-1j Shift</text>
+                <rect x="79" y="16" width="14" height="56" rx="1.5" fill="#1e40af" />
+                <text x="86" y="12" font-size="6" font-weight="bold" fill="#1e3a8a" text-anchor="middle">22j Réel</text>
+              </svg>
+            </div>
+          </div>
+
+          <!-- 4H -->
+          <div onclick="selectOption(4, 'H')" id="opt-4-H"
+            class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-row items-start gap-3">
+            <div class="flex-1 min-w-0">
+              <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                <span class="text-sm">🚩</span> H. Jalons de Traversée (Gates)
+              </div>
+              <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                Gantt simplifié suivant le passage des portes industrielles (Gate 1 Démontage, Gate 2 Contrôle, Gate 3 Banc).
+              </p>
+              <div class="text-[9px] text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 space-y-0.5">
+                <div><span class="font-bold text-blue-700">Type :</span> Jalons Temporels / Milestone Timeline</div>
+                <div><span class="font-bold text-slate-700">Axes :</span> X = Séquence des Gates • Y = Chemins</div>
+                <div><span class="font-bold text-slate-700">Dimensions :</span> Gate 1 Démontage, G2 Usinage, G3 Banc Test</div>
+                <div><span class="font-bold text-emerald-700">Mesures :</span> Respect des jalons &amp; Dérive chemin critique</div>
+              </div>
+            </div>
+            <div class="w-[115px] h-[100px] shrink-0 bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex items-center justify-center">
+              <svg class="w-full h-full" viewBox="0 0 100 85">
+                <line x1="10" y1="18" x2="88" y2="18" stroke="#cbd5e1" stroke-width="2" />
+                <circle cx="20" cy="18" r="6" fill="#10b981" />
+                <text x="20" y="21" font-size="6" font-weight="bold" fill="#ffffff" text-anchor="middle">G1</text>
+                <text x="20" y="32" font-size="6" fill="#059669" text-anchor="middle">Démont.</text>
+                <circle cx="50" cy="18" r="6" fill="#3b82f6" />
+                <text x="50" y="21" font-size="6" font-weight="bold" fill="#ffffff" text-anchor="middle">G2</text>
+                <text x="50" y="32" font-size="6" fill="#1d4ed8" text-anchor="middle">Usinage</text>
+                <circle cx="80" cy="18" r="6" fill="#ef4444" />
+                <text x="80" y="21" font-size="6" font-weight="bold" fill="#ffffff" text-anchor="middle">G3</text>
+                <text x="80" y="32" font-size="6" fill="#dc2626" text-anchor="middle">Banc Test</text>
+                <rect x="15" y="44" width="70" height="28" rx="4" fill="#f8fafc" stroke="#e2e8f0" />
+                <text x="50" y="57" font-size="7" font-weight="bold" fill="#334155" text-anchor="middle">Chemin Critique Actif</text>
+                <text x="50" y="66" font-size="6" fill="#dc2626" text-anchor="middle">Retard +2j sur Gate 3</text>
               </svg>
             </div>
           </div>
@@ -943,9 +1317,26 @@
     <div id="step-6" class="step-page hidden flex flex-col min-h-full md:h-full justify-between">
       <div class="glass-card p-3.5 rounded-xl flex flex-col justify-between flex-1">
         <div class="mb-2">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
             <h2 class="text-sm md:text-base font-bold text-blue-700">Étape 6 : Sélectionner les visuels pour la Saturation des Ateliers</h2>
-            <span class="text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full self-start sm:self-auto">📊 Dataviz & Conception Graphique</span>
+            <div class="flex items-center gap-2 self-start sm:self-auto">
+              <!-- Sélecteur d'usage synchronisé avec l'Étape 1 -->
+              <div class="flex items-center gap-1.5 bg-white border border-slate-300 rounded-lg px-2 py-0.5 shadow-xs">
+                <label for="select-usage-step6" class="text-[9.5px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1">
+                  <span>🎯</span> Usage :
+                </label>
+                <select id="select-usage-step6" onchange="onUsageChange(this.value)"
+                  class="bg-transparent text-[10.5px] font-bold text-blue-700 outline-none cursor-pointer">
+                  <option value="A">⚡ Opérationnel (AOG)</option>
+                  <option value="B">⏱️ Contractuel (SLA)</option>
+                  <option value="C">🏢 Pilotage (Capacité)</option>
+                  <option value="D">💰 Financier (Pénalités)</option>
+                  <option value="E">📦 Logistique (Appro.)</option>
+                  <option value="F">🏛️ Gouvernance (Modèles)</option>
+                </select>
+              </div>
+              <span class="text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full hidden md:inline-block">📊 Dataviz & Conception</span>
+            </div>
           </div>
           <p class="text-[11px] text-slate-500">Quels visuels choisir pour repérer les goulots d'étranglement et la surcharge ?</p>
           
@@ -965,26 +1356,200 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 flex-1 items-stretch overflow-y-auto pr-1">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 flex-1 items-stretch overflow-y-auto pr-1 max-h-[500px]">
           <!-- 6A -->
           <div onclick="selectOption(6, 'A')" id="opt-6-A"
             class="option-card active glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
             <div>
               <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
-                <span class="text-sm">🚦</span> A. Barres de Charge vs Seuil 85%
+                <span class="text-sm">📦</span> A. Top Pièces Manquantes par Site
               </div>
               <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
-                Taux d'occupation machine/banc face à la ligne critique 85% où l'encombrement explose.
+                Volume et impact des références critiques en rupture causant l'attente sur chaque site Safran.
               </p>
               <div class="text-[9px] text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
-                <div><span class="font-bold text-blue-700">Type :</span> Barres Horizontales avec Seuil Critique</div>
-                <div><span class="font-bold text-slate-700">Axes :</span> X = Taux de charge (%) • Y = Ateliers / Postes</div>
-                <div><span class="font-bold text-slate-700">Dimensions :</span> Sites (VIL, MON, CHL, BRU) ou Lignes</div>
-                <div><span class="font-bold text-emerald-700">Mesures :</span> Ratio Charge / Capacité vs Ligne 85%</div>
+                <div><span class="font-bold text-blue-700">Type :</span> Barres Horizontales Groupées par Site</div>
+                <div><span class="font-bold text-slate-700">Axes :</span> X = Heures d'attente / Volume • Y = Références</div>
+                <div><span class="font-bold text-slate-700">Dimensions :</span> Pièces critiques & Sites (VIL, MON, CHL, BRU)</div>
+                <div><span class="font-bold text-emerald-700">Mesures :</span> Heures d'arrêt ligne imputables au stock</div>
               </div>
             </div>
             <div
-              class="w-full aspect-square max-h-[105px] bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
+              class="w-full h-[125px] bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
+              <svg class="w-full h-full" viewBox="0 0 100 85">
+                <text x="6" y="18" font-size="6.5" font-semibold fill="#64748b">Aubes HP</text>
+                <rect x="36" y="10" width="56" height="10" rx="2" fill="#ef4444" />
+                <text x="76" y="17" font-size="6" font-bold fill="#fff">MON (84h)</text>
+
+                <text x="6" y="34" font-size="6.5" font-semibold fill="#64748b">Disques LLP</text>
+                <rect x="36" y="26" width="46" height="10" rx="2" fill="#f59e0b" />
+                <text x="66" y="33" font-size="6" font-bold fill="#fff">VIL (52h)</text>
+
+                <text x="6" y="50" font-size="6.5" font-semibold fill="#64748b">Joints Fan</text>
+                <rect x="36" y="42" width="34" height="10" rx="2" fill="#3b82f6" />
+                <text x="54" y="49" font-size="6" font-bold fill="#fff">CHL (28h)</text>
+
+                <text x="6" y="66" font-size="6.5" font-semibold fill="#64748b">Injecteurs</text>
+                <rect x="36" y="58" width="26" height="10" rx="2" fill="#0284c7" />
+                <text x="46" y="65" font-size="6" font-bold fill="#fff">BRU (16h)</text>
+
+                <!-- Footer label -->
+                <text x="50" y="79" font-size="6" font-bold text-anchor="middle" fill="#dc2626">Attente cumulée ruptures</text>
+              </svg>
+            </div>
+          </div>
+
+          <!-- 6B -->
+          <div onclick="selectOption(6, 'B')" id="opt-6-B"
+            class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-row justify-between items-start gap-3">
+            <div>
+              <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                <span class="text-sm">⚠️</span> B. Retards par Réparation & Moteur
+              </div>
+              <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                Types d'opérations subissant le plus de retard imprévu en % des demandes, décliné par moteur.
+              </p>
+              <div class="text-[9px] text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
+                <div><span class="font-bold text-blue-700">Type :</span> Barres Groupées / Taux de Dérive</div>
+                <div><span class="font-bold text-slate-700">Axes :</span> X = % Demandes en retard • Y = Gammes ateliers</div>
+                <div><span class="font-bold text-slate-700">Dimensions :</span> Types réparation & Moteurs (CFM vs LEAP)</div>
+                <div><span class="font-bold text-emerald-700">Mesures :</span> % Demandes avec aléas imprévus</div>
+              </div>
+            </div>
+            <div
+              class="w-full h-[125px] bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
+              <svg class="w-full h-full" viewBox="0 0 100 85">
+                <!-- Row 1 Usinage Carter -->
+                <text x="6" y="16" font-size="6" font-semibold fill="#64748b">Usinage</text>
+                <rect x="30" y="9" width="46" height="5.5" rx="1" fill="#3b82f6" />
+                <rect x="30" y="15.5" width="58" height="5.5" rx="1" fill="#6366f1" />
+
+                <!-- Row 2 Ressuage CND -->
+                <text x="6" y="32" font-size="6" font-semibold fill="#64748b">Ressuage</text>
+                <rect x="30" y="25" width="38" height="5.5" rx="1" fill="#3b82f6" />
+                <rect x="30" y="31.5" width="48" height="5.5" rx="1" fill="#6366f1" />
+
+                <!-- Row 3 Revêtement Aubes -->
+                <text x="6" y="48" font-size="6" font-semibold fill="#64748b">Aubes</text>
+                <rect x="30" y="41" width="30" height="5.5" rx="1" fill="#3b82f6" />
+                <rect x="30" y="47.5" width="52" height="5.5" rx="1" fill="#6366f1" />
+
+                <!-- Row 4 Banc d'Essais -->
+                <text x="6" y="64" font-size="6" font-semibold fill="#64748b">Banc Test</text>
+                <rect x="30" y="57" width="22" height="5.5" rx="1" fill="#3b82f6" />
+                <rect x="30" y="63.5" width="36" height="5.5" rx="1" fill="#6366f1" />
+
+                <!-- Légende -->
+                <rect x="22" y="74" width="6" height="4" rx="1" fill="#3b82f6" />
+                <text x="30" y="78" font-size="5.5" fill="#64748b">CFM56</text>
+                <rect x="62" y="74" width="6" height="4" rx="1" fill="#6366f1" />
+                <text x="70" y="78" font-size="5.5" fill="#64748b">LEAP</text>
+              </svg>
+            </div>
+          </div>
+
+          <!-- 6C -->
+          <div onclick="selectOption(6, 'C')" id="opt-6-C"
+            class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-row justify-between items-start gap-3">
+            <div>
+              <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                <span class="text-sm">🚚</span> C. Routes de Transfert & Délais Navettes
+              </div>
+              <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                Top des flux de sous-traitance inter-sites en % des demandes et délai moyen de transport.
+              </p>
+              <div class="text-[9px] text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
+                <div><span class="font-bold text-blue-700">Type :</span> Graphique Croisé Flux & Délais (Bulle/Barre)</div>
+                <div><span class="font-bold text-slate-700">Axes :</span> X1 = % Demandes • X2 = Délai Jours • Y = Route</div>
+                <div><span class="font-bold text-slate-700">Dimensions :</span> Origine ➔ Destination sous-traitant</div>
+                <div><span class="font-bold text-emerald-700">Mesures :</span> Part de volume & TAT moyen navette</div>
+              </div>
+            </div>
+            <div
+              class="w-full h-[125px] bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
+              <svg class="w-full h-full" viewBox="0 0 100 85">
+                <!-- Route 1 MON -> VIL -->
+                <text x="6" y="17" font-size="6" font-semibold fill="#64748b">MON➔VIL</text>
+                <rect x="36" y="9" width="45" height="10" rx="1.5" fill="#3b82f6" />
+                <circle cx="88" cy="14" r="5" fill="#f59e0b" />
+                <text x="88" y="16" font-size="5" font-bold text-anchor="middle" fill="#fff">1.2j</text>
+
+                <!-- Route 2 CHL -> BRU -->
+                <text x="6" y="33" font-size="6" font-semibold fill="#64748b">CHL➔BRU</text>
+                <rect x="36" y="25" width="32" height="10" rx="1.5" fill="#3b82f6" />
+                <circle cx="76" cy="30" r="5" fill="#f59e0b" />
+                <text x="76" y="32" font-size="5" font-bold text-anchor="middle" fill="#fff">2.4j</text>
+
+                <!-- Route 3 VIL -> CHL -->
+                <text x="6" y="49" font-size="6" font-semibold fill="#64748b">VIL➔CHL</text>
+                <rect x="36" y="41" width="25" height="10" rx="1.5" fill="#3b82f6" />
+                <circle cx="68" cy="46" r="5" fill="#f59e0b" />
+                <text x="68" y="48" font-size="5" font-bold text-anchor="middle" fill="#fff">1.8j</text>
+
+                <!-- Route 4 MON -> BRU -->
+                <text x="6" y="65" font-size="6" font-semibold fill="#64748b">MON➔BRU</text>
+                <rect x="36" y="57" width="18" height="10" rx="1.5" fill="#3b82f6" />
+                <circle cx="61" cy="62" r="5" fill="#f59e0b" />
+                <text x="61" y="64" font-size="5" font-bold text-anchor="middle" fill="#fff">3.1j</text>
+
+                <!-- Légende -->
+                <rect x="18" y="74" width="6" height="4" fill="#3b82f6" />
+                <text x="26" y="78" font-size="5.5" fill="#64748b">% Demandes</text>
+                <circle cx="68" cy="76" r="3" fill="#f59e0b" />
+                <text x="74" y="78" font-size="5.5" fill="#64748b">Délai navette</text>
+              </svg>
+            </div>
+          </div>
+
+          <!-- 6D -->
+          <div onclick="selectOption(6, 'D')" id="opt-6-D"
+            class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-row justify-between items-start gap-3">
+            <div>
+              <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                <span class="text-sm">⏳</span> D. Ratio Attente vs Travail Effectif
+              </div>
+              <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                Donut mesurant le temps passé en attente passive d'un technicien, d'une machine ou navette.
+              </p>
+              <div class="text-[9px] text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
+                <div><span class="font-bold text-blue-700">Type :</span> Donut Chart / Ratio Part de Voix Lean</div>
+                <div><span class="font-bold text-slate-700">Axes :</span> N/A (Proportions circulaires sur 100%)</div>
+                <div><span class="font-bold text-slate-700">Dimensions :</span> Statut temps (Valeur Ajoutée vs Non-VA)</div>
+                <div><span class="font-bold text-emerald-700">Mesures :</span> % Temps Contact vs % Attente / Navette</div>
+              </div>
+            </div>
+            <div
+              class="w-full h-[125px] bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
+              <svg class="w-full h-full" viewBox="0 0 100 85">
+                <circle cx="36" cy="38" r="22" fill="none" stroke="#3b82f6" stroke-width="6.5" />
+                <circle cx="36" cy="38" r="22" fill="none" stroke="#ef4444" stroke-width="6.5" stroke-dasharray="138"
+                  stroke-dashoffset="80" />
+                <text x="68" y="30" font-size="8" font-bold fill="#dc2626">42% Attente</text>
+                <text x="68" y="46" font-size="8" font-bold fill="#2563eb">58% Usinage</text>
+                <text x="50" y="73" font-size="7.5" font-semibold text-anchor="middle" fill="#64748b">Lead Time</text>
+              </svg>
+            </div>
+          </div>
+
+          <!-- 6E -->
+          <div onclick="selectOption(6, 'E')" id="opt-6-E"
+            class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
+            <div>
+              <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                <span class="text-sm">🚦</span> E. Barres de Charge vs Seuil 85%
+              </div>
+              <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                Taux d'occupation atelier face à la ligne rouge critique des 85% où l'encombrement explose.
+              </p>
+              <div class="text-[9px] text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
+                <div><span class="font-bold text-blue-700">Type :</span> Barres Horizontales avec Seuil Alerte</div>
+                <div><span class="font-bold text-slate-700">Axes :</span> X = % Charge Atelier • Y = Ateliers / Sites</div>
+                <div><span class="font-bold text-slate-700">Dimensions :</span> VIL-01, MON-01, CHL-01, BRU-01</div>
+                <div><span class="font-bold text-emerald-700">Mesures :</span> Taux d'occupation vs Seuil 85%</div>
+              </div>
+            </div>
+            <div
+              class="w-full h-[125px] bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
               <svg class="w-full h-full" viewBox="0 0 100 85">
                 <text x="8" y="20" font-size="7.5" font-semibold fill="#64748b">VIL-01</text>
                 <rect x="32" y="10" width="45" height="13" rx="2" fill="#3b82f6" />
@@ -993,30 +1558,30 @@
                 <rect x="32" y="36" width="62" height="13" rx="2" fill="#ef4444" />
 
                 <line x1="68" y1="5" x2="68" y2="58" stroke="#d97706" stroke-dasharray="2.5,2.5" stroke-width="1.8" />
-                <text x="68" y="70" font-size="7" font-bold text-anchor="middle" fill="#d97706">Seuil 85%</text>
+                <text x="68" y="70" font-size="7" font-bold text-anchor="middle" fill="#d97706">Seuil Critique 85%</text>
               </svg>
             </div>
           </div>
 
-          <!-- 6B -->
-          <div onclick="selectOption(6, 'B')" id="opt-6-B"
+          <!-- 6F -->
+          <div onclick="selectOption(6, 'F')" id="opt-6-F"
             class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
             <div>
               <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
-                <span class="text-sm">🗓️</span> B. Heatmap Hebdomadaire / Site
+                <span class="text-sm">🗓️</span> F. Heatmap Hebdomadaire / Site
               </div>
               <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
                 Matrice croisant sites et semaines calendaires pour repérer les pics saisonniers d'entrées.
               </p>
               <div class="text-[9px] text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
-                <div><span class="font-bold text-blue-700">Type :</span> Heatmap Matricielle Thermique</div>
-                <div><span class="font-bold text-slate-700">Axes :</span> X = Semaines fiscales • Y = Centres industriels</div>
-                <div><span class="font-bold text-slate-700">Dimensions :</span> Semaine (S12..S15), Atelier, Ligne</div>
-                <div><span class="font-bold text-emerald-700">Mesures :</span> Heures planifiées, Gradient vert/jaune/rouge</div>
+                <div><span class="font-bold text-blue-700">Type :</span> Matrice Thermique / Heatmap Hebdo</div>
+                <div><span class="font-bold text-slate-700">Axes :</span> X = Semaines S36-S39 • Y = Sites</div>
+                <div><span class="font-bold text-slate-700">Dimensions :</span> Sites Safran x Semaines</div>
+                <div><span class="font-bold text-emerald-700">Mesures :</span> Niveau d'en-cours & Gradient de tension</div>
               </div>
             </div>
             <div
-              class="w-full aspect-square max-h-[105px] bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
+              class="w-full h-[125px] bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
               <svg class="w-full h-full" viewBox="0 0 100 85">
                 <rect x="10" y="10" width="16" height="16" rx="2.5" fill="#dbeafe" stroke="#93c5fd" />
                 <rect x="31" y="10" width="16" height="16" rx="2.5" fill="#3b82f6" />
@@ -1033,25 +1598,25 @@
             </div>
           </div>
 
-          <!-- 6C -->
-          <div onclick="selectOption(6, 'C')" id="opt-6-C"
+          <!-- 6G -->
+          <div onclick="selectOption(6, 'G')" id="opt-6-G"
             class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
             <div>
               <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
-                <span class="text-sm">📈</span> C. Courbes Entrées vs Sorties (WIP)
+                <span class="text-sm">📈</span> G. Courbes Entrées vs Sorties WIP
               </div>
               <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
                 Diagramme de flux cumulé mesurant l'écart arrivées / restitutions et la dérive d'en-cours.
               </p>
               <div class="text-[9px] text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
-                <div><span class="font-bold text-blue-700">Type :</span> Courbes Cumulées / Diagramme CFD</div>
-                <div><span class="font-bold text-slate-700">Axes :</span> X = Chronologique (Semaines) • Y = Moteurs cumulés</div>
-                <div><span class="font-bold text-slate-700">Dimensions :</span> Flux entrant (In) vs Flux sortant (Out)</div>
-                <div><span class="font-bold text-emerald-700">Mesures :</span> Écart de flux = En-cours physique (WIP)</div>
+                <div><span class="font-bold text-blue-700">Type :</span> Cumulative Flow Diagram (CFD)</div>
+                <div><span class="font-bold text-slate-700">Axes :</span> X = Chronologie Jours • Y = Moteurs Cumulés</div>
+                <div><span class="font-bold text-slate-700">Dimensions :</span> Flux Entrées (In) vs Sorties (Out)</div>
+                <div><span class="font-bold text-emerald-700">Mesures :</span> Dérive du stock tampon d'en-cours WIP</div>
               </div>
             </div>
             <div
-              class="w-full aspect-square max-h-[105px] bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
+              class="w-full h-[125px] bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
               <svg class="w-full h-full" viewBox="0 0 100 85">
                 <path d="M 10 58 Q 40 50, 60 22 Q 80 16, 92 12" fill="none" stroke="#2563eb" stroke-width="2.2" />
                 <path d="M 10 60 Q 40 56, 60 52 Q 80 48, 92 46" fill="none" stroke="#059669" stroke-width="2.2" />
@@ -1062,32 +1627,41 @@
             </div>
           </div>
 
-          <!-- 6D -->
-          <div onclick="selectOption(6, 'D')" id="opt-6-D"
+          <!-- 6H -->
+          <div onclick="selectOption(6, 'H')" id="opt-6-H"
             class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
             <div>
               <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
-                <span class="text-sm">⏳</span> D. Ratio Attente vs Travail Effectif
+                <span class="text-sm">🗂️</span> H. Treemap des Goulots d'Atelier
               </div>
               <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
-                Donut mesurant le temps passé en attente passive d'un technicien, d'une machine ou navette.
+                Surfaces proportionnelles au volume d'en-cours WIP bloqué, colorées par sévérité de saturation.
               </p>
               <div class="text-[9px] text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
-                <div><span class="font-bold text-blue-700">Type :</span> Donut Chart / Ratio Part de Voix Lean</div>
-                <div><span class="font-bold text-slate-700">Axes :</span> N/A (Proportions circulaires sur 100%)</div>
-                <div><span class="font-bold text-slate-700">Dimensions :</span> Statut temps (Valeur Ajoutée vs Non-VA)</div>
-                <div><span class="font-bold text-emerald-700">Mesures :</span> % Temps Contact vs % Attente / Navette</div>
+                <div><span class="font-bold text-blue-700">Type :</span> Treemap / Cartographie Rectangulaire de Charge</div>
+                <div><span class="font-bold text-slate-700">Axes :</span> N/A (Surfaces proportionnelles au WIP)</div>
+                <div><span class="font-bold text-slate-700">Dimensions :</span> Postes (Tour CN, CND, Banc Test, Équilibrage)</div>
+                <div><span class="font-bold text-emerald-700">Mesures :</span> En-cours WIP (h) & Taux de Saturation (%)</div>
               </div>
             </div>
             <div
-              class="w-full aspect-square max-h-[105px] bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
+              class="w-full h-[125px] bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex flex-col items-center justify-center mx-auto">
               <svg class="w-full h-full" viewBox="0 0 100 85">
-                <circle cx="36" cy="38" r="22" fill="none" stroke="#3b82f6" stroke-width="6.5" />
-                <circle cx="36" cy="38" r="22" fill="none" stroke="#ef4444" stroke-width="6.5" stroke-dasharray="138"
-                  stroke-dashoffset="80" />
-                <text x="68" y="30" font-size="8" font-bold fill="#dc2626">42% Attente</text>
-                <text x="68" y="46" font-size="8" font-bold fill="#2563eb">58% Usinage</text>
-                <text x="50" y="73" font-size="7.5" font-semibold text-anchor="middle" fill="#64748b">Lead Time</text>
+                <rect x="8" y="8" width="52" height="42" rx="2" fill="#ef4444" />
+                <text x="34" y="26" font-size="7" font-bold fill="#ffffff" text-anchor="middle">Tour CN 5A</text>
+                <text x="34" y="36" font-size="6" fill="#fee2e2" text-anchor="middle">94% (48h WIP)</text>
+
+                <rect x="62" y="8" width="30" height="42" rx="2" fill="#f59e0b" />
+                <text x="77" y="26" font-size="6.5" font-weight="bold" fill="#ffffff" text-anchor="middle">CND</text>
+                <text x="77" y="36" font-size="5.5" fill="#fef3c7" text-anchor="middle">86%</text>
+
+                <rect x="8" y="52" width="40" height="25" rx="2" fill="#3b82f6" />
+                <text x="28" y="66" font-size="6.5" font-weight="bold" fill="#ffffff" text-anchor="middle">Banc Test</text>
+                <text x="28" y="73" font-size="5.5" fill="#dbeafe" text-anchor="middle">74%</text>
+
+                <rect x="50" y="52" width="42" height="25" rx="2" fill="#10b981" />
+                <text x="71" y="66" font-size="6.5" font-weight="bold" fill="#ffffff" text-anchor="middle">Équilibrage</text>
+                <text x="71" y="73" font-size="5.5" fill="#d1fae5" text-anchor="middle">62%</text>
               </svg>
             </div>
           </div>
@@ -1122,7 +1696,7 @@
               class="bg-slate-50 border border-slate-200 p-2 rounded-lg flex flex-col justify-between hover:border-blue-500 transition shadow-sm">
               <label for="select-q1"
                 class="text-[9px] text-blue-700 font-bold uppercase tracking-wider mb-1 flex items-center gap-1">
-                <span>1️⃣</span> Objectif
+                <span>1️⃣</span> Question
               </label>
               <select id="select-q1" onchange="onSummarySelectChange(1, this.value)"
                 class="bg-white text-slate-800 font-medium text-[11px] rounded border border-slate-300 px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm">
@@ -1131,6 +1705,7 @@
                 <option value="C">🏢 1.C Capacité</option>
                 <option value="D">💰 1.D Pénalités</option>
                 <option value="E">📦 1.E Logistique & Appro.</option>
+                <option value="F">🏛️ 1.F Gouvernance</option>
               </select>
               <div id="sum-q1-desc" class="text-[9px] text-slate-500 mt-1 truncate">Temps réel AOG & escalade</div>
             </div>
@@ -1140,7 +1715,7 @@
               class="bg-slate-50 border border-slate-200 p-2 rounded-lg flex flex-col justify-between hover:border-blue-500 transition shadow-sm">
               <label for="select-q2"
                 class="text-[9px] text-blue-700 font-bold uppercase tracking-wider mb-1 flex items-center gap-1">
-                <span>2️⃣</span> Données
+                <span>2️⃣</span> Modèle
               </label>
               <select id="select-q2" onchange="onSummarySelectChange(2, this.value)"
                 class="bg-white text-slate-800 font-medium text-[11px] rounded border border-slate-300 px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm">
@@ -1177,12 +1752,16 @@
               </label>
               <select id="select-q4" onchange="onSummarySelectChange(4, this.value)"
                 class="bg-white text-slate-800 font-medium text-[11px] rounded border border-slate-300 px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm">
-                <option value="A">⏱️ 4.A Cartes</option>
-                <option value="B">📊 4.B Barres vs Cible</option>
-                <option value="C">🚚 4.C Barres Décomposées</option>
-                <option value="D">📋 4.D Alertes</option>
+                <option value="A">⏱️ 4.A TAT Médian P5-P95</option>
+                <option value="B">📊 4.B Décomposition par Site</option>
+                <option value="C">🤝 4.C Respect Client & Moteur</option>
+                <option value="D">📋 4.D Alertes Nominatives</option>
+                <option value="E">⏱️ 4.E Cartes KPIs Synthétiques</option>
+                <option value="F">🎯 4.F Barres vs Seuils P85</option>
+                <option value="G">🌊 4.G Waterfall des Dérives</option>
+                <option value="H">🚩 4.H Jalons de Traversée (Gates)</option>
               </select>
-              <div id="sum-q4-desc" class="text-[9px] text-slate-500 mt-1 truncate">Comparatif vs seuils SLA</div>
+              <div id="sum-q4-desc" class="text-[9px] text-slate-500 mt-1 truncate">Décomposition du TAT par site</div>
             </div>
 
             <!-- Dropdown Q5 (Capacité) -->
@@ -1211,12 +1790,16 @@
               </label>
               <select id="select-q6" onchange="onSummarySelectChange(6, this.value)"
                 class="bg-white text-slate-800 font-medium text-[11px] rounded border border-slate-300 px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm">
-                <option value="A">🚦 6.A Charge (85%)</option>
-                <option value="B">🗓️ 6.B Heatmap</option>
-                <option value="C">📈 6.C In/Out WIP</option>
-                <option value="D">⏳ 6.D Attente/Travail</option>
+                <option value="A">📦 6.A Top Pièces Manquantes</option>
+                <option value="B">⚠️ 6.B Retards par Réparation</option>
+                <option value="C">🚚 6.C Routes de Transfert</option>
+                <option value="D">⏳ 6.D Ratio Attente/Travail</option>
+                <option value="E">🚦 6.E Barres Charge vs 85%</option>
+                <option value="F">🗓️ 6.F Heatmap Hebdo / Site</option>
+                <option value="G">📈 6.G Courbes In/Out WIP</option>
+                <option value="H">🗂️ 6.H Treemap Goulots Postes</option>
               </select>
-              <div id="sum-q6-desc" class="text-[9px] text-slate-500 mt-1 truncate">Taux d'occupation ateliers</div>
+              <div id="sum-q6-desc" class="text-[9px] text-slate-500 mt-1 truncate">Top pièces en rupture par site</div>
             </div>
           </div>
           <div
@@ -1377,7 +1960,8 @@
         'B': { title: "Engagements Contractuels", desc: "Respect des SLA & vision globale par compagnie", icon: "⏱️" },
         'C': { title: "Optimisation Capacités", desc: "Lissage de charge & élimination des goulets ateliers", icon: "🏢" },
         'D': { title: "Suivi Retard & Pénalités", desc: "Jours de dérapage ouvrés & exposition financière (€)", icon: "💰" },
-        'E': { title: "Logistique et Approvisionnement", desc: "Disponibilité stock, délais fournisseurs et kits complets", icon: "📦" }
+        'E': { title: "Logistique et Approvisionnement", desc: "Disponibilité stock, délais fournisseurs et kits complets", icon: "📦" },
+        'F': { title: "Data Gouvernance", desc: "Suivi des usages métiers, fiabilisation & pertinence des modèles", icon: "🏛️" }
       },
       2: {
         'A': { title: "La Demande (visit)", desc: "1 ligne = 1 visite moteur (visit) • Transits forfaitaires", icon: "📦" },
@@ -1391,10 +1975,14 @@
         'D': { title: "Modélisation Avancée", desc: "Délai dynamique par simulation probabiliste multi-factorielle", icon: "📈" }
       },
       4: {
-        'A': { title: "Cartes KPIs Clés", desc: "TAT moyen glissant, % SLA et écart standard", icon: "⏱️" },
-        'B': { title: "Barres vs Cible", desc: "Durée réelle vs cible P85 par sous-ensemble", icon: "📊" },
-        'C': { title: "Barres Décomposées", desc: "Décomposition Usinage / Valeur vs Transit vs Attente Pièces", icon: "🚚" },
-        'D': { title: "Tableau d'Alertes", desc: "Listing opérationnel nominatif ESN trié par criticité", icon: "📋" }
+        'A': { title: "TAT Médian & Bornes 5%-95%", desc: "Dispersion statistique P50 et intervalle P5-P95 par moteur", icon: "⏱️" },
+        'B': { title: "Décomposition TAT par Site", desc: "Barres empilées : attente, réparation et transfert", icon: "📊" },
+        'C': { title: "Respect Client & Moteur", desc: "Écart TAT moyen contractuel vs effectif et % non-respect", icon: "🤝" },
+        'D': { title: "Tableau d'Alertes Nominatives", desc: "Listing opérationnel nominatif ESN avec statut de demande", icon: "📋" },
+        'E': { title: "Cartes KPIs Synthétiques", desc: "TAT moyen réel & taux de respect SLA global", icon: "⏱️" },
+        'F': { title: "Barres vs Seuils Cibles P85", desc: "Durée réelle par sous-ensemble face au seuil P85", icon: "🎯" },
+        'G': { title: "Waterfall des Dérives TAT", desc: "Cascade cumulative des écarts contractuel vs réel", icon: "🌊" },
+        'H': { title: "Jalons de Traversée (Gates)", desc: "Passage des jalons G1 à G3 et alerte chemin critique", icon: "🚩" }
       },
       5: {
         'A': { title: "Prévisions des Demandes (Plan S&OP)", desc: "Projection déterministe basée sur le carnet de commandes", icon: "🗓️" },
@@ -1403,26 +1991,30 @@
         'D': { title: "Prévisions Multi-factorielles (MRO)", desc: "Aléas réels MRO : rebuts CND, outillages, bancs & pièces LLP", icon: "🔮" }
       },
       6: {
-        'A': { title: "Barres Charge (85%)", desc: "Taux d'occupation machine face au seuil d'engorgement", icon: "🚦" },
-        'B': { title: "Heatmap / Semaine", desc: "Matrice thermique des volumes par site et semaine", icon: "🗓️" },
-        'C': { title: "Courbes Entrées / Sorties", desc: "Différentiel de flux et suivi de l'en-cours WIP", icon: "📈" },
-        'D': { title: "Ratio Attente / Travail", desc: "Part du lead time passée en attente passive", icon: "⏳" }
+        'A': { title: "Top Pièces Manquantes par Site", desc: "Références critiques en rupture causant l'attente atelier", icon: "📦" },
+        'B': { title: "Retards par Réparation & Moteur", desc: "Opérations avec attente imprévue en % des demandes", icon: "⚠️" },
+        'C': { title: "Routes de Transfert Inter-Sites", desc: "Flux sous-traitance en % demandes et délai navette moyen", icon: "🚚" },
+        'D': { title: "Ratio Attente vs Travail Effectif", desc: "Part du lead time passée en attente passive Lean", icon: "⏳" },
+        'E': { title: "Barres Charge vs Seuil 85%", desc: "Taux d'occupation atelier face au seuil critique 85%", icon: "🚦" },
+        'F': { title: "Heatmap Hebdo / Site", desc: "Matrice hebdomadaire de charge et pics d'en-cours", icon: "🗓️" },
+        'G': { title: "Courbes Entrées vs Sorties WIP", desc: "Diagramme de flux cumulé (CFD) arrivées / livraisons", icon: "📈" },
+        'H': { title: "Treemap des Goulots d'Atelier", desc: "Cartographie de charge des postes et machines critiques", icon: "🗂️" }
       }
     };
 
     function switchStep(step) {
       currentStep = step;
-      document.querySelectorAll('.step-page').forEach((el, index) => {
-        el.classList.toggle('hidden', index + 1 !== step);
+      document.querySelectorAll('.step-page').forEach((el) => {
+        el.classList.toggle('hidden', el.id !== `step-${step}`);
       });
 
-      for (let i = 1; i <= TOTAL_STEPS; i++) {
+      for (let i = 0; i <= TOTAL_STEPS; i++) {
         const tab = document.getElementById(`tab-${i}`);
         if (!tab) continue;
         if (i === step) {
-          tab.className = "px-2 py-0.5 rounded text-xs font-bold transition flex items-center gap-1 bg-blue-600 text-white shadow-sm shadow-blue-500/20";
+          tab.className = "px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 bg-blue-600 text-white shadow-sm shadow-blue-500/20";
         } else {
-          tab.className = "px-2 py-0.5 rounded text-xs font-bold transition flex items-center gap-1 text-slate-600 hover:text-blue-600";
+          tab.className = "px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 bg-white text-slate-600 border border-slate-200 hover:text-blue-600 hover:bg-slate-50 shadow-sm";
         }
       }
 
@@ -1457,62 +2049,168 @@
     }
 
     function prevStep() {
-      if (currentStep > 1) switchStep(currentStep - 1);
+      if (currentStep > 0) switchStep(currentStep - 1);
     }
 
-    // Définition des classements recommandés parmi les 4 graphiques usuels selon l'objectif en Étape 1
+    // Définition des classements recommandés parmi les graphiques usuels selon l'objectif en Étape 1
     const recommendedCharts = {
       'A': { // Urgence opérationnelle AOG : Alertes nominatives en tête, Cartes rapides, Barres seuil, Décomposition
-        step4: ['D', 'A', 'B', 'C'],
-        step6: ['A', 'B', 'C', 'D']
+        step4: ['D', 'E', 'A', 'H', 'B', 'C', 'F', 'G'],
+        step6: ['E', 'A', 'B', 'H', 'C', 'D', 'F', 'G']
       },
       'B': { // Engagements SLA : Cartes synthétiques, Barres seuil, Décomposition, Alertes
-        step4: ['A', 'B', 'C', 'D'],
-        step6: ['A', 'B', 'C', 'D']
+        step4: ['C', 'E', 'A', 'B', 'D', 'F', 'G', 'H'],
+        step6: ['E', 'C', 'A', 'B', 'D', 'F', 'G', 'H']
       },
       'C': { // Optimisation capacités : Barres décomposées, Barres seuil, Alertes, Cartes
-        step4: ['C', 'B', 'D', 'A'],
-        step6: ['A', 'D', 'B', 'C']
+        step4: ['B', 'F', 'H', 'A', 'C', 'D', 'E', 'G'],
+        step6: ['E', 'F', 'H', 'A', 'D', 'B', 'C', 'G']
       },
       'D': { // Suivi retard & pénalités : Alertes en tête, Barres seuil, Décomposition, Cartes
-        step4: ['D', 'B', 'C', 'A'],
-        step6: ['C', 'A', 'B', 'D']
+        step4: ['C', 'D', 'G', 'E', 'A', 'B', 'F', 'H'],
+        step6: ['G', 'E', 'C', 'A', 'B', 'D', 'F', 'H']
       },
       'E': { // Arbitrage Pièces & Approvisionnements : Barres décomposées (attente pièces), Alertes nominatives, Ratio attente stock, Flux In/Out
-        step4: ['C', 'D', 'B', 'A'],
-        step6: ['D', 'C', 'A', 'B']
+        step4: ['B', 'G', 'D', 'C', 'E', 'A', 'F', 'H'],
+        step6: ['A', 'C', 'D', 'G', 'H', 'E', 'B', 'F']
+      },
+      'F': { // Data Gouvernance : TAT Médian P5-P95 (stabilité modèles), Retards par gamme (dérive), Alertes, Ratio Lean
+        step4: ['A', 'F', 'G', 'C', 'D', 'E', 'B', 'H'],
+        step6: ['B', 'D', 'G', 'F', 'H', 'A', 'C', 'E']
       }
     };
 
-    // Gestion de la compatibilité et mise en avant des graphiques usuels (A, B, C, D)
+    // Configuration des badges d'usage pour les visualisations des étapes 4 et 6
+    // Usages possibles : 'operationnel', 'contractuel', 'pilotage', 'financier', 'logistique', 'gouvernance'
+    const usageBadgeConfig = {
+      // Mapping Objectif Étape 1 -> Clé d'usage
+      targetUsage: {
+        'A': 'operationnel',
+        'B': 'contractuel',
+        'C': 'pilotage',
+        'D': 'financier',
+        'E': 'logistique',
+        'F': 'gouvernance'
+      },
+      // Définition visuelle de chaque badge
+      usageMeta: {
+        'operationnel': { label: 'Opérationnel', icon: '⚡', classes: 'bg-red-50 text-red-700 border-red-200' },
+        'contractuel':  { label: 'Contractuel',  icon: '⏱️', classes: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+        'pilotage':     { label: 'Pilotage',     icon: '🏢', classes: 'bg-blue-50 text-blue-700 border-blue-200' },
+        'financier':    { label: 'Financier',    icon: '💰', classes: 'bg-amber-50 text-amber-700 border-amber-200' },
+        'logistique':   { label: 'Logistique',   icon: '📦', classes: 'bg-indigo-50 text-indigo-700 border-indigo-200' },
+        'gouvernance':  { label: 'Gouvernance',  icon: '🏛️', classes: 'bg-purple-50 text-purple-700 border-purple-200' }
+      },
+      // Usages prépondérants pour chaque carte de l'Étape 4 (A à H)
+      step4: {
+        'A': ['pilotage', 'gouvernance'],
+        'B': ['operationnel', 'pilotage', 'logistique'],
+        'C': ['contractuel', 'financier'],
+        'D': ['operationnel', 'contractuel', 'financier'],
+        'E': ['pilotage', 'contractuel'],
+        'F': ['operationnel', 'gouvernance'],
+        'G': ['contractuel', 'financier', 'gouvernance'],
+        'H': ['operationnel', 'pilotage', 'logistique']
+      },
+      // Usages prépondérants pour chaque carte de l'Étape 6 (A à H)
+      step6: {
+        'A': ['logistique', 'operationnel'],
+        'B': ['operationnel', 'gouvernance'],
+        'C': ['logistique', 'pilotage'],
+        'D': ['pilotage', 'gouvernance'],
+        'E': ['operationnel', 'pilotage'],
+        'F': ['pilotage', 'operationnel'],
+        'G': ['logistique', 'financier', 'gouvernance'],
+        'H': ['operationnel', 'pilotage', 'logistique']
+      }
+    };
+
+    function renderUsageBadges() {
+      const q1 = selections[1] || 'A';
+      const activeUsageKey = usageBadgeConfig.targetUsage[q1] || 'operationnel';
+
+      [4, 6].forEach(stepNum => {
+        const stepMap = usageBadgeConfig[`step${stepNum}`];
+        ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'].forEach(opt => {
+          const card = document.getElementById(`opt-${stepNum}-${opt}`);
+          if (!card) return;
+
+          // Supprimer conteneur précédent s'il existe
+          const oldContainer = card.querySelector('.badge-usages-container');
+          if (oldContainer) oldContainer.remove();
+
+          const cardUsages = stepMap[opt] || [];
+          const hasActiveUsage = cardUsages.includes(activeUsageKey);
+
+          // Masquer les cartes dont aucun usage ne correspond à l'usage actif
+          // (sauf si la carte est la sélection active — toujours visible)
+          const isSelected = (selections[stepNum] === opt);
+          if (!hasActiveUsage && !isSelected) {
+            card.classList.add('hidden');
+          } else {
+            card.classList.remove('hidden');
+          }
+
+          if (cardUsages.length > 0) {
+            const containerEl = document.createElement('div');
+            containerEl.className = 'badge-usages-container flex flex-wrap items-center gap-1 mt-1.5';
+
+            cardUsages.forEach(usageKey => {
+              const meta = usageBadgeConfig.usageMeta[usageKey];
+              if (!meta) return;
+              const isActiveUsage = (usageKey === activeUsageKey);
+
+              const badgeEl = document.createElement('span');
+              if (isActiveUsage) {
+                badgeEl.className = `inline-flex items-center gap-1 text-[9px] font-bold px-1.5 py-0.5 rounded border shadow-xs ring-1 ring-offset-1 ring-blue-400 ${meta.classes}`;
+              } else {
+                badgeEl.className = `inline-flex items-center gap-1 text-[9px] font-medium px-1.5 py-0.5 rounded border bg-slate-50 text-slate-600 border-slate-200`;
+              }
+              badgeEl.innerHTML = `<span>${meta.icon}</span> <span>${meta.label}</span>`;
+              containerEl.appendChild(badgeEl);
+            });
+
+            // L'insérer dans le conteneur texte de la carte
+            const textContainer = card.querySelector('.flex-1') || card.firstElementChild;
+            if (textContainer) {
+              textContainer.appendChild(containerEl);
+            }
+          }
+        });
+      });
+    }
+
+    // Gestion de la compatibilité et mise en avant des graphiques usuels (A à H)
     function updateCompatibilities() {
       const q1 = selections[1] || 'A';
       const reco = recommendedCharts[q1] || recommendedCharts['A'];
 
-      // Toutes les options A, B, C, D restent sélectionnables
+      // Toutes les options restent sélectionnables
       applyStepConstraints(2, {});
       applyStepConstraints(3, {});
       applyStepConstraints(4, {}, reco.step4);
       applyStepConstraints(6, {}, reco.step6);
 
-      // Si sélection invalide (ex: ancienne E, F, G, H), basculer sur l'option recommandée principale
-      const valid4 = ['A', 'B', 'C', 'D'];
-      if (!valid4.includes(selections[4])) {
+      // Mise à jour dynamique des badges d'usage filtrés par Q1 sur les cartes 4 et 6
+      renderUsageBadges();
+
+      // Si sélection invalide, basculer sur l'option recommandée principale
+      const validOptions = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+      if (!validOptions.includes(selections[4])) {
         selections[4] = reco.step4[0];
         const sel4 = document.getElementById('select-q4');
         if (sel4) sel4.value = selections[4];
       }
-      const valid6 = ['A', 'B', 'C', 'D'];
-      if (!valid6.includes(selections[6])) {
+      if (!validOptions.includes(selections[6])) {
         selections[6] = reco.step6[0];
         const sel6 = document.getElementById('select-q6');
         if (sel6) sel6.value = selections[6];
       }
     }
 
-    function applyStepConstraints(stepNum, disabledMap, topList = ['A', 'B', 'C', 'D']) {
+    function applyStepConstraints(stepNum, disabledMap, topList = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']) {
       const selectEl = document.getElementById(`select-q${stepNum}`);
-      const options = (stepNum === 4 || stepNum === 6) ? ['A', 'B', 'C', 'D'] : ['A', 'B', 'C', 'D', 'E'];
+      const options = (stepNum === 4 || stepNum === 6) ? ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'] : ['A', 'B', 'C', 'D', 'E'];
 
       options.forEach(opt => {
         const card = document.getElementById(`opt-${stepNum}-${opt}`);
@@ -1536,18 +2234,7 @@
           } else {
             card.classList.remove('opacity-35', 'pointer-events-none', 'grayscale', 'bg-slate-100');
             if (notice) notice.remove();
-            // Affichage d'un badge recommandé pour les premiers de la liste si applicable
-            if ((stepNum === 4 || stepNum === 6) && topList.length > 0 && opt === topList[0]) {
-              if (!topBadge) {
-                topBadge = document.createElement('div');
-                topBadge.className = "badge-top4-step text-[9px] text-blue-700 font-bold mt-1 bg-blue-50 border border-blue-200 rounded px-1.5 py-0.5 inline-block";
-                topBadge.innerHTML = `⭐ Idéal profil`;
-                const textContainer = card.querySelector('.flex-1') || card.firstElementChild;
-                if (textContainer) textContainer.appendChild(topBadge);
-              }
-            } else if (topBadge) {
-              topBadge.remove();
-            }
+            if (topBadge) topBadge.remove();
           }
         }
 
@@ -1671,10 +2358,20 @@
       }
     }
 
+    function onUsageChange(val) {
+      selectOption(1, val);
+    }
+
     function updateRecap() {
       const q1 = selections[1], q2 = selections[2], q3 = selections[3], q4 = selections[4], q5 = selections[5], q6 = selections[6];
       document.getElementById('recap-text').textContent =
         `Q1: ${q1} (${metaInfo[1][q1]?.title || ''}) • Q2: ${q2} • Q3: ${q3} • Q4: ${q4} • Q5: ${q5} • Q6: ${q6}`;
+
+      // Synchroniser également les sélecteurs d'usage des étapes 4 et 6
+      const selUsage4 = document.getElementById('select-usage-step4');
+      if (selUsage4 && selUsage4.value !== q1) selUsage4.value = q1;
+      const selUsage6 = document.getElementById('select-usage-step6');
+      if (selUsage6 && selUsage6.value !== q1) selUsage6.value = q1;
 
       // Synchroniser également tous les dropdowns de l'étape 7 et leurs descriptions
       for (let i = 1; i <= 6; i++) {
@@ -1721,6 +2418,9 @@
       } else if (q1 === 'E') {
         badge.textContent = "📦 Arbitrage Pièces & Supply Chain";
         badge.className = "text-xs font-bold text-indigo-700 font-mono";
+      } else if (q1 === 'F') {
+        badge.textContent = "🏛️ Data Gouvernance & Modèles";
+        badge.className = "text-xs font-bold text-purple-700 font-mono";
       } else {
         badge.textContent = "🏢 Équilibrage Ateliers & Flux";
         badge.className = "text-xs font-bold text-blue-700 font-mono";
@@ -1740,6 +2440,8 @@
         reco = `Pilotage contractuel & SLA : Modèle tabulaire en étoile reliant les contrats cadres et statuts de gel chrono aux faits <strong>${factTableNames[q2]}</strong> avec conformité évaluée via <strong>${metaInfo[3][q3].title}</strong> et capacité dimensionnée par <strong>${metaInfo[5][q5].title}</strong>.`;
       } else if (q1 === 'E') {
         reco = `Arbitrage Pièces & Approvisionnements : Modèle reliant les faits <strong>${factTableNames[q2]}</strong> à la dimension <code>pièces du moteur (engine_parts)</code> (disponibilité %, marge d'incertitude et lien <code>start</code>), calcul du TAT selon <strong>${metaInfo[3][q3].title}</strong> et débit atelier contraint via <strong>${metaInfo[5][q5].title}</strong>.`;
+      } else if (q1 === 'F') {
+        reco = `Data Gouvernance & Auditabilité : Supervision de l'adoption métier et contrôle continu de la dérive des modèles décisionnels. Métriques de comparaison prévisionnel vs effectif <code>Delta_Prevu_Reel = DIVIDE([Duree_Reelle] - [Duree_Prevue], [Duree_Prevue])</code>, traçabilité des sources ERP/MES sur la table <strong>${factTableNames[q2]}</strong>, modélisation TAT par <strong>${metaInfo[3][q3].title}</strong> et capacité projetée par <strong>${metaInfo[5][q5].title}</strong>.`;
       } else {
         reco = `Optimisation flux & capacités : Dashboard en mode Import avec agrégations automatiques pour la granularité <strong>${metaInfo[2][q2].title}</strong>, matrice de saturation ateliers / stations, mesures DAX de charge calibrées par <strong>${metaInfo[3][q3].title}</strong> et modèle capacitaire <strong>${metaInfo[5][q5].title}</strong>.`;
       }
@@ -1747,6 +2449,20 @@
 
       // Génération des 4 KPI Cards du haut (influencées par Q1, Q3 TAT et Q5 Capacité)
       renderKpis(q1, q3, q5);
+
+      // Afficher l'explication des cartes sélectionnées Q4 et Q6 dans les encadrés synthèse
+      const q4Meta = metaInfo[4][q4] || {};
+      const q6Meta = metaInfo[6][q6] || {};
+
+      const q4TitleEl = document.getElementById('mock-chart-q4-title');
+      const q4SubEl   = document.getElementById('mock-chart-q4-sub');
+      if (q4TitleEl) q4TitleEl.innerHTML = `<span>${q4Meta.icon || '⏱️'}</span> ${q4Meta.title || 'Suivi Délai & Engagements'}`;
+      if (q4SubEl)   q4SubEl.textContent = q4Meta.desc || `Choix Q4 : ${q4}`;
+
+      const q6TitleEl = document.getElementById('mock-chart-q6-title');
+      const q6SubEl   = document.getElementById('mock-chart-q6-sub');
+      if (q6TitleEl) q6TitleEl.innerHTML = `<span>${q6Meta.icon || '🏭'}</span> ${q6Meta.title || 'Charge & Saturation Ateliers'}`;
+      if (q6SubEl)   q6SubEl.textContent = q6Meta.desc || `Choix Q6 : ${q6}`;
 
       // Génération du Chart Délai (Q4)
       renderChartQ4(q4, q1, q3, q2);
@@ -1974,6 +2690,15 @@
           { label: tatLabel, val: tatVal, sub: tatSub, color: tatColor, border: tatBorder },
           { label: capLabel, val: capVal, sub: capSub, color: capColor, border: capBorder }
         ];
+      } else if (q1 === 'F') {
+        const fiabRate = (Math.min(99.2, 92.4 / m)).toFixed(1);
+        const driftVal = (Math.max(4.2, 7.8 * m)).toFixed(1);
+        kpis = [
+          { label: "FIABILITÉ GLOBALE MODÈLE", val: `${fiabRate} %`, sub: "Conformité prévision vs réel", color: "text-purple-700", border: "border-purple-300" },
+          { label: "DÉRIVE MOYENNE PRÉVU/RÉEL", val: `± ${driftVal} j`, sub: "Écart résiduel constaté", color: "text-indigo-600", border: "border-indigo-300" },
+          { label: tatLabel, val: tatVal, sub: tatSub, color: tatColor, border: tatBorder },
+          { label: capLabel, val: capVal, sub: capSub, color: capColor, border: capBorder }
+        ];
       } else {
         const chargeGlob = Math.min(99, Math.round(83 * m));
         const goulots = Math.max(1, Math.round(2 * m));
@@ -2004,145 +2729,201 @@
       const granLabel = q2 === 'A' ? "Grain Demande ESN" : (q2 === 'B' ? "Grain Packages Site" : "Grain Opérations Slots");
       sub.textContent = `Option 4.${q4} : ${metaInfo[4][q4].title} • ${granLabel}`;
 
+      const m = getFilterMultiplier();
       let svg = "";
+
       if (q4 === 'A') {
-        title.innerHTML = `<span>⏱️</span> Cartes KPIs & Jauge de Performance`;
-        const metric1 = q2 === 'A' ? "TAT GLOBAL ESN" : (q2 === 'B' ? "TAT LOT PACKAGE" : "TEMPS OPÉRATION");
-        const val1 = q2 === 'A' ? "19.3 j" : (q2 === 'B' ? "6.8 j" : "4.2 h");
-        const val2 = q1 === 'D' ? (q2 === 'A' ? '+95 jours' : (q2 === 'B' ? '+38 jours' : '+214 heures')) : (q2 === 'A' ? '22.0 j' : (q2 === 'B' ? '8.0 j' : '5.5 h'));
+        // 4.A : TAT Médian avec bornes P5 et P95 par Moteur
+        title.innerHTML = `<span>⏱️</span> TAT Médian & Intervalle de Dispersion (P5 - P50 - P95) par Moteur`;
+
+        const p50_cfm = (14.5 * m).toFixed(1);
+        const p5_cfm = (9.2 * m).toFixed(1);
+        const p95_cfm = (21.0 * m).toFixed(1);
+
+        const p50_1a = (21.4 * m).toFixed(1);
+        const p5_1a = (14.0 * m).toFixed(1);
+        const p95_1a = (31.5 * m).toFixed(1);
+
+        const p50_1b = (18.2 * m).toFixed(1);
+        const p5_1b = (11.8 * m).toFixed(1);
+        const p95_1b = (27.0 * m).toFixed(1);
+
+        // Facteur de mise à l'échelle en pixels (max TAT ~ 35j -> ~95px)
+        const scale = 2.7;
+        const baseY = 118;
+
+        const y5_cfm = Math.round(baseY - p5_cfm * scale);
+        const y50_cfm = Math.round(baseY - p50_cfm * scale);
+        const y95_cfm = Math.round(baseY - p95_cfm * scale);
+
+        const y5_1a = Math.round(baseY - p5_1a * scale);
+        const y50_1a = Math.round(baseY - p50_1a * scale);
+        const y95_1a = Math.round(baseY - p95_1a * scale);
+
+        const y5_1b = Math.round(baseY - p5_1b * scale);
+        const y50_1b = Math.round(baseY - p50_1b * scale);
+        const y95_1b = Math.round(baseY - p95_1b * scale);
+
         svg = `
           <svg class="w-full h-28 md:h-32 max-h-[130px]" viewBox="0 0 320 145">
-            <!-- Jauge SLA -->
-            <circle cx="90" cy="80" r="42" fill="none" stroke="#e2e8f0" stroke-width="11" />
-            <circle cx="90" cy="80" r="42" fill="none" stroke="#2563eb" stroke-width="11" stroke-dasharray="264" stroke-dashoffset="55" stroke-linecap="round" />
-            <text x="90" y="78" font-size="15" font-weight="bold" text-anchor="middle" fill="#0f172a">93.8%</text>
-            <text x="90" y="93" font-size="8" text-anchor="middle" fill="#2563eb">Conformité ${q2 === 'C' ? 'Gamme' : 'SLA'}</text>
+            <!-- Grille horizontale -->
+            <line x1="40" y1="${baseY}" x2="305" y2="${baseY}" stroke="#cbd5e1" stroke-width="1.2" />
+            <line x1="40" y1="20" x2="40" y2="${baseY}" stroke="#cbd5e1" stroke-width="1.2" />
+            <text x="35" y="24" font-size="7" text-anchor="end" fill="#94a3b8">35j</text>
+            <text x="35" y="65" font-size="7" text-anchor="end" fill="#94a3b8">20j</text>
+            <text x="35" y="118" font-size="7" text-anchor="end" fill="#94a3b8">0j</text>
+            <line x1="40" y1="64" x2="305" y2="64" stroke="#f1f5f9" stroke-width="1" stroke-dasharray="2,2" />
 
-            <!-- Card TAT Réel -->
-            <rect x="170" y="24" width="135" height="44" rx="7" fill="#f8fafc" stroke="#cbd5e1" />
-            <text x="182" y="40" font-size="8.5" fill="#64748b">${metric1}</text>
-            <text x="182" y="58" font-size="15" font-weight="bold" fill="#0284c7">${val1}</text>
+            <!-- CFM56-7B (X=90) -->
+            <line x1="90" y1="${y95_cfm}" x2="90" y2="${y5_cfm}" stroke="#64748b" stroke-width="1.8" />
+            <line x1="82" y1="${y95_cfm}" x2="98" y2="${y95_cfm}" stroke="#64748b" stroke-width="1.8" />
+            <line x1="82" y1="${y5_cfm}" x2="98" y2="${y5_cfm}" stroke="#64748b" stroke-width="1.8" />
+            <rect x="76" y="${Math.min(y50_cfm, y95_cfm + 10)}" width="28" height="${Math.abs(y5_cfm - y95_cfm) * 0.5}" rx="3" fill="#3b82f6" opacity="0.85" />
+            <line x1="72" y1="${y50_cfm}" x2="108" y2="${y50_cfm}" stroke="#1e3a8a" stroke-width="2.5" />
+            <text x="90" y="${y50_cfm - 4}" font-size="8" font-weight="bold" text-anchor="middle" fill="#1e3a8a">${p50_cfm}j</text>
+            <text x="90" y="132" font-size="8" font-weight="bold" text-anchor="middle" fill="#475569">CFM56-7B</text>
+            <text x="90" y="142" font-size="6.5" text-anchor="middle" fill="#64748b">[${p5_cfm}j - ${p95_cfm}j]</text>
 
-            <!-- Card Dépassement / P85 -->
-            <rect x="170" y="76" width="135" height="44" rx="7" fill="#f8fafc" stroke="${q1 === 'D' ? '#f59e0b' : '#cbd5e1'}" />
-            <text x="182" y="92" font-size="8.5" fill="#64748b">${q1 === 'D' ? 'RETARD CUMULÉ' : 'SEUIL ENGAGÉ P85'}</text>
-            <text x="182" y="110" font-size="15" font-weight="bold" fill="${q1 === 'D' ? '#d97706' : '#16a34a'}">${val2}</text>
+            <!-- LEAP-1A (X=180) -->
+            <line x1="180" y1="${y95_1a}" x2="180" y2="${y5_1a}" stroke="#64748b" stroke-width="1.8" />
+            <line x1="172" y1="${y95_1a}" x2="188" y2="${y95_1a}" stroke="#64748b" stroke-width="1.8" />
+            <line x1="172" y1="${y5_1a}" x2="188" y2="${y5_1a}" stroke="#64748b" stroke-width="1.8" />
+            <rect x="166" y="${Math.min(y50_1a, y95_1a + 12)}" width="28" height="${Math.abs(y5_1a - y95_1a) * 0.52}" rx="3" fill="#6366f1" opacity="0.85" />
+            <line x1="162" y1="${y50_1a}" x2="198" y2="${y50_1a}" stroke="#312e81" stroke-width="2.5" />
+            <text x="180" y="${y50_1a - 4}" font-size="8" font-weight="bold" text-anchor="middle" fill="#312e81">${p50_1a}j</text>
+            <text x="180" y="132" font-size="8" font-weight="bold" text-anchor="middle" fill="#475569">LEAP-1A</text>
+            <text x="180" y="142" font-size="6.5" text-anchor="middle" fill="#64748b">[${p5_1a}j - ${p95_1a}j]</text>
+
+            <!-- LEAP-1B (X=270) -->
+            <line x1="270" y1="${y95_1b}" x2="270" y2="${y5_1b}" stroke="#64748b" stroke-width="1.8" />
+            <line x1="262" y1="${y95_1b}" x2="278" y2="${y95_1b}" stroke="#64748b" stroke-width="1.8" />
+            <line x1="262" y1="${y5_1b}" x2="278" y2="${y5_1b}" stroke="#64748b" stroke-width="1.8" />
+            <rect x="256" y="${Math.min(y50_1b, y95_1b + 11)}" width="28" height="${Math.abs(y5_1b - y95_1b) * 0.51}" rx="3" fill="#0284c7" opacity="0.85" />
+            <line x1="252" y1="${y50_1b}" x2="288" y2="${y50_1b}" stroke="#0c4a6e" stroke-width="2.5" />
+            <text x="270" y="${y50_1b - 4}" font-size="8" font-weight="bold" text-anchor="middle" fill="#0c4a6e">${p50_1b}j</text>
+            <text x="270" y="132" font-size="8" font-weight="bold" text-anchor="middle" fill="#475569">LEAP-1B</text>
+            <text x="270" y="142" font-size="6.5" text-anchor="middle" fill="#64748b">[${p5_1b}j - ${p95_1b}j]</text>
           </svg>
         `;
       } else if (q4 === 'B') {
-        const item1 = q2 === 'A' ? "Air France" : (q2 === 'B' ? "Aubes HP (MON)" : "USI-04 (Tour CN)");
-        const item2 = q2 === 'A' ? "Lufthansa" : (q2 === 'B' ? "Compresseur BP" : "CND-02 (Ressuage)");
-        const item3 = q2 === 'A' ? "Delta Air Lines" : (q2 === 'B' ? "Turbine BP (VIL)" : "EQU-01 (Équilibrage)");
-        const item4 = q2 === 'A' ? "Ryanair" : (q2 === 'B' ? "Banc Essai (BRU)" : "BANC-03 (Recette)");
+        // 4.B : Décomposition du TAT par site (Attente, Réparation, Transfert)
+        title.innerHTML = `<span>📊</span> Décomposition du TAT par Site (Attente • Réparation • Transfert)`;
 
-        const w1 = q2 === 'A' ? 105 : (q2 === 'B' ? 120 : 95);
-        const w2 = q2 === 'A' ? 175 : (q2 === 'B' ? 165 : 180);
-        const w3 = q2 === 'A' ? 135 : (q2 === 'B' ? 130 : 120);
-        const w4 = q2 === 'A' ? 65 : (q2 === 'B' ? 75 : 60);
+        const vil_rep = Math.round(11.2 * m), vil_tra = Math.round(2.5 * m), vil_att = Math.round(4.1 * m);
+        const mon_rep = Math.round(9.5 * m), mon_tra = Math.round(3.8 * m), mon_att = Math.round(6.8 * m);
+        const chl_rep = Math.round(12.0 * m), chl_tra = Math.round(1.8 * m), chl_att = Math.round(2.6 * m);
+        const bru_rep = Math.round(10.5 * m), bru_tra = Math.round(2.9 * m), bru_att = Math.round(3.4 * m);
 
-        const v1 = q2 === 'A' ? "14j" : (q2 === 'B' ? "6.5j" : "3.5h");
-        const v2 = q2 === 'A' ? "23j (+3j)" : (q2 === 'B' ? "12j (+2j)" : "6.8h (+1.8h)");
-        const v3 = q2 === 'A' ? "18j" : (q2 === 'B' ? "9j" : "4.0h");
-        const v4 = q2 === 'A' ? "8j" : (q2 === 'B' ? "2.5j" : "2.0h");
+        const wFactor = 7.2;
 
-        const target = q2 === 'A' ? "Cible SLA (20j)" : (q2 === 'B' ? "Cible Lot (10j)" : "Gamme Allouée (5h)");
-
-        title.innerHTML = `<span>📊</span> Durée Réelle vs Cible par ${q2 === 'A' ? 'Client' : (q2 === 'B' ? 'Package Site' : 'Poste Machine')}`;
-        svg = `
-          <svg class="w-full h-28 md:h-32 max-h-[130px]" viewBox="0 0 320 145">
-            <!-- Ligne de seuil P85 -->
-            <line x1="210" y1="18" x2="210" y2="135" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="3,3" />
-            <text x="210" y="13" font-size="8" text-anchor="middle" fill="#dc2626">${target}</text>
-
-            <!-- Bar 1 -->
-            <text x="10" y="34" font-size="8" fill="#64748b">${item1}</text>
-            <rect x="95" y="24" width="${w1}" height="13" rx="3" fill="#3b82f6" />
-            <text x="${95 + w1 + 6}" y="34" font-size="8.5" fill="#1d4ed8">${v1}</text>
-
-            <!-- Bar 2 -->
-            <text x="10" y="65" font-size="8" fill="#64748b">${item2}</text>
-            <rect x="95" y="55" width="${w2}" height="13" rx="3" fill="#ef4444" />
-            <text x="${95 + w2 + 6}" y="65" font-size="8.5" font-weight="bold" fill="#dc2626">${v2}</text>
-
-            <!-- Bar 3 -->
-            <text x="10" y="96" font-size="8" fill="#64748b">${item3}</text>
-            <rect x="95" y="86" width="${w3}" height="13" rx="3" fill="#3b82f6" />
-            <text x="${95 + w3 + 6}" y="96" font-size="8.5" fill="#1d4ed8">${v3}</text>
-
-            <!-- Bar 4 -->
-            <text x="10" y="127" font-size="8" fill="#64748b">${item4}</text>
-            <rect x="95" y="117" width="${w4}" height="13" rx="3" fill="#10b981" />
-            <text x="${95 + w4 + 6}" y="127" font-size="8.5" fill="#059669">${v4}</text>
-          </svg>
-        `;
-      } else if (q4 === 'C') {
-        const ent1 = q2 === 'A' ? "CFM56-7B" : (q2 === 'B' ? "Aubes Turbine" : "Usinage Carter");
-        const ent2 = q2 === 'A' ? "LEAP-1A" : (q2 === 'B' ? "Compresseur" : "Ressuage Chimique");
-        const ent3 = q2 === 'A' ? "LEAP-1B" : (q2 === 'B' ? "Banc Essai" : "Équilibrage Rotor");
-
-        const lblProd = q2 === 'C' ? "Temps Gamme" : "Usinage/Atelier";
-        const lblLog = q2 === 'C' ? "Réglage Machine" : "Transit Inter-sites";
-        const lblWait = (q1 === 'E') ? "Attente Pièces/Stock" : "Attente/Buffer";
-
-        const unit = q2 === 'C' ? "h" : "j";
-
-        title.innerHTML = `<span>🚚</span> Décomposition TAT : ${lblProd} vs ${lblLog} vs ${lblWait}`;
         svg = `
           <svg class="w-full h-28 md:h-32 max-h-[130px]" viewBox="0 0 320 145">
             <!-- Légende -->
-            <rect x="65" y="10" width="8" height="8" rx="2" fill="#3b82f6" />
-            <text x="76" y="17" font-size="7.5" fill="#475569">${lblProd}</text>
-            <rect x="150" y="10" width="8" height="8" rx="2" fill="#f59e0b" />
-            <text x="161" y="17" font-size="7.5" fill="#475569">${lblLog}</text>
-            <rect x="235" y="10" width="8" height="8" rx="2" fill="#ef4444" />
-            <text x="246" y="17" font-size="7.5" fill="#475569">${lblWait}</text>
+            <rect x="55" y="6" width="7" height="7" rx="1.5" fill="#3b82f6" />
+            <text x="65" y="12.5" font-size="7" fill="#475569">Réparation atelier</text>
+            <rect x="145" y="6" width="7" height="7" rx="1.5" fill="#f59e0b" />
+            <text x="155" y="12.5" font-size="7" fill="#475569">Transfert navette</text>
+            <rect x="230" y="6" width="7" height="7" rx="1.5" fill="#ef4444" />
+            <text x="240" y="12.5" font-size="7" fill="#475569">Attente / Goulot</text>
 
-            <!-- Bar 1 -->
-            <text x="10" y="48" font-size="8" fill="#64748b">${ent1}</text>
-            <rect x="85" y="38" width="95" height="15" rx="2" fill="#3b82f6" />
-            <rect x="180" y="38" width="35" height="15" rx="2" fill="#f59e0b" />
-            <rect x="215" y="38" width="45" height="15" rx="2" fill="#ef4444" />
-            <text x="268" y="49" font-size="8.5" fill="#334155">26${unit}</text>
+            <!-- Villaroche -->
+            <text x="10" y="34" font-size="8" font-semibold fill="#334155">Villaroche</text>
+            <rect x="80" y="24" width="${vil_rep * wFactor}" height="14" rx="2" fill="#3b82f6" />
+            <rect x="${80 + vil_rep * wFactor}" y="24" width="${vil_tra * wFactor}" height="14" rx="2" fill="#f59e0b" />
+            <rect x="${80 + (vil_rep + vil_tra) * wFactor}" y="24" width="${vil_att * wFactor}" height="14" rx="2" fill="#ef4444" />
+            <text x="${80 + (vil_rep + vil_tra + vil_att) * wFactor + 6}" y="34" font-size="8" font-weight="bold" fill="#1e293b">${vil_rep + vil_tra + vil_att}j</text>
 
-            <!-- Bar 2 -->
-            <text x="10" y="81" font-size="8" fill="#64748b">${ent2}</text>
-            <rect x="85" y="71" width="115" height="15" rx="2" fill="#3b82f6" />
-            <rect x="200" y="71" width="25" height="15" rx="2" fill="#f59e0b" />
-            <rect x="225" y="71" width="60" height="15" rx="2" fill="#ef4444" />
-            <text x="292" y="82" font-size="8.5" fill="#334155">31${unit}</text>
+            <!-- Montereau -->
+            <text x="10" y="62" font-size="8" font-semibold fill="#334155">Montereau</text>
+            <rect x="80" y="52" width="${mon_rep * wFactor}" height="14" rx="2" fill="#3b82f6" />
+            <rect x="${80 + mon_rep * wFactor}" y="52" width="${mon_tra * wFactor}" height="14" rx="2" fill="#f59e0b" />
+            <rect x="${80 + (mon_rep + mon_tra) * wFactor}" y="52" width="${mon_att * wFactor}" height="14" rx="2" fill="#ef4444" />
+            <text x="${80 + (mon_rep + mon_tra + mon_att) * wFactor + 6}" y="62" font-size="8" font-weight="bold" fill="#dc2626">${mon_rep + mon_tra + mon_att}j ⚠️</text>
 
-            <!-- Bar 3 -->
-            <text x="10" y="114" font-size="8" fill="#64748b">${ent3}</text>
-            <rect x="85" y="104" width="80" height="15" rx="2" fill="#3b82f6" />
-            <rect x="165" y="104" width="20" height="15" rx="2" fill="#f59e0b" />
-            <rect x="185" y="104" width="30" height="15" rx="2" fill="#ef4444" />
-            <text x="223" y="115" font-size="8.5" fill="#334155">19${unit}</text>
+            <!-- Châtellerault -->
+            <text x="10" y="90" font-size="8" font-semibold fill="#334155">Châtellerault</text>
+            <rect x="80" y="80" width="${chl_rep * wFactor}" height="14" rx="2" fill="#3b82f6" />
+            <rect x="${80 + chl_rep * wFactor}" y="80" width="${chl_tra * wFactor}" height="14" rx="2" fill="#f59e0b" />
+            <rect x="${80 + (chl_rep + chl_tra) * wFactor}" y="80" width="${chl_att * wFactor}" height="14" rx="2" fill="#ef4444" />
+            <text x="${80 + (chl_rep + chl_tra + chl_att) * wFactor + 6}" y="90" font-size="8" font-weight="bold" fill="#1e293b">${chl_rep + chl_tra + chl_att}j</text>
+
+            <!-- Bruxelles -->
+            <text x="10" y="118" font-size="8" font-semibold fill="#334155">Bruxelles</text>
+            <rect x="80" y="108" width="${bru_rep * wFactor}" height="14" rx="2" fill="#3b82f6" />
+            <rect x="${80 + bru_rep * wFactor}" y="108" width="${bru_tra * wFactor}" height="14" rx="2" fill="#f59e0b" />
+            <rect x="${80 + (bru_rep + bru_tra) * wFactor}" y="108" width="${bru_att * wFactor}" height="14" rx="2" fill="#ef4444" />
+            <text x="${80 + (bru_rep + bru_tra + bru_att) * wFactor + 6}" y="118" font-size="8" font-weight="bold" fill="#1e293b">${bru_rep + bru_tra + bru_att}j</text>
+          </svg>
+        `;
+      } else if (q4 === 'C') {
+        // 4.C : Respect des délais contractuels par client et par moteur (écart TAT contractuel vs effectif + % non respect)
+        title.innerHTML = `<span>🤝</span> Respect Contractuel par Client & Moteur (Écart TAT vs % Non-Respect SLA)`;
+
+        const clients = [
+          { name: "Air France (AFR)", cTat: 20, eTat: (19.4 * m).toFixed(1), ecart: ((19.4 * m) - 20).toFixed(1), badRate: Math.round(5.2 * m) },
+          { name: "Lufthansa (DLH)", cTat: 18, eTat: (17.5 * m).toFixed(1), ecart: ((17.5 * m) - 18).toFixed(1), badRate: Math.round(4.1 * m) },
+          { name: "Delta (DAL)", cTat: 22, eTat: (21.8 * m).toFixed(1), ecart: ((21.8 * m) - 22).toFixed(1), badRate: Math.round(6.0 * m) },
+          { name: "Ryanair (RYR)", cTat: 16, eTat: (18.6 * m).toFixed(1), ecart: ((18.6 * m) - 16).toFixed(1), badRate: Math.round(14.8 * m) }
+        ];
+
+        svg = `
+          <svg class="w-full h-28 md:h-32 max-h-[130px]" viewBox="0 0 320 145">
+            <!-- Légende -->
+            <rect x="40" y="6" width="7" height="7" rx="1" fill="#3b82f6" />
+            <text x="50" y="12" font-size="7" fill="#475569">TAT Contractuel</text>
+            <rect x="125" y="6" width="7" height="7" rx="1" fill="#93c5fd" />
+            <text x="135" y="12" font-size="7" fill="#475569">TAT Effectif</text>
+            <line x1="210" y1="9" x2="225" y2="9" stroke="#dc2626" stroke-width="1.8" />
+            <circle cx="217" cy="9" r="2.5" fill="#dc2626" />
+            <text x="230" y="12" font-size="7" font-weight="bold" fill="#dc2626">% Non-respect SLA</text>
+
+            <!-- Barres groupées et Axe Y -->
+            <line x1="30" y1="112" x2="305" y2="112" stroke="#cbd5e1" stroke-width="1" />
+
+            ${clients.map((c, idx) => {
+              const xBase = 50 + idx * 68;
+              const hContr = c.cTat * 3.4;
+              const hEff = Math.min(100, parseFloat(c.eTat) * 3.4);
+              const yContr = 112 - hContr;
+              const yEff = 112 - hEff;
+              const isLate = parseFloat(c.ecart) > 0;
+              const dotY = 112 - (c.badRate * 5.5);
+
+              return `
+                <text x="${xBase + 12}" y="124" font-size="7.5" font-semibold text-anchor="middle" fill="#334155">${c.name.split(' ')[0]}</text>
+                <text x="${xBase + 12}" y="133" font-size="6.5" text-anchor="middle" fill="${isLate ? '#dc2626' : '#16a34a'} font-weight:bold">${isLate ? '+' + c.ecart + 'j' : c.ecart + 'j'}</text>
+                <!-- Barre Contractuel -->
+                <rect x="${xBase}" y="${yContr}" width="11" height="${hContr}" rx="2" fill="#3b82f6" />
+                <!-- Barre Effectif -->
+                <rect x="${xBase + 13}" y="${yEff}" width="11" height="${hEff}" rx="2" fill="${isLate ? '#f87171' : '#93c5fd'}" />
+                <text x="${xBase + 5}" y="${yContr - 3}" font-size="6" fill="#1e40af">${c.cTat}j</text>
+                <text x="${xBase + 18}" y="${yEff - 3}" font-size="6" font-weight="bold" fill="${isLate ? '#b91c1c' : '#1d4ed8'}">${c.eTat}j</text>
+                <!-- Point % Non respect -->
+                <circle cx="${xBase + 12}" cy="${dotY}" r="3" fill="#dc2626" />
+                <text x="${xBase + 12}" y="${dotY - 4}" font-size="6.5" font-weight="bold" text-anchor="middle" fill="#dc2626">${c.badRate}%</text>
+              `;
+            }).join('')}
           </svg>
         `;
       } else if (q4 === 'D') {
-        // 4D : Tableau d'alertes nominatives
-        title.innerHTML = `<span>📋</span> Registre d'Alertes Nominatif (${q2 === 'A' ? 'ESN Moteurs' : (q2 === 'B' ? 'Packages Sous-Ensembles' : 'Postes & Opérations')})`;
+        // 4D : Tableau d'alertes nominatives avec Statut de la demande
+        title.innerHTML = `<span>📋</span> Registre d'Alertes Nominatif & Suivi des Statuts ESN`;
         const isPenalties = (q1 === 'D');
         const isSupply = (q1 === 'E');
 
-        let col1 = "ESN MOTEUR", col2 = isSupply ? "PIÈCE MANQUANTE" : "CLIENT";
-        let r1 = ["ESN-984210", isSupply ? "Aubes HP Monocristal" : "Air France", isSupply ? "+18j délai OEM" : "+8 j (32 k€)", "Retard Critique"];
-        let r2 = ["ESN-773192", isSupply ? "Disque LLP Turbine" : "Lufthansa", isSupply ? "+9j dédouanement" : "+4 j (16 k€)", "Seuil P85 dépassé"];
-        let r3 = ["ESN-449103", isSupply ? "Carter Fan Titane" : "Delta", isSupply ? "+3j transit route" : "+1 j (4 k€)", "En attente banc"];
-        let r4 = ["ESN-651084", isSupply ? "Kit visserie complet" : "Ryanair", isSupply ? "En stock magasin" : "0 j (Conforme)", "Livraison conforme"];
+        let rowsData = [
+          { esn: "ESN-984210", client: "Air France", eng: "LEAP-1A", tat: "28j", sla: "20j", status: "AOG", statBadge: "🚨 AOG Critique", statClass: "bg-red-100 text-red-700 border-red-300" },
+          { esn: "ESN-773192", client: "Lufthansa", eng: "CFM56-7B", tat: "22j", sla: "18j", status: "LATE", statBadge: "⚠️ En Retard", statClass: "bg-amber-100 text-amber-800 border-amber-300" },
+          { esn: "ESN-449103", client: "Delta", eng: "LEAP-1B", tat: "14j", sla: "22j", status: "IN_PROGRESS", statBadge: "⏳ En Cours", statClass: "bg-blue-100 text-blue-700 border-blue-300" },
+          { esn: "ESN-651084", client: "Ryanair", eng: "CFM56-7B", tat: "15j", sla: "16j", status: "ON_TIME", statBadge: "✅ Conforme", statClass: "bg-emerald-100 text-emerald-700 border-emerald-300" }
+        ];
 
-        if (q2 === 'B') {
-          col1 = "LOT PACKAGE"; col2 = isSupply ? "RÉFÉRENCE PIÈCE" : "SITE SAFRAN";
-          r1 = ["PKG-701-AUB", isSupply ? "Aube PN-9421" : "Montereau", isSupply ? "Rupture stock" : (isPenalties ? "+3 j (12 k€)" : "Dérive usinage"), "Retard"];
-          r2 = ["PKG-701-COM", isSupply ? "Joint PN-3310" : "Villaroche", isSupply ? "Expédié OEM" : (isPenalties ? "+2 j (8 k€)" : "En attente contrôle"), "Sous contrôle"];
-          r3 = ["PKG-701-TST", isSupply ? "Injecteur PN-881" : "Bruxelles", isSupply ? "En commande" : (isPenalties ? "+4 j (16 k€)" : "Banc saturé"), "Critique"];
-          r4 = ["PKG-701-ECH", isSupply ? "Faisceau PN-112" : "Châtellerault", isSupply ? "Stock sécurisé" : (isPenalties ? "0 j" : "Conforme"), "OK"];
-        } else if (q2 === 'C') {
-          col1 = "SLOT MACHINE"; col2 = isSupply ? "KIT COMPOSANTS" : "POSTE TRAVAIL";
-          r1 = ["OP-9081-12", isSupply ? "Plaquette usinage" : "USI-04 (Tour CN)", isSupply ? "Rupture poste" : (isPenalties ? "+12 h (3 k€)" : "File saturée (92%)"), "Critique"];
-          r2 = ["OP-9081-13", isSupply ? "Bain pénétrant" : "CND-02 (Ressuage)", isSupply ? "Lot conforme" : (isPenalties ? "+4 h (1 k€)" : "Attente bain"), "Attention"];
-          r3 = ["OP-9081-14", isSupply ? "Masselottes" : "EQU-01 (Banc rotor)", isSupply ? "Appro en cours" : (isPenalties ? "+18 h (5 k€)" : "Aléa balourd"), "Goulot"];
-          r4 = ["OP-9081-15", isSupply ? "Capteurs banc" : "BANC-03 (Recette)", isSupply ? "Disponible" : (isPenalties ? "0 h" : "Cadence tenue"), "OK"];
+        // Filtre selon le statut sélectionné dans la barre Étape 7
+        if (currentFilters.status !== 'ALL') {
+          rowsData = rowsData.filter(r => r.status === currentFilters.status);
+          if (rowsData.length === 0) {
+            rowsData = [{ esn: "AUCUN DOSSIER", client: "--", eng: "--", tat: "--", sla: "--", statBadge: "Filtre actif", statClass: "bg-slate-100 text-slate-600 border-slate-300" }];
+          }
         }
 
         svg = `
@@ -2150,40 +2931,143 @@
             <table class="w-full text-left border-collapse">
               <thead>
                 <tr class="text-slate-500 border-b border-slate-200 text-[9px] bg-slate-50">
-                  <th class="py-1 px-1.5">${col1}</th>
-                  <th class="py-1 px-1.5">${col2}</th>
-                  <th class="py-1 px-1.5">ÉTAT</th>
-                  <th class="py-1 px-1.5 text-right">${isSupply ? 'DÉLAI APPRO / STOCK' : (isPenalties ? 'RETARD / PÉNALITÉ' : 'STATUT PILOTAGE')}</th>
+                  <th class="py-1 px-1.5">DOSSIER ESN</th>
+                  <th class="py-1 px-1.5">CLIENT</th>
+                  <th class="py-1 px-1.5">MOTEUR</th>
+                  <th class="py-1 px-1.5">TAT RÉEL / SLA</th>
+                  <th class="py-1 px-1.5 text-right">STATUT DE LA DEMANDE</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-100 font-mono text-[10px]">
-                <tr class="hover:bg-slate-50">
-                  <td class="py-1 px-1.5 text-slate-900 font-bold">${r1[0]}</td>
-                  <td class="text-slate-600 px-1.5">${r1[1]}</td>
-                  <td class="px-1.5"><span class="px-1.5 py-0.5 rounded text-[8.5px] bg-red-50 text-red-700 border border-red-200 font-bold">🚨 ${isSupply ? 'MANQUANT' : 'AOG'}</span></td>
-                  <td class="text-right px-1.5 ${isPenalties || isSupply ? 'text-amber-700 font-bold' : 'text-red-700 font-bold'}">${r1[2]}</td>
-                </tr>
-                <tr class="hover:bg-slate-50">
-                  <td class="py-1 px-1.5 text-slate-900 font-bold">${r2[0]}</td>
-                  <td class="text-slate-600 px-1.5">${r2[1]}</td>
-                  <td class="px-1.5"><span class="px-1.5 py-0.5 rounded text-[8.5px] bg-amber-50 text-amber-700 border border-amber-200 font-bold">⚠️ Dérive</span></td>
-                  <td class="text-right px-1.5 ${isPenalties || isSupply ? 'text-amber-700 font-bold' : 'text-red-700 font-bold'}">${r2[2]}</td>
-                </tr>
-                <tr class="hover:bg-slate-50">
-                  <td class="py-1 px-1.5 text-slate-900 font-bold">${r3[0]}</td>
-                  <td class="text-slate-600 px-1.5">${r3[1]}</td>
-                  <td class="px-1.5"><span class="px-1.5 py-0.5 rounded text-[8.5px] bg-blue-50 text-blue-700 border border-blue-200 font-bold">📦 Stock</span></td>
-                  <td class="text-right px-1.5 ${isPenalties ? 'text-slate-600' : 'text-blue-700 font-bold'}">${r3[2]}</td>
-                </tr>
-                <tr class="hover:bg-slate-50">
-                  <td class="py-1 px-1.5 text-slate-900 font-bold">${r4[0]}</td>
-                  <td class="text-slate-600 px-1.5">${r4[1]}</td>
-                  <td class="px-1.5"><span class="px-1.5 py-0.5 rounded text-[8.5px] bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold">✅ OK</span></td>
-                  <td class="text-right px-1.5 text-emerald-700 font-bold">${r4[2]}</td>
-                </tr>
+                ${rowsData.map(r => `
+                  <tr class="hover:bg-slate-50">
+                    <td class="py-1 px-1.5 text-slate-900 font-bold">${r.esn}</td>
+                    <td class="text-slate-600 px-1.5">${r.client}</td>
+                    <td class="text-slate-600 px-1.5 font-sans">${r.eng}</td>
+                    <td class="px-1.5 font-bold ${r.status === 'AOG' || r.status === 'LATE' ? 'text-red-600' : 'text-slate-700'}">${r.tat} <span class="text-slate-400 font-normal">/ ${r.sla}</span></td>
+                    <td class="text-right px-1.5"><span class="px-2 py-0.5 rounded text-[9px] border font-sans font-bold ${r.statClass}">${r.statBadge}</span></td>
+                  </tr>
+                `).join('')}
               </tbody>
             </table>
           </div>
+        `;
+      } else if (q4 === 'E') {
+        // 4.E : Cartes KPIs Synthétiques
+        title.innerHTML = `<span>⏱️</span> Tableau de Bord Synthétique TAT & SLA Global`;
+        const tatMoy = (18.4 * m).toFixed(1);
+        const slaGlob = Math.min(99.4, (96.2 / m)).toFixed(1);
+        const lateVol = Math.max(1, Math.round(4 * m));
+        const p85Moy = (24.2 * m).toFixed(1);
+
+        svg = `
+          <div class="w-full grid grid-cols-2 gap-2 p-1">
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-center">
+              <div class="text-[9px] font-bold text-slate-500 uppercase">TAT Moyen Réel</div>
+              <div class="text-lg md:text-xl font-black text-blue-700 my-0.5">${tatMoy} j</div>
+              <div class="text-[8.5px] text-emerald-600 font-semibold">▼ -0.8j vs M-1</div>
+            </div>
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-center">
+              <div class="text-[9px] font-bold text-slate-500 uppercase">Respect SLA Global</div>
+              <div class="text-lg md:text-xl font-black text-emerald-600 my-0.5">${slaGlob} %</div>
+              <div class="text-[8.5px] text-emerald-600 font-semibold">Cible &gt; 95.0%</div>
+            </div>
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-center">
+              <div class="text-[9px] font-bold text-slate-500 uppercase">Dossiers Hors Délai</div>
+              <div class="text-lg md:text-xl font-black text-red-600 my-0.5">${lateVol}</div>
+              <div class="text-[8.5px] text-red-600 font-semibold">Sous pénalités</div>
+            </div>
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-center">
+              <div class="text-[9px] font-bold text-slate-500 uppercase">Borne Percentile P85</div>
+              <div class="text-lg md:text-xl font-black text-slate-800 my-0.5">${p85Moy} j</div>
+              <div class="text-[8.5px] text-slate-500">Seuil de vigilance</div>
+            </div>
+          </div>
+        `;
+      } else if (q4 === 'F') {
+        // 4.F : Barres vs Seuils Cibles P85
+        title.innerHTML = `<span>🎯</span> TAT par Sous-Ensemble vs Seuil Critique P85`;
+        const items = [
+          { name: "Aubes HP", val: Math.round(18 * m), target: 20 },
+          { name: "Révision Générale", val: Math.round(28 * m), target: 24 },
+          { name: "Recette Banc Essais", val: Math.round(14 * m), target: 16 }
+        ];
+
+        svg = `
+          <svg class="w-full h-28 md:h-32 max-h-[130px]" viewBox="0 0 320 145">
+            <line x1="110" y1="20" x2="110" y2="125" stroke="#cbd5e1" stroke-width="1.2" />
+            <line x1="230" y1="15" x2="230" y2="125" stroke="#dc2626" stroke-width="1.8" stroke-dasharray="3,3" />
+            <text x="230" y="12" font-size="7" font-weight="bold" fill="#dc2626" text-anchor="middle">| Seuil P85 (22j)</text>
+
+            ${items.map((it, idx) => {
+              const y = 30 + idx * 32;
+              const wBar = it.val * 5.2;
+              const isOver = it.val > it.target;
+              return `
+                <text x="10" y="${y + 11}" font-size="8" font-semibold fill="#334155">${it.name}</text>
+                <rect x="110" y="${y}" width="${wBar}" height="14" rx="2" fill="${isOver ? '#ef4444' : '#3b82f6'}" />
+                <text x="${110 + wBar + 5}" y="${y + 10.5}" font-size="7.5" font-weight="bold" fill="${isOver ? '#dc2626' : '#1d4ed8'}">${it.val}j ${isOver ? '⚠️' : '✓'}</text>
+              `;
+            }).join('')}
+          </svg>
+        `;
+      } else if (q4 === 'G') {
+        // 4.G : Waterfall des Dérives TAT
+        title.innerHTML = `<span>🌊</span> Cascade Cumulative des Dérives TAT (Waterfall)`;
+        svg = `
+          <svg class="w-full h-28 md:h-32 max-h-[130px]" viewBox="0 0 320 145">
+            <line x1="20" y1="118" x2="300" y2="118" stroke="#cbd5e1" stroke-width="1" />
+            <!-- Cible 18j -->
+            <rect x="30" y="48" width="30" height="70" rx="2" fill="#3b82f6" />
+            <text x="45" y="42" font-size="7.5" font-weight="bold" fill="#1d4ed8" text-anchor="middle">18j Cible</text>
+
+            <!-- +3.5j Attente Pièce -->
+            <rect x="85" y="32" width="28" height="16" rx="2" fill="#ef4444" />
+            <text x="99" y="26" font-size="7" font-weight="bold" fill="#dc2626" text-anchor="middle">+3.5j Stock</text>
+
+            <!-- +2.2j Contrôle CND -->
+            <rect x="140" y="22" width="28" height="10" rx="2" fill="#f59e0b" />
+            <text x="154" y="16" font-size="7" font-weight="bold" fill="#b45309" text-anchor="middle">+2.2j CND</text>
+
+            <!-- -1.5j Fast Track -->
+            <rect x="195" y="32" width="28" height="8" rx="2" fill="#10b981" />
+            <text x="209" y="47" font-size="7" font-weight="bold" fill="#059669" text-anchor="middle">-1.5j Fast</text>
+
+            <!-- Réel 22.2j -->
+            <rect x="250" y="28" width="30" height="90" rx="2" fill="#1e40af" />
+            <text x="265" y="22" font-size="8" font-weight="black" fill="#1e3a8a" text-anchor="middle">22.2j Réel</text>
+          </svg>
+        `;
+      } else {
+        // 4.H : Jalons de Traversée (Gates)
+        title.innerHTML = `<span>🚩</span> Jalons de Traversée Industriels (Gates G1 ➔ G3)`;
+        svg = `
+          <svg class="w-full h-28 md:h-32 max-h-[130px]" viewBox="0 0 320 145">
+            <!-- Timeline rail -->
+            <line x1="40" y1="45" x2="280" y2="45" stroke="#cbd5e1" stroke-width="3" stroke-linecap="round" />
+
+            <!-- Gate 1 -->
+            <circle cx="60" cy="45" r="14" fill="#10b981" />
+            <text x="60" y="49" font-size="9" font-weight="bold" fill="#fff" text-anchor="middle">G1</text>
+            <text x="60" y="72" font-size="7.5" font-semibold fill="#059669" text-anchor="middle">Démontage</text>
+            <text x="60" y="82" font-size="6.5" fill="#64748b" text-anchor="middle">Réalisé (J+3)</text>
+
+            <!-- Gate 2 -->
+            <circle cx="160" cy="45" r="14" fill="#3b82f6" />
+            <text x="160" y="49" font-size="9" font-weight="bold" fill="#fff" text-anchor="middle">G2</text>
+            <text x="160" y="72" font-size="7.5" font-semibold fill="#1d4ed8" text-anchor="middle">Usinage & CND</text>
+            <text x="160" y="82" font-size="6.5" fill="#64748b" text-anchor="middle">En cours (J+12)</text>
+
+            <!-- Gate 3 -->
+            <circle cx="260" cy="45" r="14" fill="#ef4444" />
+            <text x="260" y="49" font-size="9" font-weight="bold" fill="#fff" text-anchor="middle">G3</text>
+            <text x="260" y="72" font-size="7.5" font-semibold fill="#dc2626" text-anchor="middle">Recette Banc</text>
+            <text x="260" y="82" font-size="6.5" font-bold fill="#dc2626" text-anchor="middle">Retard +2j</text>
+
+            <rect x="50" y="98" width="220" height="28" rx="4" fill="#fef2f2" stroke="#fecaca" />
+            <text x="160" y="112" font-size="7.5" font-bold fill="#991b1b" text-anchor="middle">Chemin Critique Actif : Banc d'essais saturé (CHL)</text>
+            <text x="160" y="122" font-size="6.5" fill="#b91c1c" text-anchor="middle">Action requise : réallocation créneau banc sur Villaroche</text>
+          </svg>
         `;
       }
       container.innerHTML = svg;
@@ -2200,109 +3084,110 @@
       const granLabel = q2 === 'A' ? "Grain Global Safran MRO" : (q2 === 'B' ? "Grain Sites Industriels" : "Grain Postes Machines");
       sub.textContent = `Option 6.${q6} : ${metaInfo[6][q6].title} • ${granLabel}`;
 
+      const m = getFilterMultiplier();
       let svg = "";
-      if (q6 === 'A') {
-        const titleTarget = q2 === 'A' ? "Lignes de Maintenance" : (q2 === 'B' ? "Sites Industriels" : "Postes de Travail Machine");
-        title.innerHTML = `<span>🚦</span> Taux de Charge par ${titleTarget} vs Seuil 85%`;
 
-        const name1 = q2 === 'A' ? "Ligne LEAP (VIL)" : (q2 === 'B' ? "Villaroche (VIL)" : "USI-04 (Tour 5 axes)");
-        const name2 = q2 === 'A' ? "Ligne CFM56 (CHL)" : (q2 === 'B' ? "Châtellerault (CHL)" : "CND-02 (Ressuage)");
-        const name3 = q2 === 'A' ? "Ligne Aubes (MON)" : (q2 === 'B' ? "Montereau (MON)" : "EQU-01 (Équilibrage)");
-        const name4 = q2 === 'A' ? "Pôle Bancs (BRU)" : (q2 === 'B' ? "Bruxelles (BRU)" : "BANC-03 (Banc Test)");
+      if (q6 === 'A') {
+        // 6.A : Top des pièces manquantes causant l'attente par site
+        title.innerHTML = `<span>📦</span> Top des Pièces Manquantes Causant l'Attente par Site`;
+
+        const parts = [
+          { ref: "Aubes HP Monocristal", site: "Montereau (MON)", hours: Math.round(84 * m), color: "#ef4444" },
+          { ref: "Disques LLP Turbine", site: "Villaroche (VIL)", hours: Math.round(52 * m), color: "#f59e0b" },
+          { ref: "Joints Labyrinth Fan", site: "Châtellerault (CHL)", hours: Math.round(28 * m), color: "#3b82f6" },
+          { ref: "Injecteurs Chambre", site: "Bruxelles (BRU)", hours: Math.round(16 * m), color: "#0284c7" }
+        ];
 
         svg = `
           <svg class="w-full h-28 md:h-32 max-h-[130px]" viewBox="0 0 320 145">
-            <!-- Ligne de seuil 85% -->
-            <line x1="225" y1="18" x2="225" y2="135" stroke="#d97706" stroke-width="1.5" stroke-dasharray="3,3" />
-            <text x="225" y="13" font-size="8" text-anchor="middle" fill="#b45309" font-weight="bold">Seuil Saturation (85%)</text>
-
-            <!-- Bar 1 -->
-            <text x="10" y="35" font-size="8" fill="#64748b">${name1}</text>
-            <rect x="110" y="25" width="105" height="13" rx="2" fill="#3b82f6" />
-            <text x="222" y="35" font-size="8.5" fill="#1d4ed8">76%</text>
-
-            <!-- Bar 2 -->
-            <text x="10" y="66" font-size="8" fill="#64748b">${name2}</text>
-            <rect x="110" y="56" width="90" height="13" rx="2" fill="#3b82f6" />
-            <text x="208" y="66" font-size="8.5" fill="#1d4ed8">65%</text>
-
-            <!-- Bar 3 -->
-            <text x="10" y="97" font-size="8" fill="#64748b">${name3}</text>
-            <rect x="110" y="87" width="145" height="13" rx="2" fill="#ef4444" />
-            <text x="262" y="97" font-size="8.5" font-weight="bold" fill="#dc2626">94% 🚨</text>
-
-            <!-- Bar 4 -->
-            <text x="10" y="128" font-size="8" fill="#64748b">${name4}</text>
-            <rect x="110" y="118" width="118" height="13" rx="2" fill="#10b981" />
-            <text x="235" y="128" font-size="8.5" fill="#059669">82%</text>
+            ${parts.map((p, idx) => {
+              const y = 22 + idx * 28;
+              const barW = Math.min(160, Math.round(p.hours * 1.8));
+              return `
+                <text x="10" y="${y + 9}" font-size="7.5" font-semibold fill="#334155">${p.ref}</text>
+                <text x="10" y="${y + 19}" font-size="6.5" fill="#64748b">${p.site}</text>
+                <rect x="120" y="${y}" width="${barW}" height="14" rx="2.5" fill="${p.color}" />
+                <text x="${120 + barW + 6}" y="${y + 10}" font-size="8" font-weight="bold" fill="${p.color}">${p.hours} h d'attente</text>
+              `;
+            }).join('')}
+            <line x1="120" y1="18" x2="120" y2="135" stroke="#cbd5e1" stroke-width="1.2" />
+            <text x="210" y="138" font-size="7" text-anchor="middle" fill="#94a3b8">Heures de blocage cumulées sur chaîne</text>
           </svg>
         `;
       } else if (q6 === 'B') {
-        const headerUnit = q2 === 'C' ? "Postes Machines" : (q2 === 'B' ? "Sites Safran" : "Familles Moteurs");
-        title.innerHTML = `<span>🗓️</span> Heatmap Hebdo d'Occupation par ${headerUnit}`;
+        // 6.B : Types de réparation qui prennent le plus de retard (% des demandes) par moteur
+        title.innerHTML = `<span>⚠️</span> Réparations à Forte Dérive (% Demandes en Attente Imprévue)`;
 
-        const row1 = q2 === 'A' ? "CFM56" : (q2 === 'B' ? "Villaroche" : "USI-04");
-        const row2 = q2 === 'A' ? "LEAP-1A" : (q2 === 'B' ? "Montereau" : "CND-02");
-        const row3 = q2 === 'A' ? "LEAP-1B" : (q2 === 'B' ? "Châtellerault" : "EQU-01");
+        const repairs = [
+          { name: "Usinage Carter Fan", cfm: Math.round(18 * m), leap: Math.round(29 * m) },
+          { name: "Ressuage & Contrôle CND", cfm: Math.round(14 * m), leap: Math.round(24 * m) },
+          { name: "Revêtement Aubes HP", cfm: Math.round(12 * m), leap: Math.round(26 * m) },
+          { name: "Recette Banc d'Essais", cfm: Math.round(8 * m), leap: Math.round(17 * m) }
+        ];
 
         svg = `
           <svg class="w-full h-28 md:h-32 max-h-[130px]" viewBox="0 0 320 145">
-            <!-- Colonnes Semaines -->
-            <text x="100" y="14" font-size="8" text-anchor="middle" fill="#64748b" font-weight="bold">S36</text>
-            <text x="155" y="14" font-size="8" text-anchor="middle" fill="#64748b" font-weight="bold">S37</text>
-            <text x="210" y="14" font-size="8" text-anchor="middle" fill="#64748b" font-weight="bold">S38</text>
-            <text x="265" y="14" font-size="8" text-anchor="middle" fill="#64748b" font-weight="bold">S39</text>
-
-            <!-- Ligne 1 -->
-            <text x="10" y="38" font-size="8" fill="#64748b">${row1}</text>
-            <rect x="80" y="24" width="40" height="20" rx="3" fill="#dbeafe" stroke="#93c5fd" />
-            <rect x="135" y="24" width="40" height="20" rx="3" fill="#3b82f6" />
-            <rect x="190" y="24" width="40" height="20" rx="3" fill="#ef4444" />
-            <rect x="245" y="24" width="40" height="20" rx="3" fill="#3b82f6" />
-
-            <!-- Ligne 2 -->
-            <text x="10" y="68" font-size="8" fill="#64748b">${row2}</text>
-            <rect x="80" y="54" width="40" height="20" rx="3" fill="#3b82f6" />
-            <rect x="135" y="54" width="40" height="20" rx="3" fill="#ef4444" />
-            <rect x="190" y="54" width="40" height="20" rx="3" fill="#b91c1c" />
-            <rect x="245" y="54" width="40" height="20" rx="3" fill="#ef4444" />
-
-            <!-- Ligne 3 -->
-            <text x="10" y="98" font-size="8" fill="#64748b">${row3}</text>
-            <rect x="80" y="84" width="40" height="20" rx="3" fill="#f1f5f9" stroke="#cbd5e1" />
-            <rect x="135" y="84" width="40" height="20" rx="3" fill="#dbeafe" stroke="#93c5fd" />
-            <rect x="190" y="84" width="40" height="20" rx="3" fill="#3b82f6" />
-            <rect x="245" y="84" width="40" height="20" rx="3" fill="#dbeafe" stroke="#93c5fd" />
-
             <!-- Légende -->
-            <text x="180" y="125" font-size="7.5" text-anchor="middle" fill="#dc2626" font-weight="bold">■ Pic de charge critique S38 (${row2})</text>
+            <rect x="90" y="6" width="7" height="7" rx="1.5" fill="#3b82f6" />
+            <text x="100" y="12" font-size="7" fill="#475569">CFM56 (% demandes)</text>
+            <rect x="180" y="6" width="7" height="7" rx="1.5" fill="#6366f1" />
+            <text x="190" y="12" font-size="7" fill="#475569">LEAP-1A/1B (% demandes)</text>
+
+            <line x1="110" y1="20" x2="110" y2="132" stroke="#cbd5e1" stroke-width="1.2" />
+
+            ${repairs.map((r, idx) => {
+              const y = 24 + idx * 27;
+              const wCfm = r.cfm * 4.2;
+              const wLeap = r.leap * 4.2;
+              return `
+                <text x="10" y="${y + 11}" font-size="7.5" font-semibold fill="#334155">${r.name}</text>
+                <rect x="110" y="${y}" width="${wCfm}" height="8" rx="1.5" fill="#3b82f6" />
+                <text x="${110 + wCfm + 4}" y="${y + 6.5}" font-size="6.5" font-weight="bold" fill="#1d4ed8">${r.cfm}%</text>
+
+                <rect x="110" y="${y + 9}" width="${wLeap}" height="8" rx="1.5" fill="#6366f1" />
+                <text x="${110 + wLeap + 4}" y="${y + 15.5}" font-size="6.5" font-weight="bold" fill="#4338ca">${r.leap}%</text>
+              `;
+            }).join('')}
           </svg>
         `;
       } else if (q6 === 'C') {
-        const wipSubject = (q1 === 'E') ? "Pièces Commandées vs Reçues Magasin" : (q2 === 'A' ? "Moteurs ESN en Révision" : (q2 === 'B' ? "Lots Sous-Ensembles en Transit" : "Ordres de Fabrication / Pièces"));
-        title.innerHTML = `<span>📈</span> Flux Entrées vs Sorties & Tension WIP (${wipSubject})`;
+        // 6.C : Top des routes de transfert (site sous-traitant) en % des demandes et délai moyen
+        title.innerHTML = `<span>🚚</span> Top Routes de Transfert Inter-Sites (% Demandes & Délai Moyen)`;
+
+        const routes = [
+          { fromTo: "Montereau ➔ Villaroche", part: Math.round(38 * m), delay: (1.2 * m).toFixed(1) },
+          { fromTo: "Châtellerault ➔ Bruxelles", part: Math.round(27 * m), delay: (2.4 * m).toFixed(1) },
+          { fromTo: "Villaroche ➔ Châtellerault", part: Math.round(19 * m), delay: (1.8 * m).toFixed(1) },
+          { fromTo: "Montereau ➔ Bruxelles", part: Math.round(16 * m), delay: (3.1 * m).toFixed(1) }
+        ];
+
         svg = `
           <svg class="w-full h-28 md:h-32 max-h-[130px]" viewBox="0 0 320 145">
-            <!-- Axes -->
-            <line x1="30" y1="120" x2="300" y2="120" stroke="#cbd5e1" stroke-width="1.5" />
-            <line x1="30" y1="15" x2="30" y2="120" stroke="#cbd5e1" stroke-width="1.5" />
+            <!-- Légende -->
+            <rect x="70" y="6" width="7" height="7" rx="1.5" fill="#3b82f6" />
+            <text x="80" y="12" font-size="7" fill="#475569">Part du flux (% demandes)</text>
+            <circle cx="195" cy="9.5" r="3.5" fill="#f59e0b" />
+            <text x="203" y="12" font-size="7" font-weight="bold" fill="#b45309">Délai navette route (jours)</text>
 
-            <!-- Entrées (Bleu) -->
-            <path d="M 30 90 Q 110 75, 160 30 T 300 20" fill="none" stroke="#2563eb" stroke-width="2" />
-            <!-- Sorties (Vert) -->
-            <path d="M 30 95 Q 110 90, 160 85 T 300 80" fill="none" stroke="#059669" stroke-width="2" />
+            <line x1="130" y1="20" x2="130" y2="132" stroke="#cbd5e1" stroke-width="1.2" />
 
-            <!-- Zone de divergence WIP -->
-            <path d="M 160 30 Q 230 25, 300 20 L 300 80 Q 230 83, 160 85 Z" fill="#ef4444" opacity="0.15" />
-
-            <text x="240" y="48" font-size="8.5" font-weight="bold" fill="#dc2626">${q1 === 'E' ? 'Manquants (+24 réf.)' : `Écart WIP (+18 ${q2 === 'A' ? 'moteurs' : (q2 === 'B' ? 'lots' : 'OF')})`}</text>
-            <text x="280" y="16" font-size="7.5" font-weight="bold" fill="#2563eb">${q1 === 'E' ? 'Besoins' : 'Entrées'}</text>
-            <text x="280" y="93" font-size="7.5" font-weight="bold" fill="#059669">${q1 === 'E' ? 'Livrées' : 'Sorties'}</text>
-            <text x="160" y="134" font-size="7.5" text-anchor="middle" fill="#64748b">${q1 === 'E' ? 'Semaines (Décalage de réception équipementiers OEM)' : 'Semaines (Accumulation en amont des postes clés)'}</text>
+            ${routes.map((rt, idx) => {
+              const y = 25 + idx * 26;
+              const wBar = rt.part * 2.8;
+              return `
+                <text x="10" y="${y + 11}" font-size="7.5" font-semibold fill="#334155">${rt.fromTo}</text>
+                <!-- Barre volume -->
+                <rect x="130" y="${y}" width="${wBar}" height="13" rx="2" fill="#3b82f6" opacity="0.9" />
+                <text x="${130 + wBar + 5}" y="${y + 9.5}" font-size="7.5" font-weight="bold" fill="#1d4ed8">${rt.part}%</text>
+                <!-- Badge délai navette -->
+                <circle cx="265" cy="${y + 6.5}" r="7" fill="#fef3c7" stroke="#f59e0b" stroke-width="1" />
+                <text x="265" y="${y + 9}" font-size="6.5" font-weight="bold" text-anchor="middle" fill="#b45309">${rt.delay}j</text>
+              `;
+            }).join('')}
           </svg>
         `;
-      } else {
-        // 6D : Ratio Attente vs Travail
+      } else if (q6 === 'D') {
+        // 6.D : Ratio Attente vs Travail effectif
         const t1 = (q1 === 'E') ? "48% Attente approvisionnement pièces" : (q2 === 'A' ? "44% Attente / transit inter-sites" : (q2 === 'B' ? "42% Navette route & attente quai" : "48% Attente bacs tampons machine"));
         const subT1 = (q1 === 'E') ? "~ 9.5 jours bloqués en attente composants" : (q2 === 'A' ? "~ 8.2 jours sans travail physique" : (q2 === 'B' ? "~ 3.1 jours de transport" : "~ 2.1 heures en file d'attente"));
         const t2 = (q1 === 'E') ? "52% Montage & révision à valeur ajoutée" : (q2 === 'A' ? "56% Usinage, révision & essai" : (q2 === 'B' ? "58% Réparation atelier site" : "52% Usinage copeaux & contrôle"));
@@ -2327,6 +3212,125 @@
             <text x="177" y="89" font-size="7.5" fill="#64748b">${subT2}</text>
 
             <text x="160" y="115" font-size="8" fill="#334155" font-weight="semibold">🎯 Levier : ${q1 === 'E' ? 'sécuriser les stocks de sécurité LLP' : (q2 === 'A' ? 'fluidifier le goulet global' : (q2 === 'B' ? 'optimiser la logistique' : 'équilibrer la machine'))}</text>
+          </svg>
+        `;
+      } else if (q6 === 'E') {
+        // 6.E : Barres de Charge vs Seuil 85%
+        title.innerHTML = `<span>🚦</span> Taux de Charge par Atelier vs Seuil Critique 85%`;
+        const sitesCharge = [
+          { name: "Villaroche (VIL-01)", load: Math.min(99, Math.round(74 * m)) },
+          { name: "Montereau (MON-01)", load: Math.min(99, Math.round(92 * m)) },
+          { name: "Châtellerault (CHL-01)", load: Math.min(99, Math.round(68 * m)) },
+          { name: "Bruxelles (BRU-01)", load: Math.min(99, Math.round(86 * m)) }
+        ];
+
+        svg = `
+          <svg class="w-full h-28 md:h-32 max-h-[130px]" viewBox="0 0 320 145">
+            <line x1="120" y1="20" x2="120" y2="130" stroke="#cbd5e1" stroke-width="1.2" />
+            <line x1="240" y1="15" x2="240" y2="130" stroke="#d97706" stroke-width="1.8" stroke-dasharray="3,3" />
+            <text x="240" y="12" font-size="7" font-weight="bold" fill="#d97706" text-anchor="middle">Seuil Critique 85%</text>
+
+            ${sitesCharge.map((sc, idx) => {
+              const y = 24 + idx * 27;
+              const wBar = sc.load * 1.4;
+              const isSat = sc.load >= 85;
+              return `
+                <text x="10" y="${y + 11}" font-size="7.5" font-semibold fill="#334155">${sc.name}</text>
+                <rect x="120" y="${y}" width="${wBar}" height="14" rx="2" fill="${isSat ? '#ef4444' : '#3b82f6'}" />
+                <text x="${120 + wBar + 5}" y="${y + 10.5}" font-size="7.5" font-weight="bold" fill="${isSat ? '#dc2626' : '#1d4ed8'}">${sc.load}% ${isSat ? '⚠️' : ''}</text>
+              `;
+            }).join('')}
+          </svg>
+        `;
+      } else if (q6 === 'F') {
+        // 6.F : Heatmap Hebdomadaire / Site
+        title.innerHTML = `<span>🗓️</span> Matrice Hebdomadaire de Saturation par Site (S36 - S39)`;
+        const weeks = ["S36", "S37", "S38", "S39"];
+        const matrix = [
+          { site: "Villaroche", vals: [65, 72, 88, 70] },
+          { site: "Montereau", vals: [78, 86, 95, 91] },
+          { site: "Châtellerault", vals: [60, 64, 75, 68] },
+          { site: "Bruxelles", vals: [70, 79, 89, 82] }
+        ];
+
+        function getCellColor(v) {
+          if (v >= 90) return '#ef4444';
+          if (v >= 80) return '#f59e0b';
+          if (v >= 70) return '#60a5fa';
+          return '#93c5fd';
+        }
+
+        svg = `
+          <svg class="w-full h-28 md:h-32 max-h-[130px]" viewBox="0 0 320 145">
+            ${weeks.map((w, idx) => `<text x="${125 + idx * 42}" y="18" font-size="7.5" font-bold fill="#475569" text-anchor="middle">${w}</text>`).join('')}
+            ${matrix.map((row, rIdx) => {
+              const y = 26 + rIdx * 26;
+              return `
+                <text x="10" y="${y + 13}" font-size="7.5" font-semibold fill="#334155">${row.site}</text>
+                ${row.vals.map((val, cIdx) => {
+                  const x = 105 + cIdx * 42;
+                  const col = getCellColor(val);
+                  return `
+                    <rect x="${x}" y="${y}" width="38" height="18" rx="2" fill="${col}" opacity="0.9" />
+                    <text x="${x + 19}" y="${y + 12}" font-size="7" font-weight="bold" fill="#fff" text-anchor="middle">${val}%</text>
+                  `;
+                }).join('')}
+              `;
+            }).join('')}
+            <text x="160" y="138" font-size="6.5" fill="#64748b" text-anchor="middle">Pic de tension généralisé en semaine S38</text>
+          </svg>
+        `;
+      } else if (q6 === 'G') {
+        // 6.G : Courbes Entrées vs Sorties WIP
+        title.innerHTML = `<span>📈</span> Diagramme de Flux Cumulé (CFD) : Entrées vs Sorties WIP`;
+        svg = `
+          <svg class="w-full h-28 md:h-32 max-h-[130px]" viewBox="0 0 320 145">
+            <line x1="30" y1="120" x2="300" y2="120" stroke="#cbd5e1" stroke-width="1" />
+            <line x1="30" y1="20" x2="30" y2="120" stroke="#cbd5e1" stroke-width="1" />
+
+            <!-- Courbe Entrées In -->
+            <path d="M 30 110 Q 110 95, 170 50 T 290 25" fill="none" stroke="#2563eb" stroke-width="2.5" />
+            <!-- Courbe Sorties Out -->
+            <path d="M 30 115 Q 110 110, 170 85 T 290 65" fill="none" stroke="#059669" stroke-width="2.5" />
+
+            <!-- Aire entre deux (accumulation WIP) -->
+            <text x="295" y="28" font-size="7.5" font-weight="bold" fill="#2563eb">In (Arrivées)</text>
+            <text x="295" y="68" font-size="7.5" font-weight="bold" fill="#059669">Out (Livrées)</text>
+
+            <rect x="180" y="55" width="80" height="20" rx="3" fill="#fef2f2" stroke="#fca5a5" />
+            <text x="220" y="68" font-size="7" font-weight="bold" fill="#dc2626" text-anchor="middle">Accumulation WIP : +8</text>
+
+            <text x="160" y="135" font-size="6.5" fill="#64748b" text-anchor="middle">L'écartement des courbes traduit l'allongement mécanique du TAT</text>
+          </svg>
+        `;
+      } else {
+        // 6.H : Treemap des Goulots d'Atelier
+        title.innerHTML = `<span>🗂️</span> Treemap des Goulots : Volume d'En-Cours par Machine`;
+        svg = `
+          <svg class="w-full h-28 md:h-32 max-h-[130px]" viewBox="0 0 320 145">
+            <!-- Tour CN 5A (Goulot) -->
+            <rect x="15" y="15" width="145" height="70" rx="3" fill="#ef4444" />
+            <text x="87" y="45" font-size="9" font-weight="bold" fill="#fff" text-anchor="middle">Tour CN 5 Axes</text>
+            <text x="87" y="58" font-size="7.5" fill="#fee2e2" text-anchor="middle">Saturation 94% (48h WIP)</text>
+
+            <!-- CND Ressuage -->
+            <rect x="165" y="15" width="140" height="42" rx="3" fill="#f59e0b" />
+            <text x="235" y="35" font-size="8" font-weight="bold" fill="#fff" text-anchor="middle">Ligne CND Ressuage</text>
+            <text x="235" y="46" font-size="6.5" fill="#fef3c7" text-anchor="middle">Charge 86% (22h WIP)</text>
+
+            <!-- Banc d'Essais -->
+            <rect x="165" y="62" width="140" height="23" rx="3" fill="#3b82f6" />
+            <text x="235" y="77" font-size="7.5" font-weight="bold" fill="#fff" text-anchor="middle">Banc Test Recette (74%)</text>
+
+            <!-- Équilibrage Rotor -->
+            <rect x="15" y="90" width="145" height="40" rx="3" fill="#10b981" />
+            <text x="87" y="110" font-size="8" font-weight="bold" fill="#fff" text-anchor="middle">Équilibrage Rotor (62%)</text>
+            <text x="87" y="121" font-size="6.5" fill="#d1fae5" text-anchor="middle">Capacité disponible fluide</text>
+
+            <!-- Montage Chambre -->
+            <rect x="165" y="90" width="140" height="40" rx="3" fill="#0284c7" />
+            <text x="235" y="110" font-size="8" font-weight="bold" fill="#fff" text-anchor="middle">Poste Montage Chambre</text>
+            <text x="235" y="121" font-size="6.5" fill="#e0f2fe" text-anchor="middle">Charge 71% (14h WIP)</text>
           </svg>
         `;
       }
@@ -3169,7 +4173,48 @@
       }
     }
 
+    // --- Page 0 : Lecteur des fichiers Markdown du dossier racine (chargement à la volée) ---
+    const ROOT_MD_FILES = ['readme.md', 'content.md', 'AGENTS.md', 'svg_illustrations.md'];
+
+    function initMarkdownViewer() {
+      const sel = document.getElementById('md-file-select');
+      const container = document.getElementById('md-render');
+      if (!sel || !container) return;
+      ROOT_MD_FILES.forEach((f) => {
+        const opt = document.createElement('option');
+        opt.value = f;
+        opt.textContent = f;
+        sel.appendChild(opt);
+      });
+      sel.value = 'readme.md';
+      loadMarkdownFile('readme.md');
+    }
+
+    function loadMarkdownFile(file) {
+      const container = document.getElementById('md-render');
+      if (!container) return;
+      if (typeof marked === 'undefined') {
+        container.innerHTML = '<p class="text-red-600 font-bold">⚠️ Librairie marked.js non chargée (connexion internet requise).</p>';
+        return;
+      }
+      container.innerHTML = '<p class="text-slate-400 italic">⏳ Chargement de <code>' + file + '</code>…</p>';
+      fetch(file)
+        .then((res) => {
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          return res.text();
+        })
+        .then((text) => {
+          container.innerHTML = marked.parse(text);
+        })
+        .catch((err) => {
+          container.innerHTML =
+            '<p class="text-red-600 font-bold">❌ Impossible de charger <code>' + file + '</code> : ' + err.message + '</p>' +
+            '<p class="text-slate-500 text-[10.5px]">Astuce : servir la page via un serveur HTTP (VS Code Live Server, GitHub Pages ou Firebase Hosting).</p>';
+        });
+    }
+
     window.addEventListener('load', () => {
+      initMarkdownViewer();
       drawSchema('A');
       updateCompatibilities();
       renderStep3TablePreview();

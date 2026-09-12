@@ -22,13 +22,20 @@
 
 ## 2. Règles Fondamentales & Règles Métier
 
-### 2.1 Les 7 Étapes du Simulateur (Onglets 1 mot)
+### 2.1 Les 8 Étapes du Simulateur (Onglets 1 mot)
+0. **Étape 0 : Contexte** (Contexte & Documentation)
+   - Affichage du contenu des fichiers Markdown du dossier racine via un sélecteur en haut : `readme.md` (par défaut), `content.md`, `AGENTS.md`, `svg_illustrations.md`.
+   - `readme.md` porte le contexte métier (déploiement BI Safran MRO, amélioration continue & product discovery) et les missions du consultant / data lead supervisor (arbitrage de la source de vérité, dictionnaire des métriques, éthique visuelle).
+   - La **Méthodologie Data & Gouvernance** reste détaillée dans les guides méthodologiques des étapes 1 à 6.
+
 1. **Étape 1 : Objectif** (Cadrage métier prioritaire)
    - `1.A` : Urgence opérationnelle (AOG temps réel).
    - `1.B` : Engagements contractuels (SLA globaux par compagnie).
    - `1.C` : Optimisation des capacités (Équilibrage multi-sites & saturation).
    - `1.D` : Suivi Retard & Pénalités (Dérapage en jours ouvrés & exposition en €).
    - `1.E` : Logistique et Approvisionnement (Disponibilité stock, délais fournisseurs et kits complets).
+   - `1.F` : Data Gouvernance (Suivre les usages métiers, fiabiliser la donnée et s'assurer de la pertinence des modèles via écart prévisionnel vs effectif).
+   - *Règle des badges d'usage :* Les cartes des étapes 4 et 6 portent des tags d'usages (`Opérationnel`, `Contractuel`, `Pilotage`, `Financier`, `Logistique`, `Gouvernance`). Tous les usages associés à chaque carte sont affichés sous forme de badges compacts (sans le mot "Usage"), et le badge correspondant à l'objectif actif en Étape 1 est mis en valeur avec un contour distinctif et sa couleur thématique.
 
 2. **Étape 2 : Données** (Granularité & Tables pour le calcul)
    - `2.A` (Demande - visit) : 1 ligne = 1 visite complète moteur `visit (engine, priority, start, end)`. Transits forfaitaires, vision globale. Table dimensionnelle `pièces du moteur (engine_parts)` liée par `type visit` et filtrée par `model` + disponibilité (%), intervalle de confiance (+/-) et lien date `start`.
@@ -42,11 +49,15 @@
    - `3.C` : Délais selon le taux d'occupation atelier (Modélisation de saturation à l'approche de 85%).
    - `3.D` : Modélisation avancée (Simulation dynamique probabiliste multi-factorielle).
 
-4. **Étape 4 : Délai** (Visualisation des Délais & Engagements TAT)
-   - `4.A` : Cartes KPIs Synthétiques (TAT moyen, % SLA).
-   - `4.B` : Barres vs Seuils Cibles (Durée réelle vs barres $P_{50}$ / $P_{85}$).
-   - `4.C` : Barres Décomposées (Attente, Transfert, Réparation).
-   - `4.D` : Tableau d'Alertes Nominatives (Listing nominatif ESN / Packages / Postes).
+4. **Étape 4 : Délai** (Visualisation des Délais & Engagements TAT - 8 options)
+   - `4.A` : TAT Médian & Bornes 5%-95% (Distribution statistique boxplot par moteur CFM56, LEAP-1A, LEAP-1B).
+   - `4.B` : Décomposition du TAT par Site (Barres empilées : attente, réparation, transfert par site VIL, MON, CHL, BRU).
+   - `4.C` : Respect des Délais Contractuels par Client & Moteur (Écart moyen TAT contractuel vs effectif + % de non-respect SLA).
+   - `4.D` : Tableau d'Alertes Nominatives (Listing nominatif ESN avec statut couleur de la demande : AOG, En Retard, En Cours, Conforme).
+   - `4.E` : Cartes KPIs Synthétiques (TAT moyen réel & taux de respect SLA global).
+   - `4.F` : Barres vs Seuils Cibles P85 (Durée réelle par sous-ensemble face au seuil de tolérance P85).
+   - `4.G` : Waterfall des Dérives TAT (Cascade cumulative des écarts contractuel vs réel : stock, CND, fast-track).
+   - `4.H` : Jalons de Traversée (Gates G1 à G3 avec chemin critique actif et alertes goulots).
 
 5. **Étape 5 : Capacité** (Méthode d'évaluation de la Capacité & des Demandes)
    - `5.A` : Prévisions des Demandes (Plan S&OP, déposes fermes annoncées & créneaux réservés).
@@ -54,11 +65,15 @@
    - `5.C` : Capacité & Approvisionnement Pièces (Disponibilité magasin pièces de rechange, lead times OEM & kits complets OTIF).
    - `5.D` : Prévisions Multi-factorielles Avancées (Rebuts CND/ressuage, disponibilité des bancs d'essais, outillages & attrition pièces LLP).
 
-6. **Étape 6 : Saturation** (Visualisation de la Saturation / Capacité)
-   - `6.A` : Barres de Charge vs Seuil 85%.
-   - `6.B` : Heatmap Hebdomadaire / Site.
-   - `6.C` : Courbes Entrées vs Sorties (Dérive en-cours WIP).
-   - `6.D` : Ratio Attente vs Travail Effectif (Donut lead time).
+6. **Étape 6 : Saturation** (Visualisation de la Saturation / Capacité - 8 options)
+   - `6.A` : Top Pièces Manquantes par Site (Heures d'attente cumulées et volume des ruptures sur chaîne).
+   - `6.B` : Retards par Réparation & Moteur (% des demandes avec attente imprévue par type d'opération).
+   - `6.C` : Top Routes de Transfert Inter-Sites (% des demandes en sous-traitance et délai navette moyen en jours).
+   - `6.D` : Ratio Attente vs Travail Effectif (Donut lead time isolant valeur ajoutée vs attente passive).
+   - `6.E` : Barres de Charge vs Seuil 85% (Taux d'occupation atelier face à la ligne rouge critique des 85%).
+   - `6.F` : Heatmap Hebdomadaire / Site (Matrice de saturation temporelle semaines S36-S39 par site).
+   - `6.G` : Courbes Entrées vs Sorties WIP (Cumulative Flow Diagram et zone d'accumulation d'en-cours).
+   - `6.H` : Treemap des Goulots d'Atelier (Surfaces proportionnelles au volume d'en-cours bloqué par machine).
 
 7. **Étape 7 : Synthèse** (Slide Décisionnel & Dashboard Projeté)
    - Tableau de bord en temps réel alimenté par l'objet global `selections = { 1, 2, 3, 4, 5, 6 }`.
