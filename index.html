@@ -178,11 +178,11 @@
     <!-- Navigation par Onglets (1 Page par Question) - Sur une seule ligne dans le header -->
     <nav class="flex items-center gap-1 shrink-0 overflow-x-auto py-0.5 whitespace-nowrap scrollbar-none" id="nav-tabs">
       <button onclick="switchStep(0)" id="tab-0"
-        class="px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 bg-white text-slate-600 border border-slate-200 hover:text-blue-600 hover:bg-slate-50 shadow-sm">
+        class="px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 bg-blue-600 text-white shadow-sm shadow-blue-500/20">
         <span>0️⃣</span> Contexte
       </button>
       <button onclick="switchStep(1)" id="tab-1"
-        class="px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 bg-blue-600 text-white shadow-sm shadow-blue-500/20">
+        class="px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 bg-white text-slate-600 border border-slate-200 hover:text-blue-600 hover:bg-slate-50 shadow-sm">
         <span>1️⃣</span> Question
       </button>
       <button onclick="switchStep(2)" id="tab-2"
@@ -216,7 +216,7 @@
   <main class="w-full max-w-6xl flex-1 flex flex-col justify-between min-h-0 overflow-hidden">
 
     <!-- ================= PAGE 0 (Contexte : Fichiers Markdown du Dossier Racine) ================= -->
-    <div id="step-0" class="step-page hidden flex flex-col min-h-full md:h-full justify-between">
+    <div id="step-0" class="step-page flex flex-col min-h-full md:h-full justify-between">
       <div class="glass-card p-3 rounded-xl flex flex-col flex-1 min-h-0 overflow-hidden">
         <div class="mb-1.5 shrink-0">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
@@ -240,7 +240,7 @@
     </div>
 
     <!-- ================= PAGE 1 ================= -->
-    <div id="step-1" class="step-page flex flex-col min-h-full md:h-full justify-between">
+    <div id="step-1" class="step-page hidden flex flex-col min-h-full md:h-full justify-between">
       <div class="glass-card p-3 rounded-xl flex flex-col justify-between flex-1">
         <div class="mb-2">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
@@ -1961,7 +1961,7 @@
   </main>
 
   <script>
-    let currentStep = 1;
+    let currentStep = 0;
     const TOTAL_STEPS = 7;
     const selections = { 1: 'A', 2: 'A', 3: 'B', 4: 'B', 5: 'B', 6: 'A' };
 
@@ -2053,6 +2053,10 @@
       if (step === 7) {
         renderFinalDashboard();
       }
+
+      try {
+        localStorage.setItem('maestro_last_step', String(step));
+      } catch (e) {}
     }
 
     function nextStep() {
@@ -4371,11 +4375,23 @@
       loadMarkdownFile('readme.md');
     }
 
+    function ensureMarked(cb) {
+      if (typeof marked !== 'undefined') return cb();
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js';
+      s.onload = cb;
+      s.onerror = () => {
+        const container = document.getElementById('md-render');
+        if (container) container.innerHTML = '<p class="text-red-600 font-bold">⚠️ marked.js introuvable (CDN bloqué).</p>';
+      };
+      document.head.appendChild(s);
+    }
+
     function loadMarkdownFile(file) {
       const container = document.getElementById('md-render');
       if (!container) return;
       if (typeof marked === 'undefined') {
-        container.innerHTML = '<p class="text-red-600 font-bold">⚠️ Librairie marked.js non chargée (connexion internet requise).</p>';
+        ensureMarked(() => loadMarkdownFile(file));
         return;
       }
       container.innerHTML = '<p class="text-slate-400 italic">⏳ Chargement de <code>' + file + '</code>…</p>';
@@ -4396,6 +4412,14 @@
 
     window.addEventListener('load', () => {
       initMarkdownViewer();
+
+      let startStep = 0;
+      try {
+        const saved = parseInt(localStorage.getItem('maestro_last_step'), 10);
+        if (!isNaN(saved) && saved >= 0 && saved <= TOTAL_STEPS) startStep = saved;
+      } catch (e) {}
+
+      switchStep(startStep);
       drawSchema('A');
       updateCompatibilities();
       renderStep3TablePreview();
