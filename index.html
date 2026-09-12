@@ -35,51 +35,51 @@
 <body
   class="bg-slate-100 text-slate-800 font-sans min-h-screen md:h-screen flex flex-col items-center justify-between p-2 md:p-3 overflow-y-auto md:overflow-hidden select-none">
 
-  <!-- En-tête Compact -->
-  <header class="w-full max-w-6xl text-center shrink-0 mb-1.5">
-    <div class="flex flex-wrap items-center justify-center gap-1.5 md:gap-2">
+  <!-- En-tête Unifié avec Navigation sur une seule ligne -->
+  <header class="w-full max-w-6xl shrink-0 mb-1 flex flex-wrap lg:flex-nowrap items-center justify-between gap-2 bg-white/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-200/80 shadow-sm">
+    <div class="flex items-center gap-2 shrink-0">
       <span
-        class="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-blue-50 border border-blue-200 rounded-full text-blue-700 text-[10px] font-bold uppercase tracking-wider shadow-sm">
-        ✈️ SAFRAN MRO DATA CADRAGE
+        class="inline-flex items-center gap-1 px-2 py-0.5 bg-blue-50 border border-blue-200 rounded-full text-blue-700 text-[10px] font-bold uppercase tracking-wider">
+        ✈️ SAFRAN MRO
       </span>
-      <h1 class="text-xs sm:text-sm md:text-base font-black text-slate-900 tracking-tight">Cadrage Décisionnel & Architecture BI</h1>
+      <h1 class="text-xs sm:text-sm font-black text-slate-900 tracking-tight whitespace-nowrap">Cadrage Décisionnel BI</h1>
     </div>
+
+    <!-- Navigation par Onglets (1 Page par Question) - Sur une seule ligne dans le header -->
+    <nav class="flex items-center gap-1 shrink-0 overflow-x-auto py-0.5 whitespace-nowrap scrollbar-none" id="nav-tabs">
+      <button onclick="switchStep(1)" id="tab-1"
+        class="px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 bg-blue-600 text-white shadow-sm shadow-blue-500/20">
+        <span>1️⃣</span> Objectif
+      </button>
+      <button onclick="switchStep(2)" id="tab-2"
+        class="px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 bg-white text-slate-600 border border-slate-200 hover:text-blue-600 hover:bg-slate-50 shadow-sm">
+        <span>2️⃣</span> Données
+      </button>
+      <button onclick="switchStep(3)" id="tab-3"
+        class="px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 bg-white text-slate-600 border border-slate-200 hover:text-blue-600 hover:bg-slate-50 shadow-sm">
+        <span>3️⃣</span> TAT
+      </button>
+      <button onclick="switchStep(4)" id="tab-4"
+        class="px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 bg-white text-slate-600 border border-slate-200 hover:text-blue-600 hover:bg-slate-50 shadow-sm">
+        <span>4️⃣</span> Délai
+      </button>
+      <button onclick="switchStep(5)" id="tab-5"
+        class="px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 bg-white text-slate-600 border border-slate-200 hover:text-blue-600 hover:bg-slate-50 shadow-sm">
+        <span>5️⃣</span> Capacité
+      </button>
+      <button onclick="switchStep(6)" id="tab-6"
+        class="px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 bg-white text-slate-600 border border-slate-200 hover:text-blue-600 hover:bg-slate-50 shadow-sm">
+        <span>6️⃣</span> Saturation
+      </button>
+      <button onclick="switchStep(7)" id="tab-7"
+        class="px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 bg-white text-slate-600 border border-slate-200 hover:text-blue-600 hover:bg-slate-50 shadow-sm">
+        <span>🏁</span> Synthèse
+      </button>
+    </nav>
   </header>
 
-  <!-- Navigation par Onglets (1 Page par Question) - Ultra Compacte & Scrollable -->
-  <nav class="w-full max-w-6xl flex justify-start sm:justify-center gap-1.5 shrink-0 mb-2 overflow-x-auto pb-1.5 px-1 whitespace-nowrap scrollbar-thin" id="nav-tabs">
-    <button onclick="switchStep(1)" id="tab-1"
-      class="px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-blue-600 text-white shadow-md shadow-blue-500/20">
-      <span>1️⃣</span> Objectif
-    </button>
-    <button onclick="switchStep(2)" id="tab-2"
-      class="px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-slate-600 border border-slate-200 hover:text-blue-600 hover:bg-slate-50 shadow-sm">
-      <span>2️⃣</span> Données
-    </button>
-    <button onclick="switchStep(3)" id="tab-3"
-      class="px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-slate-600 border border-slate-200 hover:text-blue-600 hover:bg-slate-50 shadow-sm">
-      <span>3️⃣</span> TAT
-    </button>
-    <button onclick="switchStep(4)" id="tab-4"
-      class="px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-slate-600 border border-slate-200 hover:text-blue-600 hover:bg-slate-50 shadow-sm">
-      <span>4️⃣</span> Délai
-    </button>
-    <button onclick="switchStep(5)" id="tab-5"
-      class="px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-slate-600 border border-slate-200 hover:text-blue-600 hover:bg-slate-50 shadow-sm">
-      <span>5️⃣</span> Capacité
-    </button>
-    <button onclick="switchStep(6)" id="tab-6"
-      class="px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-slate-600 border border-slate-200 hover:text-blue-600 hover:bg-slate-50 shadow-sm">
-      <span>6️⃣</span> Saturation
-    </button>
-    <button onclick="switchStep(7)" id="tab-7"
-      class="px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-slate-600 border border-slate-200 hover:text-blue-600 hover:bg-slate-50 shadow-sm">
-      <span>🏁</span> Synthèse
-    </button>
-  </nav>
-
   <!-- Contenu Principal (Prend toute la place disponible) -->
-  <main class="w-full max-w-6xl flex-1 flex flex-col justify-center min-h-0 md:overflow-hidden">
+  <main class="w-full max-w-6xl flex-1 flex flex-col justify-between min-h-0 overflow-hidden">
 
     <!-- ================= PAGE 1 ================= -->
     <div id="step-1" class="step-page flex flex-col min-h-full md:h-full justify-between">
@@ -245,41 +245,103 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 flex-1 items-stretch">
-          <div class="lg:col-span-4 flex flex-col justify-between space-y-2">
+          <div class="lg:col-span-5 flex flex-col justify-between space-y-2">
+            <!-- 2A : Macro - visit -->
             <div onclick="selectGranularity('A')" id="opt-2-A"
-              class="option-card active glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex-1 flex flex-col justify-center">
-              <div class="text-xs md:text-sm font-bold text-slate-900 flex items-center gap-2"><span>📦</span> A. Macro - La Demande Globale (Shop Visit)</div>
-              <p class="text-[11px] text-slate-600 mt-1 leading-snug"><strong>1 ligne = 1 visite globale ESN.</strong> Vision macroscopique du TAT et des pénalités. Transits forfaitaires. Basé sur l'historique global des visites.</p>
-              <div class="text-[9.5px] text-slate-500 mt-1.5 bg-slate-50 rounded p-1.5 border border-slate-200 font-mono space-y-0.5">
-                <div><span class="text-blue-700 font-bold">FAIT_DEMANDES_MRO</span> (~1,5k lig/an)</div>
-                <div class="text-slate-500">PK: ID_Demande | FK: Client, Moteur, Contrat, Date_Entree</div>
-                <div class="text-emerald-700 font-medium">Dimensions : DIM_CLIENT, DIM_MOTEUR, DIM_CALENDRIER, DIM_CONTRAT_SLA</div>
+              class="option-card active glass-card p-3 rounded-xl border border-slate-200 cursor-pointer flex-1 flex items-center justify-between gap-3">
+              <div class="flex-1 min-w-0">
+                <div class="text-xs md:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                  <span class="text-base">📦</span> A. Macro : Demande de Visite (visit)
+                </div>
+                <p class="text-[11px] text-slate-600 mt-1 leading-snug">
+                  <strong>1 ligne = 1 visite complète moteur.</strong> Vision globale du cycle de révision atelier, du contrat SLA client et de la priorité opérationnelle.
+                </p>
+                <div class="text-[10px] text-slate-500 mt-1 space-y-0.5">
+                  <div><span class="text-blue-700 font-semibold">Granularité :</span> Table des visites <code>visit (engine, priority, start, end)</code>.</div>
+                  <div><span class="text-slate-500">Transits :</span> Forfait logistique global rattaché au moteur.</div>
+                </div>
+              </div>
+              <div class="w-16 h-16 bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex items-center justify-center shrink-0">
+                <svg class="w-full h-full" viewBox="0 0 60 60">
+                  <rect x="4" y="8" width="52" height="44" rx="4" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5" />
+                  <rect x="4" y="8" width="52" height="14" rx="4" fill="#3b82f6" />
+                  <text x="30" y="18" font-size="8" font-weight="bold" fill="#ffffff" text-anchor="middle">VISIT (Macro)</text>
+                  <!-- Avion / Moteur iconique -->
+                  <circle cx="20" cy="34" r="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1.2" />
+                  <text x="20" y="37" font-size="9" text-anchor="middle">✈️</text>
+                  <rect x="33" y="28" width="20" height="4" rx="1" fill="#2563eb" />
+                  <rect x="33" y="35" width="14" height="3" rx="1" fill="#93c5fd" />
+                  <rect x="33" y="41" width="18" height="3" rx="1" fill="#10b981" />
+                </svg>
               </div>
             </div>
+
+            <!-- 2B : Méso - repair -->
             <div onclick="selectGranularity('B')" id="opt-2-B"
-              class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex-1 flex flex-col justify-center">
-              <div class="text-xs md:text-sm font-bold text-slate-900 flex items-center gap-2"><span>🏢</span> B. Méso - La Réparation du Module (Shop Operation)</div>
-              <p class="text-[11px] text-slate-600 mt-1 leading-snug"><strong>1 ligne = 1 lot module par site.</strong> <span class="text-emerald-700 font-semibold">Accès aux délais de transit inter-ateliers</span>. <em>Basé sur les données historiques d'atelier</em> (barème théorique unitaire non disponible &rarr; 3.A indisponible).</p>
-              <div class="text-[9.5px] text-slate-500 mt-1.5 bg-slate-50 rounded p-1.5 border border-slate-200 font-mono space-y-0.5">
-                <div><span class="text-emerald-700 font-bold">FAIT_PACKAGES_SITE</span> (~15k lig/an - Données Historiques)</div>
-                <div class="text-slate-500">PK: ID_Lot_Package | FK: Demande, Module, Site, Date_Envoi</div>
-                <div class="text-emerald-700 font-medium">Dimensions : DIM_SOUS_ENSEMBLE, DIM_SITE_SAFRAN, DIM_DEMANDE_MRO, DIM_CALENDRIER</div>
+              class="option-card glass-card p-3 rounded-xl border border-slate-200 cursor-pointer flex-1 flex items-center justify-between gap-3">
+              <div class="flex-1 min-w-0">
+                <div class="text-xs md:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                  <span class="text-base">🏢</span> B. Méso : Réparation par Atelier (repair)
+                </div>
+                <p class="text-[11px] text-slate-600 mt-1 leading-snug">
+                  <strong>1 ligne = 1 réparation module par atelier (shop).</strong> Historique atelier et mesure physique des durées de transits entre sites Safran.
+                </p>
+                <div class="text-[10px] text-slate-500 mt-1 space-y-0.5">
+                  <div><span class="text-emerald-700 font-semibold">Granularité :</span> <code>repair (type, visit, shop, start, end)</code>.</div>
+                  <div><span class="text-slate-500">Transits :</span> <code>durée des transits (shop, shop, length)</code>.</div>
+                </div>
+              </div>
+              <div class="w-16 h-16 bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex items-center justify-center shrink-0">
+                <svg class="w-full h-full" viewBox="0 0 60 60">
+                  <!-- Deux ateliers reliés par navette transit -->
+                  <rect x="4" y="6" width="22" height="24" rx="3" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.3" />
+                  <text x="15" y="16" font-size="6.5" font-weight="bold" fill="#15803d" text-anchor="middle">Shop A</text>
+                  <text x="15" y="24" font-size="5" fill="#475569" text-anchor="middle">VIL</text>
+
+                  <rect x="34" y="30" width="22" height="24" rx="3" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.3" />
+                  <text x="45" y="40" font-size="6.5" font-weight="bold" fill="#15803d" text-anchor="middle">Shop B</text>
+                  <text x="45" y="48" font-size="5" fill="#475569" text-anchor="middle">MON</text>
+
+                  <!-- Arc navette -->
+                  <path d="M 26 18 Q 44 14, 45 28" fill="none" stroke="#f59e0b" stroke-width="1.8" stroke-dasharray="2,2" />
+                  <text x="36" y="21" font-size="5.5" font-weight="bold" fill="#d97706">transit</text>
+                </svg>
               </div>
             </div>
+
+            <!-- 2C : Micro - task -->
             <div onclick="selectGranularity('C')" id="opt-2-C"
-              class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex-1 flex flex-col justify-center">
-              <div class="text-xs md:text-sm font-bold text-slate-900 flex items-center gap-2"><span>🔧</span> C. Micro - L'Opération Technique (Shop Task)</div>
-              <p class="text-[11px] text-slate-600 mt-1 leading-snug"><strong>1 ligne = 1 tâche technique unitaire.</strong> <span class="text-blue-700 font-bold">Seule option avec la table des opérations & durées théoriques</span> croisée par type de moteur et réparation. Accès aux transits & buffers.</p>
-              <div class="text-[9.5px] text-slate-500 mt-1.5 bg-slate-50 rounded p-1.5 border border-slate-200 font-mono space-y-0.5">
-                <div><span class="text-amber-700 font-bold">FAIT_OPERATIONS_REPARATION</span> (>250k lig/an - Réalisé & Suivi)</div>
-                <div class="text-blue-700 font-semibold">⭐ Table de référence : REF_OPERATIONS_THEORIQUES (Durée standard par Moteur/Réparation)</div>
-                <div class="text-emerald-700 font-medium">Dimensions : REF_OPERATIONS_THEORIQUES, DIM_POSTE_MACHINE, DIM_MOTEUR, DIM_PACKAGE</div>
+              class="option-card glass-card p-3 rounded-xl border border-slate-200 cursor-pointer flex-1 flex items-center justify-between gap-3">
+              <div class="flex-1 min-w-0">
+                <div class="text-xs md:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                  <span class="text-base">🔧</span> C. Micro : Tâche sur Poste (task)
+                </div>
+                <p class="text-[11px] text-slate-600 mt-1 leading-snug">
+                  <strong>1 ligne = 1 tâche technique sur une station.</strong> Seule option avec le référentiel des <em>durées théoriques</em> croisant type moteur et tâche.
+                </p>
+                <div class="text-[10px] text-slate-500 mt-1 space-y-0.5">
+                  <div><span class="text-amber-700 font-semibold">Granularité :</span> <code>task (visit, repair, station, type)</code>.</div>
+                  <div><span class="text-blue-700 font-semibold">Référence :</span> <code>durée des tâches (type engine, type task, length)</code>.</div>
+                </div>
+              </div>
+              <div class="w-16 h-16 bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex items-center justify-center shrink-0">
+                <svg class="w-full h-full" viewBox="0 0 60 60">
+                  <rect x="4" y="6" width="52" height="48" rx="4" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5" />
+                  <text x="30" y="16" font-size="7" font-weight="bold" fill="#b45309" text-anchor="middle">STATION / TASK</text>
+                  <!-- Roue dentée / machine + chrono -->
+                  <circle cx="20" cy="34" r="10" fill="#fef3c7" stroke="#d97706" stroke-width="1.2" />
+                  <text x="20" y="38" font-size="11" text-anchor="middle">⚙️</text>
+                  <!-- Durée théorique standard -->
+                  <rect x="34" y="24" width="18" height="18" rx="2" fill="#2563eb" />
+                  <text x="43" y="32" font-size="5" font-weight="bold" fill="#ffffff" text-anchor="middle">THEO</text>
+                  <text x="43" y="39" font-size="6" font-weight="bold" fill="#ffffff" text-anchor="middle">4.5h</text>
+                </svg>
               </div>
             </div>
           </div>
 
           <div
-            class="lg:col-span-8 bg-slate-50/80 rounded-xl p-2.5 border border-slate-200 shadow-sm flex flex-col items-center justify-between overflow-x-auto w-full">
+            class="lg:col-span-7 bg-slate-50/80 rounded-xl p-2.5 border border-slate-200 shadow-sm flex flex-col items-center justify-between overflow-x-auto w-full">
             <div class="w-full min-w-[320px] max-w-[600px] flex justify-center overflow-x-auto">
               <canvas id="schemaCanvas" width="600" height="340"
                 class="w-full max-w-[600px] max-h-[340px] h-auto shrink-0"></canvas>
@@ -1390,9 +1452,9 @@
         'D': { title: "Suivi Retard & Pénalités", desc: "Jours de dérapage ouvrés & exposition financière (€)", icon: "💰" }
       },
       2: {
-        'A': { title: "La Demande Globale (Shop Visit)", desc: "1 ligne = 1 visite globale ESN (FAIT_DEMANDES_MRO) • Transits forfaitaires", icon: "📦" },
-        'B': { title: "La Réparation du Module (Shop Operation)", desc: "1 ligne = 1 lot module par site (FAIT_PACKAGES_SITE) • Accès aux transits inter-ateliers", icon: "🏢" },
-        'C': { title: "L'Opération Technique (Shop Task)", desc: "1 ligne = 1 opération de gamme (FAIT_OPERATIONS) • Accès aux transits inter-ateliers & tampons", icon: "🔧" }
+        'A': { title: "La Demande (visit)", desc: "1 ligne = 1 visite moteur (visit) • Transits forfaitaires", icon: "📦" },
+        'B': { title: "La Réparation (repair)", desc: "1 ligne = 1 réparation module par atelier (repair) • Transits inter-ateliers (shop)", icon: "🏢" },
+        'C': { title: "La Tâche Technique (task)", desc: "1 ligne = 1 tâche sur station (task) • Référentiel des durées théoriques", icon: "🔧" }
       },
       3: {
         'A': { title: "Délais Théoriques de Traitement", desc: "Temps standards par type de moteur (gamme & transit)", icon: "➕" },
@@ -1616,14 +1678,15 @@
       // Recommandation technique
       const recoEl = document.getElementById('mock-reco-text');
       let reco = "";
+      const factTableNames = { 'A': 'visit', 'B': 'repair', 'C': 'task' };
       if (q1 === 'D') {
-        reco = `Table de faits <strong>${q2 === 'A' ? 'FAIT_DEMANDES_MRO' : (q2 === 'B' ? 'FAIT_PACKAGES_SITE' : 'FAIT_OPERATIONS')}</strong> enrichie avec les colonnes <code>Jours_Retard = MAX(0, Date_Livraison_Reelle - Date_SLA_Contractuelle)</code> et <code>Montant_Penalite = Jours_Retard * Bareme_Journalier</code>. Modélisation temporelle calibrée selon la méthode <strong>${metaInfo[3][q3].title}</strong> et capacité pilotée par <strong>${metaInfo[5][q5].title}</strong>.`;
+        reco = `Table de faits <strong>${factTableNames[q2]}</strong> enrichie avec les colonnes <code>Jours_Retard = MAX(0, Date_Livraison_Reelle - Date_SLA_Contractuelle)</code> et <code>Montant_Penalite = Jours_Retard * Bareme_Journalier</code>. Modélisation temporelle calibrée selon la méthode <strong>${metaInfo[3][q3].title}</strong> et capacité pilotée par <strong>${metaInfo[5][q5].title}</strong>.`;
       } else if (q1 === 'A') {
-        reco = `Tour de contrôle temps réel : Modèle DirectQuery / rafraîchissement horaire sur <strong>${q2 === 'A' ? 'FAIT_DEMANDES_MRO' : (q2 === 'B' ? 'FAIT_PACKAGES_SITE' : 'FAIT_OPERATIONS')}</strong> avec alertes Power Automate sur dossiers critiques, calcul dynamique selon <strong>${metaInfo[3][q3].title}</strong> et charge calibrée sur <strong>${metaInfo[5][q5].title}</strong>.`;
+        reco = `Tour de contrôle temps réel : Modèle DirectQuery / rafraîchissement horaire sur <strong>${factTableNames[q2]}</strong> avec alertes Power Automate sur dossiers critiques, calcul dynamique selon <strong>${metaInfo[3][q3].title}</strong> et charge calibrée sur <strong>${metaInfo[5][q5].title}</strong>.`;
       } else if (q1 === 'B') {
-        reco = `Pilotage contractuel & SLA : Modèle tabulaire en étoile reliant les contrats cadres et statuts de gel chrono aux faits <strong>${q2 === 'A' ? 'FAIT_DEMANDES_MRO' : (q2 === 'B' ? 'FAIT_PACKAGES_SITE' : 'FAIT_OPERATIONS')}</strong> avec conformité évaluée via <strong>${metaInfo[3][q3].title}</strong> et capacité dimensionnée par <strong>${metaInfo[5][q5].title}</strong>.`;
+        reco = `Pilotage contractuel & SLA : Modèle tabulaire en étoile reliant les contrats cadres et statuts de gel chrono aux faits <strong>${factTableNames[q2]}</strong> avec conformité évaluée via <strong>${metaInfo[3][q3].title}</strong> et capacité dimensionnée par <strong>${metaInfo[5][q5].title}</strong>.`;
       } else {
-        reco = `Optimisation flux & capacités : Dashboard en mode Import avec agrégations automatiques pour la granularité <strong>${metaInfo[2][q2].title}</strong>, matrice de saturation ateliers / machines, mesures DAX de charge calibrées par <strong>${metaInfo[3][q3].title}</strong> et modèle capacitaire <strong>${metaInfo[5][q5].title}</strong>.`;
+        reco = `Optimisation flux & capacités : Dashboard en mode Import avec agrégations automatiques pour la granularité <strong>${metaInfo[2][q2].title}</strong>, matrice de saturation ateliers / stations, mesures DAX de charge calibrées par <strong>${metaInfo[3][q3].title}</strong> et modèle capacitaire <strong>${metaInfo[5][q5].title}</strong>.`;
       }
       if (recoEl) recoEl.innerHTML = reco;
 
@@ -2321,55 +2384,55 @@
       if (granularity === 'A') {
         schemaModel = {
           fact: {
-            title: "FAIT_DEMANDES_MRO",
-            sub: "Grain : 1 ligne = 1 Demande / ESN Moteur",
+            title: "visit",
+            sub: "Grain : 1 ligne = 1 Demande (visit)",
             grainColor: "#3b82f6",
             rows: [
-              { type: 'PK', name: 'ID_Demande', desc: 'Identifiant unique visite' },
-              { type: 'FK', name: 'FK_Client', desc: '-> DIM_CLIENT.ID_Client' },
-              { type: 'FK', name: 'FK_Moteur', desc: '-> DIM_MOTEUR.ESN_Moteur' },
-              { type: 'FK', name: 'FK_Contrat', desc: '-> DIM_CONTRAT_SLA.ID_Contrat' },
-              { type: 'FK', name: 'FK_Date_Entree', desc: '-> DIM_CALENDRIER.Date_Key' },
-              { type: 'M',  name: 'Duree_Reelle_Jours', desc: 'Mesure TAT global (jours)' },
-              { type: 'M',  name: 'Jours_Retard_SLA', desc: 'Mesure dépassement SLA' },
-              { type: 'M',  name: 'Montant_Penalite_EUR', desc: 'Pénalités de retard' }
+              { type: 'PK', name: 'id_visit', desc: 'Identifiant unique de la visite' },
+              { type: 'FK', name: 'engine_id', desc: '-> engine (type, model, customer)' },
+              { type: 'A',  name: 'priority', desc: 'Niveau d\'urgence (AOG, Standard)' },
+              { type: 'FK', name: 'date_start', desc: '-> calendar.date' },
+              { type: 'FK', name: 'date_end', desc: '-> calendar.date' },
+              { type: 'M',  name: 'tat_days', desc: 'Mesure TAT global (jours)' },
+              { type: 'M',  name: 'sla_delay_days', desc: 'Dérapage délai vs contrat' },
+              { type: 'M',  name: 'penalty_eur', desc: 'Pénalités calculées' }
             ]
           },
           dims: [
             {
-              title: "DIM_CLIENT", icon: "🏢", color: "#f59e0b", x: 14, y: 15, w: 168, h: 125,
+              title: "engine", icon: "✈️", color: "#8b5cf6", x: 14, y: 15, w: 168, h: 125,
               rows: [
-                { type: 'PK', name: 'ID_Client', desc: 'Code IATA (AFR, DLH, RYR)' },
-                { type: 'A',  name: 'Compagnie_Aerienne', desc: 'Nom compagnie' },
-                { type: 'A',  name: 'Segment_Marche', desc: 'Major / Low-Cost / Cargo' },
-                { type: 'A',  name: 'Taux_Penalite_Jour', desc: 'Barème contractuel €/j' }
+                { type: 'PK', name: 'engine_id', desc: 'Numéro de série ESN' },
+                { type: 'A',  name: 'type', desc: 'CFM56 / LEAP-1A / LEAP-1B' },
+                { type: 'A',  name: 'model', desc: 'Sous-variante constructeur' },
+                { type: 'A',  name: 'customer', desc: 'Compagnie aérienne cliente' }
               ]
             },
             {
-              title: "DIM_MOTEUR", icon: "✈️", color: "#8b5cf6", x: 418, y: 15, w: 168, h: 125,
+              title: "contract_sla", icon: "📜", color: "#10b981", x: 418, y: 15, w: 168, h: 125,
               rows: [
-                { type: 'PK', name: 'ESN_Moteur', desc: 'Numéro de série moteur' },
-                { type: 'A',  name: 'Famille_Moteur', desc: 'CFM56-7B / LEAP-1A / 1B' },
-                { type: 'A',  name: 'Heures_Vol_TSN', desc: 'Time Since New' },
-                { type: 'A',  name: 'Cycles_Vol_CSN', desc: 'Cycles de vol' }
+                { type: 'PK', name: 'contract_id', desc: 'Accord cadre client' },
+                { type: 'A',  name: 'customer', desc: 'Compagnie donneuse d\'ordre' },
+                { type: 'A',  name: 'sla_target_days', desc: 'Engagement TAT convenu' },
+                { type: 'A',  name: 'penalty_rate_day', desc: 'Taux pénalité journalière' }
               ]
             },
             {
-              title: "DIM_CONTRAT_SLA", icon: "📜", color: "#10b981", x: 14, y: 195, w: 168, h: 125,
+              title: "durée des transits", icon: "🚚", color: "#f59e0b", x: 14, y: 195, w: 168, h: 125,
               rows: [
-                { type: 'PK', name: 'ID_Contrat', desc: 'Code accord cadre' },
-                { type: 'A',  name: 'Type_Engagement', desc: 'Flight Hour Agreement' },
-                { type: 'A',  name: 'SLA_Cible_Jours', desc: 'TAT standard convenu' },
-                { type: 'A',  name: 'Seuil_Alerte_P85', desc: 'Seuil déclenchement crise' }
+                { type: 'PK', name: 'transit_id', desc: 'Liaison logistique' },
+                { type: 'A',  name: 'shop_from', desc: 'Centre expéditeur' },
+                { type: 'A',  name: 'shop_to', desc: 'Centre destinataire' },
+                { type: 'A',  name: 'length', desc: 'Durée forfaitaire de transit (j)' }
               ]
             },
             {
-              title: "DIM_CALENDRIER", icon: "📅", color: "#ec4899", x: 418, y: 195, w: 168, h: 125,
+              title: "calendar", icon: "📅", color: "#ec4899", x: 418, y: 195, w: 168, h: 125,
               rows: [
-                { type: 'PK', name: 'Date_Key', desc: 'Format YYYYMMDD' },
-                { type: 'A',  name: 'Semaine_Fiscale', desc: 'S36, S37, S38...' },
-                { type: 'A',  name: 'Mois_Annee', desc: 'Septembre 2026' },
-                { type: 'A',  name: 'Est_Ouvre_Safran', desc: 'Filtre jours ouvrés MRO' }
+                { type: 'PK', name: 'date', desc: 'Clé date YYYY-MM-DD' },
+                { type: 'A',  name: 'fiscal_week', desc: 'Semaine d\'activité (S36...)' },
+                { type: 'A',  name: 'month_year', desc: 'Mois et année' },
+                { type: 'A',  name: 'is_workday', desc: 'Jour ouvré Safran MRO' }
               ]
             }
           ]
@@ -2377,112 +2440,112 @@
       } else if (granularity === 'B') {
         schemaModel = {
           fact: {
-            title: "FAIT_PACKAGES_SITE",
-            sub: "Grain : Données Historiques de Réparation par Site",
+            title: "repair",
+            sub: "Grain : 1 Réparation par Atelier (repair)",
             grainColor: "#10b981",
             rows: [
-              { type: 'PK', name: 'ID_Lot_Package', desc: 'Lot unique sous-ensemble' },
-              { type: 'FK', name: 'FK_Demande_MRO', desc: '-> DIM_DEMANDE_MRO.ID_Demande' },
-              { type: 'FK', name: 'FK_Sous_Ensemble', desc: '-> DIM_MODULE.ID_Module' },
-              { type: 'FK', name: 'FK_Site_Safran', desc: '-> DIM_SITE.ID_Site' },
-              { type: 'FK', name: 'FK_Date_Envoi', desc: '-> DIM_CALENDRIER.Date_Key' },
-              { type: 'M',  name: 'Duree_Atelier_Historique', desc: 'Réalisé historique site (j)' },
-              { type: 'M',  name: 'Duree_Navette_Transit', desc: 'Transit réel inter-ateliers (j)' },
-              { type: 'M',  name: 'TAT_Package_Total', desc: 'Total cycle constaté (j)' }
+              { type: 'PK', name: 'repair_id', desc: 'Identifiant du lot réparation' },
+              { type: 'FK', name: 'visit_id', desc: '-> visit (engine, priority...)' },
+              { type: 'FK', name: 'shop_id', desc: '-> shop (type of repairs*, stations*)' },
+              { type: 'A',  name: 'type', desc: 'Type de réparation module' },
+              { type: 'FK', name: 'start', desc: 'Date début intervention' },
+              { type: 'FK', name: 'end', desc: 'Date fin intervention' },
+              { type: 'M',  name: 'shop_history_tat', desc: 'Délai réalisé historique (j)' },
+              { type: 'M',  name: 'transit_duration', desc: 'Délai navette constaté (j)' }
             ]
           },
           dims: [
             {
-              title: "DIM_DEMANDE_MRO", icon: "📦", color: "#3b82f6", x: 14, y: 15, w: 168, h: 125,
+              title: "visit", icon: "📦", color: "#3b82f6", x: 14, y: 15, w: 168, h: 125,
               rows: [
-                { type: 'PK', name: 'ID_Demande', desc: 'Visite parente MRO' },
-                { type: 'A',  name: 'ESN_Moteur', desc: 'Réf révision moteur' },
-                { type: 'A',  name: 'Client_Nom', desc: 'Compagnie donneuse d\'ordre' },
-                { type: 'A',  name: 'Date_Promesse_SLA', desc: 'Date cible globale' }
+                { type: 'PK', name: 'visit_id', desc: 'Visite parente du moteur' },
+                { type: 'A',  name: 'engine', desc: 'Réf moteur rattaché' },
+                { type: 'A',  name: 'priority', desc: 'Niveau priorité (AOG, Normal)' },
+                { type: 'A',  name: 'customer', desc: 'Client donneur d\'ordre' }
               ]
             },
             {
-              title: "DIM_SOUS_ENSEMBLE", icon: "⚙️", color: "#8b5cf6", x: 418, y: 15, w: 168, h: 125,
+              title: "shop", icon: "🏭", color: "#f59e0b", x: 418, y: 15, w: 168, h: 125,
               rows: [
-                { type: 'PK', name: 'ID_Module', desc: 'Code module moteur' },
-                { type: 'A',  name: 'Nom_Sous_Ensemble', desc: 'Aubes Fan / Compresseur HP' },
-                { type: 'A',  name: 'Famille_Technologique', desc: 'Aubes monocristal, carter' },
-                { type: 'A',  name: 'Criticite_Maint', desc: 'Niveau d\'inspection' }
+                { type: 'PK', name: 'shop_id', desc: 'Centre de réparation' },
+                { type: 'A',  name: 'shop_name', desc: 'Villaroche / Montereau / BRU' },
+                { type: 'A',  name: 'type of repairs*', desc: 'Types de réparations traités' },
+                { type: 'A',  name: 'stations*', desc: 'Postes / stations du centre' }
               ]
             },
             {
-              title: "DIM_SITE_SAFRAN", icon: "🏭", color: "#f59e0b", x: 14, y: 195, w: 168, h: 125,
+              title: "durée des transits", icon: "🚚", color: "#d97706", x: 14, y: 195, w: 168, h: 125,
               rows: [
-                { type: 'PK', name: 'ID_Site', desc: 'Code site industriel' },
-                { type: 'A',  name: 'Nom_Site', desc: 'Villaroche / Montereau / BRU' },
-                { type: 'A',  name: 'Specialite_Atelier', desc: 'Pôle Aubes / Bancs Essai' },
-                { type: 'A',  name: 'Capacite_Lots_Hebdo', desc: 'Capacité nominale' }
+                { type: 'PK', name: 'transit_id', desc: 'Liaison inter-ateliers' },
+                { type: 'A',  name: 'shop', desc: 'Shop source' },
+                { type: 'A',  name: 'shop_dest', desc: 'Shop destination' },
+                { type: 'A',  name: 'length', desc: 'Délai transit constaté (jours)' }
               ]
             },
             {
-              title: "DIM_CALENDRIER", icon: "📅", color: "#ec4899", x: 418, y: 195, w: 168, h: 125,
+              title: "calendar", icon: "📅", color: "#ec4899", x: 418, y: 195, w: 168, h: 125,
               rows: [
-                { type: 'PK', name: 'Date_Key', desc: 'Format YYYYMMDD' },
-                { type: 'A',  name: 'Semaine_Fiscale', desc: 'S36, S37, S38...' },
-                { type: 'A',  name: 'Navette_Planifiee', desc: 'Jour de rotation camion' },
-                { type: 'A',  name: 'Est_Ouvre_Atelier', desc: 'Calendrier équipe 2x8' }
+                { type: 'PK', name: 'date', desc: 'Clé calendaire' },
+                { type: 'A',  name: 'fiscal_week', desc: 'Semaine calendaire' },
+                { type: 'A',  name: 'shuttle_day', desc: 'Rotation navette inter-shops' },
+                { type: 'A',  name: 'is_workday', desc: 'Équipes 2x8 ouvertes' }
               ]
             }
           ]
         };
       } else {
-        // Granularité C (Micro - Shop Task) : Seule option avec REF_OPERATIONS_THEORIQUES
+        // Granularité C (Micro - task) : Seule option avec durée des tâches théoriques
         schemaModel = {
           fact: {
-            title: "FAIT_OPERATIONS_REPARATION",
-            sub: "Grain : 1 Tâche Technique Réalisée & Pointée",
+            title: "task",
+            sub: "Grain : 1 Tâche Technique sur Station (task)",
             grainColor: "#f59e0b",
             rows: [
-              { type: 'PK', name: 'ID_Op_Reparation', desc: 'Identifiant pointage unitaire' },
-              { type: 'FK', name: 'FK_Operation_Ref', desc: '-> REF_OPERATIONS_THEORIQUES' },
-              { type: 'FK', name: 'FK_Poste_Machine', desc: '-> DIM_POSTE_MACHINE.ID_Poste' },
-              { type: 'FK', name: 'FK_Lot_Package', desc: '-> DIM_PACKAGE.ID_Lot' },
-              { type: 'FK', name: 'FK_Temps_Slot', desc: '-> DIM_TEMPS_SLOT.Slot_Key' },
-              { type: 'M',  name: 'Temps_Reel_Historique_h', desc: 'Pointage réalisé (h)' },
-              { type: 'M',  name: 'Temps_Transit_Buffer_h', desc: 'Transit inter-ateliers (h)' },
-              { type: 'M',  name: 'Ecart_Theorique_h', desc: 'Réalisé - Duree_Standard' }
+              { type: 'PK', name: 'task_id', desc: 'Identifiant pointage unitaire' },
+              { type: 'FK', name: 'visit', desc: '-> visit (engine, priority...)' },
+              { type: 'FK', name: 'repair', desc: '-> repair (type, shop...)' },
+              { type: 'FK', name: 'station', desc: '-> station (shop, type of repairs)' },
+              { type: 'A',  name: 'type', desc: 'Type d\'opération technique' },
+              { type: 'FK', name: 'start', desc: 'Horodatage début pointage' },
+              { type: 'FK', name: 'end', desc: 'Horodatage fin pointage' },
+              { type: 'M',  name: 'real_length_h', desc: 'Durée constatée (heures)' }
             ]
           },
           dims: [
             {
-              title: "REF_OPERATIONS_THEORIQUES", icon: "⭐", color: "#2563eb", x: 14, y: 15, w: 168, h: 125,
+              title: "durée des tâches", icon: "⭐", color: "#2563eb", x: 14, y: 15, w: 168, h: 125,
               rows: [
-                { type: 'PK', name: 'ID_Op_Ref', desc: 'Code Barème Théorique' },
-                { type: 'A',  name: 'Type_Moteur', desc: 'CFM56 / LEAP-1A / LEAP-1B' },
-                { type: 'A',  name: 'Type_Reparation', desc: 'Tournage, Ressuage, Équilibrage' },
-                { type: 'A',  name: 'Duree_Theorique_h', desc: '⏱️ Durée standard de traitement' }
+                { type: 'PK', name: 'task_theo_id', desc: 'Barème standard constructeur' },
+                { type: 'A',  name: 'type engine', desc: 'CFM56 / LEAP-1A / LEAP-1B' },
+                { type: 'A',  name: 'type task', desc: 'Tournage, Ressuage, Banc...' },
+                { type: 'A',  name: 'length', desc: '⏱️ Durée théorique standard (h)' }
               ]
             },
             {
-              title: "DIM_POSTE_MACHINE", icon: "🤖", color: "#8b5cf6", x: 418, y: 15, w: 168, h: 125,
+              title: "station", icon: "🤖", color: "#8b5cf6", x: 418, y: 15, w: 168, h: 125,
               rows: [
-                { type: 'PK', name: 'ID_Poste', desc: 'Identifiant centre usinage' },
-                { type: 'A',  name: 'Nom_Machine', desc: 'USI-04 / CND-02 / EQU-01' },
-                { type: 'A',  name: 'Ilot_Atelier', desc: 'Ligne Usinage / Contrôle' },
-                { type: 'A',  name: 'Taux_Charge_Cible', desc: 'Seuil saturation 85%' }
+                { type: 'PK', name: 'station_id', desc: 'Poste de réparation' },
+                { type: 'A',  name: 'shop', desc: 'Atelier de rattachement' },
+                { type: 'A',  name: 'type of repairs', desc: 'Spécialités de réparation' },
+                { type: 'A',  name: 'target_occupancy', desc: 'Seuil saturation 85%' }
               ]
             },
             {
-              title: "DIM_PACKAGE", icon: "🏢", color: "#10b981", x: 14, y: 195, w: 168, h: 125,
+              title: "capacité station", icon: "📊", color: "#10b981", x: 14, y: 195, w: 168, h: 125,
               rows: [
-                { type: 'PK', name: 'ID_Lot', desc: 'Lot parent sous-ensemble' },
-                { type: 'A',  name: 'ESN_Moteur_Ref', desc: 'Moteur CFM56 / LEAP rattaché' },
-                { type: 'A',  name: 'Module_Concerne', desc: 'Aubes HP / Compresseur' },
-                { type: 'A',  name: 'Statut_Avancement', desc: 'En cours / Clôturé' }
+                { type: 'PK', name: 'capacity_id', desc: 'Métrique capacitaire' },
+                { type: 'A',  name: 'station', desc: 'Poste concerné' },
+                { type: 'A',  name: 'occupation', desc: 'Taux de charge effectif' },
+                { type: 'A',  name: 'disponibilité', desc: 'Capacité heures disponibles' }
               ]
             },
             {
-              title: "DIM_TEMPS_SLOT", icon: "⏱️", color: "#ec4899", x: 418, y: 195, w: 168, h: 125,
+              title: "calendrier stations", icon: "⏱️", color: "#ec4899", x: 418, y: 195, w: 168, h: 125,
               rows: [
-                { type: 'PK', name: 'Slot_Key', desc: 'Horodatage créneau horaire' },
-                { type: 'A',  name: 'Date_Jour', desc: 'Date calendaire' },
-                { type: 'A',  name: 'Equipe_Shift', desc: 'Matin (5h-13h) / Soir (13h-21h)' },
-                { type: 'A',  name: 'Creneau_Heure', desc: 'Plage 1h de production' }
+                { type: 'PK', name: 'schedule_id', desc: 'Plage horaire planifiée' },
+                { type: 'A',  name: 'station', desc: 'Station de réparation' },
+                { type: 'A',  name: 'repair_slot', desc: 'Créneau d\'intervention' },
+                { type: 'A',  name: 'shift_team', desc: 'Équipe Matin/Soir Part-145' }
               ]
             }
           ]
@@ -2699,15 +2762,15 @@
       if (!container) return;
 
       const granNames = {
-        'A': 'Demande Globale (1 ligne = 1 moteur ESN)',
-        'B': 'Packages Maintenance (1 ligne = 1 sous-ensemble site)',
-        'C': 'Opérations & Réparations (1 ligne = 1 type de réparation par type de moteur)'
+        'A': 'Demande (visit : 1 ligne = 1 visite moteur)',
+        'B': 'Réparation (repair : 1 ligne = 1 réparation module par atelier)',
+        'C': 'Tâche (task : 1 ligne = 1 opération sur station)'
       };
 
       const tableNames = {
-        'A': 'FAIT_DEMANDES_MRO',
-        'B': 'FAIT_PACKAGES_SITE',
-        'C': 'FAIT_OPERATIONS_REPARATION'
+        'A': 'visit',
+        'B': 'repair',
+        'C': 'task'
       };
 
       const methNames = {
@@ -2718,13 +2781,13 @@
       };
 
       const levelLabels = {
-        'A': 'Shop Visit (Macro)',
-        'B': 'Shop Operation (Méso)',
-        'C': 'Shop Task (Micro)'
+        'A': 'Demande (visit)',
+        'B': 'Réparation (repair)',
+        'C': 'Tâche (task)'
       };
 
       if (titleEl) {
-        titleEl.innerHTML = `📋 Extrait de <span class="font-mono text-blue-700 font-bold ml-1">${tableNames[q2]}</span>`;
+        titleEl.innerHTML = `📋 Extrait de la table de faits <span class="font-mono text-blue-700 font-bold ml-1">${tableNames[q2]}</span>`;
       }
       if (badgeEl) {
         badgeEl.textContent = `${levelLabels[q2]} + Méthode 3${q3}`;
@@ -2738,124 +2801,124 @@
 
       // 1. Colonnes d'entités selon Q2
       if (q2 === 'A') {
-        // Demande globale ESN
+        // Demande : visit (engine, priority, start, end)
         if (q3 === 'A') {
-          cols = ['ID_Demande', 'ESN_Moteur', 'Client', 'Duree_Theorique_j', 'Forfait_Transit_j', 'TAT_Total_j'];
+          cols = ['id_visit', 'engine', 'priority', 'duree_theorique_j', 'forfait_transit_j', 'tat_total_j'];
           rows = [
-            ['DEM-2024-089', 'ESN-884210', 'Air France', '18.0', '+ 2.0', '<span class="text-blue-700 font-bold font-mono">20.0 j</span>'],
-            ['DEM-2024-094', 'ESN-773412', 'Lufthansa', '22.0', '+ 3.0', '<span class="text-blue-700 font-bold font-mono">25.0 j</span>'],
-            ['DEM-2024-102', 'ESN-651098', 'Ryanair', '14.0', '+ 1.5', '<span class="text-blue-700 font-bold font-mono">15.5 j</span>']
+            ['VISIT-2024-089', 'CFM56-7B (Air France)', 'AOG Critique', '18.0', '+ 2.0', '<span class="text-blue-700 font-bold font-mono">20.0 j</span>'],
+            ['VISIT-2024-094', 'LEAP-1A (Lufthansa)', 'Standard SLA', '22.0', '+ 3.0', '<span class="text-blue-700 font-bold font-mono">25.0 j</span>'],
+            ['VISIT-2024-102', 'CFM56-5B (Ryanair)', 'Standard SLA', '14.0', '+ 1.5', '<span class="text-blue-700 font-bold font-mono">15.5 j</span>']
           ];
-          formulaNote = "<strong>Délais théoriques de traitement :</strong> Calcul basé sur les barèmes constructeur Safran et forfaits logistiques.";
-          daxSnippet = "TAT_Theorique = SUMX(FAIT_DEMANDES_MRO, [Duree_Theorique] + [Forfait_Transit])";
+          formulaNote = "<strong>Délais théoriques de traitement :</strong> Calcul basé sur les barèmes constructeur Safran et forfaits logistiques rattachés à <code>visit</code>.";
+          daxSnippet = "TAT_Theorique = SUMX(visit, [duree_theorique] + [forfait_transit])";
         } else if (q3 === 'B') {
-          cols = ['ID_Demande', 'ESN_Moteur', 'Famille', 'Délai à 5% (Opt)', 'Délai Médian (50%)', 'Délai à 95% (Pess)', 'Écart_Type'];
+          cols = ['id_visit', 'engine', 'priority', 'délai à 5% (Opt)', 'délai médian (50%)', 'délai à 95% (Pess)', 'écart_type'];
           rows = [
-            ['DEM-2024-089', 'ESN-884210', 'CFM56-7B', '14.5 j', '<span class="text-amber-700 font-bold font-mono">18.2 j</span>', '27.0 j', '3.8 j'],
-            ['DEM-2024-094', 'ESN-773412', 'LEAP-1A', '18.0 j', '<span class="text-amber-700 font-bold font-mono">22.5 j</span>', '34.5 j', '4.2 j'],
-            ['DEM-2024-102', 'ESN-651098', 'CFM56-5B', '11.0 j', '<span class="text-amber-700 font-bold font-mono">14.0 j</span>', '21.0 j', '2.5 j']
+            ['VISIT-2024-089', 'CFM56-7B (AFR)', 'AOG', '14.5 j', '<span class="text-amber-700 font-bold font-mono">18.2 j</span>', '27.0 j', '3.8 j'],
+            ['VISIT-2024-094', 'LEAP-1A (DLH)', 'Standard', '18.0 j', '<span class="text-amber-700 font-bold font-mono">22.5 j</span>', '34.5 j', '4.2 j'],
+            ['VISIT-2024-102', 'CFM56-5B (RYR)', 'Standard', '11.0 j', '<span class="text-amber-700 font-bold font-mono">14.0 j</span>', '21.0 j', '2.5 j']
           ];
-          formulaNote = "<strong>Table des délais moyens (5%, Médian, 95%) :</strong> Distribution empirique mesurée sur l'historique des visites atelier.";
-          daxSnippet = "TAT_Median = PERCENTILEX.INC(FAIT_DEMANDES_MRO, [Duree_Reelle_Jours], 0.50)";
+          formulaNote = "<strong>Table des délais moyens (5%, Médian, 95%) :</strong> Distribution empirique mesurée sur l'historique des visites <code>visit</code>.";
+          daxSnippet = "TAT_Median = PERCENTILEX.INC(visit, [tat_days], 0.50)";
         } else if (q3 === 'C') {
-          cols = ['ID_Demande', 'ESN_Moteur', 'Charge_MRO_Globale', 'Tps_Usinage_j', 'Attente_Occupation_j', 'TAT_Total_Moyen'];
+          cols = ['id_visit', 'engine', 'taux_occupation_mro', 'tps_usinage_j', 'attente_occupation_j', 'tat_total_moyen'];
           rows = [
-            ['DEM-2024-089', 'ESN-884210', '<span class="text-emerald-700 font-bold">78 %</span> (Normal)', '18.0 j', '+ 3.8 j', '<span class="text-blue-700 font-bold font-mono">21.8 j</span>'],
-            ['DEM-2024-094', 'ESN-773412', '<span class="text-red-700 font-bold">92 %</span> (Saturé)', '22.0 j', '+ 16.5 j', '<span class="text-red-700 font-bold font-mono">38.5 j ⚠️</span>'],
-            ['DEM-2024-102', 'ESN-651098', '<span class="text-amber-700 font-bold">84 %</span> (Tendu)', '14.0 j', '+ 5.2 j', '<span class="text-amber-700 font-bold font-mono">19.2 j</span>']
+            ['VISIT-2024-089', 'CFM56-7B (AFR)', '<span class="text-emerald-700 font-bold">78 %</span> (Normal)', '18.0 j', '+ 3.8 j', '<span class="text-blue-700 font-bold font-mono">21.8 j</span>'],
+            ['VISIT-2024-094', 'LEAP-1A (DLH)', '<span class="text-red-700 font-bold">92 %</span> (Saturé)', '22.0 j', '+ 16.5 j', '<span class="text-red-700 font-bold font-mono">38.5 j ⚠️</span>'],
+            ['VISIT-2024-102', 'CFM56-5B (RYR)', '<span class="text-amber-700 font-bold">84 %</span> (Tendu)', '14.0 j', '+ 5.2 j', '<span class="text-amber-700 font-bold font-mono">19.2 j</span>']
           ];
-          formulaNote = "<strong>Délais selon le taux d'occupation :</strong> Modélisation de l'attente générée par l'encombrement et la saturation des ateliers.";
-          daxSnippet = "TAT_Ajuste_Charge = DIVIDE([Tps_Usinage], 1 - [Taux_Charge_Global])";
+          formulaNote = "<strong>Délais selon le taux d'occupation :</strong> Modélisation de l'attente générée par l'encombrement global des ateliers sur <code>visit</code>.";
+          daxSnippet = "TAT_Ajuste_Charge = DIVIDE([tps_usinage], 1 - [taux_occupation_global])";
         } else {
           // 3D
-          cols = ['ID_Demande', 'ESN_Moteur', 'Famille', 'Facteur_Complexité', 'Aléa_Technique', 'TAT_Dynamique_Estime'];
+          cols = ['id_visit', 'engine', 'priority', 'facteur_complexité', 'aléa_technique', 'tat_dynamique_estimé'];
           rows = [
-            ['DEM-2024-089', 'ESN-884210', 'CFM56-7B', '1.05', 'Faible (+1.2j)', '<span class="text-emerald-700 font-bold font-mono">19.8 j</span>'],
-            ['DEM-2024-094', 'ESN-773412', 'LEAP-1A', '1.30', 'Élevé (+6.5j)', '<span class="text-amber-700 font-bold font-mono">28.5 j</span>'],
-            ['DEM-2024-102', 'ESN-651098', 'CFM56-5B', '0.95', 'Nul (+0.0j)', '<span class="text-emerald-700 font-bold font-mono">14.2 j</span>']
+            ['VISIT-2024-089', 'CFM56-7B (AFR)', 'AOG', '1.05', 'Faible (+1.2j)', '<span class="text-emerald-700 font-bold font-mono">19.8 j</span>'],
+            ['VISIT-2024-094', 'LEAP-1A (DLH)', 'Standard', '1.30', 'Élevé (+6.5j)', '<span class="text-amber-700 font-bold font-mono">28.5 j</span>'],
+            ['VISIT-2024-102', 'CFM56-5B (RYR)', 'Standard', '0.95', 'Nul (+0.0j)', '<span class="text-emerald-700 font-bold font-mono">14.2 j</span>']
           ];
-          formulaNote = "<strong>Modélisation avancée :</strong> Estimation dynamique basée sur une simulation probabiliste multi-factorielle.";
-          daxSnippet = "TAT_Avance = SIMULATE_TAT_ADVANCED(FAIT_DEMANDES_MRO, CONTEXT)";
+          formulaNote = "<strong>Modélisation avancée :</strong> Estimation dynamique multi-factorielle appliquée à <code>visit</code>.";
+          daxSnippet = "TAT_Avance = SIMULATE_TAT_ADVANCED(visit, CONTEXT)";
         }
       } else if (q2 === 'B') {
-        // Packages / Sites (Données Historiques d'Atelier)
+        // Réparation : repair (type, visit, shop, start, end) + durée des transits (shop, shop, length)
         if (q3 === 'A') {
-          cols = ['ID_Package', 'Site_Safran', 'Sous_Ensemble', 'Délai_Historique_Atelier', 'Transit_Historique', 'Statut_Calcul'];
+          cols = ['repair_id', 'type', 'visit', 'shop', 'transit (durée des transits)', 'statut_calcul'];
           rows = [
-            ['PKG-701-AUB', 'Montereau', 'Aubes Turbine HP', '6.5 j', '+ 1.0 j', '<span class="text-red-600 font-bold font-mono">3.A Non Dispo</span>'],
-            ['PKG-701-COM', 'Villaroche', 'Compresseur BP', '12.0 j', '+ 1.5 j', '<span class="text-red-600 font-bold font-mono">3.A Non Dispo</span>'],
-            ['PKG-701-TST', 'Bruxelles (Banc)', 'Passage Banc Essai', '2.5 j', '+ 0.5 j', '<span class="text-red-600 font-bold font-mono">3.A Non Dispo</span>']
+            ['REP-701-AUB', 'Aubes Turbine HP', 'VISIT-2024-089', 'Montereau', '+ 1.0 j (MON ➔ VIL)', '<span class="text-red-600 font-bold font-mono">3.A Non Dispo</span>'],
+            ['REP-701-COM', 'Compresseur BP', 'VISIT-2024-089', 'Villaroche', '+ 1.5 j (VIL ➔ CHL)', '<span class="text-red-600 font-bold font-mono">3.A Non Dispo</span>'],
+            ['REP-701-TST', 'Banc d\'Essai', 'VISIT-2024-089', 'Bruxelles', '+ 0.5 j (BRU ➔ VIL)', '<span class="text-red-600 font-bold font-mono">3.A Non Dispo</span>']
           ];
-          formulaNote = "<strong>Option 3.A indisponible en 2.B :</strong> Le niveau 2.B se base uniquement sur les données historiques d'atelier. Seul le niveau 2.C dispose d'une table théorique des opérations par type de moteur et de réparation.";
-          daxSnippet = "-- 3.A indisponible en 2.B (bascule recommandée sur 3.B ou niveau 2.C requis)";
+          formulaNote = "<strong>Option 3.A indisponible en 2.B :</strong> Le niveau <code>repair</code> se base sur les données historiques d'atelier et la table <code>durée des transits (shop, shop, length)</code>. Seul le niveau 2.C (<code>task</code>) dispose d'une table théorique des opérations.";
+          daxSnippet = "-- 3.A indisponible en 2.B (bascule recommandée sur 3.B ou granularité task requise)";
         } else if (q3 === 'B') {
-          cols = ['ID_Package', 'Site_Safran', 'Sous_Ensemble', 'Délai à 5%', 'Délai Médian Historique', 'Délai à 95%', 'Dispersion'];
+          cols = ['repair_id', 'type', 'visit', 'shop', 'délai à 5%', 'délai médian historique', 'délai à 95%'];
           rows = [
-            ['PKG-701-AUB', 'Montereau', 'Aubes HP', '5.0 j', '<span class="text-amber-700 font-bold font-mono">6.8 j</span>', '12.0 j', 'Modérée'],
-            ['PKG-701-COM', 'Villaroche', 'Compresseur BP', '9.5 j', '<span class="text-amber-700 font-bold font-mono">12.5 j</span>', '18.0 j', 'Faible'],
-            ['PKG-701-TST', 'Bruxelles', 'Banc Essai', '2.0 j', '<span class="text-amber-700 font-bold font-mono">3.2 j</span>', '8.5 j', 'Forte (Goulot)']
+            ['REP-701-AUB', 'Aubes HP', 'VISIT-2024-089', 'Montereau', '5.0 j', '<span class="text-amber-700 font-bold font-mono">6.8 j</span>', '12.0 j'],
+            ['REP-701-COM', 'Compresseur BP', 'VISIT-2024-089', 'Villaroche', '9.5 j', '<span class="text-amber-700 font-bold font-mono">12.5 j</span>', '18.0 j'],
+            ['REP-701-TST', 'Banc Essai', 'VISIT-2024-089', 'Bruxelles', '2.0 j', '<span class="text-amber-700 font-bold font-mono">3.2 j</span>', '8.5 j']
           ];
-          formulaNote = "<strong>Table des délais moyens (5%, Médian, 95%) :</strong> Distribution empirique issue de l'historique réalisé par lot package.";
-          daxSnippet = "Median_Package = CALCULATE(PERCENTILEX.INC(FAIT_PACKAGES_SITE, [Duree_Atelier_Historique], 0.50))";
+          formulaNote = "<strong>Table des délais moyens (5%, Médian, 95%) :</strong> Distribution empirique issue de l'historique réalisé dans la table <code>repair</code>.";
+          daxSnippet = "Median_Repair = CALCULATE(PERCENTILEX.INC(repair, [shop_history_tat], 0.50))";
         } else if (q3 === 'C') {
-          cols = ['ID_Package', 'Site_Safran', 'Taux_Charge_Site', 'Tps_Atelier_Hist_j', 'Attente_Saturation_j', 'TAT_Total_Site'];
+          cols = ['repair_id', 'type', 'shop', 'taux_occupation_shop', 'tps_atelier_hist_j', 'attente_saturation_j', 'tat_total_shop'];
           rows = [
-            ['PKG-701-AUB', 'Montereau', '<span class="text-emerald-700 font-bold">72 %</span>', '6.5 j', '+ 1.2 j', '<span class="text-blue-700 font-bold font-mono">7.7 j</span>'],
-            ['PKG-701-COM', 'Villaroche', '<span class="text-amber-700 font-bold">86 %</span>', '12.0 j', '+ 4.8 j', '<span class="text-amber-700 font-bold font-mono">16.8 j</span>'],
-            ['PKG-701-TST', 'Bruxelles', '<span class="text-red-700 font-bold">94 %</span> (Goulot)', '2.5 j', '+ 7.4 j', '<span class="text-red-700 font-bold font-mono">9.9 j ⚠️</span>']
+            ['REP-701-AUB', 'Aubes HP', 'Montereau', '<span class="text-emerald-700 font-bold">72 %</span>', '6.5 j', '+ 1.2 j', '<span class="text-blue-700 font-bold font-mono">7.7 j</span>'],
+            ['REP-701-COM', 'Compresseur BP', 'Villaroche', '<span class="text-amber-700 font-bold">86 %</span>', '12.0 j', '+ 4.8 j', '<span class="text-amber-700 font-bold font-mono">16.8 j</span>'],
+            ['REP-701-TST', 'Banc Essai', 'Bruxelles', '<span class="text-red-700 font-bold">94 %</span> (Goulot)', '2.5 j', '+ 7.4 j', '<span class="text-red-700 font-bold font-mono">9.9 j ⚠️</span>']
           ];
-          formulaNote = "<strong>Délais selon le taux d'occupation :</strong> Impact de la charge du site industriel sur le délai historique de traitement du package.";
-          daxSnippet = "TAT_Site_Charge = [Duree_Atelier_Historique] / (1 - RELATED(DIM_SITE[Taux_Charge]))";
+          formulaNote = "<strong>Délais selon le taux d'occupation :</strong> Impact de la charge de l'atelier <code>shop</code> sur le délai de traitement <code>repair</code>.";
+          daxSnippet = "TAT_Repair_Charge = [shop_history_tat] / (1 - RELATED(shop[taux_occupation]))";
         } else {
           // 3D
-          cols = ['ID_Package', 'Site_Safran', 'Sous_Ensemble', 'Profil_Usure', 'Alea_Contextuel', 'TAT_Dynamique_Package'];
+          cols = ['repair_id', 'type', 'visit', 'shop', 'profil_usure', 'aléa_contexte', 'tat_dynamique_repair'];
           rows = [
-            ['PKG-701-AUB', 'Montereau', 'Aubes HP', 'Sévère (Criques)', '+2.5 j (Re-revetement)', '<span class="text-amber-700 font-bold font-mono">9.3 j</span>'],
-            ['PKG-701-COM', 'Villaroche', 'Compresseur BP', 'Nominal', '0.0 j', '<span class="text-emerald-700 font-bold font-mono">12.5 j</span>'],
-            ['PKG-701-TST', 'Bruxelles', 'Banc Essai', 'Passage Complexe', '+1.2 j (Repasse)', '<span class="text-amber-700 font-bold font-mono">4.4 j</span>']
+            ['REP-701-AUB', 'Aubes HP', 'VISIT-2024-089', 'Montereau', 'Sévère (Criques)', '+2.5 j (Re-revêtement)', '<span class="text-amber-700 font-bold font-mono">9.3 j</span>'],
+            ['REP-701-COM', 'Compresseur BP', 'VISIT-2024-089', 'Villaroche', 'Nominal', '0.0 j', '<span class="text-emerald-700 font-bold font-mono">12.5 j</span>'],
+            ['REP-701-TST', 'Banc Essai', 'VISIT-2024-089', 'Bruxelles', 'Passage Complexe', '+1.2 j (Repasse)', '<span class="text-amber-700 font-bold font-mono">4.4 j</span>']
           ];
-          formulaNote = "<strong>Modélisation avancée :</strong> Simulation dynamique intégrant les caractéristiques d'usure du package.";
-          daxSnippet = "SIMULATE_PKG_ADVANCED(FAIT_PACKAGES_SITE, CONTEXT)";
+          formulaNote = "<strong>Modélisation avancée :</strong> Simulation dynamique intégrant les caractéristiques d'usure et transits de <code>repair</code>.";
+          daxSnippet = "SIMULATE_REPAIR_ADVANCED(repair, CONTEXT)";
         }
       } else {
-        // Opérations unitaires (Micro 2.C) : Seul niveau avec table des opérations théoriques
+        // Tâches unitaires : task (visit, repair, station, type) + durée des tâches (type engine, type task, length)
         if (q3 === 'A') {
-          cols = ['ID_Op_Ref', 'Type_Moteur', 'Type_Reparation', 'Duree_Theorique_h', 'Transit_Buffer_h', 'Cycle_Standard_h'];
+          cols = ['task_id', 'type engine', 'type task', 'station', 'durée des tâches (length)', 'transit_buffer_h', 'cycle_total_h'];
           rows = [
-            ['OP-REF-CFM-01', 'CFM56-7B', 'Tournage Carter Turbine', '4.5 h', '+ 1.0 h', '<span class="text-blue-700 font-bold font-mono">5.5 h</span>'],
-            ['OP-REF-LEAP-02', 'LEAP-1A', 'Ressuage Chimique CND', '2.0 h', '+ 0.5 h', '<span class="text-blue-700 font-bold font-mono">2.5 h</span>'],
-            ['OP-REF-LEAP-03', 'LEAP-1B', 'Équilibrage Dynamique Rotor', '3.5 h', '+ 0.5 h', '<span class="text-blue-700 font-bold font-mono">4.0 h</span>']
+            ['TASK-901-01', 'CFM56-7B', 'Tournage Carter', 'USI-04 (VIL)', '4.5 h', '+ 1.0 h', '<span class="text-blue-700 font-bold font-mono">5.5 h</span>'],
+            ['TASK-901-02', 'LEAP-1A', 'Ressuage Chimique', 'CND-02 (MON)', '2.0 h', '+ 0.5 h', '<span class="text-blue-700 font-bold font-mono">2.5 h</span>'],
+            ['TASK-901-03', 'LEAP-1B', 'Équilibrage Rotor', 'EQU-01 (VIL)', '3.5 h', '+ 0.5 h', '<span class="text-blue-700 font-bold font-mono">4.0 h</span>']
           ];
-          formulaNote = "<strong>Délais théoriques de traitement (Seul 2.C) :</strong> Calcul basé sur <code>REF_OPERATIONS_THEORIQUES</code> croisant <code>Type_Moteur</code> et <code>Type_Reparation</code>.";
-          daxSnippet = "Duree_Totale_Theorique = SUMX(REF_OPERATIONS_THEORIQUES, [Duree_Theorique_h])";
+          formulaNote = "<strong>Délais théoriques de traitement (Seul 2.C) :</strong> Calcul basé sur <code>durée des tâches (type engine, type task, length)</code> croisant moteur et tâche.";
+          daxSnippet = "Duree_Totale_Theorique = SUMX('durée des tâches', [length])";
         } else if (q3 === 'B') {
-          cols = ['ID_Op_Rep', 'Type_Moteur', 'Type_Reparation', 'Délai à 5%', 'Délai Médian Réel', 'Délai à 95%', 'Dispersion'];
+          cols = ['task_id', 'station', 'type task', 'délai à 5%', 'délai médian réel', 'délai à 95%', 'dispersion'];
           rows = [
-            ['OP-9081-12', 'CFM56-7B', 'Tournage Carter', '3.8 h', '<span class="text-amber-700 font-bold font-mono">4.8 h</span>', '8.5 h', 'Faible'],
-            ['OP-9081-13', 'LEAP-1A', 'Ressuage CND', '1.8 h', '<span class="text-amber-700 font-bold font-mono">2.2 h</span>', '4.2 h', 'Moyenne'],
-            ['OP-9081-14', 'LEAP-1B', 'Équilibrage Rotor', '2.8 h', '<span class="text-amber-700 font-bold font-mono">3.8 h</span>', '7.5 h', 'Modérée']
+            ['TASK-901-01', 'USI-04 (Tour CN)', 'Tournage Carter', '3.8 h', '<span class="text-amber-700 font-bold font-mono">4.8 h</span>', '8.5 h', 'Faible'],
+            ['TASK-901-02', 'CND-02 (Bain)', 'Ressuage CND', '1.8 h', '<span class="text-amber-700 font-bold font-mono">2.2 h</span>', '4.2 h', 'Moyenne'],
+            ['TASK-901-03', 'EQU-01 (Banc)', 'Équilibrage Rotor', '2.8 h', '<span class="text-amber-700 font-bold font-mono">3.8 h</span>', '7.5 h', 'Modérée']
           ];
-          formulaNote = "<strong>Table des délais moyens (5%, Médian, 95%) :</strong> Statistique des pointages réels historiques par poste machine et opération.";
-          daxSnippet = "Median_Slot = PERCENTILEX.INC(FAIT_OPERATIONS_SLOTS, [Duree_Reelle_Heures], 0.50)";
+          formulaNote = "<strong>Table des délais moyens (5%, Médian, 95%) :</strong> Statistique des pointages réels historiques par poste <code>station</code> pour chaque <code>task</code>.";
+          daxSnippet = "Median_Task = PERCENTILEX.INC(task, [real_length_h], 0.50)";
         } else if (q3 === 'C') {
-          cols = ['ID_Slot_Op', 'Machine_Ressource', 'Charge_Machine', 'Usinage_Pur', 'Attente_Tampon_h', 'Temps_Cycle_Machine'];
+          cols = ['task_id', 'station', 'occupation_station', 'usinage_pur_h', 'attente_tampon_h', 'temps_cycle_station'];
           rows = [
-            ['OP-9081-12', 'USI-04 (5 axes)', '<span class="text-amber-700 font-bold">85 %</span>', '4.5 h', '+ 3.5 h', '<span class="text-amber-700 font-bold font-mono">8.0 h</span>'],
-            ['OP-9081-13', 'CND-02 (Bain)', '<span class="text-emerald-700 font-bold">60 %</span>', '2.0 h', '+ 0.5 h', '<span class="text-blue-700 font-bold font-mono">2.5 h</span>'],
-            ['OP-9081-14', 'EQU-01 (Banc rotor)', '<span class="text-red-700 font-bold">95 %</span>', '3.5 h', '+ 12.0 h', '<span class="text-red-700 font-bold font-mono">15.5 h ⚠️</span>']
+            ['TASK-901-01', 'USI-04 (5 axes)', '<span class="text-amber-700 font-bold">85 %</span>', '4.5 h', '+ 3.5 h', '<span class="text-amber-700 font-bold font-mono">8.0 h</span>'],
+            ['TASK-901-02', 'CND-02 (Bain)', '<span class="text-emerald-700 font-bold">60 %</span>', '2.0 h', '+ 0.5 h', '<span class="text-blue-700 font-bold font-mono">2.5 h</span>'],
+            ['TASK-901-03', 'EQU-01 (Banc)', '<span class="text-red-700 font-bold">95 %</span>', '3.5 h', '+ 12.0 h', '<span class="text-red-700 font-bold font-mono">15.5 h ⚠️</span>']
           ];
-          formulaNote = "<strong>Délais selon le taux d'occupation :</strong> Encombrement et attente en bac tampon devant le poste de travail.";
-          daxSnippet = "Cycle_Slot_Charge = [Usinage] / (1 - RELATED(DIM_MACHINE[Taux_Occupation]))";
+          formulaNote = "<strong>Délais selon le taux d'occupation :</strong> Encombrement et attente en bac tampon devant la <code>station</code>.";
+          daxSnippet = "Cycle_Station_Charge = [real_length_h] / (1 - RELATED(station[occupation]))";
         } else {
           // 3D
-          cols = ['ID_Slot_Op', 'Poste_Machine', 'Famille_Piece', 'Complexite_Usinage', 'Alea_Outillage', 'TAT_Dynamique_Slot'];
+          cols = ['task_id', 'station', 'type task', 'complexité_usinage', 'aléa_outillage', 'tat_dynamique_task'];
           rows = [
-            ['OP-9081-12', 'USI-04', 'Carter Titane', 'Élevée', '+1.2 h (Usure plaquette)', '<span class="text-amber-700 font-bold font-mono">6.7 h</span>'],
-            ['OP-9081-13', 'CND-02', 'Aubes Monocristal', 'Standard', '0.0 h', '<span class="text-emerald-700 font-bold font-mono">2.2 h</span>'],
-            ['OP-9081-14', 'EQU-01', 'Arbre HP', 'Haute Précision', '+2.1 h (Reprise balourd)', '<span class="text-amber-700 font-bold font-mono">6.1 h</span>']
+            ['TASK-901-01', 'USI-04', 'Carter Titane', 'Élevée', '+1.2 h (Usure plaquette)', '<span class="text-amber-700 font-bold font-mono">6.7 h</span>'],
+            ['TASK-901-02', 'CND-02', 'Aubes Monocristal', 'Standard', '0.0 h', '<span class="text-emerald-700 font-bold font-mono">2.2 h</span>'],
+            ['TASK-901-03', 'EQU-01', 'Arbre HP', 'Haute Précision', '+2.1 h (Reprise balourd)', '<span class="text-amber-700 font-bold font-mono">6.1 h</span>']
           ];
-          formulaNote = "<strong>Modélisation avancée :</strong> Prédiction unitaire du slot intégrant les facteurs matériels et outillage.";
-          daxSnippet = "SIMULATE_SLOT_ADVANCED(FAIT_OPERATIONS_SLOTS, CONTEXT)";
+          formulaNote = "<strong>Modélisation avancée :</strong> Prédiction unitaire pour chaque <code>task</code> intégrant les aléas d'outillage sur <code>station</code>.";
+          daxSnippet = "SIMULATE_TASK_ADVANCED(task, CONTEXT)";
         }
       }
 
@@ -2916,19 +2979,19 @@
       if (!container) return;
 
       const granCapTableNames = {
-        'A': 'FAIT_CAPACITE_DEMANDES',
-        'B': 'FAIT_CAPACITE_SITES',
-        'C': 'FAIT_CAPACITE_POSTES'
+        'A': 'capacité des visites (visit)',
+        'B': 'capacité des ateliers (shop / repair)',
+        'C': 'capacité des stations (station / task)'
       };
 
       const levelLabels = {
-        'A': 'Shop Visit (Macro)',
-        'B': 'Shop Operation (Méso)',
-        'C': 'Shop Task (Micro)'
+        'A': 'Demande (visit)',
+        'B': 'Réparation (repair)',
+        'C': 'Tâche (task)'
       };
 
       if (titleEl) {
-        titleEl.innerHTML = `📋 Extrait de <span class="font-mono text-purple-700 font-bold ml-1">${granCapTableNames[q2]}</span>`;
+        titleEl.innerHTML = `📋 Extrait de la vue capacitaire <span class="font-mono text-purple-700 font-bold ml-1">${granCapTableNames[q2]}</span>`;
       }
       if (badgeEl) {
         badgeEl.textContent = `${levelLabels[q2]} + Capacité 5.${q5}`;
@@ -2940,124 +3003,124 @@
       let daxSnippet = "";
 
       if (q2 === 'A') {
-        // Demande Globale ESN
+        // Demande : visit (engine, priority, start, end)
         if (q5 === 'A') {
-          cols = ['Ligne_MRO', 'Lignes_Ouvertes', 'Cadence_Nominale', 'Capacite_Theorique_Mois', 'SLA_Garantie'];
+          cols = ['engine type', 'baies_ouvertes', 'cadence_nominale', 'capacité_visites_mois', 'sla_cible'];
           rows = [
-            ['LIGNE-CFM56', '4 baies', '12 visites / mois', '<span class="text-purple-700 font-bold font-mono">12.0 mot.</span>', '20.0 j'],
-            ['LIGNE-LEAP-1A', '3 baies', '8 visites / mois', '<span class="text-purple-700 font-bold font-mono">8.0 mot.</span>', '22.0 j'],
-            ['LIGNE-LEAP-1B', '2 baies', '6 visites / mois', '<span class="text-purple-700 font-bold font-mono">6.0 mot.</span>', '25.0 j']
+            ['CFM56 (Ligne MRO)', '4 baies', '12 visites / mois', '<span class="text-purple-700 font-bold font-mono">12.0 visit</span>', '20.0 j'],
+            ['LEAP-1A (Ligne MRO)', '3 baies', '8 visites / mois', '<span class="text-purple-700 font-bold font-mono">8.0 visit</span>', '22.0 j'],
+            ['LEAP-1B (Ligne MRO)', '2 baies', '6 visites / mois', '<span class="text-purple-700 font-bold font-mono">6.0 visit</span>', '25.0 j']
           ];
-          formulaNote = "<strong>Capacité Nominale Standard :</strong> Nombre de baies d'assemblage ouvertes calibrées sur les équipes Part-145.";
-          daxSnippet = "Capacite_Nominale = SUMX(DIM_LIGNE_MRO, [Baies_Ouvertes] * [Cadence_Standard])";
+          formulaNote = "<strong>Capacité Nominale Standard :</strong> Nombre de baies d'assemblage ouvertes calibrées sur les équipes Part-145 pour <code>visit</code>.";
+          daxSnippet = "Capacite_Nominale = SUMX(visit_capacity, [baies_ouvertes] * [cadence_standard])";
         } else if (q5 === 'B') {
-          cols = ['Ligne_MRO', 'Demandes_Actives_WIP', 'Capacite_Disponible', 'Taux_Occupation_Instant', 'Statut'];
+          cols = ['engine type', 'demandes_actives_wip', 'capacité_disponible', 'taux_occupation_instant', 'statut'];
           rows = [
-            ['LIGNE-CFM56', '10 moteurs', '12 baies max', '<span class="text-amber-700 font-bold font-mono">83.3 %</span>', '<span class="text-amber-600 font-bold">Charge Haute</span>'],
-            ['LIGNE-LEAP-1A', '8 moteurs', '8 baies max', '<span class="text-red-700 font-bold font-mono">100.0 %</span>', '<span class="text-red-600 font-bold">Saturé 🚨</span>'],
-            ['LIGNE-LEAP-1B', '3 moteurs', '6 baies max', '<span class="text-emerald-700 font-bold font-mono">50.0 %</span>', '<span class="text-emerald-600 font-bold">Fluide</span>']
+            ['CFM56', '10 visites en cours', '12 baies max', '<span class="text-amber-700 font-bold font-mono">83.3 %</span>', '<span class="text-amber-600 font-bold">Charge Haute</span>'],
+            ['LEAP-1A', '8 visites en cours', '8 baies max', '<span class="text-red-700 font-bold font-mono">100.0 %</span>', '<span class="text-red-600 font-bold">Saturé 🚨</span>'],
+            ['LEAP-1B', '3 visites en cours', '6 baies max', '<span class="text-emerald-700 font-bold font-mono">50.0 %</span>', '<span class="text-emerald-600 font-bold">Fluide</span>']
           ];
-          formulaNote = "<strong>Demandes Effectives à l'Instant (WIP Réel) :</strong> Moteurs physiquement engagés dans les baies d'atelier.";
-          daxSnippet = "Taux_Occupation_Live = DIVIDE(COUNTROWS(FILTER(FAIT_DEMANDES_MRO, [Statut] = \"EN_COURS\")), [Capacite_Baies])";
+          formulaNote = "<strong>Demandes Effectives à l'Instant (WIP Réel) :</strong> Moteurs physiquement engagés dans les baies d'atelier pour <code>visit</code>.";
+          daxSnippet = "Taux_Occupation_Live = DIVIDE(COUNTROWS(FILTER(visit, ISBLANK([date_end]))), [capacité_baies])";
         } else if (q5 === 'C') {
-          cols = ['Ligne_MRO', 'Mois_Cible', 'Déposes_Annoncées', 'Slots_Réservés', 'Couverture_Plan'];
+          cols = ['engine type', 'mois_cible', 'visites_annoncées (S&OP)', 'créneaux_réservés', 'couverture_plan'];
           rows = [
-            ['LIGNE-CFM56', 'M+1 (Octobre)', '14 visites fermes', '12 slots', '<span class="text-red-700 font-bold font-mono">116.7 % (Déficit)</span>'],
-            ['LIGNE-LEAP-1A', 'M+1 (Octobre)', '7 visites fermes', '8 slots', '<span class="text-emerald-700 font-bold font-mono">87.5 % (OK)</span>'],
-            ['LIGNE-LEAP-1B', 'M+1 (Octobre)', '5 visites fermes', '6 slots', '<span class="text-emerald-700 font-bold font-mono">83.3 % (OK)</span>']
+            ['CFM56', 'M+1 (Octobre)', '14 visites fermes', '12 slots', '<span class="text-red-700 font-bold font-mono">116.7 % (Déficit)</span>'],
+            ['LEAP-1A', 'M+1 (Octobre)', '7 visites fermes', '8 slots', '<span class="text-emerald-700 font-bold font-mono">87.5 % (OK)</span>'],
+            ['LEAP-1B', 'M+1 (Octobre)', '5 visites fermes', '6 slots', '<span class="text-emerald-700 font-bold font-mono">83.3 % (OK)</span>']
           ];
-          formulaNote = "<strong>Prévisions des Demandes (Plan de Charge S&OP) :</strong> Engagements contractuels fermes de déposes moteurs déclarés par les compagnies.";
-          daxSnippet = "Charge_Prevue_SOP = SUM(PLAN_CHARGE_SOP[Deposes_Fermes]) / [Capacite_Mensuelle]";
+          formulaNote = "<strong>Prévisions des Demandes (Plan S&OP) :</strong> Déposes fermes annoncées par les compagnies clientes pour <code>visit</code>.";
+          daxSnippet = "Charge_Prevue_SOP = SUM(prevision_visit[visites_fermes]) / [capacité_mensuelle]";
         } else {
           // 5D
-          cols = ['Ligne_MRO', 'Horizon', 'Demandes_IA_Multi', 'Facteur_Chaleur/Saison', 'Risque_Saturation'];
+          cols = ['engine type', 'horizon', 'visites_prédites_ia', 'facteur_environnement', 'risque_saturation'];
           rows = [
-            ['LIGNE-CFM56', 'T4 2026', '38 visites estimées', 'Facteur 1.15 (Saison Golfe)', '<span class="text-amber-700 font-bold font-mono">Modéré (88%)</span>'],
-            ['LIGNE-LEAP-1A', 'T4 2026', '29 visites estimées', 'Facteur 1.28 (Cycles TSN/CSN)', '<span class="text-red-700 font-bold font-mono">Critique (104%) ⚠️</span>'],
-            ['LIGNE-LEAP-1B', 'T4 2026', '16 visites estimées', 'Facteur 0.95 (Flotte jeune)', '<span class="text-emerald-700 font-bold font-mono">Nominal (67%)</span>']
+            ['CFM56', 'T4 2026', '38 visites estimées', 'Facteur 1.15 (Saison Golfe)', '<span class="text-amber-700 font-bold font-mono">Modéré (88%)</span>'],
+            ['LEAP-1A', 'T4 2026', '29 visites estimées', 'Facteur 1.28 (Cycles TSN/CSN)', '<span class="text-red-700 font-bold font-mono">Critique (104%) ⚠️</span>'],
+            ['LEAP-1B', 'T4 2026', '16 visites estimées', 'Facteur 0.95 (Flotte jeune)', '<span class="text-emerald-700 font-bold font-mono">Nominal (67%)</span>']
           ];
-          formulaNote = "<strong>Prévisions Multi-factorielles Avancées :</strong> Simulation prédictive croisant cycles de vol (TSN/CSN), environnements chauds/poussiéreux et historique de déposes.";
-          daxSnippet = "Demande_Predictive = FORECAST_DEMANDS_MRO(CYCLES_VOL, CLIMAT, AGING_FACTORS)";
+          formulaNote = "<strong>Prévisions Multi-factorielles Avancées :</strong> Simulation dynamique croisant cycles TSN/CSN et météo pour <code>visit</code>.";
+          daxSnippet = "Demande_Predictive = FORECAST_VISIT(cycles_engine, meteo, aging_factors)";
         }
       } else if (q2 === 'B') {
-        // Packages / Sites
+        // Réparation par atelier : repair (type, visit, shop, start, end)
         if (q5 === 'A') {
-          cols = ['Site_Safran', 'Spécialité_Pôle', 'Capacité_Lots_Hebdo', 'Effectif_Homologué', 'Cadence_Cible'];
+          cols = ['shop (atelier)', 'type of repairs*', 'capacité (lots/sem)', 'stations*', 'cadence_cible'];
           rows = [
-            ['Montereau', 'Aubes Turbine HP', '24 lots / sem', '18 techniciens', '<span class="text-purple-700 font-bold font-mono">1.33 lot/tech</span>'],
-            ['Villaroche', 'Compresseurs & Rotors', '16 lots / sem', '14 techniciens', '<span class="text-purple-700 font-bold font-mono">1.14 lot/tech</span>'],
-            ['Bruxelles', 'Bancs d\'Essais', '10 passages / sem', '8 ingénieurs banc', '<span class="text-purple-700 font-bold font-mono">1.25 test/tech</span>']
+            ['Montereau', 'Aubes Turbine HP', '24 lots / sem', '12 stations', '<span class="text-purple-700 font-bold font-mono">2.0 lot/station</span>'],
+            ['Villaroche', 'Compresseurs & Rotors', '16 lots / sem', '8 stations', '<span class="text-purple-700 font-bold font-mono">2.0 lot/station</span>'],
+            ['Bruxelles', 'Bancs d\'Essais', '10 passages / sem', '4 bancs', '<span class="text-purple-700 font-bold font-mono">2.5 test/banc</span>']
           ];
-          formulaNote = "<strong>Capacité Nominale Standard :</strong> Capacité déclarée des pôles d'excellence en nombre de sous-ensembles traitables par semaine.";
-          daxSnippet = "Capacite_Lots_Site = SUMX(DIM_SITE_SAFRAN, [Capacite_Lots_Hebdo])";
+          formulaNote = "<strong>Capacité Nominale Standard :</strong> Capacité hebdomadaire déclarée des ateliers <code>shop</code> par type de réparation.";
+          daxSnippet = "Capacite_Lots_Shop = SUMX(shop, [capacité_lots_hebdo])";
         } else if (q5 === 'B') {
-          cols = ['Site_Safran', 'Sous_Ensemble', 'Lots_En_Cours_WIP', 'Navettes_En_Transit', 'Taux_Charge_Site'];
+          cols = ['shop (atelier)', 'type of repairs', 'lots_repair_wip', 'durée des transits (en cours)', 'taux_occupation'];
           rows = [
-            ['Montereau', 'Aubes Turbine HP', '22 lots', '3 navettes route', '<span class="text-amber-700 font-bold font-mono">91.7 % ⚠️</span>'],
-            ['Villaroche', 'Compresseurs', '11 lots', '1 navette', '<span class="text-emerald-700 font-bold font-mono">68.8 %</span>'],
-            ['Bruxelles', 'Banc Essai Recette', '10 lots', '2 en attente quai', '<span class="text-red-700 font-bold font-mono">100.0 % 🚨</span>']
+            ['Montereau', 'Aubes Turbine HP', '22 lots actifs', '3 navettes route', '<span class="text-amber-700 font-bold font-mono">91.7 % ⚠️</span>'],
+            ['Villaroche', 'Compresseurs', '11 lots actifs', '1 navette', '<span class="text-emerald-700 font-bold font-mono">68.8 %</span>'],
+            ['Bruxelles', 'Banc d\'Essai', '10 lots actifs', '2 en attente quai', '<span class="text-red-700 font-bold font-mono">100.0 % 🚨</span>']
           ];
-          formulaNote = "<strong>Demandes Effectives à l'Instant (WIP Ateliers + Navettes) :</strong> Suivi des lots physiques pointés sur site et lots en cours de transfert routier.";
-          daxSnippet = "Charge_Site_Live = DIVIDE(COUNTROWS(FILTER(FAIT_PACKAGES_SITE, [Statut] IN {\"EN_ATELIER\", \"EN_TRANSIT\"})), [Capacite_Lots_Hebdo])";
+          formulaNote = "<strong>Demandes Effectives à l'Instant (WIP Réel + Transits) :</strong> Lots en atelier et navettes inter-ateliers (<code>durée des transits</code>).";
+          daxSnippet = "Occupation_Shop_Live = DIVIDE(COUNTROWS(FILTER(repair, ISBLANK([end]))), [capacité_lots_hebdo])";
         } else if (q5 === 'C') {
-          cols = ['Site_Safran', 'Horizon_Semaine', 'Lots_S&OP_Planifiés', 'Capacité_Disponible', 'Tension_Prévisionnelle'];
+          cols = ['shop (atelier)', 'horizon_semaine', 'lots_s&op_planifiés', 'capacité_disponible', 'tension_prévisionnelle'];
           rows = [
             ['Montereau', 'S38-S40', '68 lots programmés', '72 lots max', '<span class="text-emerald-700 font-bold font-mono">94.4 % (Tendu)</span>'],
             ['Villaroche', 'S38-S40', '42 lots programmés', '48 lots max', '<span class="text-emerald-700 font-bold font-mono">87.5 % (OK)</span>'],
             ['Bruxelles', 'S38-S40', '35 passages', '30 slots max', '<span class="text-red-700 font-bold font-mono">116.7 % (Saturation)</span>']
           ];
-          formulaNote = "<strong>Prévisions des Demandes (Plan S&OP par Site) :</strong> Volume de modules issus des déposes programmées affectés selon les spécialités d'ateliers.";
-          daxSnippet = "Tension_Site_SOP = DIVIDE(SUM(PREVISION_PACKAGES[Lots_Planifies]), [Capacite_Site_Periode])";
+          formulaNote = "<strong>Prévisions des Demandes (Plan S&OP par Shop) :</strong> Volumes de réparation programmés selon les spécialités d'atelier.";
+          daxSnippet = "Tension_Shop_SOP = DIVIDE(SUM(prevision_repair[lots_planifies]), [capacité_shop_periode])";
         } else {
           // 5D
-          cols = ['Site_Safran', 'Sous_Ensemble', 'Volume_Prédit_IA', 'Impact_Aléas_Contrôle', 'Saturation_Probabiliste'];
+          cols = ['shop (atelier)', 'type of repairs', 'volume_prédit_ia', 'impact_aléas_contrôle', 'saturation_probabiliste'];
           rows = [
             ['Montereau', 'Aubes HP Monocristal', '28.4 lots / sem', '+3.8 lots (Rebuts CND)', '<span class="text-red-700 font-bold font-mono">98.2 % ⚠️</span>'],
             ['Villaroche', 'Compresseurs BP/HP', '15.1 lots / sem', '+1.1 lot (Rétrofit)', '<span class="text-emerald-700 font-bold font-mono">75.5 %</span>'],
-            ['Bruxelles', 'Banc Essai', '11.8 passages / sem', '+2.0 repasses (Aléas banc)', '<span class="text-red-700 font-bold font-mono">105.0 % 🚨</span>']
+            ['Bruxelles', 'Banc d\'Essai', '11.8 passages / sem', '+2.0 repasses (Aléas banc)', '<span class="text-red-700 font-bold font-mono">105.0 % 🚨</span>']
           ];
-          formulaNote = "<strong>Prévisions Multi-factorielles Avancées :</strong> Projection prenant en compte les taux de rebuts aux contrôles non destructifs et ré-interventions.";
-          daxSnippet = "Charge_Probabiliste_Site = PREDICT_SITE_DEMANDS(HISTORIQUE_LOTS, TAUX_REBUTS_CND, CONTEXT)";
+          formulaNote = "<strong>Prévisions Multi-factorielles Avancées :</strong> Simulation dynamique intégrant rebuts aux contrôles CND et retours banc.";
+          daxSnippet = "Charge_Probabiliste_Shop = PREDICT_SHOP_DEMANDS(historique_repair, taux_rebuts, CONTEXT)";
         }
       } else {
-        // Opérations unitaires / Postes de travail (Micro 2.C)
+        // Tâches unitaires sur stations : task (visit, repair, station, type)
         if (q5 === 'A') {
-          cols = ['Poste_Machine', 'Atelier', 'Capacite_Heures_Sem', 'Equipes_Shifts', 'Taux_Dispo_Moy'];
+          cols = ['station [poste]', 'shop (atelier)', 'capacité (heures/sem)', 'disponibilité (%)', 'calendrier shifts'];
           rows = [
-            ['USI-04 (Tour CN 5-Axes)', 'Usinage Mécanique', '110 h / sem', '2x8h (Lundi-Vendredi)', '<span class="text-purple-700 font-bold font-mono">92 %</span>'],
-            ['CND-02 (Bain Ressuage)', 'Contrôle Non Destructif', '80 h / sem', '2x8h', '<span class="text-purple-700 font-bold font-mono">95 %</span>'],
-            ['EQU-01 (Banc Équilibrage)', 'Rotor / Dynamique', '70 h / sem', '1x8h (+ astreinte)', '<span class="text-purple-700 font-bold font-mono">88 %</span>']
+            ['USI-04 (Tour CN)', 'Montereau (shop)', '110 h / sem', '<span class="text-purple-700 font-bold font-mono">92 %</span>', '2x8h (Lundi-Vendredi)'],
+            ['CND-02 (Ressuage)', 'Montereau (shop)', '80 h / sem', '<span class="text-purple-700 font-bold font-mono">95 %</span>', '2x8h'],
+            ['EQU-01 (Équilibrage)', 'Villaroche (shop)', '70 h / sem', '<span class="text-purple-700 font-bold font-mono">88 %</span>', '1x8h (+ astreinte)']
           ];
-          formulaNote = "<strong>Capacité Nominale Standard :</strong> Heures d'ouverture calendrier multipliées par le coefficient de disponibilité machine (TRS/OEE standard).";
-          daxSnippet = "Heures_Dispo_Poste = SUMX(DIM_MACHINE, [Heures_Ouverture_Semaine] * [TRS_Cible])";
+          formulaNote = "<strong>Capacité Nominale Standard :</strong> <code>capacité, occupation, disponibilité des stations</code> calibrée sur le temps d'ouverture calendaire.";
+          daxSnippet = "Heures_Dispo_Station = SUMX(station, [capacité_heures_sem] * [disponibilité])";
         } else if (q5 === 'B') {
-          cols = ['Poste_Machine', 'Pièces_En_Attente_Tampon', 'Heures_Charge_Live', 'Capacité_Restante_Sem', 'Statut_Goulot'];
+          cols = ['station [poste]', 'tâches_en_tampon (task)', 'heures_charge_live', 'disponibilité_restante', 'occupation'];
           rows = [
-            ['USI-04 (5-Axes)', '14 pièces en bac', '104 h de pointage', '6 h restantes', '<span class="text-red-700 font-bold font-mono">94.5 % (Goulot 🚨)</span>'],
-            ['CND-02 (Ressuage)', '5 pièces en bac', '48 h de pointage', '32 h restantes', '<span class="text-emerald-700 font-bold font-mono">60.0 % (Fluide)</span>'],
-            ['EQU-01 (Équilibrage)', '9 pièces en bac', '66 h de pointage', '4 h restantes', '<span class="text-amber-700 font-bold font-mono">94.3 % (Tendu ⚠️)</span>']
+            ['USI-04 (5-Axes)', '14 tâches en bac', '104 h de pointage', '6 h restantes', '<span class="text-red-700 font-bold font-mono">94.5 % (Goulot 🚨)</span>'],
+            ['CND-02 (Ressuage)', '5 tâches en bac', '48 h de pointage', '32 h restantes', '<span class="text-emerald-700 font-bold font-mono">60.0 % (Fluide)</span>'],
+            ['EQU-01 (Équilibrage)', '9 tâches en bac', '66 h de pointage', '4 h restantes', '<span class="text-amber-700 font-bold font-mono">94.3 % (Tendu ⚠️)</span>']
           ];
-          formulaNote = "<strong>Demandes Effectives à l'Instant (En-cours Pointé) :</strong> Somme des gammes d'usinage des pièces en file d'attente immédiate devant la machine.";
-          daxSnippet = "Charge_Machine_Live = DIVIDE(SUM(FAIT_OPERATIONS_REPARATION[Temps_Gamme_Restant]), RELATED(DIM_MACHINE[Capacite_Heures_Sem]))";
+          formulaNote = "<strong>Demandes Effectives à l'Instant (En-cours Pointé) :</strong> Cumul des <code>durée des tâches</code> des opérations en file d'attente devant la <code>station</code>.";
+          daxSnippet = "Occupation_Station_Live = DIVIDE(SUM(task[real_length_h]), RELATED(station[capacité_heures_sem]))";
         } else if (q5 === 'C') {
-          cols = ['Poste_Machine', 'Semaine_Plan', 'Heures_Ordres_Fab (OF)', 'Capacité_Allouée', 'Taux_Engagement'];
+          cols = ['station [poste]', 'semaine_calendrier', 'heures_tâches_planifiées', 'capacité_allouée', 'occupation_prévue'];
           rows = [
-            ['USI-04 (5-Axes)', 'Semaine S38', '118 h prévues', '110 h max', '<span class="text-red-700 font-bold font-mono">107.3 % (Heures Sup Requises)</span>'],
+            ['USI-04 (5-Axes)', 'Semaine S38', '118 h prévues', '110 h max', '<span class="text-red-700 font-bold font-mono">107.3 % (Heures Sup)</span>'],
             ['CND-02 (Ressuage)', 'Semaine S38', '62 h prévues', '80 h max', '<span class="text-emerald-700 font-bold font-mono">77.5 % (Équilibré)</span>'],
             ['EQU-01 (Équilibrage)', 'Semaine S38', '74 h prévues', '70 h max', '<span class="text-amber-700 font-bold font-mono">105.7 % (Tendu)</span>']
           ];
-          formulaNote = "<strong>Prévisions des Demandes (Génération automatique des OF) :</strong> Ordres de fabrication déversés par l'ERP/MES selon le plan directeur de production.";
-          daxSnippet = "Charge_Planifiee_OF = DIVIDE(SUM(PLAN_OF_CHARGE[Heures_Allouees]), [Capacite_Machine_Heures])";
+          formulaNote = "<strong>Prévisions des Demandes :</strong> Basées sur le <code>calendrier des réparations des stations</code> issu du plan industriel.";
+          daxSnippet = "Occupation_Planifiee = DIVIDE(SUM('calendrier des réparations des stations'[heures_allouees]), [capacité_station])";
         } else {
           // 5D
-          cols = ['Poste_Machine', 'Simulation_Horodatee', 'Charge_Prédite_Heures', 'Risque_Panne_Usure', 'Goulot_Probable'];
+          cols = ['station [poste]', 'simulation_horodatée', 'charge_prédite_heures', 'risque_panne_usure', 'goulot_probable'];
           rows = [
             ['USI-04 (5-Axes)', 'J+1 à J+7', '122.5 h probabilistes', 'Risque Broche 14%', '<span class="text-red-700 font-bold font-mono">Oui (P95 = 112%) 🚨</span>'],
             ['CND-02 (Ressuage)', 'J+1 à J+7', '68.0 h probabilistes', 'Risque Bain 2%', '<span class="text-emerald-700 font-bold font-mono">Non (P95 = 85%)</span>'],
             ['EQU-01 (Équilibrage)', 'J+1 à J+7', '76.2 h probabilistes', 'Calibrage Capteur 8%', '<span class="text-amber-700 font-bold font-mono">Modéré (P95 = 98%)</span>']
           ];
-          formulaNote = "<strong>Prévisions Multi-factorielles Avancées :</strong> Modélisation fine croisant cadence d'usinage, usure des outils de coupe et risques de défaillance.";
-          daxSnippet = "PREDICT_MACHINE_BOTTLENECK(FAIT_OPERATIONS_HIST, TRS_HISTORIQUE, AI_PREDICTION)";
+          formulaNote = "<strong>Prévisions Multi-factorielles Avancées :</strong> Simulation fine croisant usure des stations et risques de pannes.";
+          daxSnippet = "PREDICT_STATION_BOTTLENECK(historique_task, station_availability, ai_forecast)";
         }
       }
 

@@ -30,9 +30,9 @@
    - `1.D` : Suivi Retard & Pénalités (Dérapage en jours ouvrés & exposition en €).
 
 2. **Étape 2 : Données** (Granularité & Tables pour le calcul)
-   - `2.A` (Macro - Shop Visit) : 1 ligne = 1 visite globale ESN (`FAIT_DEMANDES_MRO`). Transits forfaitaires, vision globale.
-   - `2.B` (Méso - Shop Operation) : 1 ligne = 1 lot module par site (`FAIT_PACKAGES_SITE`). **Données historiques d'atelier** + navettes physiques inter-ateliers (Villaroche, Montereau, Châtellerault, Bruxelles). Pas de barème théorique unitaire.
-   - `2.C` (Micro - Shop Task) : 1 ligne = 1 tâche technique unitaire pointée (`FAIT_OPERATIONS_REPARATION`). **Seule option disposant de la table de référence des durées théoriques** (`REF_OPERATIONS_THEORIQUES`) croisant `Type_Moteur` et `Type_Reparation`.
+   - `2.A` (Demande - visit) : 1 ligne = 1 visite complète moteur `visit (engine, priority, start, end)`. Transits forfaitaires, vision globale.
+   - `2.B` (Réparation - repair) : 1 ligne = 1 réparation module par atelier `repair (type, visit, shop, start, end)`. **Données historiques d'atelier** + navettes physiques inter-ateliers via `durée des transits (shop, shop, length)`. Pas de barème théorique unitaire.
+   - `2.C` (Tâche - task) : 1 ligne = 1 tâche technique unitaire pointée sur poste `task (visit, start, end, station, type, repair)`. **Seule option disposant de la table de référence des durées théoriques** `durée des tâches (type engine, type task, length)` croisant `type engine` et `type task`.
 
 3. **Étape 3 : TAT** (Méthode de calcul du Turn Around Time TAT)
    - `3.A` : Délais théoriques de traitement (Gamme standard + forfaits transit).
@@ -105,9 +105,9 @@ Chaque modification apportée à la logique, aux libellés ou aux schémas dans 
    - Respecter les IDs HTML existants (`schemaCanvas`, `step3-table-container`, `select-q1` à `select-q5`, `opt-X-Y`, `tab-X`).
 
 3. **Fonction Canvas `drawSchema(granularity)` :**
-   - En `A` : Faits `FAIT_DEMANDES_MRO` + Dimensions Client, Moteur, Contrat SLA, Calendrier.
-   - En `B` : Faits `FAIT_PACKAGES_SITE` (Historique atelier + Transit inter-sites) + Dimensions Demande, Sous-Ensemble, Site Safran, Calendrier.
-   - En `C` : Faits `FAIT_OPERATIONS_REPARATION` (Pointages & Réalisé) + Dimension de calcul `REF_OPERATIONS_THEORIQUES` (Durées standard par Moteur/Réparation) + Dimensions Machine, Package, Temps Slot.
+   - En `A` : Faits `visit (engine, priority, start, end)` + Dimensions `engine (type, model, customer)`, `contract_sla`, `durée des transits`, `calendar`.
+   - En `B` : Faits `repair (type, visit, shop, start, end)` + Dimensions `visit`, `shop [centre de réparation] (type of repairs*, stations*)`, `durée des transits (shop, shop, length)`, `calendar`.
+   - En `C` : Faits `task (visit, start, end, station, type, repair)` + Dimension de calcul `durée des tâches (type engine, type task, length)` + Dimensions `station [poste de réparation] (shop, type of repairs)`, `capacité, occupation, disponibilité des stations`, `calendrier des réparations des stations`.
 
 ---
 

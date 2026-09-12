@@ -127,247 +127,115 @@ Ce fichier centralise l'intégralité des contenus rédactionnels, explications 
 ## Étape 2 : Données
 
 > **Question :** Quelles sont les tables qui permettent le calcul selon le niveau de détail unitaire (Granularité de la table centrale) ?
-> **Description du besoin :** La structure des tables conditionne directement les méthodes de calcul de délai possibles à l'Étape 3. **Seul le niveau 2.C (Micro)** dispose de la table de référence des opérations (`REF_OPERATIONS_THEORIQUES`) avec la **durée de traitement théorique** par type de moteur et par type de réparation. En **2.B (Méso)**, le modèle repose exclusivement sur les **données historiques d'atelier** enregistrées (`Duree_Atelier_Historique`), ce qui rend **l'option 3.A ("Délais théoriques") indisponible**.
+> **Description du besoin :** La structure des tables conditionne directement les méthodes de calcul de délai possibles à l'Étape 3 et de capacité à l'Étape 5. **Seul le niveau 2.C (task)** dispose de la table de référence `durée des tâches (type engine, type task, length)` avec la **durée de traitement théorique standard** par type de moteur et tâche. En **2.B (repair)**, le modèle repose sur les **données historiques d'atelier** enregistrées et la table `durée des transits (shop, shop, length)`, ce qui rend **l'option 3.A ("Délais théoriques") indisponible**.
 
 ---
 
-### Option 2.A : Macro - La Demande Globale (Shop Visit)
+### Option 2.A : Macro - La Demande (visit)
 - **Icône / Emoji :** 📦
-- **Sous-titre :** 1 ligne = 1 visite atelier / ESN moteur (`FAIT_DEMANDES_MRO`)
+- **Sous-titre :** 1 ligne = 1 visite complète moteur (`visit`)
 - **Description métier :**
-  Niveau d'agrégation macroscopique. On suit la demande globale d'une visite moteur complète (Shop Visit / ESN) depuis sa réception jusqu'à son expédition certifiée. Idéal pour le suivi global du TAT contractuel et l'exposition aux pénalités de restitution vis-à-vis des compagnies aériennes.
+  Niveau d'agrégation macroscopique. On suit la demande globale d'une visite moteur (`visit`) depuis sa réception jusqu'à son expédition certifiée. Idéal pour le pilotage du TAT contractuel global et l'exposition aux pénalités vis-à-vis des compagnies aériennes clientes.
 - **Accès aux délais de transit :** 
-  Non détaillé. Les transits sont agrégés dans un forfait logistique global ou inclus dans le TAT total du moteur.
+  Non détaillé au niveau atelier. Les transits sont inclus dans un forfait logistique global lié au moteur (`engine`).
 - **Modèle de données associé & Tables de calcul :**
-  - **Table de faits :** `FAIT_DEMANDES_MRO` (~1,5k lig/an)
-    - Champs clés : `ID_Demande` (PK), `FK_Client`, `FK_Moteur`, `FK_Contrat`, `FK_Date_Entree`, `Duree_Reelle_Jours`, `Jours_Retard_SLA`, `Montant_Penalite_EUR`.
+  - **Table de faits centrale :** `visit (engine, priority, start, end)`
+    - Champs clés : `id_visit` (PK), `engine_id` (FK), `priority`, `date_start` (FK), `date_end` (FK), `tat_days` (Mesure), `sla_delay_days` (Mesure), `penalty_eur` (Mesure).
   - **Dimensions reliées (1:N) :**
-    - `DIM_CLIENT` (`ID_Client`, Nom_Client, Flotte_Active, SLA_Contractuel_Standard)
-    - `DIM_MOTEUR` (`ESN_Moteur`, Famille_Moteur, Heures_Vol_TSN, Cycles_Vol_CSN)
-    - `DIM_CONTRAT_SLA` (`ID_Contrat`, Type_Engagement, SLA_Cible_Jours, Seuil_Alerte_P85)
-    - `DIM_CALENDRIER` (`Date_Key`, Semaine_Fiscale, Mois_Annee, Est_Ouvre_Safran)
-- **Illustration SVG du Schéma Relationnel :**
+    - `engine (type, model, customer)` (`engine_id` PK, `type`, `model`, `customer`)
+    - `contract_sla` (`contract_id` PK, `customer`, `sla_target_days`, `penalty_rate_day`)
+    - `durée des transits` (`transit_id` PK, `shop_from`, `shop_to`, `length`)
+    - `calendar` (`date` PK, `fiscal_week`, `month_year`, `is_workday`)
+- **Illustration SVG de la carte réponse :**
 ```xml
-<svg class="w-full max-w-[550px] mx-auto" viewBox="0 0 520 220">
-  <!-- DIM_CLIENT -->
-  <rect x="10" y="10" width="130" height="85" rx="5" fill="#ffffff" stroke="#f59e0b" stroke-width="1.5" />
-  <rect x="10" y="10" width="130" height="20" rx="5" fill="#f59e0b" />
-  <text x="75" y="24" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">🏢 DIM_CLIENT</text>
-  <text x="18" y="42" font-size="7.5" fill="#d97706" font-weight="bold">PK ID_Client</text>
-  <text x="18" y="56" font-size="7.5" fill="#475569">• Compagnie_Aerienne</text>
-  <text x="18" y="70" font-size="7.5" fill="#475569">• Taux_Penalite_Jour</text>
-
-  <!-- DIM_CONTRAT_SLA -->
-  <rect x="10" y="125" width="130" height="85" rx="5" fill="#ffffff" stroke="#10b981" stroke-width="1.5" />
-  <rect x="10" y="125" width="130" height="20" rx="5" fill="#10b981" />
-  <text x="75" y="139" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">📜 DIM_CONTRAT_SLA</text>
-  <text x="18" y="157" font-size="7.5" fill="#d97706" font-weight="bold">PK ID_Contrat</text>
-  <text x="18" y="171" font-size="7.5" fill="#475569">• SLA_Cible_Jours</text>
-  <text x="18" y="185" font-size="7.5" fill="#475569">• Seuil_Alerte_P85</text>
-
-  <!-- FAIT_DEMANDES_MRO (Centrale) -->
-  <rect x="185" y="15" width="150" height="190" rx="6" fill="#ffffff" stroke="#3b82f6" stroke-width="2" />
-  <rect x="185" y="15" width="150" height="26" rx="6" fill="#3b82f6" />
-  <text x="260" y="32" font-size="9.5" font-weight="bold" fill="#ffffff" text-anchor="middle">FAIT_DEMANDES_MRO</text>
-  <text x="195" y="54" font-size="8" fill="#d97706" font-weight="bold">PK ID_Demande</text>
-  <text x="195" y="70" font-size="8" fill="#2563eb">FK FK_Client (1:N)</text>
-  <text x="195" y="86" font-size="8" fill="#2563eb">FK FK_Moteur (1:N)</text>
-  <text x="195" y="102" font-size="8" fill="#2563eb">FK FK_Contrat (1:N)</text>
-  <text x="195" y="118" font-size="8" fill="#2563eb">FK FK_Date_Entree</text>
-  <line x1="190" y1="128" x2="330" y2="128" stroke="#cbd5e1" stroke-width="1" />
-  <text x="195" y="144" font-size="8" fill="#7c3aed" font-weight="bold">📐 Duree_Reelle_Jours</text>
-  <text x="195" y="160" font-size="8" fill="#7c3aed">📐 Jours_Retard_SLA</text>
-  <text x="195" y="176" font-size="8" fill="#7c3aed">📐 Montant_Penalite_EUR</text>
-
-  <!-- DIM_MOTEUR -->
-  <rect x="380" y="10" width="130" height="85" rx="5" fill="#ffffff" stroke="#8b5cf6" stroke-width="1.5" />
-  <rect x="380" y="10" width="130" height="20" rx="5" fill="#8b5cf6" />
-  <text x="445" y="24" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">✈️ DIM_MOTEUR</text>
-  <text x="388" y="42" font-size="7.5" fill="#d97706" font-weight="bold">PK ESN_Moteur</text>
-  <text x="388" y="56" font-size="7.5" fill="#475569">• Famille_Moteur</text>
-  <text x="388" y="70" font-size="7.5" fill="#475569">• TSN / CSN</text>
-
-  <!-- DIM_CALENDRIER -->
-  <rect x="380" y="125" width="130" height="85" rx="5" fill="#ffffff" stroke="#ec4899" stroke-width="1.5" />
-  <rect x="380" y="125" width="130" height="20" rx="5" fill="#ec4899" />
-  <text x="445" y="139" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">📅 DIM_CALENDRIER</text>
-  <text x="388" y="157" font-size="7.5" fill="#d97706" font-weight="bold">PK Date_Key</text>
-  <text x="388" y="171" font-size="7.5" fill="#475569">• Semaine_Fiscale</text>
-  <text x="388" y="185" font-size="7.5" fill="#475569">• Est_Ouvre_Safran</text>
-
-  <!-- Liens relationnels -->
-  <path d="M 140 50 L 185 70" stroke="#94a3b8" stroke-width="1.5" fill="none" />
-  <path d="M 140 165 L 185 102" stroke="#94a3b8" stroke-width="1.5" fill="none" />
-  <path d="M 380 50 L 335 86" stroke="#94a3b8" stroke-width="1.5" fill="none" />
-  <path d="M 380 165 L 335 118" stroke="#94a3b8" stroke-width="1.5" fill="none" />
+<svg class="w-full h-full" viewBox="0 0 60 60">
+  <rect x="4" y="8" width="52" height="44" rx="4" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5" />
+  <rect x="4" y="8" width="52" height="14" rx="4" fill="#3b82f6" />
+  <text x="30" y="18" font-size="8" font-weight="bold" fill="#ffffff" text-anchor="middle">VISIT (Macro)</text>
+  <circle cx="20" cy="34" r="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1.2" />
+  <text x="20" y="37" font-size="9" text-anchor="middle">✈️</text>
+  <rect x="33" y="28" width="20" height="4" rx="1" fill="#2563eb" />
+  <rect x="33" y="35" width="14" height="3" rx="1" fill="#93c5fd" />
+  <rect x="33" y="41" width="18" height="3" rx="1" fill="#10b981" />
 </svg>
 ```
 
 - **Avantages & Limites :**
-  - Volume très léger (< 10k lignes), réponses instantanées pour la Direction.
-  - Impossibilité d'isoler le sous-ensemble ou l'atelier responsable d'un goulot d'étranglement.
+  - Modèle très léger, réponses instantanées pour la Direction des Opérations.
+  - Pas d'isolation des postes ou navettes physiques responsables des dérives.
 
 ---
 
-### Option 2.B : Méso - La Réparation du Module (Shop Operation)
+### Option 2.B : Méso - La Réparation par Atelier (repair)
 - **Icône / Emoji :** 🏢
-- **Sous-titre :** 1 ligne = 1 lot d'opérations / module par site (`FAIT_PACKAGES_SITE`) - *Données historiques*
+- **Sous-titre :** 1 ligne = 1 réparation module par atelier (`repair`) - *Données historiques*
 - **Description métier :**
-  Niveau intermédiaire calqué sur les lots sous-ensembles / modules moteur (Fan, Compresseur HP, Chambre de Combustion, Turbine BP, Boîte d'engrenages AGB). Permet d'analyser les chemins critiques et les flux d'avancement par centre de travail ou site industriel.
+  Niveau intermédiaire calqué sur les réparations de sous-ensembles / modules moteur (Fan, Compresseur HP, Turbine BP...). Permet d'analyser l'avancement par centre de réparation (`shop`) et les flux de transferts inter-sites.
 - **Accès aux délais de transit inter-ateliers :** 
-  ✅ **Oui, explicitement disponible.** Ce niveau capture précisément la durée des navettes et transferts physiques entre les différents sites et ateliers de réparation (ex: navettes routières ou transferts entre Villaroche, Montereau, Châtellerault, Bruxelles), permettant de dissocier le temps d'usinage/réparation en atelier (`Duree_Atelier_Historique`) du délai de transit logistique inter-sites (`Duree_Navette_Transit`).
+  ✅ **Oui, explicitement disponible via la table dédiée :** `durée des transits (shop, shop, length)`. Permet de dissocier le temps d'intervention atelier du délai de transport routier entre ateliers (Villaroche, Montereau, Châtellerault, Bruxelles).
 - **Nature des données & Impact sur le calcul :**
-  ⚠️ **Basé exclusivement sur les données historiques d'atelier.** Il n'existe pas de table de barème théorique unitaire à ce niveau. Par conséquent, **l'option 3.A ("Délais théoriques de traitement") n'est pas disponible** avec l'option 2.B (on s'appuie sur la distribution historique des délais réels 3.B, le taux de charge 3.C ou la simulation dynamique 3.D).
+  ⚠️ **Basé sur les données historiques d'atelier.** Pas de barème théorique unitaire à ce niveau. Par conséquent, **l'option 3.A ("Délais théoriques") n'est pas disponible** avec l'option 2.B (on utilise la distribution 3.B, le taux de saturation 3.C ou la simulation 3.D).
 - **Modèle de données associé & Tables de calcul :**
-  - **Table de faits :** `FAIT_PACKAGES_SITE` (~15k lig/an - Données Historiques)
-    - Champs clés : `ID_Lot_Package` (PK), `FK_Demande_MRO`, `FK_Sous_Ensemble`, `FK_Site_Safran`, `FK_Date_Envoi`, `Duree_Atelier_Historique`, `Duree_Navette_Transit` *(Délai transit inter-ateliers)*, `TAT_Package_Total`.
+  - **Table de faits centrale :** `repair (type, visit, shop, start, end)`
+    - Champs clés : `repair_id` (PK), `visit_id` (FK), `shop_id` (FK), `type`, `start` (FK), `end` (FK), `shop_history_tat` (Mesure), `transit_duration` (Mesure).
   - **Dimensions reliées (1:N) :**
-    - `DIM_DEMANDE_MRO` (`ID_Demande`, ESN_Moteur, Client_Nom, Date_Promesse_SLA)
-    - `DIM_SOUS_ENSEMBLE` (`ID_Module`, Nom_Sous_Ensemble, Famille_Technologique, Criticite_Maint)
-    - `DIM_SITE_SAFRAN` (`ID_Site`, Nom_Site, Specialite_Atelier, Capacite_Lots_Hebdo)
-    - `DIM_CALENDRIER` (`Date_Key`, Semaine_Fiscale, Navette_Planifiee, Est_Ouvre_Atelier)
-- **Illustration SVG du Schéma Relationnel :**
+    - `visit (engine, priority, start, end)` (`visit_id` PK, `engine`, `priority`, `customer`)
+    - `shop [centre de réparation] (type of repairs*, stations*)` (`shop_id` PK, `shop_name`, `type of repairs*`, `stations*`)
+    - `durée des transits (shop, shop, length)` (`transit_id` PK, `shop`, `shop_dest`, `length`)
+    - `calendar` (`date` PK, `fiscal_week`, `shuttle_day`, `is_workday`)
+- **Illustration SVG de la carte réponse :**
 ```xml
-<svg class="w-full max-w-[550px] mx-auto" viewBox="0 0 520 220">
-  <!-- DIM_DEMANDE_MRO -->
-  <rect x="10" y="10" width="130" height="85" rx="5" fill="#ffffff" stroke="#3b82f6" stroke-width="1.5" />
-  <rect x="10" y="10" width="130" height="20" rx="5" fill="#3b82f6" />
-  <text x="75" y="24" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">📦 DIM_DEMANDE_MRO</text>
-  <text x="18" y="42" font-size="7.5" fill="#d97706" font-weight="bold">PK ID_Demande</text>
-  <text x="18" y="56" font-size="7.5" fill="#475569">• ESN_Moteur</text>
-  <text x="18" y="70" font-size="7.5" fill="#475569">• Date_Promesse_SLA</text>
-
-  <!-- DIM_SITE_SAFRAN -->
-  <rect x="10" y="125" width="130" height="85" rx="5" fill="#ffffff" stroke="#f59e0b" stroke-width="1.5" />
-  <rect x="10" y="125" width="130" height="20" rx="5" fill="#f59e0b" />
-  <text x="75" y="139" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">🏭 DIM_SITE_SAFRAN</text>
-  <text x="18" y="157" font-size="7.5" fill="#d97706" font-weight="bold">PK ID_Site</text>
-  <text x="18" y="171" font-size="7.5" fill="#475569">• Nom_Site (VIL/MON)</text>
-  <text x="18" y="185" font-size="7.5" fill="#475569">• Capacite_Lots_Hebdo</text>
-
-  <!-- FAIT_PACKAGES_SITE (Centrale Historique) -->
-  <rect x="185" y="15" width="150" height="190" rx="6" fill="#ffffff" stroke="#10b981" stroke-width="2" />
-  <rect x="185" y="15" width="150" height="26" rx="6" fill="#10b981" />
-  <text x="260" y="32" font-size="9.5" font-weight="bold" fill="#ffffff" text-anchor="middle">FAIT_PACKAGES_SITE</text>
-  <text x="195" y="54" font-size="8" fill="#d97706" font-weight="bold">PK ID_Lot_Package</text>
-  <text x="195" y="70" font-size="8" fill="#2563eb">FK FK_Demande_MRO</text>
-  <text x="195" y="86" font-size="8" fill="#2563eb">FK FK_Sous_Ensemble</text>
-  <text x="195" y="102" font-size="8" fill="#2563eb">FK FK_Site_Safran</text>
-  <text x="195" y="118" font-size="8" fill="#2563eb">FK FK_Date_Envoi</text>
-  <line x1="190" y1="128" x2="330" y2="128" stroke="#cbd5e1" stroke-width="1" />
-  <text x="195" y="144" font-size="8" fill="#7c3aed" font-weight="bold">📐 Duree_Atelier_Hist</text>
-  <text x="195" y="160" font-size="8" fill="#7c3aed" font-weight="bold">📐 Duree_Navette_Transit</text>
-  <text x="195" y="176" font-size="8" fill="#7c3aed">📐 TAT_Package_Total</text>
-
-  <!-- DIM_SOUS_ENSEMBLE -->
-  <rect x="380" y="10" width="130" height="85" rx="5" fill="#ffffff" stroke="#8b5cf6" stroke-width="1.5" />
-  <rect x="380" y="10" width="130" height="20" rx="5" fill="#8b5cf6" />
-  <text x="445" y="24" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">⚙️ DIM_SOUS_ENSEMBLE</text>
-  <text x="388" y="42" font-size="7.5" fill="#d97706" font-weight="bold">PK ID_Module</text>
-  <text x="388" y="56" font-size="7.5" fill="#475569">• Aubes Fan, HP, AGB</text>
-  <text x="388" y="70" font-size="7.5" fill="#475569">• Criticite_Maint</text>
-
-  <!-- DIM_CALENDRIER -->
-  <rect x="380" y="125" width="130" height="85" rx="5" fill="#ffffff" stroke="#ec4899" stroke-width="1.5" />
-  <rect x="380" y="125" width="130" height="20" rx="5" fill="#ec4899" />
-  <text x="445" y="139" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">📅 DIM_CALENDRIER</text>
-  <text x="388" y="157" font-size="7.5" fill="#d97706" font-weight="bold">PK Date_Key</text>
-  <text x="388" y="171" font-size="7.5" fill="#475569">• Navette_Planifiee</text>
-  <text x="388" y="185" font-size="7.5" fill="#475569">• Est_Ouvre_Atelier</text>
-
-  <!-- Liens relationnels -->
-  <path d="M 140 50 L 185 70" stroke="#94a3b8" stroke-width="1.5" fill="none" />
-  <path d="M 140 165 L 185 102" stroke="#94a3b8" stroke-width="1.5" fill="none" />
-  <path d="M 380 50 L 335 86" stroke="#94a3b8" stroke-width="1.5" fill="none" />
-  <path d="M 380 165 L 335 118" stroke="#94a3b8" stroke-width="1.5" fill="none" />
+<svg class="w-full h-full" viewBox="0 0 60 60">
+  <rect x="4" y="6" width="22" height="24" rx="3" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.3" />
+  <text x="15" y="16" font-size="6.5" font-weight="bold" fill="#15803d" text-anchor="middle">Shop A</text>
+  <text x="15" y="24" font-size="5" fill="#475569" text-anchor="middle">VIL</text>
+  <rect x="34" y="30" width="22" height="24" rx="3" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.3" />
+  <text x="45" y="40" font-size="6.5" font-weight="bold" fill="#15803d" text-anchor="middle">Shop B</text>
+  <text x="45" y="48" font-size="5" fill="#475569" text-anchor="middle">MON</text>
+  <path d="M 26 18 Q 44 14, 45 28" fill="none" stroke="#f59e0b" stroke-width="1.8" stroke-dasharray="2,2" />
+  <text x="36" y="21" font-size="5.5" font-weight="bold" fill="#d97706">transit</text>
 </svg>
 ```
 
 - **Avantages & Limites :**
-  - Excellent compromis volumétrie / finesse analytique.
-  - Isole parfaitement les frottements logistiques inter-sites sans noyer l'utilisateur dans le détail de chaque coup d'outil.
+  - Équilibre idéal entre visibilité globale et tracking logistique inter-sites.
+  - Nécessite l'historique réalisé pour les estimations de délais.
 
 ---
 
-### Option 2.C : Micro - L'Opération Technique (Shop Task)
+### Option 2.C : Micro - La Tâche Technique sur Poste (task)
 - **Icône / Emoji :** 🔧
-- **Sous-titre :** 1 ligne = 1 opération de gamme ou 1 pointage (`FAIT_OPERATIONS_REPARATION`) - *Seule option avec Table Théorique*
+- **Sous-titre :** 1 ligne = 1 tâche technique pointée sur station (`task`) - *Seule option avec Durée Théorique*
 - **Description métier :**
-  Niveau le plus fin du système d'information industriel (MES / ERP). Chaque ligne représente une opération élémentaire de gamme ou un pointage sur poste (ex: tournage carter, ressuage CND, équilibrage dynamique, passage banc d'essai) avec qualification Part-145 requise.
-- **Accès aux délais de transit inter-ateliers :** 
-  ✅ **Oui, au niveau le plus granulaire.** Permet de mesurer non seulement les transferts physiques inter-ateliers et inter-bâtiments, mais également les temps de roulage internes, les délais de mise en bac navette et les temps d'attente en zone tampon avant prise en charge sur la machine suivante (`Temps_Transit_Buffer_h` et transferts inter-îlots).
+  Niveau le plus fin du suivi industriel. Chaque ligne correspond à un pointage d'opération unitaire sur une machine ou poste de travail (`station`) avec adéquation des compétences et outillages Part-145.
+- **Accès aux délais de transit :** 
+  ✅ **Oui, au niveau le plus détaillé.** Roulage interne, mise en bac tampon et navettes d'îlots.
 - **Nature des données & Présence de la table théorique :**
-  ⭐ **Seul niveau doté de la table des opérations théoriques (`REF_OPERATIONS_THEORIQUES`).** Cette table de référence fournit pour chaque croisement `Type_Moteur` (CFM56, LEAP-1A, LEAP-1B) et `Type_Reparation` (Tournage, Ressuage, Équilibrage...) la **durée de traitement théorique standard** (`Duree_Theorique_h`). L'option 3.A y est donc pleinement calculable et comparable aux pointages réels (`Temps_Reel_Historique_h`).
+  ⭐ **Seul niveau doté de la table des durées théoriques :** `durée des tâches (type engine, type task, length)`. Cette table croise le type de moteur (`CFM56`, `LEAP-1A`, `LEAP-1B`) et le type de tâche (`Tournage`, `Ressuage`, `Équilibrage`...) pour fournir la **durée théorique standard** (`length`). L'option 3.A y est donc pleinement calculable.
 - **Modèle de données associé & Tables de calcul :**
-  - **Table de référence des calculs théoriques :** `REF_OPERATIONS_THEORIQUES`
-    - Champs clés : `ID_Op_Ref` (PK), `Type_Moteur`, `Type_Reparation`, `Duree_Theorique_h` *(Durée standard théorique)*.
-  - **Table de faits :** `FAIT_OPERATIONS_REPARATION` (>250k lig/an - Pointages & Réalisé)
-    - Champs clés : `ID_Op_Reparation` (PK), `FK_Operation_Ref`, `FK_Poste_Machine`, `FK_Lot_Package`, `FK_Temps_Slot`, `Temps_Reel_Historique_h`, `Temps_Transit_Buffer_h` *(Transit inter-ateliers / buffers)*, `Ecart_Theorique_h`.
+  - **Table de faits centrale :** `task (visit, start, end, station, type, repair)`
+    - Champs clés : `task_id` (PK), `visit` (FK), `repair` (FK), `station` (FK), `type`, `start` (FK), `end` (FK), `real_length_h` (Mesure).
   - **Dimensions reliées (1:N) :**
-    - `REF_OPERATIONS_THEORIQUES` (`ID_Op_Ref`, Type_Moteur, Type_Reparation, Duree_Theorique_h)
-    - `DIM_POSTE_MACHINE` (`ID_Poste`, Nom_Machine, Ilot_Atelier, Taux_Charge_Cible)
-    - `DIM_PACKAGE` (`ID_Lot`, ESN_Moteur_Ref, Module_Concerne, Statut_Avancement)
-    - `DIM_TEMPS_SLOT` (`Slot_Key`, Date_Jour, Equipe_Shift, Creneau_Heure)
-- **Illustration SVG du Schéma Relationnel :**
+    - `durée des tâches (type engine, type task, length)` (`task_theo_id` PK, `type engine`, `type task`, `length`)
+    - `station [poste de réparation] (shop, type of repairs)` (`station_id` PK, `shop`, `type of repairs`, `target_occupancy`)
+    - `capacité, occupation, disponibilité des stations` (`capacity_id` PK, `station`, `occupation`, `disponibilité`)
+    - `calendrier des réparations des stations` (`schedule_id` PK, `station`, `repair_slot`, `shift_team`)
+- **Illustration SVG de la carte réponse :**
 ```xml
-<svg class="w-full max-w-[550px] mx-auto" viewBox="0 0 520 220">
-  <!-- REF_OPERATIONS_THEORIQUES (Table théorique de calcul unique) -->
-  <rect x="10" y="10" width="140" height="85" rx="5" fill="#ffffff" stroke="#2563eb" stroke-width="2" />
-  <rect x="10" y="10" width="140" height="20" rx="5" fill="#2563eb" />
-  <text x="80" y="24" font-size="8.5" font-weight="bold" fill="#ffffff" text-anchor="middle">⭐ REF_OPERATIONS_THEO</text>
-  <text x="18" y="42" font-size="7.5" fill="#d97706" font-weight="bold">PK ID_Op_Ref</text>
-  <text x="18" y="56" font-size="7.5" fill="#475569">• Type_Moteur (LEAP/CFM)</text>
-  <text x="18" y="70" font-size="7.5" fill="#1d4ed8" font-weight="bold">• Duree_Theorique_h</text>
-
-  <!-- DIM_PACKAGE -->
-  <rect x="10" y="125" width="140" height="85" rx="5" fill="#ffffff" stroke="#10b981" stroke-width="1.5" />
-  <rect x="10" y="125" width="140" height="20" rx="5" fill="#10b981" />
-  <text x="80" y="139" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">🏢 DIM_PACKAGE</text>
-  <text x="18" y="157" font-size="7.5" fill="#d97706" font-weight="bold">PK ID_Lot</text>
-  <text x="18" y="171" font-size="7.5" fill="#475569">• ESN_Moteur_Ref</text>
-  <text x="18" y="185" font-size="7.5" fill="#475569">• Statut_Avancement</text>
-
-  <!-- FAIT_OPERATIONS_REPARATION (Centrale) -->
-  <rect x="185" y="15" width="155" height="190" rx="6" fill="#ffffff" stroke="#f59e0b" stroke-width="2" />
-  <rect x="185" y="15" width="155" height="26" rx="6" fill="#f59e0b" />
-  <text x="262" y="32" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">FAIT_OPERATIONS_REP</text>
-  <text x="195" y="54" font-size="8" fill="#d97706" font-weight="bold">PK ID_Op_Reparation</text>
-  <text x="195" y="70" font-size="8" fill="#2563eb">FK FK_Operation_Ref</text>
-  <text x="195" y="86" font-size="8" fill="#2563eb">FK FK_Poste_Machine</text>
-  <text x="195" y="102" font-size="8" fill="#2563eb">FK FK_Lot_Package</text>
-  <text x="195" y="118" font-size="8" fill="#2563eb">FK FK_Temps_Slot</text>
-  <line x1="190" y1="128" x2="335" y2="128" stroke="#cbd5e1" stroke-width="1" />
-  <text x="195" y="144" font-size="8" fill="#7c3aed" font-weight="bold">📐 Temps_Reel_Hist_h</text>
-  <text x="195" y="160" font-size="8" fill="#7c3aed">📐 Temps_Transit_Buffer_h</text>
-  <text x="195" y="176" font-size="8" fill="#7c3aed" font-weight="bold">📐 Ecart_Theorique_h</text>
-
-  <!-- DIM_POSTE_MACHINE -->
-  <rect x="375" y="10" width="135" height="85" rx="5" fill="#ffffff" stroke="#8b5cf6" stroke-width="1.5" />
-  <rect x="375" y="10" width="135" height="20" rx="5" fill="#8b5cf6" />
-  <text x="442" y="24" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">🤖 DIM_POSTE_MACHINE</text>
-  <text x="383" y="42" font-size="7.5" fill="#d97706" font-weight="bold">PK ID_Poste</text>
-  <text x="383" y="56" font-size="7.5" fill="#475569">• USI-04 / CND-02</text>
-  <text x="383" y="70" font-size="7.5" fill="#475569">• Taux_Charge_Cible</text>
-
-  <!-- DIM_TEMPS_SLOT -->
-  <rect x="375" y="125" width="135" height="85" rx="5" fill="#ffffff" stroke="#ec4899" stroke-width="1.5" />
-  <rect x="375" y="125" width="135" height="20" rx="5" fill="#ec4899" />
-  <text x="442" y="139" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">⏱️ DIM_TEMPS_SLOT</text>
-  <text x="383" y="157" font-size="7.5" fill="#d97706" font-weight="bold">PK Slot_Key</text>
-  <text x="383" y="171" font-size="7.5" fill="#475569">• Equipe_Shift (Matin/Soir)</text>
-  <text x="383" y="185" font-size="7.5" fill="#475569">• Creneau_Heure</text>
-
-  <!-- Liens relationnels -->
-  <path d="M 150 50 L 185 70" stroke="#2563eb" stroke-width="2" fill="none" />
-  <path d="M 150 165 L 185 102" stroke="#94a3b8" stroke-width="1.5" fill="none" />
-  <path d="M 375 50 L 340 86" stroke="#94a3b8" stroke-width="1.5" fill="none" />
-  <path d="M 375 165 L 340 118" stroke="#94a3b8" stroke-width="1.5" fill="none" />
+<svg class="w-full h-full" viewBox="0 0 60 60">
+  <rect x="4" y="6" width="52" height="48" rx="4" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5" />
+  <text x="30" y="16" font-size="7" font-weight="bold" fill="#b45309" text-anchor="middle">STATION / TASK</text>
+  <circle cx="20" cy="34" r="10" fill="#fef3c7" stroke="#d97706" stroke-width="1.2" />
+  <text x="20" y="38" font-size="11" text-anchor="middle">⚙️</text>
+  <rect x="34" y="24" width="18" height="18" rx="2" fill="#2563eb" />
+  <text x="43" y="32" font-size="5" font-weight="bold" fill="#ffffff" text-anchor="middle">THEO</text>
+  <text x="43" y="39" font-size="6" font-weight="bold" fill="#ffffff" text-anchor="middle">4.5h</text>
 </svg>
 ```
 
 - **Avantages & Limites :**
-  - Finesse maximale pour l'optimisation Lean, détection des gaspillages de manutention et calcul précis de l'écart Gamme vs Réalisé.
-  - Volumétrie élevée nécessitant des agrégations Power BI pour les rapports de synthèse.
+  - Précision chirurgicale pour l'analyse des goulets d'étranglement machine et l'écart Théorique vs Réalisé.
+  - Volumétrie importante nécessitant de solides agrégations DAX pour les dashboards exécutifs.
 
 ---
 
