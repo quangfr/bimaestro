@@ -23,10 +23,10 @@ Ce document constitue le référentiel textuel, méthodologique et technique syn
 
 ### 0.1 Contenu par défaut (readme.md)
 Le fichier `readme.md`, affiché par défaut, porte le **contexte opérationnel** et le **rôle du consultant / data lead supervisor** :
-- **Contexte Opérationnel & Déploiement BI :** Déploiement d'un outil décisionnel Power BI de cadrage de charge et de pilotage du TAT sur les flottes CFM56-5B/7B, LEAP-1A, LEAP-1B, dans une démarche d'amélioration continue, de discovery métier et de fiabilisation algorithmique.
+- **Contexte Opérationnel & Déploiement BI :** Déploiement d'un outil décisionnel Power BI de cadrage de charge et de pilotage du TAT sur les flottes CFM56-7B, CFM56-5B, LEAP-1A, LEAP-1B, GE90-115B, M88-2, sur 10 centres Safran (FR-Villaroche, FR-Montereau, FR-Châtellerault, BE-Bruxelles, FR-Saint-Quentin, FR-Gennevilliers, FR-Bordeaux, FR-Toulouse, BE-Liège, FR-Le Creusot).
 - **Rôle & Enjeux du Consultant / Data Lead Supervisor :** Arbitrage de la source de vérité (Golden Source), supervision de la qualité et du cycle de vie des données, normalisation des règles de calcul (Data Dictionary) et éthique de restitution (RLS/RBAC).
 
-> *(La **Méthodologie Data & Gouvernance** reste détaillée dans les guides méthodologiques des étapes 1 à 6 du simulateur.)*
+> *(La **Méthodologie Data & Gouvernance** est consultable à tout moment via le bouton d'information `i` (icône Lucide) présent à côté du titre de chaque étape, ouvrant une modale globale avec ancres de navigation directe.)*
 
 ---
 
@@ -79,7 +79,7 @@ xychart-beta
 
 > **Question de cadrage :** Quelles tables permettent le calcul selon le niveau de détail unitaire ?  
 > **En-tête de l'interface :** Étape 2 : Données (Granularité & Tables pour le calcul)  
-> **Bouton d'affichage :** en haut à droite, le bouton `schema-toggle` bascule entre la vue SVG (`schemaCanvas`) et le code Mermaid (`SCHEMA_MERMAID` dans `index.html`), identique aux diagrammes `erDiagram` ci-dessous.
+> **Bouton d'affichage :** en haut à droite, le bouton `schema-toggle` bascule entre la vue SVG (`schemaCanvas`) et le code Mermaid (`SCHEMA_MERMAID` dans `index.html`, avec bouton dédié « Copier le code » et sélection intégrale sans toast intempestif), identique aux diagrammes `erDiagram` ci-dessous.
 
 ### Les 3 Niveaux de Granularité :
 
@@ -87,8 +87,9 @@ xychart-beta
 - **Granularité :** 1 ligne = 1 visite complète moteur `visit (engine, priority, start, end)`.
 - **Transits logistiques :** Forfait logistique global rattaché au moteur.
 - **Modélisation relationnelle Canvas :**
-  - **Fait central :** `visit` (`id_visit`, `id_moteur`, `priorité_saisie`, `date_entrée [start]`, `date_livraison`, `id_kit_pièces`, `tat_réalisé_j`, `dérapage_sla_j`, `pénalités_eur`).
-  - **Dimensions liées (1:N) :** `engine` (type, modèle, client), `contract_sla` (client, sla_cible_jours, pénalité_jour_eur), `transits` (site_départ, site_arrivée, délai_transit_j), `calendar` (date, semaine, ouvré), `engine_parts` (modèle_moteur, dispo %, intervalle confiance +/-, lien date start).
+  - **Fait central :** `visit` (`id_demande` / `id_visit` commençant par `D-xxxxx`, `id_moteur` / ESN, `priorite`, `date_entree [start]`, `date_livraison`, `id_kit_pieces`, `tat_realise_j`, `derapage_sla_j`, `penalites_eur`).
+  - **Dimensions liées (1:N) :** `engine` (type, modele, client), `contract_sla` (client, sla_cible_jours, penalite_jour_eur), `transits` (shop_source, shop_dest, delai_transit_j), `calendar` (date, semaine, ouvre), `engine_parts` (`id_piece_pn` au format `Pxxxxx`, modele_moteur, dispo %, intervalle confiance +/-, lien date start).
+  - **Identifiants normalisés (`data.json`) :** Demandes au format `D-xxxxx` (ex: `D-09842`), Pièces au format `Pxxxxx` (ex: `P01125`), clés étrangères alignées avec le schéma de l'Étape 2 (`id_demande`, `id_moteur`, `id_shop`, `id_piece_pn`).
 
 ```mermaid
 erDiagram
@@ -315,25 +316,41 @@ erDiagram
 
 > **Question de cadrage :** Quels visuels utiliser pour piloter les délais et les engagements clients ?  
 > **En-tête de l'interface :** Étape 4 : Sélectionner les visuels pour le Délai (TAT) (`📊 Dataviz & Conception Graphique`)
-> **Rendu Chart.js (Étape 4) :** Les cartes d'options disposent d'un panneau Chart.js à droite (titres et sous-titres `metaInfo`, canvas `#step-4-canvas`). Les valeurs chiffrées sont générées côté client (PRNG seedé `maestro_seed`, persistant) sur la base des libellés de `data.json` — mêmes règles de cohérence que le Scénario Final (Étape 7, filtre).
+> **Rendu Chart.js (Étape 4) :** Les cartes d'options disposent d'un panneau Chart.js à droite (titres et sous-titres avec description explicite de la mesure et des axes X et Y, canvas `#step-4-canvas`). Les valeurs graphiques sont affichées par défaut sur chaque point, barre ou tranche via `chartjs-plugin-datalabels` (sans nécessiter de survol). Les données sont générées côté client (PRNG seedé `maestro_seed`, persistant) sur la base des libellés de `data.json` avec 10 sites Safran préfixés (`BE-`, `FR-`) et les flottes de moteurs (*CFM56-7B, CFM56-5B, LEAP-1A, LEAP-1B, GE90-115B, M88-2*).
 
 ### Les 8 Graphiques Disponibles pour le Délai :
-- **4.A : TAT Médian & Bornes 5%-95% par Moteur** (Distribution statistique en boxplot avec valeur médiane $P_{50}$ et bornes $P_{5} - P_{95}$ pour CFM56-7B, LEAP-1A, LEAP-1B).  
-  *Usages prépondérants associés :* `Pilotage`, `Gouvernance`.
-- **4.B : Décomposition du TAT par Site** (Barres empilées par centre industriel : part d'attente passive, réparation atelier et transferts navettes).  
-  *Usages prépondérants associés :* `Opérationnel`, `Pilotage`, `Logistique`.
-- **4.C : Respect des Délais Contractuels par Client & Moteur** (Barres groupées comparant TAT contractuel vs TAT effectif couplées au % de non-respect SLA).  
-  *Usages prépondérants associés :* `Contractuel`, `Financier`.
-- **4.D : Tableau d'Alertes Nominatives** (Listing matriciel ESN avec statut de la demande : AOG critique, En Retard, En Cours, Conforme).  
-  *Usages prépondérants associés :* `Opérationnel`, `Contractuel`, `Financier`.
-- **4.E : Cartes KPIs Synthétiques** (Indicateurs phares scalaires : TAT moyen réel glissant, taux de respect SLA global et dérive d'en-cours).  
-  *Usages prépondérants associés :* `Pilotage`, `Contractuel`.
-- **4.F : Barres vs Seuils Cibles P85** (Barres horizontales face au seuil de tolérance P85 par module : Aubes HP, Révision, Banc test).  
-  *Usages prépondérants associés :* `Opérationnel`, `Gouvernance`.
-- **4.G : Waterfall des Dérives TAT** (Cascade cumulative décomposant l'écart entre TAT contractuel et réel : attente pièce, CND, fast-track).  
-  *Usages prépondérants associés :* `Contractuel`, `Financier`, `Gouvernance`.
-- **4.H : Jalons de Traversée (Gates)** (Timeline séquentielle des gates industrielles G1 à G3 avec identification du chemin critique).  
-  *Usages prépondérants associés :* `Opérationnel`, `Pilotage`, `Logistique`.
+- **4.A : TAT Médian & Bornes 5%-95% par Moteur**  
+  *Titre & Sous-titre :* Mesure du TAT Médian et intervalle P5-P95 (j) | Axe X : Modèle Moteur (CFM56-7B, CFM56-5B, LEAP-1A, LEAP-1B, GE90-115B, M88-2) | Axe Y : Durée du TAT (jours).  
+  *Rendu :* Distribution statistique avec étiquettes de valeurs par défaut sur les médianes et bornes.  
+  *Usages associés :* `Pilotage`, `Gouvernance`.
+- **4.B : Décomposition du TAT par Site**  
+  *Titre & Sous-titre :* Décomposition du TAT cumulé (j) | Axe X : Site Industriel Safran (10 sites : FR-Villaroche, FR-Montereau, FR-Châtellerault, BE-Bruxelles, FR-Saint-Quentin, FR-Gennevilliers, FR-Bordeaux, FR-Toulouse, BE-Liège, FR-Le Creusot) | Axe Y : Jours cumulés (j).  
+  *Rendu :* Barres empilées (Attente, Réparation, Transit) avec affichage systématique des valeurs chiffrées en jours sur chaque segment.  
+  *Usages associés :* `Opérationnel`, `Pilotage`, `Logistique`.
+- **4.C : Respect des Délais Contractuels par Client & Moteur**  
+  *Titre & Sous-titre :* Respect Contractuel et Taux de Dérive SLA (%) | Axe X : Compagnies Aériennes (Air France, Air China, EasyJet, Lufthansa, Delta Air Lines, Emirates, Singapore Airlines) | Axe Y1 : Jours (j) / Axe Y2 : Dérive SLA (%).  
+  *Rendu :* Barres groupées et courbe combinée avec étiquettes de valeurs actives en permanence.  
+  *Usages associés :* `Contractuel`, `Financier`.
+- **4.D : Tableau d'Alertes Nominatives**  
+  *Titre & Sous-titre :* Cartographie des Dossiers ESN et Niveaux d'Escalade | Axe X : Moteur / Compagnie | Axe Y : Retard Effectif (jours).  
+  *Rendu :* Répartition catégorisée (Conforme, En cours, Retard, AOG critique) avec badges et valeurs associées.  
+  *Usages associés :* `Opérationnel`, `Contractuel`, `Financier`.
+- **4.E : Cartes KPIs Synthétiques**  
+  *Titre & Sous-titre :* Indicateurs Phares Globaux | Métriques : TAT Moyen Réel (j), Taux SLA (%), En-cours Critique.  
+  *Rendu :* Cartes métriques scalaires et donut de répartition des statuts avec affichage direct des volumes.  
+  *Usages associés :* `Pilotage`, `Contractuel`.
+- **4.F : Barres vs Seuils Cibles P85**  
+  *Titre & Sous-titre :* Positionnement TAT vs Seuil Tolérance P85 (j) | Axe X : Durée constatée (j) | Axe Y : Modules & Types de Réparation.  
+  *Rendu :* Barres horizontales avec seuils cibles et valeurs exactes affichées en bout de barre.  
+  *Usages associés :* `Opérationnel`, `Gouvernance`.
+- **4.G : Waterfall des Dérives TAT**  
+  *Titre & Sous-titre :* Décomposition Cumulative des Dérives TAT (j) | Axe X : Facteurs de Dérive / Étapes | Axe Y : Impact sur le Délai (jours).  
+  *Rendu :* Cascade de barres flottantes avec delta chiffré sur chaque composante de retard.  
+  *Usages associés :* `Contractuel`, `Financier`, `Gouvernance`.
+- **4.H : Jalons de Traversée (Gates)**  
+  *Titre & Sous-titre :* Durée de Traversée par Gate Industrielle (G1 à G3) | Axe X : Portes Industrielles | Axe Y : Durée de Passage (jours).  
+  *Rendu :* Chronogramme avec valeurs affichées par étape et chemin critique mis en exergue.  
+  *Usages associés :* `Opérationnel`, `Pilotage`, `Logistique`.
 
 ### Illustrations Graphiques en Mermaid (Étape 4)
 
@@ -362,11 +379,11 @@ gantt
 %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#3b82f6'}}}%%
 xychart-beta
     title "Décomposition du TAT (Jours) par Site Safran : Réparation vs Navette vs Attente"
-    x-axis ["Villaroche (VIL)", "Montereau (MON)", "Châtellerault (CHL)", "Bruxelles (BRU)"]
+    x-axis ["FR-Villaroche", "FR-Montereau", "FR-Châtellerault", "BE-Bruxelles", "FR-St-Quentin", "FR-Gennevilliers", "FR-Bordeaux"]
     y-axis "Jours cumulés" 0 --> 25
-    bar [11, 10, 12, 10]
-    bar [3, 4, 2, 3]
-    bar [4, 7, 3, 3]
+    bar [11, 10, 12, 10, 11, 13, 12]
+    bar [3, 4, 2, 3, 2, 3, 2]
+    bar [4, 7, 3, 3, 4, 5, 4]
 ```
 
 #### 3. Respect des Délais Contractuels vs Effectifs par Client (Illustration 4.C)
@@ -374,11 +391,11 @@ xychart-beta
 %%{init: {'theme': 'base'}}%%
 xychart-beta
     title "Écart TAT Contractuel vs Effectif et Taux de Non-Respect SLA (%)"
-    x-axis ["Air France (AFR)", "Lufthansa (DLH)", "Delta (DAL)", "Ryanair (RYR)"]
+    x-axis ["Air France", "Air China", "EasyJet", "Lufthansa", "Delta Air Lines", "Emirates", "Singapore Airlines"]
     y-axis "TAT Moyen (Jours)" 0 --> 25
-    bar [20, 18, 22, 16]
-    bar [19, 17, 22, 19]
-    line [5, 4, 6, 15]
+    bar [20, 18, 22, 16, 21, 19, 23]
+    bar [19, 17, 22, 19, 20, 18, 21]
+    line [5, 4, 6, 15, 8, 5, 4]
 ```
 
 #### 4. Logigramme d'Escalade et Qualification des Statuts ESN (Illustration 4.D)
@@ -431,11 +448,12 @@ graph TD
 
 #### Extrait B : Réparation Méso (repair) × WIP Instantané d'Atelier (5.B)
 ```text
-| shop (atelier) | type of repairs  | lots_repair_wip | durée des transits (en cours) | taux_occupation |
-| :------------- | :--------------- | :-------------- | :---------------------------- | :-------------- |
-| Montereau      | Aubes Turbine HP | 22 lots actifs  | 3 navettes route              | 91.7 % ⚠️       |
-| Villaroche     | Compresseurs     | 11 lots actifs  | 1 navette route               | 68.8 %          |
-| Bruxelles      | Banc d'Essai     | 10 lots actifs  | 2 en attente quai             | 100.0 % 🚨      |
+| shop (atelier)    | type of repairs  | lots_repair_wip | durée des transits (en cours) | taux_occupation |
+| :---------------- | :--------------- | :-------------- | :---------------------------- | :-------------- |
+| FR-Montereau      | Aubes Turbine HP | 22 lots actifs  | 3 navettes route              | 91.7 % ⚠️       |
+| FR-Villaroche     | Compresseurs     | 11 lots actifs  | 1 navette route               | 68.8 %          |
+| BE-Bruxelles      | Banc d'Essai     | 10 lots actifs  | 2 en attente quai             | 100.0 % 🚨      |
+| FR-Saint-Quentin  | Éléments Chauds  | 8 lots actifs   | 1 navette route               | 78.4 %          |
 ```
 *Formule DAX associée :* `Occupation_Shop_Live = DIVIDE(COUNTROWS(FILTER(repair, ISBLANK([end]))), [capacité_lots_hebdo])`
 
@@ -455,25 +473,41 @@ graph TD
 
 > **Question de cadrage :** Quels visuels choisir pour repérer les goulots d'étranglement et la surcharge ?  
 > **En-tête de l'interface :** Étape 6 : Sélectionner les visuels pour la Saturation des Ateliers (`📊 Dataviz & Conception Graphique`)
-> **Rendu Chart.js (Étape 6) :** Les cartes d'options disposent d'un panneau Chart.js à droite (titres et sous-titres `metaInfo`, canvas `#step-6-canvas`). Les valeurs chiffrées sont générées côté client (PRNG seedé `maestro_seed`, persistant) sur la base des libellés de `data.json` — mêmes règles de cohérence que le Scénario Final (Étape 7, filtre).
+> **Rendu Chart.js (Étape 6) :** Les cartes d'options disposent d'un panneau Chart.js à droite (titres et sous-titres avec description explicite de la mesure et des axes X et Y, canvas `#step-6-canvas`). Les valeurs graphiques sont affichées par défaut sur chaque point, barre ou tranche via `chartjs-plugin-datalabels` (sans nécessiter de survol). Les données sont générées côté client (PRNG seedé `maestro_seed`, persistant) sur la base des libellés de `data.json` avec 7 sites Safran préfixés (`BE-`, `FR-`) et les vraies compagnies aériennes.
 
 ### Les 8 Graphiques de Saturation :
-- **6.A : Top Pièces Manquantes par Site** (Heures d'attente cumulées et volume des pièces critiques en rupture par centre : Aubes HP, Disques LLP, Joints, Injecteurs).  
-  *Usages prépondérants associés :* `Logistique`, `Opérationnel`.
-- **6.B : Retards par Réparation & Moteur** (% des demandes avec attente imprévue décliné par famille CFM56 vs LEAP-1A/1B : Usinage carter, Ressuage CND, Aubes HP, Bancs).  
-  *Usages prépondérants associés :* `Opérationnel`, `Gouvernance`.
-- **6.C : Top Routes de Transfert Inter-Sites** (Part du flux de demandes transférées en sous-traitance et délai navette moyen en jours par axe d'origine).  
-  *Usages prépondérants associés :* `Logistique`, `Pilotage`.
-- **6.D : Ratio Attente vs Travail Effectif** (Donut Lean isolant le temps de travail à valeur ajoutée de l'attente passive et de la logistique).  
-  *Usages prépondérants associés :* `Pilotage`, `Gouvernance`.
-- **6.E : Barres de Charge vs Seuil 85%** (Taux d'occupation atelier face à la ligne critique des 85% où la file d'attente explose).  
-  *Usages prépondérants associés :* `Opérationnel`, `Pilotage`.
-- **6.F : Heatmap Hebdomadaire / Site** (Matrice thermique croisant sites et semaines calendaires pour détecter les pics saisonniers de tension).  
-  *Usages prépondérants associés :* `Pilotage`, `Opérationnel`.
-- **6.G : Courbes Entrées vs Sorties WIP** (Cumulative Flow Diagram mesurant l'accumulation d'en-cours et la dérive de lead time).  
-  *Usages prépondérants associés :* `Logistique`, `Financier`, `Gouvernance`.
-- **6.H : Treemap des Goulots d'Atelier** (Cartographie rectangulaire proportionnelle à l'en-cours bloqué par machine ou poste critique).  
-  *Usages prépondérants associés :* `Opérationnel`, `Pilotage`, `Logistique`.
+- **6.A : Top Pièces Manquantes par Site**  
+  *Titre & Sous-titre :* Heures d'Attente Induites par les Pièces Manquantes (h) | Axe X : Références Pièces Critiques (Aubes HP, Disques LLP, etc.) | Axe Y : Heures d'attente cumulées (h).  
+  *Rendu :* Barres avec affichage permanent des heures d'attente cumulées sur chaque barre.  
+  *Usages associés :* `Logistique`, `Opérationnel`.
+- **6.B : Retards par Réparation & Moteur**  
+  *Titre & Sous-titre :* Taux de Retard par Type de Réparation et Flotte Moteur (%) | Axe X : Typologie de Réparation | Axe Y : % de Dossiers Décalés (%).  
+  *Rendu :* Barres groupées CFM56 vs LEAP avec pourcentages affichés par défaut.  
+  *Usages associés :* `Opérationnel`, `Gouvernance`.
+- **6.C : Top Routes de Transfert Inter-Sites**  
+  *Titre & Sous-titre :* Flux Navettes et Délais de Transfert Inter-Sites | Axe X : Axes Logistiques Inter-Sites | Axe Y1 : % du Flux Global / Axe Y2 : Délai Moyen Navette (j).  
+  *Rendu :* Barres de volume de flux combinées à la courbe des délais avec valeurs visibles sur chaque point et barre.  
+  *Usages associés :* `Logistique`, `Pilotage`.
+- **6.D : Ratio Attente vs Travail Effectif**  
+  *Titre & Sous-titre :* Répartition du Lead Time Global Atelier (Lean MRO) | Donut : Travail VA, Attente pièces, Transferts navettes.  
+  *Rendu :* Donut Lean avec étiquettes de pourcentages et d'heures affichées directement sur chaque segment.  
+  *Usages associés :* `Pilotage`, `Gouvernance`.
+- **6.E : Barres de Charge vs Seuil 85%**  
+  *Titre & Sous-titre :* Taux de Charge Atelier vs Seuil Critique 85% (%) | Axe X : Centres Industriels Safran | Axe Y : Taux d'Occupation Réel (%).  
+  *Rendu :* Barres de charge avec coloration d'alerte et étiquette du taux d'occupation exact par site.  
+  *Usages associés :* `Opérationnel`, `Pilotage`.
+- **6.F : Heatmap Hebdomadaire / Site**  
+  *Titre & Sous-titre :* Matrice d'Intensité Hebdomadaire de Charge (%) | Axe X : Semaines Calendaires (S1 à S8) | Axe Y : Sites Safran (7 centres).  
+  *Rendu :* Matrice thermique avec affichage des taux de charge moyens par site.  
+  *Usages associés :* `Pilotage`, `Opérationnel`.
+- **6.G : Courbes Entrées vs Sorties WIP**  
+  *Titre & Sous-titre :* Cumulative Flow Diagram - Entrées vs Sorties WIP (unités) | Axe X : Semaines Calendaires (S1 à S6) | Axe Y : Volumes Cumulés (moteurs).  
+  *Rendu :* Courbes d'accumulation avec volumes visibles par défaut sur chaque jalon hebdomadaire.  
+  *Usages associés :* `Logistique`, `Financier`, `Gouvernance`.
+- **6.H : Treemap des Goulots d'Atelier**  
+  *Titre & Sous-titre :* En-cours Cumulé et Taux de Saturation par Poste Critique | Axe X : En-cours Cumulé WIP (heures) | Axe Y : Postes & Machines d'Atelier.  
+  *Rendu :* Barres horizontales avec étiquettes détaillées `[WIP h (Saturation %)]` affichées en bout de ligne.  
+  *Usages associés :* `Opérationnel`, `Pilotage`, `Logistique`.
 
 ### Illustrations Graphiques en Mermaid (Étape 6)
 
@@ -482,7 +516,7 @@ graph TD
 %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ef4444'}}}%%
 xychart-beta
     title "Heures de Blocage d'Attente par Référence Critique et Site"
-    x-axis ["Aubes HP (Montereau)", "Disques LLP (Villaroche)", "Joints Fan (Châtellerault)", "Injecteurs (Bruxelles)"]
+    x-axis ["Aubes HP (FR-Montereau)", "Disques LLP (FR-Villaroche)", "Joints Fan (FR-Châtellerault)", "Injecteurs (BE-Bruxelles)"]
     y-axis "Heures de rupture cumulées" 0 --> 100
     bar [84, 52, 28, 16]
 ```
@@ -503,7 +537,7 @@ xychart-beta
 %%{init: {'theme': 'base'}}%%
 xychart-beta
     title "Flux de Sous-Traitance (% Demandes) et Délai Navette Route (Jours)"
-    x-axis ["Montereau ➔ Villaroche", "Châtellerault ➔ Bruxelles", "Villaroche ➔ Châtellerault", "Montereau ➔ Bruxelles"]
+    x-axis ["FR-Montereau ➔ FR-Villaroche", "FR-Châtellerault ➔ BE-Bruxelles", "FR-Villaroche ➔ FR-Châtellerault", "FR-Montereau ➔ BE-Bruxelles"]
     y-axis "% Part du Flux Global" 0 --> 45
     bar [38, 27, 19, 16]
     line [12, 24, 18, 31]
@@ -528,9 +562,9 @@ pie title "Répartition du Lead Time Global MRO"
 1. **Dropdowns Interactifs Synchronisés (`#select-q1` à `#select-q6`) :**
    Permettent de modifier instantanément un choix sans devoir reboucler les étapes antérieures.
 2. **Barre de Filtres Multidimensionnelle Dynamique :**
-   - *Filtre Site :* Tous, Villaroche (VIL), Montereau (MON), Châtellerault (CHL), Bruxelles (BRU).
-   - *Filtre Client :* Toutes compagnies, Air France (AFR), Lufthansa (DLH), Delta Air Lines (DAL), Ryanair (RYR).
-   - *Filtre Moteur :* CFM56-7B, LEAP-1A, LEAP-1B.
+   - *Filtre Site (10 sites) :* Tous, FR-Villaroche (VIL), FR-Montereau (MON), FR-Châtellerault (CHL), BE-Bruxelles (BRU), FR-Saint-Quentin (SQY), FR-Gennevilliers (GEN), FR-Bordeaux (BDX), FR-Toulouse (TLS), BE-Liège (LGG), FR-Le Creusot (CRE).
+   - *Filtre Client (Vraies compagnies) :* Toutes compagnies, Air France (AFR), Air China (CCA), EasyJet (EZY), Lufthansa (DLH), Delta Air Lines (DAL), Emirates (UAE), Singapore Airlines (SIA).
+   - *Filtre Moteur (6 flottes) :* CFM56-7B, CFM56-5B, LEAP-1A, LEAP-1B, GE90-115B, M88-2.
    - *Filtre Date Calendaire Jour :* Sélecteur de date d'entrée prédictive couplé au calcul automatique de la **Date Prévisionnelle de restitution** (`Date + TAT Médian`).
 3. **Quatuor de Cartes KPIs Dynamiques :**
    - KPI 1 : Dérive métier selon l'objectif Q1 (ex: AOG critiques, pénalités financières encourues, % SLA).
@@ -538,7 +572,7 @@ pie title "Répartition du Lead Time Global MRO"
    - KPI 3 : TAT moyen glissant et bornes de dispersion $P_5 - P_{95}$ (selon Q3).
    - KPI 4 : Taux de charge et certitude d'adéquation capacitaire (selon Q5).
 4. **Visualisations Temps Réel Croisées :**
-   - Cadre gauche : Visualisation du délai calibrée selon l'option choisie en Étape 4 (de 4.A à 4.H).
-   - Cadre droit : Visualisation de la saturation calibrée selon l'option choisie en Étape 6 (de 6.A à 6.H).
+   - Cadre gauche : Visualisation du délai calibrée selon l'option choisie en Étape 4 (de 4.A à 4.H) avec axes explicites et valeurs par défaut.
+   - Cadre droit : Visualisation de la saturation calibrée selon l'option choisie en Étape 6 (de 6.A à 6.H) avec axes explicites et valeurs par défaut.
 5. **Recommandations d'Architecture BI & Mesures DAX Déduites :**
    - Formulations automatiques suggérant les colonnes calculées, les liens d'étoile avec le calendrier industriel ouvré et les règles de partitionnement DirectQuery / Import selon la combinaison `[Q1, Q2, Q3, Q4, Q5, Q6]`.

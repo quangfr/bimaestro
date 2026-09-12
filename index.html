@@ -8,6 +8,11 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix@2.0.1/dist/chartjs-chart-matrix.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-treemap@2.3.1/dist/chartjs-chart-treemap.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     .glass-card {
       background: rgba(255, 255, 255, 0.9);
@@ -31,6 +36,25 @@
       background: rgba(239, 246, 255, 0.95);
       box-shadow: 0 0 0 1.5px #2563eb, 0 4px 12px -2px rgba(37, 99, 235, 0.15);
     }
+
+    /* Cartes réponses grand format avec scroll Y (Étapes 4 et 6) */
+    .step-answers-card {
+      min-height: 104px;
+      padding: 0.85rem 0.95rem;
+    }
+    .step-answers-card .ans-title {
+      font-size: 14px !important; /* +2px vs 12px text-xs */
+      line-height: 1.35;
+    }
+    .step-answers-card .ans-desc {
+      font-size: 12.5px !important; /* +2px vs 10.5px */
+      line-height: 1.45;
+    }
+    .step-answers-card .ans-meta {
+      font-size: 11px !important; /* +2px vs 9px */
+      line-height: 1.4;
+    }
+
 
     .markdown-body h1,
     .markdown-body h2,
@@ -167,7 +191,7 @@
   class="bg-slate-100 text-slate-800 font-sans min-h-screen md:h-screen flex flex-col items-center justify-between p-2 md:p-3 overflow-y-auto md:overflow-hidden select-none">
 
   <!-- En-tête Unifié avec Navigation sur une seule ligne -->
-  <header class="relative z-40 w-full max-w-6xl shrink-0 mb-1 flex flex-wrap lg:flex-nowrap items-center justify-between gap-2 bg-white/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-200/80 shadow-sm">
+  <header class="relative z-40 w-full shrink-0 mb-1 flex flex-wrap lg:flex-nowrap items-center justify-between gap-2 bg-white/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-200/80 shadow-sm">
     <div class="flex items-center gap-2 shrink-0">
       <span
         class="inline-flex items-center gap-1 px-2 py-0.5 bg-blue-50 border border-blue-200 rounded-full text-blue-700 text-[10px] font-bold uppercase tracking-wider">
@@ -188,7 +212,7 @@
           <span>1️⃣</span> Question <span class="text-[8px] text-slate-400 font-semibold">▾</span>
         </button>
         <div id="nav-dd-1"
-          class="hidden group-hover:block focus-within:block absolute left-0 top-full z-50 mt-1 w-72 max-h-72 overflow-y-auto bg-white rounded-xl border border-slate-200 shadow-2xl p-1.5 space-y-0.5"></div>
+          class="hidden group-hover:block focus-within:block absolute left-0 top-full z-50 mt-1 w-[420px] max-w-none bg-white rounded-xl border border-slate-200 shadow-2xl p-2 space-y-1"></div>
       </div>
       <div id="nav-step-2" class="relative group">
         <button onclick="switchStep(2)" id="tab-2"
@@ -196,7 +220,7 @@
           <span>2️⃣</span> Modèle <span class="text-[8px] text-slate-400 font-semibold">▾</span>
         </button>
         <div id="nav-dd-2"
-          class="hidden group-hover:block focus-within:block absolute left-0 top-full z-50 mt-1 w-72 max-h-72 overflow-y-auto bg-white rounded-xl border border-slate-200 shadow-2xl p-1.5 space-y-0.5"></div>
+          class="hidden group-hover:block focus-within:block absolute left-0 top-full z-50 mt-1 w-[420px] max-w-none bg-white rounded-xl border border-slate-200 shadow-2xl p-2 space-y-1"></div>
       </div>
       <div id="nav-step-3" class="relative group">
         <button onclick="switchStep(3)" id="tab-3"
@@ -204,7 +228,7 @@
           <span>3️⃣</span> TAT <span class="text-[8px] text-slate-400 font-semibold">▾</span>
         </button>
         <div id="nav-dd-3"
-          class="hidden group-hover:block focus-within:block absolute left-0 top-full z-50 mt-1 w-72 max-h-72 overflow-y-auto bg-white rounded-xl border border-slate-200 shadow-2xl p-1.5 space-y-0.5"></div>
+          class="hidden group-hover:block focus-within:block absolute left-0 top-full z-50 mt-1 w-[420px] max-w-none bg-white rounded-xl border border-slate-200 shadow-2xl p-2 space-y-1"></div>
       </div>
       <div id="nav-step-4" class="relative group">
         <button onclick="switchStep(4)" id="tab-4"
@@ -212,7 +236,7 @@
           <span>4️⃣</span> Délai <span class="text-[8px] text-slate-400 font-semibold">▾</span>
         </button>
         <div id="nav-dd-4"
-          class="hidden group-hover:block focus-within:block absolute left-0 top-full z-50 mt-1 w-72 max-h-72 overflow-y-auto bg-white rounded-xl border border-slate-200 shadow-2xl p-1.5 space-y-0.5"></div>
+          class="hidden group-hover:block focus-within:block absolute left-0 top-full z-50 mt-1 w-[420px] max-w-none bg-white rounded-xl border border-slate-200 shadow-2xl p-2 space-y-1"></div>
       </div>
       <div id="nav-step-5" class="relative group">
         <button onclick="switchStep(5)" id="tab-5"
@@ -220,7 +244,7 @@
           <span>5️⃣</span> Capacité <span class="text-[8px] text-slate-400 font-semibold">▾</span>
         </button>
         <div id="nav-dd-5"
-          class="hidden group-hover:block focus-within:block absolute left-0 top-full z-50 mt-1 w-72 max-h-72 overflow-y-auto bg-white rounded-xl border border-slate-200 shadow-2xl p-1.5 space-y-0.5"></div>
+          class="hidden group-hover:block focus-within:block absolute left-0 top-full z-50 mt-1 w-[420px] max-w-none bg-white rounded-xl border border-slate-200 shadow-2xl p-2 space-y-1"></div>
       </div>
       <div id="nav-step-6" class="relative group">
         <button onclick="switchStep(6)" id="tab-6"
@@ -228,7 +252,7 @@
           <span>6️⃣</span> Saturation <span class="text-[8px] text-slate-400 font-semibold">▾</span>
         </button>
         <div id="nav-dd-6"
-          class="hidden group-hover:block focus-within:block absolute left-0 top-full z-50 mt-1 w-72 max-h-72 overflow-y-auto bg-white rounded-xl border border-slate-200 shadow-2xl p-1.5 space-y-0.5"></div>
+          class="hidden group-hover:block focus-within:block absolute left-0 top-full z-50 mt-1 w-[420px] max-w-none bg-white rounded-xl border border-slate-200 shadow-2xl p-2 space-y-1"></div>
       </div>
       <button onclick="switchStep(7)" id="tab-7"
         class="px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 bg-white text-slate-600 border border-slate-200 hover:text-blue-600 hover:bg-slate-50 shadow-sm">
@@ -238,7 +262,7 @@
   </header>
 
   <!-- Contenu Principal (Prend toute la place disponible) -->
-  <main class="w-full max-w-6xl flex-1 flex flex-col justify-between min-h-0 overflow-hidden">
+  <main class="w-full flex-1 flex flex-col justify-between min-h-0 overflow-hidden">
 
     <!-- ================= PAGE 0 (Contexte : Fichiers Markdown du Dossier Racine) ================= -->
     <div id="step-0" class="step-page flex flex-col min-h-full md:h-full justify-between">
@@ -269,25 +293,17 @@
       <div class="glass-card p-3 rounded-xl flex flex-col justify-between flex-1">
         <div class="mb-2">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+            <div class="flex items-center gap-1.5">
             <h2 class="text-sm md:text-base font-bold text-blue-700">Étape 1 : Cadrer la question métier prioritaire</h2>
+            <button type="button" onclick="openMethodologyModal(1)" title="Méthodologie Data & Gouvernance" class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-700 transition hover:scale-110 shadow-2xs">
+              <i data-lucide="info" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
             <span class="text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full self-start sm:self-auto">🎯 Cadrage du Persona Métier</span>
           </div>
-          <p class="text-[11px] text-slate-500">Quel est le premier problème que le tableau de bord doit résoudre ?</p>
           
-          <!-- Guide Méthodologique Data & Gouvernance : Persona Métier & Alignement Décisionnel -->
-          <div class="mt-1.5 p-2 bg-slate-50/90 rounded-lg border border-slate-200 text-[10px] text-slate-600">
-            <div class="font-bold text-slate-800 text-[10.5px] mb-1 flex items-center gap-1.5">
-              <span>🏛️</span> Méthodologie Data & Gouvernance — Persona Métier & Enjeux Décisionnels :
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-1 text-[9.5px]">
-              <div>• <strong>Propriétaire métier (Data Owner) :</strong> Qui porte la responsabilité décisionnelle (Directeur de site, CSM client, Chef d'atelier ou Approvisionneur) ?</div>
-              <div>• <strong>Pouvoir d'arbitrage :</strong> Quelle décision formelle est prise sur la donnée (escalade AOG, contestation SLA, dérogation stock) ?</div>
-              <div>• <strong>Niveau d'habilitation (RBAC) :</strong> Qui a le droit de voir quoi (vue par contrat client, vision globale Safran ou cloisonnement site) ?</div>
-              <div>• <strong>Pacte de service (SLA du rapport) :</strong> Quel engagement de fraîcheur de donnée (Direct live horaire vs consolidation consolidée hebdo) ?</div>
-              <div>• <strong>Impact de non-conformité :</strong> Quel coût financier, contractuel ou de réputation en cas d'erreur de pilotage ?</div>
-              <div>• <strong>Rituel de gouvernance :</strong> Dans quelle instance officielle la donnée est-elle arbitrée (War room quotidienne, Comité de direction, Revue S&OP) ?</div>
-            </div>
-          </div>
+          
+          
         </div>
 
         <!-- Grille 3 colonnes x 2 lignes -->
@@ -499,28 +515,20 @@
     </div>
 
     <!-- ================= PAGE 2 (Modèle Canvas Conservé & Compacté) ================= -->
-    <div id="step-2" class="step-page hidden flex flex-col min-h-full md:h-full justify-between">
-      <div class="glass-card p-3.5 rounded-xl flex flex-col justify-between flex-1">
+    <div id="step-2" class="step-page hidden flex flex-col h-full min-h-full justify-between overflow-y-auto pr-0.5">
+      <div class="glass-card p-3.5 rounded-xl flex flex-col justify-between flex-1 min-h-0">
         <div class="mb-2">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+            <div class="flex items-center gap-1.5">
             <h2 class="text-sm md:text-base font-bold text-blue-700">Étape 2 : Données (Granularité & Tables pour le calcul)</h2>
+            <button type="button" onclick="openMethodologyModal(2)" title="Méthodologie Data & Gouvernance" class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-700 transition hover:scale-110 shadow-2xs">
+              <i data-lucide="info" class="w-3.5 h-3.5"></i>
+            </button>
           </div>
-          <p class="text-[11px] text-slate-500">Quelles tables permettent le calcul selon le niveau de détail unitaire ?</p>
+          </div>
           
-          <!-- Guide Méthodologique Data & Gouvernance : Choix des Données & Gestion de Patrimoine -->
-          <div class="mt-1.5 p-2 bg-slate-50/90 rounded-lg border border-slate-200 text-[10px] text-slate-600">
-            <div class="font-bold text-slate-800 text-[10.5px] mb-1 flex items-center gap-1.5">
-              <span>🏛️</span> Méthodologie Data & Gouvernance — Gestion du Patrimoine Données & Traçabilité :
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-1 text-[9.5px]">
-              <div>• <strong>Source de vérité unique (Golden Source) :</strong> L'ERP Safran, le MES atelier ou le système de suivi commercial fait-il foi ?</div>
-              <div>• <strong>Data Stewardship & Rôles :</strong> Qui certifie la qualité et valide la saisie des pointages d'opérations sur les postes ?</div>
-              <div>• <strong>Complétude & exhaustivité :</strong> Existe-t-il des trous dans la raquette sur les gammes standards ou les tables de transits ?</div>
-              <div>• <strong>Intégrité référentielle :</strong> Les identifiants ESN moteur, numéros d'OF et codes postes sont-ils unifiés et normés ?</div>
-              <div>• <strong>Linéage & Traçabilité Part-145 :</strong> Peut-on justifier l'historique et la conformité légale de chaque mesure auprès de l'OSAC/EASA ?</div>
-              <div>• <strong>Gestion du cycle de vie (Archivage) :</strong> Quelle durée de rétention des données unitaires vs historisation agrégée ?</div>
-            </div>
-          </div>
+          
+          
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 flex-1 items-stretch">
@@ -641,8 +649,14 @@
                 <span class="flex items-center gap-1.5"><span class="text-purple-600 font-bold text-xs">📐</span> Mesures / Métriques</span>
               </div>
             </div>
-            <div id="schema-mermaid-view" class="hidden w-full min-w-[320px] max-w-[640px] flex-1 flex flex-col min-h-0">
-              <pre class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-3 overflow-x-auto overflow-y-auto text-[11px] leading-relaxed whitespace-pre-wrap"><code id="schema-mermaid-code" class="language-mermaid"></code></pre>
+            <div id="schema-mermaid-view" class="hidden w-full min-w-[320px] max-w-[640px] flex-1 flex flex-col min-h-0 relative">
+              <div class="flex items-center justify-between pb-1 shrink-0">
+                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Modèle Mermaid ERD</span>
+                <button type="button" id="schema-copy-btn" onclick="copyMermaidSchema()" class="px-2 py-0.5 text-[10px] font-bold rounded bg-slate-700 hover:bg-blue-600 text-white transition flex items-center gap-1 shadow-sm">
+                  <span>📋</span> Copier le code
+                </button>
+              </div>
+              <pre class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-3 overflow-x-auto overflow-y-auto text-[11px] leading-relaxed whitespace-pre-wrap select-all"><code id="schema-mermaid-code" class="language-mermaid"></code></pre>
             </div>
           </div>
         </div>
@@ -654,25 +668,17 @@
       <div class="glass-card p-3.5 rounded-xl flex flex-col justify-between flex-1">
         <div class="mb-2">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+            <div class="flex items-center gap-1.5">
             <h2 class="text-sm md:text-base font-bold text-blue-700">Étape 3 : Choisir la méthode de calcul du délai (TAT)</h2>
+            <button type="button" onclick="openMethodologyModal(3)" title="Méthodologie Data & Gouvernance" class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-700 transition hover:scale-110 shadow-2xs">
+              <i data-lucide="info" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
             <span class="text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full self-start sm:self-auto">📐 Méthode & Rigueur de Calcul</span>
           </div>
-          <p class="text-[11px] text-slate-500">Quel niveau de complexité mathématique et d'hypothèse adopter ?</p>
           
-          <!-- Guide Méthodologique Data & Gouvernance : Définitions Métier & Rigueur des Indicateurs -->
-          <div class="mt-1.5 p-2 bg-slate-50/90 rounded-lg border border-slate-200 text-[10px] text-slate-600">
-            <div class="font-bold text-slate-800 text-[10.5px] mb-1 flex items-center gap-1.5">
-              <span>🏛️</span> Méthodologie Data & Gouvernance — Dictionnaire des Métriques & Auditabilité du Calcul :
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-1 text-[9.5px]">
-              <div>• <strong>Définition certifiée (Data Dictionary) :</strong> Le TAT est-il validé par toutes les parties (brut calendaire, ouvré ou net gelé client) ?</div>
-              <div>• <strong>Auditabilité & Reproductibilité :</strong> Les auditeurs clients ou financiers peuvent-ils recalculer et prouver la même valeur à l'identique ?</div>
-              <div>• <strong>Transparence des hypothèses :</strong> Les règles de suspension de chrono ("Stop-the-clock") ou de lissage sont-elles documentées ?</div>
-              <div>• <strong>Biais statistique & Représentativité :</strong> L'échantillon historique utilisé (médiane $P_{50}$) exclut-il les visites aberrantes ou prototypes ?</div>
-              <div>• <strong>Robustesse & Validité dans le temps :</strong> La formule résiste-t-elle aux changements d'organisation atelier et aux nouveaux moteurs ?</div>
-              <div>• <strong>Acceptation par les parties prenantes :</strong> Les compagnies aériennes reconnaissent-elles juridiquement cette modalité de décompte ?</div>
-            </div>
-          </div>
+          
+          
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 flex-1 items-stretch overflow-hidden">
@@ -823,17 +829,19 @@
     </div>
 
     <!-- ================= PAGE 4 ================= -->
-    <div id="step-4" class="step-page hidden flex flex-col min-h-full md:h-full justify-between">
-      <div class="glass-card p-3.5 rounded-xl flex flex-col justify-between flex-1">
+    <div id="step-4" class="step-page hidden flex flex-col h-full min-h-full justify-between overflow-hidden pr-0.5">
+      <div class="glass-card p-3.5 rounded-xl flex flex-col justify-between flex-1 min-h-0">
         <div class="mb-2">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+            <div class="flex items-center gap-1.5">
             <h2 class="text-sm md:text-base font-bold text-blue-700">Étape 4 : Sélectionner les visuels pour le Délai (TAT)</h2>
+            <button type="button" onclick="openMethodologyModal(4)" title="Méthodologie Data & Gouvernance" class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-700 transition hover:scale-110 shadow-2xs">
+              <i data-lucide="info" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
             <div class="flex items-center gap-2 self-start sm:self-auto">
               <!-- Sélecteur d'usage synchronisé avec l'Étape 1 -->
               <div class="flex items-center gap-1.5 bg-white border border-slate-300 rounded-lg px-2 py-0.5 shadow-xs">
-                <label for="select-usage-step4" class="text-[9.5px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1">
-                  <span>🎯</span> Usage :
-                </label>
                 <select id="select-usage-step4" onchange="onUsageChange(this.value)"
                   class="bg-transparent text-[10.5px] font-bold text-blue-700 outline-none cursor-pointer">
                   <option value="A">⚡ Opérationnel (AOG)</option>
@@ -847,36 +855,23 @@
               <span class="text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full hidden md:inline-block">📊 Dataviz & Conception</span>
             </div>
           </div>
-          <p class="text-[11px] text-slate-500">Quels visuels utiliser pour piloter les délais et les engagements clients ?</p>
           
-          <!-- Guide Méthodologique Data & Gouvernance : Sémiologie Visuelle & Intégrité Décisionnelle -->
-          <div class="mt-1.5 p-2 bg-slate-50/90 rounded-lg border border-slate-200 text-[10px] text-slate-600">
-            <div class="font-bold text-slate-800 text-[10.5px] mb-1 flex items-center gap-1.5">
-              <span>🏛️</span> Méthodologie Data & Gouvernance — Standard de Restitution & Éthique de Restitution :
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-1 text-[9.5px]">
-              <div>• <strong>Intégrité d'interprétation :</strong> Le visuel évite-t-il les effets d'échelle trompeurs ou les faux sentiments d'urgence ?</div>
-              <div>• <strong>Standard Corporate Safran :</strong> Les codes couleurs (vert conforme, orange aléas, rouge AOG) respectent-ils la charte MRO ?</div>
-              <div>• <strong>Neutralité & Fidélité :</strong> Les seuils d'alerte (SLA, $P_{85}$) sont-ils objectivement opposables à tous les acteurs ?</div>
-              <div>• <strong>Accessibilité & Clarté cognitive :</strong> Le lecteur novice comprend-il immédiatement l'action requise sans formation poussée ?</div>
-              <div>• <strong>Protection des données sensibles :</strong> Les pénalités financières (€) doivent-elles être masquées selon le profil utilisateur ?</div>
-              <div>• <strong>Responsabilité de l'action :</strong> Le graphique permet-il d'assigner sans ambiguïté un responsable au déblocage ?</div>
-            </div>
-          </div>
+          
+          
         </div>
 
                   <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 flex-1 items-stretch">
-            <div id="step-4-answers" class="lg:col-span-5 flex flex-col justify-between space-y-2 min-h-0 overflow-y-auto pr-1">
+            <div id="step-4-answers" class="lg:col-span-5 flex flex-col justify-start space-y-2.5 min-h-0 overflow-y-auto pr-1">
     <div onclick="selectOption(4, 'A')" id="opt-4-A"
-                class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-row items-start gap-3">
+                class="option-card step-answers-card glass-card rounded-xl border border-slate-200 cursor-pointer flex flex-row items-start gap-3">
                 <div id="opt-4-A-body" class="flex-1 min-w-0">
-                  <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                  <div class="ans-title font-bold text-slate-900 mb-1 flex items-center gap-1.5">
                     <span class="text-sm">⏱️</span> A. TAT Médian &amp; Bornes 5%-95%
                   </div>
-                  <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                  <p class="ans-desc text-slate-600 leading-snug mb-1.5">
                     Distribution du TAT par type de moteur avec valeur médiane P50 et barres de dispersion P5 - P95.
                   </p>
-                  <div class="text-[9px] text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 space-y-0.5">
+                  <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 space-y-0.5">
                     <div><span class="font-bold text-blue-700">Type :</span> Boxplot / Barres d'Erreur P5-P50-P95</div>
                     <div><span class="font-bold text-slate-700">Axes :</span> X = Familles moteurs • Y = TAT (Jours)</div>
                     <div><span class="font-bold text-slate-700">Dimensions :</span> CFM56-7B, LEAP-1A, LEAP-1B</div>
@@ -884,15 +879,15 @@
                   </div>
                 </div></div>
     <div onclick="selectOption(4, 'B')" id="opt-4-B"
-                class="option-card active glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-row items-start gap-3">
+                class="option-card active step-answers-card glass-card rounded-xl border border-slate-200 cursor-pointer flex flex-row items-start gap-3">
                 <div id="opt-4-B-body" class="flex-1 min-w-0">
-                  <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                  <div class="ans-title font-bold text-slate-900 mb-1 flex items-center gap-1.5">
                     <span class="text-sm">📊</span> B. Décomposition du TAT par Site
                   </div>
-                  <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                  <p class="ans-desc text-slate-600 leading-snug mb-1.5">
                     Barres empilées par site : part d'attente, délai de réparation atelier et temps de transfert.
                   </p>
-                  <div class="text-[9px] text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 space-y-0.5">
+                  <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 space-y-0.5">
                     <div><span class="font-bold text-blue-700">Type :</span> Barres Empilées Horizontales / Site</div>
                     <div><span class="font-bold text-slate-700">Axes :</span> X = TAT Décomposé • Y = Sites Safran</div>
                     <div><span class="font-bold text-slate-700">Dimensions :</span> Sites (VIL, MON, CHL, BRU)</div>
@@ -900,15 +895,15 @@
                   </div>
                 </div></div>
     <div onclick="selectOption(4, 'C')" id="opt-4-C"
-                class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-row items-start gap-3">
+                class="option-card step-answers-card glass-card rounded-xl border border-slate-200 cursor-pointer flex flex-row items-start gap-3">
                 <div id="opt-4-C-body" class="flex-1 min-w-0">
-                  <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                  <div class="ans-title font-bold text-slate-900 mb-1 flex items-center gap-1.5">
                     <span class="text-sm">🤝</span> C. Respect Délais par Client &amp; Moteur
                   </div>
-                  <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                  <p class="ans-desc text-slate-600 leading-snug mb-1.5">
                     Écart moyen TAT contractuel vs effectif couplé au taux de non-respect SLA par client et moteur.
                   </p>
-                  <div class="text-[9px] text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 space-y-0.5">
+                  <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 space-y-0.5">
                     <div><span class="font-bold text-blue-700">Type :</span> Barres Groupées &amp; Ligne % Écart</div>
                     <div><span class="font-bold text-slate-700">Axes :</span> X = Client / Moteur • Y1 = TAT • Y2 = % Retard</div>
                     <div><span class="font-bold text-slate-700">Dimensions :</span> Compagnies (AFR, DLH, DAL, RYR)</div>
@@ -916,15 +911,15 @@
                   </div>
                 </div></div>
     <div onclick="selectOption(4, 'D')" id="opt-4-D"
-                class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-row items-start gap-3">
+                class="option-card step-answers-card glass-card rounded-xl border border-slate-200 cursor-pointer flex flex-row items-start gap-3">
                 <div id="opt-4-D-body" class="flex-1 min-w-0">
-                  <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                  <div class="ans-title font-bold text-slate-900 mb-1 flex items-center gap-1.5">
                     <span class="text-sm">📋</span> D. Tableau d'Alertes Nominatives
                   </div>
-                  <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                  <p class="ans-desc text-slate-600 leading-snug mb-1.5">
                     Listing opérationnel détaillé avec statut couleur (vert/orange/rouge), ESN moteur, client et écart.
                   </p>
-                  <div class="text-[9px] text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 space-y-0.5">
+                  <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 space-y-0.5">
                     <div><span class="font-bold text-blue-700">Type :</span> Table / Matrice avec Mise en Forme Conditionnelle</div>
                     <div><span class="font-bold text-slate-700">Axes :</span> Lignes = Dossiers unitaires ESN • Colonnes = Attributs</div>
                     <div><span class="font-bold text-slate-700">Dimensions :</span> ESN Moteur, Compagnie, Atelier, Criticité AOG</div>
@@ -932,15 +927,15 @@
                   </div>
                 </div></div>
     <div onclick="selectOption(4, 'E')" id="opt-4-E"
-                class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-row items-start gap-3">
+                class="option-card step-answers-card glass-card rounded-xl border border-slate-200 cursor-pointer flex flex-row items-start gap-3">
                 <div id="opt-4-E-body" class="flex-1 min-w-0">
-                  <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                  <div class="ans-title font-bold text-slate-900 mb-1 flex items-center gap-1.5">
                     <span class="text-sm">⏱️</span> E. Cartes KPIs Synthétiques
                   </div>
-                  <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                  <p class="ans-desc text-slate-600 leading-snug mb-1.5">
                     Indicateurs phares en gros chiffres : TAT moyen glissant, respect SLA global et dérive d'en-cours.
                   </p>
-                  <div class="text-[9px] text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 space-y-0.5">
+                  <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 space-y-0.5">
                     <div><span class="font-bold text-blue-700">Type :</span> Multi-Card KPI Synthétique</div>
                     <div><span class="font-bold text-slate-700">Axes :</span> N/A (Indicateurs scalaires agrégés)</div>
                     <div><span class="font-bold text-slate-700">Dimensions :</span> Tous moteurs &amp; Tous contrats</div>
@@ -948,15 +943,15 @@
                   </div>
                 </div></div>
     <div onclick="selectOption(4, 'F')" id="opt-4-F"
-                class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-row items-start gap-3">
+                class="option-card step-answers-card glass-card rounded-xl border border-slate-200 cursor-pointer flex flex-row items-start gap-3">
                 <div id="opt-4-F-body" class="flex-1 min-w-0">
-                  <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                  <div class="ans-title font-bold text-slate-900 mb-1 flex items-center gap-1.5">
                     <span class="text-sm">🎯</span> F. Barres vs Seuils Cibles P85
                   </div>
-                  <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                  <p class="ans-desc text-slate-600 leading-snug mb-1.5">
                     Durée réelle par sous-ensemble face aux barres de tolérance contractuelles (lignes seuil P85).
                   </p>
-                  <div class="text-[9px] text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 space-y-0.5">
+                  <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 space-y-0.5">
                     <div><span class="font-bold text-blue-700">Type :</span> Barres Horizontales avec Ligne Seuil Cible</div>
                     <div><span class="font-bold text-slate-700">Axes :</span> X = TAT Réalisé • Y = Modules &amp; Packages</div>
                     <div><span class="font-bold text-slate-700">Dimensions :</span> Aubes HP, Révision Générale, Recette Banc</div>
@@ -964,15 +959,15 @@
                   </div>
                 </div></div>
     <div onclick="selectOption(4, 'G')" id="opt-4-G"
-                class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-row items-start gap-3">
+                class="option-card step-answers-card glass-card rounded-xl border border-slate-200 cursor-pointer flex flex-row items-start gap-3">
                 <div id="opt-4-G-body" class="flex-1 min-w-0">
-                  <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                  <div class="ans-title font-bold text-slate-900 mb-1 flex items-center gap-1.5">
                     <span class="text-sm">🌊</span> G. Waterfall des Dérives TAT
                   </div>
-                  <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                  <p class="ans-desc text-slate-600 leading-snug mb-1.5">
                     Cascade cumulative expliquant l'écart entre TAT contractuel convenu et TAT réel (+pièces, +aléa).
                   </p>
-                  <div class="text-[9px] text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 space-y-0.5">
+                  <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 space-y-0.5">
                     <div><span class="font-bold text-blue-700">Type :</span> Graphique Waterfall / Cascade Déviations</div>
                     <div><span class="font-bold text-slate-700">Axes :</span> X = Causes de Dérive • Y = Jours Cumulés</div>
                     <div><span class="font-bold text-slate-700">Dimensions :</span> Cible, Attente Pièce, Aléa CND, Fast Track</div>
@@ -980,15 +975,15 @@
                   </div>
                 </div></div>
     <div onclick="selectOption(4, 'H')" id="opt-4-H"
-                class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-row items-start gap-3">
+                class="option-card step-answers-card glass-card rounded-xl border border-slate-200 cursor-pointer flex flex-row items-start gap-3">
                 <div id="opt-4-H-body" class="flex-1 min-w-0">
-                  <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                  <div class="ans-title font-bold text-slate-900 mb-1 flex items-center gap-1.5">
                     <span class="text-sm">🚩</span> H. Jalons de Traversée (Gates)
                   </div>
-                  <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                  <p class="ans-desc text-slate-600 leading-snug mb-1.5">
                     Gantt simplifié suivant le passage des portes industrielles (Gate 1 Démontage, Gate 2 Contrôle, Gate 3 Banc).
                   </p>
-                  <div class="text-[9px] text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 space-y-0.5">
+                  <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 space-y-0.5">
                     <div><span class="font-bold text-blue-700">Type :</span> Jalons Temporels / Milestone Timeline</div>
                     <div><span class="font-bold text-slate-700">Axes :</span> X = Séquence des Gates • Y = Chemins</div>
                     <div><span class="font-bold text-slate-700">Dimensions :</span> Gate 1 Démontage, G2 Usinage, G3 Banc Test</div>
@@ -996,13 +991,13 @@
                   </div>
                 </div></div>
             </div>
-            <div id="step-4-chart-panel" class="lg:col-span-7 bg-white rounded-xl p-2.5 border border-slate-200 shadow-sm flex flex-col min-h-0 overflow-hidden">
+            <div id="step-4-chart-panel" class="lg:col-span-7 bg-white rounded-xl p-2.5 border border-slate-200 shadow-sm flex flex-col h-full max-h-full min-h-0">
               <div class="flex items-center justify-between gap-2 shrink-0 pb-1.5 border-b border-slate-200">
                 <span id="step-4-chart-title" class="text-[11px] font-bold text-blue-700">📊 Illustration Chart.js</span>
                 <span id="step-4-chart-sub" class="text-[9px] font-mono font-bold text-slate-500 bg-slate-50 border border-slate-200 rounded px-1.5 py-0.5"></span>
               </div>
-              <div id="step-4-chart-box" class="flex-1 min-h-[300px] lg:min-h-0 mt-1.5 mb-1.5 relative">
-                <canvas id="step-4-canvas"></canvas>
+              <div id="step-4-chart-box" class="flex-1 w-full h-full max-h-full min-h-0 mt-1.5 mb-1.5 relative">
+                <canvas id="step-4-canvas" class="w-full h-full"></canvas>
               </div>
               <div id="step-4-chart-note" class="shrink-0 text-[9.5px] text-slate-600 bg-slate-50 rounded-lg border border-slate-200 px-2 py-1.5"></div>
             </div>
@@ -1015,25 +1010,17 @@
       <div class="glass-card p-3.5 rounded-xl flex flex-col justify-between flex-1">
         <div class="mb-2">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+            <div class="flex items-center gap-1.5">
             <h2 class="text-sm md:text-base font-bold text-blue-700">Étape 5 : Choisir la méthode d'évaluation de la Capacité Atelier</h2>
+            <button type="button" onclick="openMethodologyModal(5)" title="Méthodologie Data & Gouvernance" class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-700 transition hover:scale-110 shadow-2xs">
+              <i data-lucide="info" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
             <span class="text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full self-start sm:self-auto">⚖️ Modélisation du Capacitaire</span>
           </div>
-          <p class="text-[11px] text-slate-500">Sur quelle base dimensionner et projeter la capacité des ateliers (demandes effectives instantanées vs prévisions) ?</p>
           
-          <!-- Guide Méthodologique Data & Gouvernance : Gouvernance de la Charge & Contrats d'Interface -->
-          <div class="mt-1.5 p-2 bg-slate-50/90 rounded-lg border border-slate-200 text-[10px] text-slate-600">
-            <div class="font-bold text-slate-800 text-[10.5px] mb-1 flex items-center gap-1.5">
-              <span>🏛️</span> Méthodologie Data & Gouvernance — Gouvernance du Plan Capacitaire & Accords de Service :
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-1 text-[9.5px]">
-              <div>• <strong>Autorité d'engagement :</strong> Qui valide le plan capacitaire officiel (Directeur Industriel vs Ventes & Programmes) ?</div>
-              <div>• <strong>Contrats d'interface Fournisseurs :</strong> Les lead times des équipementiers OEM reposent-ils sur des engagements contractuels opposables ?</div>
-              <div>• <strong>Fiabilité des prévisions S&OP :</strong> Quel historique de respect des créneaux de déposes par les compagnies partenaires ?</div>
-              <div>• <strong>Synchronisation des silos :</strong> Comment assurer la cohérence entre la cellule Achats Pièces et l'ordonnancement Atelier ?</div>
-              <div>• <strong>Gouvernance des dérogations :</strong> Quelle procédure formelle autorise l'utilisation de pièces d'occasion ou cannibalisées ?</div>
-              <div>• <strong>Gestion des risques d'attrition :</strong> Les règles de mise au rebut aux CND sont-elles certifiées par les autorités de navigabilité ?</div>
-            </div>
-          </div>
+          
+          
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 flex-1 items-stretch overflow-hidden">
@@ -1190,17 +1177,19 @@
     </div>
 
     <!-- ================= PAGE 6 (Saturation) ================= -->
-    <div id="step-6" class="step-page hidden flex flex-col min-h-full md:h-full justify-between">
-      <div class="glass-card p-3.5 rounded-xl flex flex-col justify-between flex-1">
+    <div id="step-6" class="step-page hidden flex flex-col h-full min-h-full justify-between overflow-hidden pr-0.5">
+      <div class="glass-card p-3.5 rounded-xl flex flex-col justify-between flex-1 min-h-0">
         <div class="mb-2">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+            <div class="flex items-center gap-1.5">
             <h2 class="text-sm md:text-base font-bold text-blue-700">Étape 6 : Sélectionner les visuels pour la Saturation des Ateliers</h2>
+            <button type="button" onclick="openMethodologyModal(6)" title="Méthodologie Data & Gouvernance" class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-700 transition hover:scale-110 shadow-2xs">
+              <i data-lucide="info" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
             <div class="flex items-center gap-2 self-start sm:self-auto">
               <!-- Sélecteur d'usage synchronisé avec l'Étape 1 -->
               <div class="flex items-center gap-1.5 bg-white border border-slate-300 rounded-lg px-2 py-0.5 shadow-xs">
-                <label for="select-usage-step6" class="text-[9.5px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1">
-                  <span>🎯</span> Usage :
-                </label>
                 <select id="select-usage-step6" onchange="onUsageChange(this.value)"
                   class="bg-transparent text-[10.5px] font-bold text-blue-700 outline-none cursor-pointer">
                   <option value="A">⚡ Opérationnel (AOG)</option>
@@ -1214,36 +1203,23 @@
               <span class="text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full hidden md:inline-block">📊 Dataviz & Conception</span>
             </div>
           </div>
-          <p class="text-[11px] text-slate-500">Quels visuels choisir pour repérer les goulots d'étranglement et la surcharge ?</p>
           
-          <!-- Guide Méthodologique Data & Gouvernance : Pilotage des Tensions & Protocole d'Arbitrage -->
-          <div class="mt-1.5 p-2 bg-slate-50/90 rounded-lg border border-slate-200 text-[10px] text-slate-600">
-            <div class="font-bold text-slate-800 text-[10.5px] mb-1 flex items-center gap-1.5">
-              <span>🏛️</span> Méthodologie Data & Gouvernance — Pilotage des Tensions & Protocoles d'Arbitrage :
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-1 text-[9.5px]">
-              <div>• <strong>Protocole d'escalade au seuil 85% :</strong> Quel circuit de décision officiel se déclenche dès l'entrée en zone de saturation critique ?</div>
-              <div>• <strong>Arbitrage inter-sites équitable :</strong> Quelle gouvernance tranche le délestage d'un atelier vers un autre (VIL, MON, CHL, BRU) ?</div>
-              <div>• <strong>Responsabilité sur l'en-cours (WIP) :</strong> Qui rend compte des dérives de lead time causées par l'accumulation d'en-cours ?</div>
-              <div>• <strong>Transparence de la file d'attente :</strong> La ventilation temps utile vs temps d'attente est-elle partagée en toute neutralité avec le Lean ?</div>
-              <div>• <strong>Données de sous-traitance :</strong> Les goulets chez les partenaires externes sont-ils monitorés avec les mêmes exigences de gouvernance ?</div>
-              <div>• <strong>Mesure de l'impact social & capacitaire :</strong> Comment la donnée de saturation est-elle partagée avec le management des ressources humaines ?</div>
-            </div>
-          </div>
+          
+          
         </div>
 
                   <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 flex-1 items-stretch">
-            <div id="step-6-answers" class="lg:col-span-5 flex flex-col justify-between space-y-2 min-h-0 overflow-y-auto pr-1">
+            <div id="step-6-answers" class="lg:col-span-5 flex flex-col justify-start space-y-2.5 min-h-0 overflow-y-auto pr-1">
     <div onclick="selectOption(6, 'A')" id="opt-6-A"
-                class="option-card active glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
+                class="option-card active step-answers-card glass-card rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
                 <div id="opt-6-A-body">
-                  <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                  <div class="ans-title font-bold text-slate-900 mb-1 flex items-center gap-1.5">
                     <span class="text-sm">📦</span> A. Top Pièces Manquantes par Site
                   </div>
-                  <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                  <p class="ans-desc text-slate-600 leading-snug mb-1.5">
                     Volume et impact des références critiques en rupture causant l'attente sur chaque site Safran.
                   </p>
-                  <div class="text-[9px] text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
+                  <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
                     <div><span class="font-bold text-blue-700">Type :</span> Barres Horizontales Groupées par Site</div>
                     <div><span class="font-bold text-slate-700">Axes :</span> X = Heures d'attente / Volume • Y = Références</div>
                     <div><span class="font-bold text-slate-700">Dimensions :</span> Pièces critiques & Sites (VIL, MON, CHL, BRU)</div>
@@ -1251,15 +1227,15 @@
                   </div>
                 </div></div>
     <div onclick="selectOption(6, 'B')" id="opt-6-B"
-                class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-row justify-between items-start gap-3">
+                class="option-card step-answers-card glass-card rounded-xl border border-slate-200 cursor-pointer flex flex-row justify-between items-start gap-3">
                 <div id="opt-6-B-body">
-                  <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                  <div class="ans-title font-bold text-slate-900 mb-1 flex items-center gap-1.5">
                     <span class="text-sm">⚠️</span> B. Retards par Réparation & Moteur
                   </div>
-                  <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                  <p class="ans-desc text-slate-600 leading-snug mb-1.5">
                     Types d'opérations subissant le plus de retard imprévu en % des demandes, décliné par moteur.
                   </p>
-                  <div class="text-[9px] text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
+                  <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
                     <div><span class="font-bold text-blue-700">Type :</span> Barres Groupées / Taux de Dérive</div>
                     <div><span class="font-bold text-slate-700">Axes :</span> X = % Demandes en retard • Y = Gammes ateliers</div>
                     <div><span class="font-bold text-slate-700">Dimensions :</span> Types réparation & Moteurs (CFM vs LEAP)</div>
@@ -1267,15 +1243,15 @@
                   </div>
                 </div></div>
     <div onclick="selectOption(6, 'C')" id="opt-6-C"
-                class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-row justify-between items-start gap-3">
+                class="option-card step-answers-card glass-card rounded-xl border border-slate-200 cursor-pointer flex flex-row justify-between items-start gap-3">
                 <div id="opt-6-C-body">
-                  <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                  <div class="ans-title font-bold text-slate-900 mb-1 flex items-center gap-1.5">
                     <span class="text-sm">🚚</span> C. Routes de Transfert & Délais Navettes
                   </div>
-                  <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                  <p class="ans-desc text-slate-600 leading-snug mb-1.5">
                     Top des flux de sous-traitance inter-sites en % des demandes et délai moyen de transport.
                   </p>
-                  <div class="text-[9px] text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
+                  <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
                     <div><span class="font-bold text-blue-700">Type :</span> Graphique Croisé Flux & Délais (Bulle/Barre)</div>
                     <div><span class="font-bold text-slate-700">Axes :</span> X1 = % Demandes • X2 = Délai Jours • Y = Route</div>
                     <div><span class="font-bold text-slate-700">Dimensions :</span> Origine ➔ Destination sous-traitant</div>
@@ -1283,15 +1259,15 @@
                   </div>
                 </div></div>
     <div onclick="selectOption(6, 'D')" id="opt-6-D"
-                class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-row justify-between items-start gap-3">
+                class="option-card step-answers-card glass-card rounded-xl border border-slate-200 cursor-pointer flex flex-row justify-between items-start gap-3">
                 <div id="opt-6-D-body">
-                  <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                  <div class="ans-title font-bold text-slate-900 mb-1 flex items-center gap-1.5">
                     <span class="text-sm">⏳</span> D. Ratio Attente vs Travail Effectif
                   </div>
-                  <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                  <p class="ans-desc text-slate-600 leading-snug mb-1.5">
                     Donut mesurant le temps passé en attente passive d'un technicien, d'une machine ou navette.
                   </p>
-                  <div class="text-[9px] text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
+                  <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
                     <div><span class="font-bold text-blue-700">Type :</span> Donut Chart / Ratio Part de Voix Lean</div>
                     <div><span class="font-bold text-slate-700">Axes :</span> N/A (Proportions circulaires sur 100%)</div>
                     <div><span class="font-bold text-slate-700">Dimensions :</span> Statut temps (Valeur Ajoutée vs Non-VA)</div>
@@ -1299,15 +1275,15 @@
                   </div>
                 </div></div>
     <div onclick="selectOption(6, 'E')" id="opt-6-E"
-                class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
+                class="option-card step-answers-card glass-card rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
                 <div id="opt-6-E-body">
-                  <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                  <div class="ans-title font-bold text-slate-900 mb-1 flex items-center gap-1.5">
                     <span class="text-sm">🚦</span> E. Barres de Charge vs Seuil 85%
                   </div>
-                  <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                  <p class="ans-desc text-slate-600 leading-snug mb-1.5">
                     Taux d'occupation atelier face à la ligne rouge critique des 85% où l'encombrement explose.
                   </p>
-                  <div class="text-[9px] text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
+                  <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
                     <div><span class="font-bold text-blue-700">Type :</span> Barres Horizontales avec Seuil Alerte</div>
                     <div><span class="font-bold text-slate-700">Axes :</span> X = % Charge Atelier • Y = Ateliers / Sites</div>
                     <div><span class="font-bold text-slate-700">Dimensions :</span> VIL-01, MON-01, CHL-01, BRU-01</div>
@@ -1315,15 +1291,15 @@
                   </div>
                 </div></div>
     <div onclick="selectOption(6, 'F')" id="opt-6-F"
-                class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
+                class="option-card step-answers-card glass-card rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
                 <div id="opt-6-F-body">
-                  <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                  <div class="ans-title font-bold text-slate-900 mb-1 flex items-center gap-1.5">
                     <span class="text-sm">🗓️</span> F. Heatmap Hebdomadaire / Site
                   </div>
-                  <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                  <p class="ans-desc text-slate-600 leading-snug mb-1.5">
                     Matrice croisant sites et semaines calendaires pour repérer les pics saisonniers d'entrées.
                   </p>
-                  <div class="text-[9px] text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
+                  <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
                     <div><span class="font-bold text-blue-700">Type :</span> Matrice Thermique / Heatmap Hebdo</div>
                     <div><span class="font-bold text-slate-700">Axes :</span> X = Semaines S36-S39 • Y = Sites</div>
                     <div><span class="font-bold text-slate-700">Dimensions :</span> Sites Safran x Semaines</div>
@@ -1331,15 +1307,15 @@
                   </div>
                 </div></div>
     <div onclick="selectOption(6, 'G')" id="opt-6-G"
-                class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
+                class="option-card step-answers-card glass-card rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
                 <div id="opt-6-G-body">
-                  <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                  <div class="ans-title font-bold text-slate-900 mb-1 flex items-center gap-1.5">
                     <span class="text-sm">📈</span> G. Courbes Entrées vs Sorties WIP
                   </div>
-                  <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                  <p class="ans-desc text-slate-600 leading-snug mb-1.5">
                     Diagramme de flux cumulé mesurant l'écart arrivées / restitutions et la dérive d'en-cours.
                   </p>
-                  <div class="text-[9px] text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
+                  <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
                     <div><span class="font-bold text-blue-700">Type :</span> Cumulative Flow Diagram (CFD)</div>
                     <div><span class="font-bold text-slate-700">Axes :</span> X = Chronologie Jours • Y = Moteurs Cumulés</div>
                     <div><span class="font-bold text-slate-700">Dimensions :</span> Flux Entrées (In) vs Sorties (Out)</div>
@@ -1347,15 +1323,15 @@
                   </div>
                 </div></div>
     <div onclick="selectOption(6, 'H')" id="opt-6-H"
-                class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
+                class="option-card step-answers-card glass-card rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
                 <div id="opt-6-H-body">
-                  <div class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+                  <div class="ans-title font-bold text-slate-900 mb-1 flex items-center gap-1.5">
                     <span class="text-sm">🗂️</span> H. Treemap des Goulots d'Atelier
                   </div>
-                  <p class="text-[10.5px] text-slate-600 leading-snug mb-1">
+                  <p class="ans-desc text-slate-600 leading-snug mb-1.5">
                     Surfaces proportionnelles au volume d'en-cours WIP bloqué, colorées par sévérité de saturation.
                   </p>
-                  <div class="text-[9px] text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
+                  <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
                     <div><span class="font-bold text-blue-700">Type :</span> Treemap / Cartographie Rectangulaire de Charge</div>
                     <div><span class="font-bold text-slate-700">Axes :</span> N/A (Surfaces proportionnelles au WIP)</div>
                     <div><span class="font-bold text-slate-700">Dimensions :</span> Postes (Tour CN, CND, Banc Test, Équilibrage)</div>
@@ -1363,13 +1339,13 @@
                   </div>
                 </div></div>
             </div>
-            <div id="step-6-chart-panel" class="lg:col-span-7 bg-white rounded-xl p-2.5 border border-slate-200 shadow-sm flex flex-col min-h-0 overflow-hidden">
+            <div id="step-6-chart-panel" class="lg:col-span-7 bg-white rounded-xl p-2.5 border border-slate-200 shadow-sm flex flex-col h-full max-h-full min-h-0">
               <div class="flex items-center justify-between gap-2 shrink-0 pb-1.5 border-b border-slate-200">
                 <span id="step-6-chart-title" class="text-[11px] font-bold text-blue-700">📊 Illustration Chart.js</span>
                 <span id="step-6-chart-sub" class="text-[9px] font-mono font-bold text-slate-500 bg-slate-50 border border-slate-200 rounded px-1.5 py-0.5"></span>
               </div>
-              <div id="step-6-chart-box" class="flex-1 min-h-[300px] lg:min-h-0 mt-1.5 mb-1.5 relative">
-                <canvas id="step-6-canvas"></canvas>
+              <div id="step-6-chart-box" class="flex-1 w-full h-full max-h-full min-h-0 mt-1.5 mb-1.5 relative">
+                <canvas id="step-6-canvas" class="w-full h-full"></canvas>
               </div>
               <div id="step-6-chart-note" class="shrink-0 text-[9.5px] text-slate-600 bg-slate-50 rounded-lg border border-slate-200 px-2 py-1.5"></div>
             </div>
@@ -1396,10 +1372,16 @@
                   <span class="text-slate-500 text-[9px] font-semibold">Site:</span>
                   <select id="filter-site" onchange="onFilterChange()" class="bg-transparent text-slate-800 font-medium text-[10px] outline-none cursor-pointer">
                     <option value="ALL">Tous les sites</option>
-                    <option value="VIL">Villaroche (VIL)</option>
-                    <option value="MON">Montereau (MON)</option>
-                    <option value="CHL">Châtellerault (CHL)</option>
-                    <option value="BRU">Bruxelles (BRU)</option>
+                    <option value="VIL">FR-Villaroche (VIL)</option>
+                    <option value="MON">FR-Montereau (MON)</option>
+                    <option value="CHL">FR-Châtellerault (CHL)</option>
+                    <option value="BRU">BE-Bruxelles (BRU)</option>
+                    <option value="SQY">FR-Saint-Quentin (SQY)</option>
+                    <option value="GEN">FR-Gennevilliers (GEN)</option>
+                    <option value="BDX">FR-Bordeaux (BDX)</option>
+                    <option value="TLS">FR-Toulouse (TLS)</option>
+                    <option value="LGG">BE-Liège (LGG)</option>
+                    <option value="CRE">FR-Le Creusot (CRE)</option>
                   </select>
                 </div>
 
@@ -1409,9 +1391,12 @@
                   <select id="filter-client" onchange="onFilterChange()" class="bg-transparent text-slate-800 font-medium text-[10px] outline-none cursor-pointer">
                     <option value="ALL">Toutes compagnies</option>
                     <option value="AFR">Air France (AFR)</option>
+                    <option value="CCA">Air China (CCA)</option>
+                    <option value="EZY">EasyJet (EZY)</option>
                     <option value="DLH">Lufthansa (DLH)</option>
                     <option value="DAL">Delta Air Lines (DAL)</option>
-                    <option value="RYR">Ryanair (RYR)</option>
+                    <option value="UAE">Emirates (UAE)</option>
+                    <option value="SIA">Singapore Airlines (SIA)</option>
                   </select>
                 </div>
 
@@ -1421,8 +1406,11 @@
                   <select id="filter-engine" onchange="onFilterChange()" class="bg-transparent text-slate-800 font-medium text-[10px] outline-none cursor-pointer">
                     <option value="ALL">Tous moteurs</option>
                     <option value="CFM56">CFM56-7B</option>
+                    <option value="CFM56_5B">CFM56-5B</option>
                     <option value="LEAP1A">LEAP-1A</option>
                     <option value="LEAP1B">LEAP-1B</option>
+                    <option value="GE90">GE90-115B</option>
+                    <option value="M88">M88-2</option>
                   </select>
                 </div>
 
@@ -1521,6 +1509,194 @@
         </div>
       </div>
 
+  <!-- ================= MODALE MÉTHODOLOGIE DATA & GOUVERNANCE ================= -->
+  <div id="methodology-modal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-2 sm:p-4">
+    <div class="bg-white w-full max-w-4xl max-h-[92vh] rounded-2xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- En-tête de la modale -->
+      <div class="px-4 py-3 bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-900 text-white flex items-center justify-between shrink-0 shadow-sm">
+        <div class="flex items-center gap-2">
+          <span class="text-lg">🏛️</span>
+          <div>
+            <h3 class="text-xs md:text-sm font-black tracking-tight">Référentiel Méthodologique Data & Gouvernance Safran MRO</h3>
+            <p class="text-[10.5px] text-blue-100 font-normal">Cadre normatif, rôles Part-145, auditabilité et protocoles décisionnels</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeMethodologyModal()" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition text-sm font-bold" title="Fermer (Échap)">
+          ✕
+        </button>
+      </div>
+
+      <!-- Barre de navigation rapide / Ancres entre étapes -->
+      <div class="px-3 py-1.5 bg-slate-100 border-b border-slate-200 flex items-center gap-1.5 overflow-x-auto shrink-0 scrollbar-none text-[11px]">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider shrink-0 mr-1">Aller à :</span>
+        <button type="button" onclick="scrollToMethodology(1)" class="px-2 py-0.5 rounded-md font-semibold bg-white text-slate-700 hover:text-blue-700 border border-slate-200 shadow-2xs shrink-0 transition">1️⃣ Question</button>
+        <button type="button" onclick="scrollToMethodology(2)" class="px-2 py-0.5 rounded-md font-semibold bg-white text-slate-700 hover:text-blue-700 border border-slate-200 shadow-2xs shrink-0 transition">2️⃣ Données</button>
+        <button type="button" onclick="scrollToMethodology(3)" class="px-2 py-0.5 rounded-md font-semibold bg-white text-slate-700 hover:text-blue-700 border border-slate-200 shadow-2xs shrink-0 transition">3️⃣ TAT</button>
+        <button type="button" onclick="scrollToMethodology(4)" class="px-2 py-0.5 rounded-md font-semibold bg-white text-slate-700 hover:text-blue-700 border border-slate-200 shadow-2xs shrink-0 transition">4️⃣ Visuels Délai</button>
+        <button type="button" onclick="scrollToMethodology(5)" class="px-2 py-0.5 rounded-md font-semibold bg-white text-slate-700 hover:text-blue-700 border border-slate-200 shadow-2xs shrink-0 transition">5️⃣ Capacité</button>
+        <button type="button" onclick="scrollToMethodology(6)" class="px-2 py-0.5 rounded-md font-semibold bg-white text-slate-700 hover:text-blue-700 border border-slate-200 shadow-2xs shrink-0 transition">6️⃣ Saturation</button>
+      </div>
+
+      <!-- Corps déroulant avec toutes les méthodologies -->
+      <div id="methodology-modal-content" class="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3">
+        <!-- Section Étape 1 -->
+        <section id="methodology-step-1" class="scroll-mt-4 p-3 rounded-xl border border-slate-200 bg-slate-50/80 shadow-2xs">
+          <div class="flex items-center justify-between mb-1.5 pb-1 border-b border-slate-200">
+            <h4 class="text-xs md:text-sm font-bold text-blue-800 flex items-center gap-1.5">
+              <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-600 text-white text-[10px] font-black">1</span>
+              Étape 1 : Persona Métier & Alignement Décisionnel
+            </h4>
+            <span class="text-[9.5px] font-bold text-slate-400 uppercase tracking-wider">Étape 1</span>
+          </div>
+          <!-- Guide Méthodologique Data & Gouvernance : Persona Métier & Alignement Décisionnel -->
+          <div class="mt-1.5 p-2 bg-slate-50/90 rounded-lg border border-slate-200 text-[10px] text-slate-600">
+            <div class="font-bold text-slate-800 text-[10.5px] mb-1 flex items-center gap-1.5">
+              <span>🏛️</span> Méthodologie Data & Gouvernance — Persona Métier & Enjeux Décisionnels :
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-1 text-[9.5px]">
+              <div>• <strong>Propriétaire métier (Data Owner) :</strong> Qui porte la responsabilité décisionnelle (Directeur de site, CSM client, Chef d'atelier ou Approvisionneur) ?</div>
+              <div>• <strong>Pouvoir d'arbitrage :</strong> Quelle décision formelle est prise sur la donnée (escalade AOG, contestation SLA, dérogation stock) ?</div>
+              <div>• <strong>Niveau d'habilitation (RBAC) :</strong> Qui a le droit de voir quoi (vue par contrat client, vision globale Safran ou cloisonnement site) ?</div>
+              <div>• <strong>Pacte de service (SLA du rapport) :</strong> Quel engagement de fraîcheur de donnée (Direct live horaire vs consolidation consolidée hebdo) ?</div>
+              <div>• <strong>Impact de non-conformité :</strong> Quel coût financier, contractuel ou de réputation en cas d'erreur de pilotage ?</div>
+              <div>• <strong>Rituel de gouvernance :</strong> Dans quelle instance officielle la donnée est-elle arbitrée (War room quotidienne, Comité de direction, Revue S&OP) ?</div>
+            </div>
+          </div>
+        </section>
+        <!-- Section Étape 2 -->
+        <section id="methodology-step-2" class="scroll-mt-4 p-3 rounded-xl border border-slate-200 bg-slate-50/80 shadow-2xs">
+          <div class="flex items-center justify-between mb-1.5 pb-1 border-b border-slate-200">
+            <h4 class="text-xs md:text-sm font-bold text-blue-800 flex items-center gap-1.5">
+              <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-600 text-white text-[10px] font-black">2</span>
+              Étape 2 : Gestion du Patrimoine Données & Traçabilité
+            </h4>
+            <span class="text-[9.5px] font-bold text-slate-400 uppercase tracking-wider">Étape 2</span>
+          </div>
+          <!-- Guide Méthodologique Data & Gouvernance : Choix des Données & Gestion de Patrimoine -->
+          <div class="mt-1.5 p-2 bg-slate-50/90 rounded-lg border border-slate-200 text-[10px] text-slate-600">
+            <div class="font-bold text-slate-800 text-[10.5px] mb-1 flex items-center gap-1.5">
+              <span>🏛️</span> Méthodologie Data & Gouvernance — Gestion du Patrimoine Données & Traçabilité :
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-1 text-[9.5px]">
+              <div>• <strong>Source de vérité unique (Golden Source) :</strong> L'ERP Safran, le MES atelier ou le système de suivi commercial fait-il foi ?</div>
+              <div>• <strong>Data Stewardship & Rôles :</strong> Qui certifie la qualité et valide la saisie des pointages d'opérations sur les postes ?</div>
+              <div>• <strong>Complétude & exhaustivité :</strong> Existe-t-il des trous dans la raquette sur les gammes standards ou les tables de transits ?</div>
+              <div>• <strong>Intégrité référentielle :</strong> Les identifiants ESN moteur, numéros d'OF et codes postes sont-ils unifiés et normés ?</div>
+              <div>• <strong>Linéage & Traçabilité Part-145 :</strong> Peut-on justifier l'historique et la conformité légale de chaque mesure auprès de l'OSAC/EASA ?</div>
+              <div>• <strong>Gestion du cycle de vie (Archivage) :</strong> Quelle durée de rétention des données unitaires vs historisation agrégée ?</div>
+            </div>
+          </div>
+        </section>
+        <!-- Section Étape 3 -->
+        <section id="methodology-step-3" class="scroll-mt-4 p-3 rounded-xl border border-slate-200 bg-slate-50/80 shadow-2xs">
+          <div class="flex items-center justify-between mb-1.5 pb-1 border-b border-slate-200">
+            <h4 class="text-xs md:text-sm font-bold text-blue-800 flex items-center gap-1.5">
+              <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-600 text-white text-[10px] font-black">3</span>
+              Étape 3 : Dictionnaire des Métriques & Auditabilité du Calcul
+            </h4>
+            <span class="text-[9.5px] font-bold text-slate-400 uppercase tracking-wider">Étape 3</span>
+          </div>
+          <!-- Guide Méthodologique Data & Gouvernance : Définitions Métier & Rigueur des Indicateurs -->
+          <div class="mt-1.5 p-2 bg-slate-50/90 rounded-lg border border-slate-200 text-[10px] text-slate-600">
+            <div class="font-bold text-slate-800 text-[10.5px] mb-1 flex items-center gap-1.5">
+              <span>🏛️</span> Méthodologie Data & Gouvernance — Dictionnaire des Métriques & Auditabilité du Calcul :
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-1 text-[9.5px]">
+              <div>• <strong>Définition certifiée (Data Dictionary) :</strong> Le TAT est-il validé par toutes les parties (brut calendaire, ouvré ou net gelé client) ?</div>
+              <div>• <strong>Auditabilité & Reproductibilité :</strong> Les auditeurs clients ou financiers peuvent-ils recalculer et prouver la même valeur à l'identique ?</div>
+              <div>• <strong>Transparence des hypothèses :</strong> Les règles de suspension de chrono ("Stop-the-clock") ou de lissage sont-elles documentées ?</div>
+              <div>• <strong>Biais statistique & Représentativité :</strong> L'échantillon historique utilisé (médiane $P_{50}$) exclut-il les visites aberrantes ou prototypes ?</div>
+              <div>• <strong>Robustesse & Validité dans le temps :</strong> La formule résiste-t-elle aux changements d'organisation atelier et aux nouveaux moteurs ?</div>
+              <div>• <strong>Acceptation par les parties prenantes :</strong> Les compagnies aériennes reconnaissent-elles juridiquement cette modalité de décompte ?</div>
+            </div>
+          </div>
+        </section>
+        <!-- Section Étape 4 -->
+        <section id="methodology-step-4" class="scroll-mt-4 p-3 rounded-xl border border-slate-200 bg-slate-50/80 shadow-2xs">
+          <div class="flex items-center justify-between mb-1.5 pb-1 border-b border-slate-200">
+            <h4 class="text-xs md:text-sm font-bold text-blue-800 flex items-center gap-1.5">
+              <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-600 text-white text-[10px] font-black">4</span>
+              Étape 4 : Standard de Restitution & Éthique de Restitution
+            </h4>
+            <span class="text-[9.5px] font-bold text-slate-400 uppercase tracking-wider">Étape 4</span>
+          </div>
+          <!-- Guide Méthodologique Data & Gouvernance : Sémiologie Visuelle & Intégrité Décisionnelle -->
+          <div class="mt-1.5 p-2 bg-slate-50/90 rounded-lg border border-slate-200 text-[10px] text-slate-600">
+            <div class="font-bold text-slate-800 text-[10.5px] mb-1 flex items-center gap-1.5">
+              <span>🏛️</span> Méthodologie Data & Gouvernance — Standard de Restitution & Éthique de Restitution :
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-1 text-[9.5px]">
+              <div>• <strong>Intégrité d'interprétation :</strong> Le visuel évite-t-il les effets d'échelle trompeurs ou les faux sentiments d'urgence ?</div>
+              <div>• <strong>Standard Corporate Safran :</strong> Les codes couleurs (vert conforme, orange aléas, rouge AOG) respectent-ils la charte MRO ?</div>
+              <div>• <strong>Neutralité & Fidélité :</strong> Les seuils d'alerte (SLA, $P_{85}$) sont-ils objectivement opposables à tous les acteurs ?</div>
+              <div>• <strong>Accessibilité & Clarté cognitive :</strong> Le lecteur novice comprend-il immédiatement l'action requise sans formation poussée ?</div>
+              <div>• <strong>Protection des données sensibles :</strong> Les pénalités financières (€) doivent-elles être masquées selon le profil utilisateur ?</div>
+              <div>• <strong>Responsabilité de l'action :</strong> Le graphique permet-il d'assigner sans ambiguïté un responsable au déblocage ?</div>
+            </div>
+          </div>
+        </section>
+        <!-- Section Étape 5 -->
+        <section id="methodology-step-5" class="scroll-mt-4 p-3 rounded-xl border border-slate-200 bg-slate-50/80 shadow-2xs">
+          <div class="flex items-center justify-between mb-1.5 pb-1 border-b border-slate-200">
+            <h4 class="text-xs md:text-sm font-bold text-blue-800 flex items-center gap-1.5">
+              <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-600 text-white text-[10px] font-black">5</span>
+              Étape 5 : Gouvernance du Plan Capacitaire & Accords de Service
+            </h4>
+            <span class="text-[9.5px] font-bold text-slate-400 uppercase tracking-wider">Étape 5</span>
+          </div>
+          <!-- Guide Méthodologique Data & Gouvernance : Gouvernance de la Charge & Contrats d'Interface -->
+          <div class="mt-1.5 p-2 bg-slate-50/90 rounded-lg border border-slate-200 text-[10px] text-slate-600">
+            <div class="font-bold text-slate-800 text-[10.5px] mb-1 flex items-center gap-1.5">
+              <span>🏛️</span> Méthodologie Data & Gouvernance — Gouvernance du Plan Capacitaire & Accords de Service :
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-1 text-[9.5px]">
+              <div>• <strong>Autorité d'engagement :</strong> Qui valide le plan capacitaire officiel (Directeur Industriel vs Ventes & Programmes) ?</div>
+              <div>• <strong>Contrats d'interface Fournisseurs :</strong> Les lead times des équipementiers OEM reposent-ils sur des engagements contractuels opposables ?</div>
+              <div>• <strong>Fiabilité des prévisions S&OP :</strong> Quel historique de respect des créneaux de déposes par les compagnies partenaires ?</div>
+              <div>• <strong>Synchronisation des silos :</strong> Comment assurer la cohérence entre la cellule Achats Pièces et l'ordonnancement Atelier ?</div>
+              <div>• <strong>Gouvernance des dérogations :</strong> Quelle procédure formelle autorise l'utilisation de pièces d'occasion ou cannibalisées ?</div>
+              <div>• <strong>Gestion des risques d'attrition :</strong> Les règles de mise au rebut aux CND sont-elles certifiées par les autorités de navigabilité ?</div>
+            </div>
+          </div>
+        </section>
+        <!-- Section Étape 6 -->
+        <section id="methodology-step-6" class="scroll-mt-4 p-3 rounded-xl border border-slate-200 bg-slate-50/80 shadow-2xs">
+          <div class="flex items-center justify-between mb-1.5 pb-1 border-b border-slate-200">
+            <h4 class="text-xs md:text-sm font-bold text-blue-800 flex items-center gap-1.5">
+              <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-600 text-white text-[10px] font-black">6</span>
+              Étape 6 : Pilotage des Tensions & Protocoles d'Arbitrage
+            </h4>
+            <span class="text-[9.5px] font-bold text-slate-400 uppercase tracking-wider">Étape 6</span>
+          </div>
+          <!-- Guide Méthodologique Data & Gouvernance : Pilotage des Tensions & Protocole d'Arbitrage -->
+          <div class="mt-1.5 p-2 bg-slate-50/90 rounded-lg border border-slate-200 text-[10px] text-slate-600">
+            <div class="font-bold text-slate-800 text-[10.5px] mb-1 flex items-center gap-1.5">
+              <span>🏛️</span> Méthodologie Data & Gouvernance — Pilotage des Tensions & Protocoles d'Arbitrage :
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-1 text-[9.5px]">
+              <div>• <strong>Protocole d'escalade au seuil 85% :</strong> Quel circuit de décision officiel se déclenche dès l'entrée en zone de saturation critique ?</div>
+              <div>• <strong>Arbitrage inter-sites équitable :</strong> Quelle gouvernance tranche le délestage d'un atelier vers un autre (VIL, MON, CHL, BRU) ?</div>
+              <div>• <strong>Responsabilité sur l'en-cours (WIP) :</strong> Qui rend compte des dérives de lead time causées par l'accumulation d'en-cours ?</div>
+              <div>• <strong>Transparence de la file d'attente :</strong> La ventilation temps utile vs temps d'attente est-elle partagée en toute neutralité avec le Lean ?</div>
+              <div>• <strong>Données de sous-traitance :</strong> Les goulets chez les partenaires externes sont-ils monitorés avec les mêmes exigences de gouvernance ?</div>
+              <div>• <strong>Mesure de l'impact social & capacitaire :</strong> Comment la donnée de saturation est-elle partagée avec le management des ressources humaines ?</div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Pied de la modale -->
+      <div class="px-4 py-2 bg-slate-50 border-t border-slate-200 flex items-center justify-between shrink-0 text-[11px] text-slate-500">
+        <span>💡 Défilement libre autorisé sur l'ensemble des étapes du cycle décisionnel</span>
+        <button type="button" onclick="closeMethodologyModal()" class="px-3 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs transition shadow-sm">
+          Fermer
+        </button>
+      </div>
+    </div>
+  </div>
+
   </main>
 
   <script>
@@ -1576,6 +1752,36 @@
       }
     };
 
+    function openMethodologyModal(stepNum) {
+      const modal = document.getElementById("methodology-modal");
+      if (!modal) return;
+      modal.classList.remove("hidden");
+      if (stepNum) {
+        setTimeout(() => scrollToMethodology(stepNum), 60);
+      }
+      if (window.lucide && window.lucide.createIcons) {
+        window.lucide.createIcons();
+      }
+    }
+
+    function closeMethodologyModal() {
+      const modal = document.getElementById("methodology-modal");
+      if (modal) modal.classList.add("hidden");
+    }
+
+    function scrollToMethodology(stepNum) {
+      const target = document.getElementById("methodology-step-" + stepNum);
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+        target.classList.add("ring-2", "ring-blue-500");
+        setTimeout(() => target.classList.remove("ring-2", "ring-blue-500"), 1500);
+      }
+    }
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeMethodologyModal();
+    });
+
     function switchStep(step) {
       currentStep = step;
       document.querySelectorAll('.step-page').forEach((el) => {
@@ -1621,6 +1827,10 @@
       }
       if (step === 7) {
         renderFinalDashboard();
+      }
+
+      if (window.lucide && window.lucide.createIcons) {
+        window.lucide.createIcons();
       }
 
       try {
@@ -1935,7 +2145,7 @@
     }
 
     // ===== Dropdowns de la barre de navigation : changer une réponse au survol (Étapes 1 à 6) =====
-    // La réponse déjà sélectionnée est toujours affichée en premier.
+    // Ordre fixe (A, B, C, D) conservé pour chaque étape, sans remonter l'option sélectionnée.
     const NAV_ORDER = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
     function buildNavDropdowns() {
@@ -1944,7 +2154,7 @@
         if (!dd || !metaInfo[q]) continue;
         dd.innerHTML = '';
         const opts = NAV_ORDER.filter((o) => metaInfo[q][o]);
-        opts.sort((a, b) => (a === selections[q] ? -1 : b === selections[q] ? 1 : a < b ? -1 : 1));
+
         opts.forEach((o) => {
           const m = metaInfo[q][o];
           const isSel = selections[q] === o;
@@ -1955,11 +2165,11 @@
             (isSel
               ? 'bg-blue-50 border-blue-200 text-blue-700'
               : 'text-slate-700 hover:bg-slate-50 border-transparent');
-          btn.innerHTML =
-            `<span class="text-[12px] shrink-0">${m.icon}</span>` +
-            `<span class="min-w-0"><span class="block font-bold">${q}.${o} · ${m.title}</span>` +
-            `<span class="block font-normal text-slate-500">${m.desc}</span></span>` +
-            (isSel ? '<span class="ml-auto shrink-0 text-[10px] font-bold text-blue-600">✓</span>' : '');
+                    btn.innerHTML =
+            `<span class="text-[13px] shrink-0 mt-0.5">${m.icon}</span>` +
+            `<span class="flex-1 min-w-0"><span class="block font-bold text-[11px] leading-tight text-slate-900">${q}.${o} · ${m.title}</span>` +
+            `<span class="block font-normal text-slate-500 text-[10px] leading-snug mt-0.5 whitespace-normal">${m.desc}</span></span>` +
+            (isSel ? '<span class="ml-2 shrink-0 text-[11px] font-bold text-blue-600">✓</span>' : '');
           btn.onclick = () => onSummarySelectChange(q, o);
           dd.appendChild(btn);
         });
@@ -2008,9 +2218,17 @@
       const D = JSON.parse(JSON.stringify(base));
 
       // 4.A — TAT médian & bornes par famille (P5 ≈ 60-70 % P50, P95 ≈ 140-165 % P50)
-      const p50Base = { 'CFM56-7B': 14.9, 'LEAP-1A': 21.6, 'LEAP-1B': 18.4 };
+      const p50Base = {
+        'CFM56-7B': 14.9,
+        'CFM56-5B': 13.8,
+        'LEAP-1A': 21.6,
+        'LEAP-1B': 18.4,
+        'GE90-115B': 26.2,
+        'M88-2': 16.5
+      };
       D.modeles = D.modeles.map((m) => {
-        const p50 = rndDec(rng, p50Base[m.famille] - 1.2, p50Base[m.famille] + 1.2);
+        const baseVal = p50Base[m.famille] || 18.0;
+        const p50 = rndDec(rng, baseVal - 1.2, baseVal + 1.2);
         const p5 = rndDec(rng, p50 * 0.60, p50 * 0.70);
         const p95 = rndDec(rng, p50 * 1.40, p50 * 1.65);
         return { famille: m.famille, p50, p5, p95 };
@@ -2034,16 +2252,31 @@
         return { code: c.code, nom: c.nom, contrat: contrat, effectif: contrat + over, nonRespect: Math.round(nonRespect * 10) / 10 };
       });
 
-      // 4.D — Alertes ESN : TAT et retard selon statut, pénalités = retard × 1500-2500 €
+      // 4.D — Demandes de visite / Alertes : TAT et retard selon statut, pénalités = retard × 1500-2500 €
       const statutTat = { 'AOG Critique': [30, 42], 'En Retard': [20, 24], 'En Cours': [15, 19], 'Conforme': [13, 17] };
       D.alertesESN = D.alertesESN.map((a) => {
-        const [lo, hi] = statutTat[a.statut] || [15, 20];
+        const statut = a.priorite || a.statut || 'En Cours';
+        const [lo, hi] = statutTat[statut] || [15, 20];
         const tat = rndDec(rng, lo, hi);
         let retard = 0;
-        if (a.statut === 'AOG Critique') retard = rndDec(rng, 8, 18);
-        else if (a.statut === 'En Retard') retard = rndDec(rng, 2, 5);
+        if (statut === 'AOG Critique') retard = rndDec(rng, 8, 18);
+        else if (statut === 'En Retard') retard = rndDec(rng, 2, 5);
         const penalites = Math.round(retard * rndRange(rng, 1500, 2500));
-        return { esn: a.esn, client: a.client, site: a.site, model: a.model, statut: a.statut, tat, retard, penalites };
+        return {
+          id_demande: a.id_demande || a.id_visit || a.esn,
+          id_moteur: a.id_moteur || a.esn,
+          client: a.client,
+          site: a.site,
+          model: a.model || a.modele || a.type,
+          statut: statut,
+          priorite: statut,
+          tat_realise_j: tat,
+          tat: tat,
+          retard: retard,
+          derapage_sla_j: retard,
+          penalites_eur: penalites,
+          penalites: penalites
+        };
       });
 
       // 4.E — KPIs synthétiques (agrégats)
@@ -2098,9 +2331,22 @@
       // 6.A — Pièces manquantes (heures TAT 10-90, qty 2-12, lead 7-26)
       const statutHeures = { Critique: [55, 90], 'Modéré': [30, 55], Veille: [10, 30] };
       D.pieces = D.pieces.map((p) => {
-        const [lo, hi] = statutHeures[p.statut] || [10, 50];
+        const statut = p.statut || (p.disponibilite_pct < 80 ? 'Critique' : p.disponibilite_pct < 90 ? 'Modéré' : 'Veille');
+        const [lo, hi] = statutHeures[statut] || [10, 50];
         const heures = rndInt(rng, lo, hi);
-        return { pn: p.pn, libelle: p.libelle, site: p.site, statut: p.statut, heures, qte: rndInt(rng, 2, 12), lead: rndInt(rng, 7, 26) };
+        const pn = p.id_piece_pn || p.pn;
+        return {
+          id_piece_pn: pn,
+          pn: pn,
+          libelle: p.libelle,
+          site: p.site || p.id_shop,
+          statut: statut,
+          disponibilite_pct: p.disponibilite_pct || (statut === 'Critique' ? rndInt(rng, 65, 78) : statut === 'Modéré' ? rndInt(rng, 82, 89) : rndInt(rng, 92, 98)),
+          confiance_appro_j: p.confiance_appro_j || rndInt(rng, 2, 6),
+          heures,
+          qte: rndInt(rng, 2, 12),
+          lead: rndInt(rng, 7, 26)
+        };
       });
 
       // 6.B — % retards par opération (CFM 8-20, LEAP = CFM + 7-12)
@@ -2110,9 +2356,12 @@
         return { operation: op.operation, cfm: cfm, leap: Math.round(leap * 10) / 10 };
       });
 
-      // 6.C — Concentration des flux inter-sites (décroissante 30-40 → 12-18) + délai navette
-      const pcts = [rndDec(rng, 32, 40), rndDec(rng, 24, 30), rndDec(rng, 18, 24), rndDec(rng, 12, 18)];
-      D.routes = D.routes.map((rt, i) => ({ route: rt.route, pct: pcts[i], delai: rndDec(rng, 1, 3.5) }));
+      // 6.C — Concentration des flux inter-sites + délai navette
+      const nRoutes = (D.routes && D.routes.length) || 4;
+      D.routes = D.routes.map((rt, i) => {
+        const pct = Math.max(5, Math.round((36 - i * (28 / Math.max(1, nRoutes - 1)) + rndRange(rng, -2, 2)) * 10) / 10);
+        return { route: rt.route, pct: pct, delai: rndDec(rng, 1.2, 3.8) };
+      });
 
       // 6.D — Ratio Lean (VA dominant, attente secondaire, transfert = complément à 100)
       const va = rndDec(rng, 52, 58);
@@ -2188,19 +2437,51 @@
     const CHART_FONT = { family: 'ui-sans-serif, system-ui, sans-serif' };
 
     function baseChartOpts(extra) {
-      return Object.assign(
+      if (typeof ChartDataLabels !== 'undefined' && typeof Chart !== 'undefined' && !Chart._maestroDatalabelsRegistered) {
+        try { Chart.register(ChartDataLabels); Chart._maestroDatalabelsRegistered = true; } catch (e) {}
+      }
+      const extraPlugins = (extra && extra.plugins) || {};
+      const mergedPlugins = Object.assign(
+        {
+          legend: { position: 'bottom', labels: { boxWidth: 9, boxHeight: 9, font: Object.assign({ size: 9 }, CHART_FONT), padding: 8 } },
+          tooltip: { titleFont: Object.assign({ size: 10 }, CHART_FONT), bodyFont: Object.assign({ size: 9.5 }, CHART_FONT), boxPadding: 3, cornerRadius: 4 },
+          datalabels: {
+            display: (context) => {
+              const ds = context.dataset;
+              if (ds.datalabels && ds.datalabels.display !== undefined) return ds.datalabels.display;
+              const val = ds.data[context.dataIndex];
+              return val !== null && val !== undefined && val !== 0;
+            },
+            color: '#1e293b',
+            font: { size: 9, weight: 'bold', family: CHART_FONT.family },
+            anchor: 'end',
+            align: 'top',
+            offset: 2,
+            formatter: (v) => {
+              if (Array.isArray(v)) {
+                const diff = Math.round(Math.abs(v[1] - v[0]) * 10) / 10;
+                return diff + ' j';
+              }
+              if (typeof v === 'number') {
+                return (Math.round(v * 10) / 10).toString();
+              }
+              return v;
+            }
+          }
+        },
+        extraPlugins
+      );
+      const res = Object.assign(
         {
           responsive: true,
           maintainAspectRatio: false,
-          layout: { padding: 4 },
-          plugins: {
-            legend: { position: 'bottom', labels: { boxWidth: 9, boxHeight: 9, font: Object.assign({ size: 9 }, CHART_FONT), padding: 8 } },
-            tooltip: { titleFont: Object.assign({ size: 10 }, CHART_FONT), bodyFont: Object.assign({ size: 9.5 }, CHART_FONT), boxPadding: 3, cornerRadius: 4 }
-          },
+          layout: { padding: { top: 16, bottom: 6, left: 6, right: 14 } },
           animation: { duration: 350 }
         },
         extra || {}
       );
+      res.plugins = mergedPlugins;
+      return res;
     }
 
     function destroyChart(canvas) {
@@ -2241,9 +2522,12 @@
           },
           options: baseChartOpts({
             indexAxis: 'y',
+            plugins: {
+              datalabels: { anchor: 'end', align: 'right', offset: 2, formatter: (v) => v + ' j' }
+            },
             scales: {
-              x: { beginAtZero: true, title: { display: true, text: 'TAT (jours)', font: { size: 9 } }, ticks: { font: { size: 9 } } },
-              y: { ticks: { font: Object.assign({ size: 10 }, CHART_FONT) } }
+              x: { beginAtZero: true, title: { display: true, text: 'Axe X : Durée TAT (jours)', font: { size: 9.5, weight: 'bold' } }, ticks: { font: { size: 9 } } },
+              y: { title: { display: true, text: 'Axe Y : Famille Moteur', font: { size: 9.5, weight: 'bold' } }, ticks: { font: Object.assign({ size: 10 }, CHART_FONT) } }
             }
           })
         },
@@ -2266,9 +2550,16 @@
           },
           options: baseChartOpts({
             indexAxis: 'y',
+            plugins: {
+              datalabels: {
+                anchor: 'center', align: 'center', color: '#ffffff',
+                font: { size: 8.5, weight: 'bold' },
+                formatter: (v) => (v >= 2 ? v + ' j' : '')
+              }
+            },
             scales: {
-              x: { stacked: true, beginAtZero: true, title: { display: true, text: 'Jours TAT décomposés', font: { size: 9 } }, ticks: { font: { size: 9 } } },
-              y: { stacked: true, ticks: { font: Object.assign({ size: 10 }, CHART_FONT) } }
+              x: { stacked: true, beginAtZero: true, title: { display: true, text: 'Axe X : Jours TAT cumulés décomposés (jours)', font: { size: 9.5, weight: 'bold' } }, ticks: { font: { size: 9 } } },
+              y: { stacked: true, title: { display: true, text: 'Axe Y : Sites Safran MRO', font: { size: 9.5, weight: 'bold' } }, ticks: { font: Object.assign({ size: 9.5 }, CHART_FONT) } }
             }
           })
         },
@@ -2290,10 +2581,17 @@
             ]
           },
           options: baseChartOpts({
+            plugins: {
+              datalabels: {
+                align: (ctx) => ctx.dataset.type === 'line' ? 'top' : 'end',
+                anchor: (ctx) => ctx.dataset.type === 'line' ? 'center' : 'end',
+                formatter: (v, ctx) => ctx.dataset.type === 'line' ? v + ' %' : v + ' j'
+              }
+            },
             scales: {
-              x: { ticks: { font: Object.assign({ size: 9 }, CHART_FONT) }, grid: { display: false } },
-              y: { beginAtZero: true, title: { display: true, text: 'TAT (jours)', font: { size: 9 } }, ticks: { font: { size: 9 } } },
-              y1: { position: 'right', min: 0, beginAtZero: true, title: { display: true, text: '% non-respect', font: { size: 9 } }, grid: { drawOnChartArea: false }, ticks: { font: { size: 9 } } }
+              x: { title: { display: true, text: 'Axe X : Compagnies Aériennes', font: { size: 9.5, weight: 'bold' } }, ticks: { font: Object.assign({ size: 9 }, CHART_FONT) }, grid: { display: false } },
+              y: { beginAtZero: true, title: { display: true, text: 'Axe Y1 : TAT Moyen (jours)', font: { size: 9.5, weight: 'bold' } }, ticks: { font: { size: 9 } } },
+              y1: { position: 'right', min: 0, beginAtZero: true, title: { display: true, text: 'Axe Y2 : Non-Respect SLA (%)', font: { size: 9.5, weight: 'bold' } }, grid: { drawOnChartArea: false }, ticks: { font: { size: 9 } } }
             }
           })
         },
@@ -2308,12 +2606,12 @@
         config: {
           type: 'bar',
           data: {
-            labels: rows.map((r) => r.a.esn + ' · ' + r.a.client + ' · ' + r.a.site),
+            labels: rows.map((r) => (r.a.id_demande || r.a.esn) + ' (' + r.a.id_moteur + ') · ' + r.a.client + ' · ' + r.a.site),
             datasets: [
               {
                 label: 'Retard (j)',
                 data: rows.map((r) => Math.round(r.v * 10) / 10),
-                backgroundColor: rows.map((r) => colors[r.a.statut] || '#94a3b8'),
+                backgroundColor: rows.map((r) => colors[r.a.statut || r.a.priorite] || '#94a3b8'),
                 borderRadius: 3
               }
             ]
@@ -2325,15 +2623,21 @@
                 callbacks: {
                   afterLabel: (ctx) => {
                     const a = rows[ctx.dataIndex];
-                    return `Statut : ${a.a.statut}\nTAT : ${a.a.tat} j\nPénalités : ${a.a.penalites.toLocaleString('fr-FR')} €`;
+                    return `Demande : ${a.a.id_demande || a.a.esn} (${a.a.id_moteur})\nPriorité/Statut : ${a.a.priorite || a.a.statut}\nTAT : ${a.a.tat_realise_j || a.a.tat} j\nPénalités : ${(a.a.penalites_eur || a.a.penalites).toLocaleString('fr-FR')} €`;
                   }
                 }
               }
             },
-            scales: { x: { beginAtZero: true, title: { display: true, text: 'Jours de retard', font: { size: 9 } }, ticks: { font: { size: 9 } } }, y: { ticks: { font: { size: 8.5 } } } }
+            plugins: {
+              datalabels: { anchor: 'end', align: 'right', offset: 2, formatter: (v) => v > 0 ? '+' + v + ' j' : '0 j' }
+            },
+            scales: {
+              x: { beginAtZero: true, title: { display: true, text: 'Axe X : Retard au-delà du SLA (jours)', font: { size: 9.5, weight: 'bold' } }, ticks: { font: { size: 9 } } },
+              y: { title: { display: true, text: 'Axe Y : Demande (ESN) · Client · Site', font: { size: 9.5, weight: 'bold' } }, ticks: { font: { size: 8.5 } } }
+            }
           })
         },
-        note: 'Listing dossiers ESN trié par retard décroissant (rouge = AOG Critique, orange = En Retard). Passer la souris : TAT et pénalités estimées.'
+        note: 'Listing des demandes trié par retard décroissant (rouge = AOG Critique, orange = En Retard). Passer la souris : TAT et pénalités estimées.'
       };
     }
 
@@ -2355,7 +2659,16 @@ function calc4E(k, labels, mult) {
           },
           options: baseChartOpts({
             indexAxis: 'y',
-            scales: { x: { beginAtZero: true, ticks: { font: { size: 9 } } }, y: { ticks: { font: { size: 9 } } } }
+            plugins: {
+              datalabels: {
+                anchor: 'end', align: 'right', offset: 2,
+                formatter: (v, ctx) => ctx.dataIndex === 1 ? v + ' %' : v + ' j'
+              }
+            },
+            scales: {
+              x: { beginAtZero: true, title: { display: true, text: 'Axe X : Valeurs Mesurées vs Cibles (jours ou %)', font: { size: 9.5, weight: 'bold' } }, ticks: { font: { size: 9 } } },
+              y: { title: { display: true, text: 'Axe Y : Indicateurs Clés MRO', font: { size: 9.5, weight: 'bold' } }, ticks: { font: { size: 9 } } }
+            }
           })
         },
         note: 'Agrégats scalaires hétérogènes (jours / %) regroupés pour la synthèse : la valeur réelle est toujours comparée à sa cible contractuelle ou à son seuil d\'alerte.'
@@ -2381,9 +2694,15 @@ function calc4E(k, labels, mult) {
           },
           options: baseChartOpts({
             indexAxis: 'y',
+            plugins: {
+              datalabels: {
+                display: (ctx) => ctx.datasetIndex === 0,
+                anchor: 'end', align: 'right', offset: 2, formatter: (v) => v + ' j'
+              }
+            },
             scales: {
-              x: { min: 0, max: 100, title: { display: true, text: 'Jours vs seuil P85 (85 j)', font: { size: 9 } }, ticks: { font: { size: 9 } } },
-              y: { ticks: { font: Object.assign({ size: 8.5 }, CHART_FONT) } }
+              x: { min: 0, max: 105, title: { display: true, text: 'Axe X : TAT Module Réalisé vs Seuil (jours)', font: { size: 9.5, weight: 'bold' } }, ticks: { font: { size: 9 } } },
+              y: { title: { display: true, text: 'Axe Y : Sous-ensembles & Modules', font: { size: 9.5, weight: 'bold' } }, ticks: { font: Object.assign({ size: 8.5 }, CHART_FONT) } }
             }
           })
         },
@@ -2432,7 +2751,23 @@ function calc4E(k, labels, mult) {
             ]
           },
           options: baseChartOpts({
-            scales: { y: { beginAtZero: true, title: { display: true, text: 'Jours cumulés', font: { size: 9 } }, ticks: { font: { size: 9 } } }, x: { ticks: { font: { size: 8.5 } } } }
+            plugins: {
+              datalabels: {
+                anchor: 'end', align: 'top', offset: 2,
+                formatter: (v, ctx) => {
+                  const idx = ctx.dataIndex;
+                  if (idx === 0) return floats[idx][1] + ' j';
+                  if (idx === labels.length - 1) return floats[idx][1] + ' j';
+                  const rel = (floats[idx][1] - floats[idx][0]) * (floats[idx][1] >= floats[idx][0] ? 1 : -1);
+                  const rounded = Math.round(rel * 10) / 10;
+                  return (rounded >= 0 ? '+' : '') + rounded + ' j';
+                }
+              }
+            },
+            scales: {
+              x: { title: { display: true, text: 'Axe X : Étapes et Dérives TAT', font: { size: 9.5, weight: 'bold' } }, ticks: { font: { size: 8.5 } } },
+              y: { beginAtZero: true, title: { display: true, text: 'Axe Y : Durée Cumulée (jours)', font: { size: 9.5, weight: 'bold' } }, ticks: { font: { size: 9 } } }
+            }
           })
         },
         note: 'Cascade : le TAT réel = cible + attentes pièces + aléas CND ± fast-track ± dérives logistiques. Barres vertes = réduction, rouges = dérive.'
@@ -2440,24 +2775,142 @@ function calc4E(k, labels, mult) {
     }
 
     function calc4H(p, mult) {
+      // Timeline de jalons (milestones timeline) sur frise temporelle avec axe time
+      // Nécessite chartjs-adapter-date-fns, placement horizontal avec axe Y masqué
+      const baseDate = new Date(2026, 8, 1); // 1er Septembre 2026
+
+      let cumDaysCible = 0;
+      let cumDaysRealise = 0;
+
+      const ciblePoints = [];
+      const realisePoints = [];
+
+      p.forEach((g) => {
+        cumDaysCible += g.cible;
+        cumDaysRealise += Math.round(g.realise * mult * 10) / 10;
+
+        const dCible = new Date(baseDate.getTime() + cumDaysCible * 86400000);
+        const dRealise = new Date(baseDate.getTime() + cumDaysRealise * 86400000);
+
+        ciblePoints.push({
+          x: dCible.toISOString().split('T')[0],
+          y: 0,
+          gate: g.gate,
+          type: 'Cible',
+          days: cumDaysCible
+        });
+
+        realisePoints.push({
+          x: dRealise.toISOString().split('T')[0],
+          y: 0,
+          gate: g.gate,
+          type: 'Réalisé',
+          retard: g.retard,
+          days: cumDaysRealise
+        });
+      });
+
       return {
         config: {
-          type: 'bar',
+          type: 'line',
           data: {
-            labels: p.map((g) => g.gate),
             datasets: [
-              { label: 'Cible (j)', data: p.map((g) => g.cible), backgroundColor: '#cbd5e1', borderRadius: 3 },
-              { label: 'Réalisé (j)', data: p.map((g) => Math.round(g.realise * mult * 10) / 10), backgroundColor: p.map((g) => (g.retard > 1.2 ? '#ef4444' : g.retard > 0 ? '#f59e0b' : '#3b82f6')), borderRadius: 3 }
+              {
+                label: 'Jalons Cibles (Planning)',
+                data: ciblePoints,
+                borderColor: '#94a3b8',
+                borderWidth: 2,
+                borderDash: [6, 4],
+                backgroundColor: '#cbd5e1',
+                pointBackgroundColor: '#64748b',
+                pointBorderColor: '#ffffff',
+                pointBorderWidth: 2,
+                pointRadius: 6,
+                pointHoverRadius: 8,
+                fill: false,
+                tension: 0
+              },
+              {
+                label: 'Jalons Réalisés (Chemin Critique)',
+                data: realisePoints,
+                borderColor: '#3b82f6',
+                borderWidth: 3,
+                backgroundColor: 'rgba(59, 130, 246, 0.05)',
+                pointBackgroundColor: realisePoints.map((pt) => pt.retard > 1.2 ? '#ef4444' : pt.retard > 0 ? '#f59e0b' : '#10b981'),
+                pointBorderColor: '#ffffff',
+                pointBorderWidth: 2.5,
+                pointRadius: 8,
+                pointHoverRadius: 10,
+                fill: false,
+                tension: 0
+              }
             ]
           },
           options: baseChartOpts({
+            plugins: {
+              legend: {
+                display: true,
+                position: 'top',
+                labels: { boxWidth: 10, boxHeight: 10, font: { size: 9.5, weight: 'bold' } }
+              },
+              datalabels: {
+                display: (ctx) => ctx.datasetIndex === 1, // Afficher les repères sur les jalons réels
+                anchor: 'start',
+                align: 'top',
+                offset: 10,
+                backgroundColor: 'rgba(255, 255, 255, 0.92)',
+                borderColor: '#e2e8f0',
+                borderWidth: 1,
+                borderRadius: 4,
+                padding: { top: 3, bottom: 3, left: 6, right: 6 },
+                color: '#0f172a',
+                font: { size: 9, weight: 'bold', family: CHART_FONT.family },
+                formatter: (v, ctx) => {
+                  const pt = ctx.dataset.data[ctx.dataIndex];
+                  const sign = pt.retard > 0 ? ` (+${pt.retard}j)` : ' (OK)';
+                  return `${pt.gate}${sign}`;
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  title: (items) => {
+                    const pt = items[0] && items[0].raw;
+                    return pt ? `📍 ${pt.gate} (${pt.type})` : '';
+                  },
+                  label: (item) => {
+                    const pt = item.raw;
+                    if (!pt) return '';
+                    const retStr = pt.retard !== undefined ? (pt.retard > 0 ? ` • Retard : +${pt.retard} jours` : ' • Conforme SLA') : '';
+                    return `Date : ${pt.x} (Cumul : ${pt.days} jours)${retStr}`;
+                  }
+                }
+              }
+            },
             scales: {
-              x: { ticks: { font: Object.assign({ size: 10 }, CHART_FONT) }, grid: { display: false } },
-              y: { beginAtZero: true, title: { display: true, text: 'Jours depuis entrée atelier', font: { size: 9 } }, ticks: { font: { size: 9 } } }
+              x: {
+                type: 'time',
+                time: {
+                  unit: 'day',
+                  tooltipFormat: 'dd/MM/yyyy',
+                  displayFormats: { day: 'dd MMM' }
+                },
+                title: {
+                  display: true,
+                  text: 'Axe X : Chronologie Temporelle du Moteur en Atelier (Dates de passage)',
+                  font: { size: 9.5, weight: 'bold' }
+                },
+                ticks: { font: Object.assign({ size: 9 }, CHART_FONT) },
+                grid: { color: 'rgba(226, 232, 240, 0.6)' }
+              },
+              y: {
+                display: false, // Axe Y masqué pour frise horizontale épurée
+                min: -0.6,
+                max: 0.6
+              }
             }
           })
         },
-        note: 'Jalons G1 (démontage) → G5 (remontage final). Une barre « Réalisé » plus haute que la cible signale une dérive sur le chemin critique.'
+        note: 'Timeline temporelle (Milestones) sur frise horizontale : passage des portes G1 à G5 sur axe date-fns. Repères verts = conforme, orange = alerte, rouge = dérive chemin critique. Axe Y masqué.'
       };
     }
 
@@ -2480,12 +2933,18 @@ function calc4E(k, labels, mult) {
                 callbacks: {
                   afterLabel: (ctx) => {
                     const r = rows[ctx.dataIndex];
-                    return `PN ${r.x.pn} · ${r.x.site}\nQuantité : ${r.x.qte} pcs · Lead : ${r.x.lead} j\nStatut : ${r.x.statut}`;
+                    return `PN : ${r.x.id_piece_pn || r.x.pn} · ${r.x.site}\nQuantité : ${r.x.qte} pcs · Lead : ${r.x.lead} j\nStatut : ${r.x.statut || (r.x.disponibilite_pct < 80 ? 'Critique' : 'Normal')}`;
                   }
                 }
               }
             },
-            scales: { x: { beginAtZero: true, title: { display: true, text: 'Heures (TAT unitaire)', font: { size: 9 } }, ticks: { font: { size: 9 } } }, y: { ticks: { font: { size: 8.5 } } } }
+            plugins: {
+              datalabels: { anchor: 'end', align: 'right', offset: 2, formatter: (v) => v + ' h' }
+            },
+            scales: {
+              x: { beginAtZero: true, title: { display: true, text: 'Axe X : Heures d\'Attente Cumulées (heures)', font: { size: 9.5, weight: 'bold' } }, ticks: { font: { size: 9 } } },
+              y: { title: { display: true, text: 'Axe Y : Pièces Critiques & Sous-ensembles', font: { size: 9.5, weight: 'bold' } }, ticks: { font: { size: 8.5 } } }
+            }
           })
         },
         note: 'Top pièces manquantes trié par TAT unitaire (rouge = critique, orange = modéré, bleu = veille). Au survol : PN, site, quantité et lead.'
@@ -2505,9 +2964,12 @@ function calc4E(k, labels, mult) {
             ]
           },
           options: baseChartOpts({
+            plugins: {
+              datalabels: { anchor: 'end', align: 'top', offset: 2, formatter: (v) => v + ' %' }
+            },
             scales: {
-              x: { ticks: { font: Object.assign({ size: 8.5 }, CHART_FONT) }, grid: { display: false } },
-              y: { beginAtZero: true, title: { display: true, text: '% opérations en retard', font: { size: 9 } }, ticks: { font: { size: 9 } } }
+              x: { title: { display: true, text: 'Axe X : Opérations Techniques Atelier', font: { size: 9.5, weight: 'bold' } }, ticks: { font: Object.assign({ size: 8.5 }, CHART_FONT) }, grid: { display: false } },
+              y: { beginAtZero: true, title: { display: true, text: 'Axe Y : Taux de Retard (%)', font: { size: 9.5, weight: 'bold' } }, ticks: { font: { size: 9 } } }
             }
           })
         },
@@ -2528,9 +2990,16 @@ function calc4E(k, labels, mult) {
           },
           options: baseChartOpts({
             indexAxis: 'y',
+            plugins: {
+              datalabels: {
+                align: 'right', anchor: 'end', offset: 2,
+                formatter: (v, ctx) => ctx.datasetIndex === 0 ? v + ' %' : v + ' j'
+              }
+            },
             scales: {
-              x: { id: 'x', beginAtZero: true, max: 45, title: { display: true, text: '% du flux', font: { size: 9 } }, ticks: { font: { size: 9 } } },
-              x1: { id: 'x1', position: 'top', beginAtZero: true, max: 5, grid: { drawOnChartArea: false }, title: { display: true, text: 'Délai (j)', font: { size: 9 } }, ticks: { font: { size: 9 } } }
+              x: { id: 'x', beginAtZero: true, max: 50, title: { display: true, text: 'Axe X1 (Bas) : Part du Flux Logistique (%)', font: { size: 9.5, weight: 'bold' } }, ticks: { font: { size: 9 } } },
+              x1: { id: 'x1', position: 'top', beginAtZero: true, max: 5, grid: { drawOnChartArea: false }, title: { display: true, text: 'Axe X2 (Haut) : Délai Navette (jours)', font: { size: 9.5, weight: 'bold' } }, ticks: { font: { size: 9 } } },
+              y: { title: { display: true, text: 'Axe Y : Navettes & Transits Inter-Sites', font: { size: 9.5, weight: 'bold' } }, ticks: { font: { size: 8.5 } } }
             }
           })
         },
@@ -2548,7 +3017,17 @@ function calc4E(k, labels, mult) {
               { data: rl.map((c) => c.valeur), backgroundColor: ['#10b981', '#ef4444', '#f59e0b'], borderWidth: 2, borderColor: '#ffffff' }
             ]
           },
-          options: baseChartOpts({ cutout: '62%', plugins: { legend: { position: 'bottom', labels: { boxWidth: 9, boxHeight: 9, font: { size: 8.5 }, padding: 6 } } } })
+          options: baseChartOpts({
+            cutout: '58%',
+            plugins: {
+              datalabels: {
+                color: '#ffffff',
+                font: { size: 10, weight: 'bold' },
+                formatter: (v) => v + ' %'
+              },
+              legend: { position: 'bottom', labels: { boxWidth: 9, boxHeight: 9, font: { size: 8.5 }, padding: 6 } }
+            }
+          })
         },
         note: 'Séquence Lean moyenne : ~55 % à valeur ajoutée, ~27 % d\'attente passive, complément en transfert. Cible : réduire la part d\'attente (démo).'
       };
@@ -2568,7 +3047,16 @@ function calc4E(k, labels, mult) {
           },
           options: baseChartOpts({
             indexAxis: 'y',
-            scales: { x: { min: 0, max: 100, title: { display: true, text: 'Taux de charge (%)', font: { size: 9 } }, ticks: { font: { size: 9 } } }, y: { ticks: { font: { size: 8.5 } } } }
+            plugins: {
+              datalabels: {
+                display: (ctx) => ctx.datasetIndex === 0,
+                anchor: 'end', align: 'right', offset: 2, formatter: (v) => v + ' %'
+              }
+            },
+            scales: {
+              x: { min: 0, max: 105, title: { display: true, text: 'Axe X : Taux de Charge vs Seuil 85% (%)', font: { size: 9.5, weight: 'bold' } }, ticks: { font: { size: 9 } } },
+              y: { title: { display: true, text: 'Axe Y : Ateliers de Spécialité Safran', font: { size: 9.5, weight: 'bold' } }, ticks: { font: { size: 8.5 } } }
+            }
           })
         },
         note: 'Saturation des ateliers vs seuil d\'alerte 85 % (ligne rouge). MON-01 Turbine et MON-02 Chambre Combustion dépassent le seuil : priorité de réaffectation.'
@@ -2576,11 +3064,91 @@ function calc4E(k, labels, mult) {
     }
 
     function calc6F(hm, mult) {
-      const colorsByValue = (v) => (v >= 90 ? '#dc2626' : v >= 85 ? '#ef4444' : v >= 75 ? '#f59e0b' : '#3b82f6');
+      // Heatmap 2D via chartjs-chart-matrix (avec fallback en barres groupées si plugin non dispo)
+      const isMatrixAvailable = typeof Chart !== 'undefined' && Chart.registry && Chart.registry.controllers && Chart.registry.controllers.get('matrix');
+
+      const colorsByValue = (v) => (v >= 90 ? '#dc2626' : v >= 85 ? '#ef4444' : v >= 75 ? '#f59e0b' : v >= 60 ? '#3b82f6' : '#10b981');
+
+      if (isMatrixAvailable) {
+        const matrixData = [];
+        hm.sites.forEach((site) => {
+          hm.semaines.forEach((semaine, wIdx) => {
+            const rawVal = hm.valeurs[hm.sites.indexOf(site)][wIdx];
+            const v = Math.round(clampN(rawVal * (0.9 + mult / 3), 10, 100));
+            matrixData.push({ x: semaine, y: site, v: v });
+          });
+        });
+
+        return {
+          config: {
+            type: 'matrix',
+            data: {
+              datasets: [{
+                label: 'Tension d\'En-cours (%)',
+                data: matrixData,
+                backgroundColor(c) {
+                  const val = c.raw ? c.raw.v : 0;
+                  return colorsByValue(val);
+                },
+                borderColor: '#ffffff',
+                borderWidth: 1.5,
+                borderRadius: 3,
+                width({ chart }) {
+                  const a = chart.chartArea;
+                  return a ? Math.max(8, (a.right - a.left) / hm.semaines.length - 2) : 18;
+                },
+                height({ chart }) {
+                  const a = chart.chartArea;
+                  return a ? Math.max(14, (a.bottom - a.top) / hm.sites.length - 2) : 22;
+                }
+              }]
+            },
+            options: baseChartOpts({
+              plugins: {
+                legend: { display: false },
+                tooltip: {
+                  callbacks: {
+                    title: (items) => items[0] && items[0].raw ? `${items[0].raw.y} • ${items[0].raw.x}` : '',
+                    label: (item) => item.raw ? `Tension d'en-cours : ${item.raw.v} %` : ''
+                  }
+                },
+                datalabels: {
+                  display: true,
+                  color: '#ffffff',
+                  font: { size: 8.5, weight: 'bold' },
+                  anchor: 'center',
+                  align: 'center',
+                  formatter: (v) => (v && v.v !== undefined) ? v.v + '%' : ''
+                }
+              },
+              scales: {
+                x: {
+                  type: 'category',
+                  labels: hm.semaines,
+                  title: { display: true, text: 'Axe X : Semaines Calendaires (Trimestre Glissant)', font: { size: 9.5, weight: 'bold' } },
+                  ticks: { font: Object.assign({ size: 8.5 }, CHART_FONT) },
+                  grid: { display: false }
+                },
+                y: {
+                  type: 'category',
+                  labels: hm.sites,
+                  offset: true,
+                  title: { display: true, text: 'Axe Y : Sites & Ateliers Safran', font: { size: 9.5, weight: 'bold' } },
+                  ticks: { font: Object.assign({ size: 9, weight: 'bold' }, CHART_FONT) },
+                  grid: { display: false }
+                }
+              }
+            })
+          },
+          note: 'Heatmap matricielle 2D (chartjs-chart-matrix) croisant les sites Safran et les semaines : rouge ≥ 90 %, orange ≥ 85 % (seuil saturation), bleu < 75 %.'
+        };
+      }
+
+      // Fallback sécurisé en barres groupées
       const rows = hm.valeurs.map((vals, sIdx) => ({
         label: hm.sites[sIdx],
-        data: vals.map((v, w) => Math.round(clampN(v, 0, 100) * (0.9 + mult / 3))),
-        backgroundColor: vals.map((v, w) => colorsByValue(Math.round(v)))
+        data: vals.map((v) => Math.round(clampN(v, 0, 100) * (0.9 + mult / 3))),
+        backgroundColor: vals.map((v) => colorsByValue(Math.round(v)))
       }));
       return {
         config: {
@@ -2595,14 +3163,22 @@ function calc4E(k, labels, mult) {
             }))
           },
           options: baseChartOpts({
-            plugins: { legend: { display: false }, tooltip: { callbacks: { label: (ctx) => ctx.dataset.label + ' : ' + ctx.parsed.y + ' %' } } },
+            plugins: {
+              legend: { display: false },
+              datalabels: {
+                display: (ctx) => ctx.dataset.data[ctx.dataIndex] >= 85,
+                anchor: 'end', align: 'top', offset: 1, font: { size: 7.5, weight: 'bold' },
+                formatter: (v) => v + '%'
+              },
+              tooltip: { callbacks: { label: (ctx) => ctx.dataset.label + ' : ' + ctx.parsed.y + ' %' } }
+            },
             scales: {
-              x: { stacked: false, ticks: { font: Object.assign({ size: 8.5 }, CHART_FONT) }, grid: { display: false } },
-              y: { min: 0, max: 100, ticks: { font: { size: 8 } } }
+              x: { title: { display: true, text: 'Axe X : Semaines Calendaires (Trimestre Glissant)', font: { size: 9.5, weight: 'bold' } }, stacked: false, ticks: { font: Object.assign({ size: 8.5 }, CHART_FONT) }, grid: { display: false } },
+              y: { min: 0, max: 105, title: { display: true, text: 'Axe Y : Tension d\'En-cours (%)', font: { size: 9.5, weight: 'bold' } }, ticks: { font: { size: 8 } } }
             }
           })
         },
-        note: 'Heatmap trimestre glissant par site : rouge ≥ 90 %, orange ≥ 85 % (seuil), jaune ≥ 75 %. Couleur d\'épisode = moyenne de la période.'
+        note: 'Heatmap trimestre glissant par site : rouge ≥ 90 %, orange ≥ 85 % (seuil), jaune ≥ 75 %.'
       };
     }
 
@@ -2618,9 +3194,15 @@ function calc4E(k, labels, mult) {
             ]
           },
           options: baseChartOpts({
+            plugins: {
+              datalabels: {
+                display: (ctx) => ctx.dataIndex % 2 === 1 || ctx.dataIndex === cfd.jours.length - 1,
+                anchor: 'end', align: 'top', offset: 2, formatter: (v) => v
+              }
+            },
             scales: {
-              x: { ticks: { font: Object.assign({ size: 9 }, CHART_FONT) }, grid: { display: false } },
-              y: { beginAtZero: true, title: { display: true, text: 'Modules cumulés', font: { size: 9 } }, ticks: { font: { size: 9 } } }
+              x: { title: { display: true, text: 'Axe X : Chronologie des Jours Ouvrés', font: { size: 9.5, weight: 'bold' } }, ticks: { font: Object.assign({ size: 9 }, CHART_FONT) }, grid: { display: false } },
+              y: { beginAtZero: true, title: { display: true, text: 'Axe Y : Modules & Réacteurs Cumulés (WIP)', font: { size: 9.5, weight: 'bold' } }, ticks: { font: { size: 9 } } }
             }
           })
         },
@@ -2629,6 +3211,71 @@ function calc4E(k, labels, mult) {
     }
 
     function calc6H(p) {
+      // Treemap via chartjs-chart-treemap (avec fallback barres horizontales si non dispo)
+      const isTreemapAvailable = typeof Chart !== 'undefined' && Chart.registry && Chart.registry.controllers && Chart.registry.controllers.get('treemap');
+
+      const treeItems = p.map((g) => ({
+        poste: g.poste,
+        wip: g.wip,
+        saturation: g.saturation
+      }));
+
+      if (isTreemapAvailable) {
+        return {
+          config: {
+            type: 'treemap',
+            data: {
+              datasets: [{
+                tree: treeItems,
+                key: 'wip',
+                groups: ['poste'],
+                spacing: 2,
+                borderWidth: 1.5,
+                borderColor: '#ffffff',
+                borderRadius: 4,
+                backgroundColor(ctx) {
+                  if (!ctx.raw) return '#3b82f6';
+                  const item = ctx.raw._data || ctx.raw;
+                  const sat = item.saturation || 0;
+                  return sat >= 90 ? '#ef4444' : sat >= 85 ? '#f59e0b' : '#10b981';
+                },
+                labels: {
+                  display: true,
+                  formatter(ctx) {
+                    if (!ctx.raw) return '';
+                    const item = ctx.raw._data || ctx.raw;
+                    return [item.poste, item.wip + 'h WIP (' + item.saturation + '%)'];
+                  },
+                  color: '#ffffff',
+                  font: [{ size: 10.5, weight: 'bold', family: CHART_FONT.family }, { size: 9, weight: 'normal', family: CHART_FONT.family }],
+                  position: 'center'
+                }
+              }]
+            },
+            options: baseChartOpts({
+              plugins: {
+                legend: { display: false },
+                datalabels: { display: false }, // Géré directement par le formatter interne du treemap
+                tooltip: {
+                  callbacks: {
+                    title(items) {
+                      const item = items[0] && (items[0].raw._data || items[0].raw);
+                      return item ? item.poste : '';
+                    },
+                    label(item) {
+                      const d = item.raw._data || item.raw;
+                      return d ? [`En-cours WIP : ${d.wip} heures`, `Taux de saturation : ${d.saturation} %`] : '';
+                    }
+                  }
+                }
+              }
+            })
+          },
+          note: 'Treemap des goulots d\'atelier (chartjs-chart-treemap) : la surface rectangulaire est proportionnelle à la charge d\'en-cours WIP (h). Rouge ≥ 90 %, Orange ≥ 85 %.'
+        };
+      }
+
+      // Fallback en barres horizontales
       const rows = p.map((g, i) => ({ g, i })).sort((a, b) => b.g.wip - a.g.wip);
       return {
         config: {
@@ -2647,11 +3294,18 @@ function calc4E(k, labels, mult) {
           options: baseChartOpts({
             indexAxis: 'y',
             plugins: {
+              datalabels: {
+                anchor: 'end', align: 'right', offset: 2,
+                formatter: (v, ctx) => v + 'h (' + rows[ctx.dataIndex].g.saturation + '%)'
+              },
               tooltip: {
                 callbacks: { afterLabel: (ctx) => 'Taux de saturation : ' + rows[ctx.dataIndex].g.saturation + ' %' }
               }
             },
-            scales: { x: { beginAtZero: true, title: { display: true, text: 'En-cours WIP (h)', font: { size: 9 } }, ticks: { font: { size: 9 } } }, y: { ticks: { font: { size: 8.5 } } } }
+            scales: {
+              x: { beginAtZero: true, title: { display: true, text: 'Axe X : En-cours Cumulé WIP (heures)', font: { size: 9.5, weight: 'bold' } }, ticks: { font: { size: 9 } } },
+              y: { title: { display: true, text: 'Axe Y : Postes & Machines d\'Atelier', font: { size: 9.5, weight: 'bold' } }, ticks: { font: { size: 8.5 } } }
+            }
           })
         },
         note: 'Goulots rouges = postes saturés à plus de 90 % ; orange ≥ 85 %. La saturation est corrélée au WIP cumulé devant chaque poste.'
@@ -2888,15 +3542,27 @@ const canvas = document.getElementById('mock-chart-q' + step + '-canvas');
       else if (currentFilters.site === 'MON') m *= 1.08;
       else if (currentFilters.site === 'CHL') m *= 0.92;
       else if (currentFilters.site === 'BRU') m *= 1.04;
+      else if (currentFilters.site === 'SQY') m *= 0.95;
+      else if (currentFilters.site === 'GEN') m *= 1.02;
+      else if (currentFilters.site === 'BDX') m *= 0.98;
+      else if (currentFilters.site === 'TLS') m *= 0.97;
+      else if (currentFilters.site === 'LGG') m *= 1.05;
+      else if (currentFilters.site === 'CRE') m *= 1.01;
 
       if (currentFilters.client === 'AFR') m *= 1.02;
+      else if (currentFilters.client === 'CCA') m *= 1.04;
+      else if (currentFilters.client === 'EZY') m *= 0.97;
       else if (currentFilters.client === 'DLH') m *= 0.95;
       else if (currentFilters.client === 'DAL') m *= 0.98;
-      else if (currentFilters.client === 'RYR') m *= 1.05;
+      else if (currentFilters.client === 'UAE') m *= 1.03;
+      else if (currentFilters.client === 'SIA') m *= 0.94;
 
       if (currentFilters.engine === 'CFM56') m *= 0.90;
+      else if (currentFilters.engine === 'CFM56_5B') m *= 0.88;
       else if (currentFilters.engine === 'LEAP1A') m *= 1.06;
       else if (currentFilters.engine === 'LEAP1B') m *= 1.03;
+      else if (currentFilters.engine === 'GE90') m *= 1.15;
+      else if (currentFilters.engine === 'M88') m *= 0.93;
 
       // Variation selon l'éloignement de la date dans le futur (effet de saisonnalité)
       if (currentFilters.date) {
@@ -3279,7 +3945,7 @@ const canvas = document.getElementById('mock-chart-q' + step + '-canvas');
       '4B': `%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#3b82f6'}}}%%
 xychart-beta
     title "Décomposition du TAT (Jours) par Site Safran : Réparation vs Navette vs Attente"
-    x-axis ["Villaroche (VIL)", "Montereau (MON)", "Châtellerault (CHL)", "Bruxelles (BRU)"]
+    x-axis ["FR-Villaroche (VIL)", "FR-Montereau (MON)", "FR-Châtellerault (CHL)", "BE-Bruxelles (BRU)"]
     y-axis "Jours cumulés" 0 --> 25
     bar [11, 10, 12, 10]
     bar [3, 4, 2, 3]
@@ -3287,7 +3953,7 @@ xychart-beta
       '4C': `%%{init: {'theme': 'base'}}%%
 xychart-beta
     title "Écart TAT Contractuel vs Effectif et Taux de Non-Respect SLA (%)"
-    x-axis ["Air France (AFR)", "Lufthansa (DLH)", "Delta (DAL)", "Ryanair (RYR)"]
+    x-axis ["Air France (AFR)", "Lufthansa (DLH)", "Delta Air Lines (DAL)", "Ryanair (RYR)"]
     y-axis "TAT Moyen (Jours)" 0 --> 25
     bar [20, 18, 22, 16]
     bar [19, 17, 22, 19]
@@ -3330,7 +3996,7 @@ xychart-beta
       '6A': `%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ef4444'}}}%%
 xychart-beta
     title "Heures de Blocage d'Attente par Référence Critique et Site"
-    x-axis ["Aubes HP (Montereau)", "Disques LLP (Villaroche)", "Joints Fan (Châtellerault)", "Injecteurs (Bruxelles)"]
+    x-axis ["Aubes HP (FR-MON)", "Disques LLP (FR-VIL)", "Joints Fan (FR-CHL)", "Injecteurs (BE-BRU)"]
     y-axis "Heures de rupture cumulées" 0 --> 100
     bar [84, 52, 28, 16]`,
       '6B': `%%{init: {'theme': 'base'}}%%
@@ -3343,7 +4009,7 @@ xychart-beta
       '6C': `%%{init: {'theme': 'base'}}%%
 xychart-beta
     title "Flux de Sous-Traitance (% Demandes) et Délai Navette Route (Jours)"
-    x-axis ["Montereau ➔ Villaroche", "Châtellerault ➔ Bruxelles", "Villaroche ➔ Châtellerault", "Montereau ➔ Bruxelles"]
+    x-axis ["FR-Montereau ➔ FR-Villaroche", "FR-Châtellerault ➔ BE-Bruxelles", "FR-Villaroche ➔ FR-Châtellerault", "FR-Montereau ➔ BE-Bruxelles"]
     y-axis "% Part du Flux Global" 0 --> 45
     bar [38, 27, 19, 16]
     line [12, 24, 18, 31]`,
@@ -3464,6 +4130,22 @@ xychart-beta
       if (codeEl) codeEl.textContent = SCHEMA_MERMAID[granularity] || SCHEMA_MERMAID.A;
     }
 
+    function copyMermaidSchema() {
+      const codeEl = document.getElementById('schema-mermaid-code');
+      const btn = document.getElementById('schema-copy-btn');
+      if (!codeEl) return;
+      copyTextToClipboard(codeEl.textContent || '').then(() => {
+        if (btn) {
+          btn.innerHTML = '<span>✅</span> Copié !';
+          btn.classList.add('bg-emerald-600');
+          setTimeout(() => {
+            btn.innerHTML = '<span>📋</span> Copier le code';
+            btn.classList.remove('bg-emerald-600');
+          }, 1800);
+        }
+      });
+    }
+
     function toggleSchemaView(view) {
       const svgView = document.getElementById('schema-svg-view');
       const mermaidView = document.getElementById('schema-mermaid-view');
@@ -3473,11 +4155,6 @@ xychart-beta
       updateToggleButtons('schema-toggle', view);
       if (view === 'mermaid') {
         updateMermaidCode(selections[2] || 'A');
-        const codeEl = document.getElementById('schema-mermaid-code');
-        copyTextToClipboard((codeEl ? codeEl.textContent : '') || '').then(
-          () => showToast('📋 Code Mermaid copié dans le presse-papier'),
-          () => showToast('❌ Copie dans le presse-papier impossible')
-        );
       }
     }
 
@@ -4366,8 +5043,11 @@ xychart-beta
             try {
               const pretty = JSON.stringify(JSON.parse(text), null, 2);
               const pre = document.createElement('pre');
-              pre.style.cssText = 'max-height:78vh;overflow:auto;font-size:10px;line-height:1.55;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px;';
-              pre.textContent = pretty;
+              pre.style.cssText = 'max-height:78vh;overflow:auto;font-size:10.5px;line-height:1.55;background:#ffffff;color:#000000;border:1px solid #cbd5e1;border-radius:8px;padding:12px;font-weight:500;';
+              const code = document.createElement('code');
+              code.style.cssText = 'color:#000000;background:transparent;padding:0;border:none;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;';
+              code.textContent = pretty;
+              pre.appendChild(code);
               container.innerHTML = '';
               container.appendChild(pre);
               return;
@@ -4383,6 +5063,7 @@ xychart-beta
     }
 
     window.addEventListener('load', () => {
+      if (window.lucide && window.lucide.createIcons) window.lucide.createIcons();
       initMarkdownViewer();
 
       let startStep = 0;

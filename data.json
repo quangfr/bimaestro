@@ -1,47 +1,368 @@
 {
   "meta": {
     "source": "Simulateur Cadrage Décisionnel Maestro — Jeu de données de démonstration MRO",
-    "perimetre": "Flottes CFM56-7B / LEAP-1A / LEAP-1B sur 4 centres Safran (Villaroche, Montereau, Châtellerault, Bruxelles)",
+    "perimetre": "Flottes CFM56-7B / CFM56-5B / LEAP-1A / LEAP-1B / GE90-115B / M88-2 sur 10 centres Safran (FR-Villaroche, FR-Montereau, FR-Châtellerault, BE-Bruxelles, FR-Saint-Quentin, FR-Gennevilliers, FR-Bordeaux, FR-Toulouse, BE-Liège, FR-Le Creusot)",
     "actualise": "2026-09-12",
     "licence": "Données fictives à des fins de démonstration",
     "generation": "Ce fichier contient uniquement la structure des objets, les libellés et la donnée non chiffrée. Les valeurs chiffrées des graphiques Chart.js sont générées aléatoirement côté client selon des règles de cohérence, avec un seed stable (persistance entre sessions)."
   },
   "sites": [
-    { "code": "VIL", "nom": "Villaroche", "ateliers": "Compresseur & Rotors", "profil": "Modèles LEAP" },
-    { "code": "MON", "nom": "Montereau", "ateliers": "Chambre de combustion & Turbine", "profil": "CFM56 à haute tension" },
-    { "code": "CHL", "nom": "Châtellerault", "ateliers": "Usinage base & Carter", "profil": "Gamme nominale" },
-    { "code": "BRU", "nom": "Bruxelles", "ateliers": "Contrôles CND & Revêtements", "profil": "Services aéro encapsulés" }
+    {
+      "id_shop": "VIL",
+      "code": "VIL",
+      "nom": "FR-Villaroche",
+      "ateliers": "Compresseur & Rotors",
+      "type_of_repairs": "Compresseurs & Rotors",
+      "profil": "Modèles LEAP"
+    },
+    {
+      "id_shop": "MON",
+      "code": "MON",
+      "nom": "FR-Montereau",
+      "ateliers": "Chambre de combustion & Turbine",
+      "type_of_repairs": "Chambre de combustion & Turbine",
+      "profil": "CFM56 à haute tension"
+    },
+    {
+      "id_shop": "CHL",
+      "code": "CHL",
+      "nom": "FR-Châtellerault",
+      "ateliers": "Usinage base & Carter",
+      "type_of_repairs": "Usinage base & Carter",
+      "profil": "Gamme nominale"
+    },
+    {
+      "id_shop": "BRU",
+      "code": "BRU",
+      "nom": "BE-Bruxelles",
+      "ateliers": "Contrôles CND & Revêtements",
+      "type_of_repairs": "Contrôles CND & Banc d'Essai",
+      "profil": "Services aéro encapsulés"
+    },
+    {
+      "id_shop": "SQY",
+      "code": "SQY",
+      "nom": "FR-Saint-Quentin",
+      "ateliers": "Équipements & Systèmes FADEC",
+      "type_of_repairs": "Équipements & Systèmes FADEC",
+      "profil": "Avionique & Régulation"
+    },
+    {
+      "id_shop": "GEN",
+      "code": "GEN",
+      "nom": "FR-Gennevilliers",
+      "ateliers": "Forge & Aubes Forgées",
+      "type_of_repairs": "Forge & Aubes Forgées",
+      "profil": "Composants bruts & métallurgie"
+    },
+    {
+      "id_shop": "BDX",
+      "code": "BDX",
+      "nom": "FR-Bordeaux",
+      "ateliers": "Matériaux composites & Nacelles",
+      "type_of_repairs": "Matériaux composites & Nacelles",
+      "profil": "Aérostructures & tuyères"
+    },
+    {
+      "id_shop": "TLS",
+      "code": "TLS",
+      "nom": "FR-Toulouse",
+      "ateliers": "Intégration Moteurs & Nacelles",
+      "type_of_repairs": "Intégration Moteurs & Nacelles",
+      "profil": "Support avionneur & essais ligne"
+    },
+    {
+      "id_shop": "LGG",
+      "code": "LGG",
+      "nom": "BE-Liège",
+      "ateliers": "Bancs d'Essais Grand Débit & CND",
+      "type_of_repairs": "Bancs d'Essais Grand Débit & CND",
+      "profil": "Recette & certification dynamique"
+    },
+    {
+      "id_shop": "CRE",
+      "code": "CRE",
+      "nom": "FR-Le Creusot",
+      "ateliers": "Disques & Aubes Haute Précision",
+      "type_of_repairs": "Disques & Aubes Haute Précision",
+      "profil": "Forge lourde & usinage extrême"
+    }
   ],
   "modeles": [
-    { "famille": "CFM56-7B" },
-    { "famille": "LEAP-1A" },
-    { "famille": "LEAP-1B" }
+    {
+      "famille": "CFM56-7B",
+      "type": "CFM56",
+      "modele": "CFM56-7B27"
+    },
+    {
+      "famille": "CFM56-5B",
+      "type": "CFM56",
+      "modele": "CFM56-5B4/P"
+    },
+    {
+      "famille": "LEAP-1A",
+      "type": "LEAP",
+      "modele": "LEAP-1A26"
+    },
+    {
+      "famille": "LEAP-1B",
+      "type": "LEAP",
+      "modele": "LEAP-1B28"
+    },
+    {
+      "famille": "GE90-115B",
+      "type": "GE90",
+      "modele": "GE90-115B1"
+    },
+    {
+      "famille": "M88-2",
+      "type": "M88",
+      "modele": "M88-2E4"
+    }
   ],
   "decompoTAT": [
-    { "site": "Villaroche (VIL)" },
-    { "site": "Montereau (MON)" },
-    { "site": "Châtellerault (CHL)" },
-    { "site": "Bruxelles (BRU)" }
+    {
+      "site": "FR-Villaroche (VIL)"
+    },
+    {
+      "site": "FR-Montereau (MON)"
+    },
+    {
+      "site": "FR-Châtellerault (CHL)"
+    },
+    {
+      "site": "BE-Bruxelles (BRU)"
+    },
+    {
+      "site": "FR-Saint-Quentin (SQY)"
+    },
+    {
+      "site": "FR-Gennevilliers (GEN)"
+    },
+    {
+      "site": "FR-Bordeaux (BDX)"
+    },
+    {
+      "site": "FR-Toulouse (TLS)"
+    },
+    {
+      "site": "BE-Liège (LGG)"
+    },
+    {
+      "site": "FR-Le Creusot (CRE)"
+    }
   ],
   "respectClients": [
-    { "code": "AFR", "nom": "Air France" },
-    { "code": "DLH", "nom": "Lufthansa" },
-    { "code": "DAL", "nom": "Delta Air Lines" },
-    { "code": "RYR", "nom": "Ryanair" }
+    {
+      "code": "AFR",
+      "nom": "Air France"
+    },
+    {
+      "code": "CCA",
+      "nom": "Air China"
+    },
+    {
+      "code": "EZY",
+      "nom": "EasyJet"
+    },
+    {
+      "code": "DLH",
+      "nom": "Lufthansa"
+    },
+    {
+      "code": "DAL",
+      "nom": "Delta Air Lines"
+    },
+    {
+      "code": "UAE",
+      "nom": "Emirates"
+    },
+    {
+      "code": "SIA",
+      "nom": "Singapore Airlines"
+    }
   ],
   "alertesESN": [
-    { "esn": "ESN-9842", "client": "RYR", "site": "MON", "model": "CFM56-7B", "statut": "AOG Critique" },
-    { "esn": "ESN-1021", "client": "DLH", "site": "MON", "model": "LEAP-1A", "statut": "AOG Critique" },
-    { "esn": "ESN-0957", "client": "AFR", "site": "VIL", "model": "LEAP-1A", "statut": "En Retard" },
-    { "esn": "ESN-0993", "client": "DAL", "site": "VIL", "model": "LEAP-1B", "statut": "En Retard" },
-    { "esn": "ESN-1034", "client": "RYR", "site": "CHL", "model": "CFM56-7B", "statut": "En Retard" },
-    { "esn": "ESN-1042", "client": "DLH", "site": "CHL", "model": "LEAP-1B", "statut": "En Retard" },
-    { "esn": "ESN-0908", "client": "AFR", "site": "BRU", "model": "CFM56-7B", "statut": "En Cours" },
-    { "esn": "ESN-1011", "client": "DLH", "site": "BRU", "model": "LEAP-1A", "statut": "En Cours" },
-    { "esn": "ESN-0875", "client": "DAL", "site": "MON", "model": "CFM56-7B", "statut": "Conforme" },
-    { "esn": "ESN-0986", "client": "RYR", "site": "VIL", "model": "LEAP-1B", "statut": "Conforme" },
-    { "esn": "ESN-0912", "client": "AFR", "site": "MON", "model": "CFM56-7B", "statut": "Conforme" },
-    { "esn": "ESN-0971", "client": "DAL", "site": "MON", "model": "LEAP-1A", "statut": "AOG Critique" }
+    {
+      "id_demande": "D-09842",
+      "esn": "ESN-9842",
+      "id_moteur": "ESN-9842",
+      "client": "EZY",
+      "site": "FR-Montereau",
+      "id_shop": "MON",
+      "type": "CFM56-7B",
+      "model": "CFM56-7B",
+      "priorite": "AOG Critique",
+      "statut": "AOG Critique"
+    },
+    {
+      "id_demande": "D-01021",
+      "esn": "ESN-1021",
+      "id_moteur": "ESN-1021",
+      "client": "DLH",
+      "site": "FR-Montereau",
+      "id_shop": "MON",
+      "type": "LEAP-1A",
+      "model": "LEAP-1A",
+      "priorite": "AOG Critique",
+      "statut": "AOG Critique"
+    },
+    {
+      "id_demande": "D-00957",
+      "esn": "ESN-0957",
+      "id_moteur": "ESN-0957",
+      "client": "AFR",
+      "site": "FR-Villaroche",
+      "id_shop": "VIL",
+      "type": "LEAP-1A",
+      "model": "LEAP-1A",
+      "priorite": "En Retard",
+      "statut": "En Retard"
+    },
+    {
+      "id_demande": "D-00993",
+      "esn": "ESN-0993",
+      "id_moteur": "ESN-0993",
+      "client": "DAL",
+      "site": "FR-Villaroche",
+      "id_shop": "VIL",
+      "type": "LEAP-1B",
+      "model": "LEAP-1B",
+      "priorite": "En Retard",
+      "statut": "En Retard"
+    },
+    {
+      "id_demande": "D-01034",
+      "esn": "ESN-1034",
+      "id_moteur": "ESN-1034",
+      "client": "CCA",
+      "site": "FR-Châtellerault",
+      "id_shop": "CHL",
+      "type": "CFM56-7B",
+      "model": "CFM56-7B",
+      "priorite": "En Retard",
+      "statut": "En Retard"
+    },
+    {
+      "id_demande": "D-01042",
+      "esn": "ESN-1042",
+      "id_moteur": "ESN-1042",
+      "client": "UAE",
+      "site": "FR-Châtellerault",
+      "id_shop": "CHL",
+      "type": "LEAP-1B",
+      "model": "LEAP-1B",
+      "priorite": "En Retard",
+      "statut": "En Retard"
+    },
+    {
+      "id_demande": "D-00908",
+      "esn": "ESN-0908",
+      "id_moteur": "ESN-0908",
+      "client": "AFR",
+      "site": "BE-Bruxelles",
+      "id_shop": "BRU",
+      "type": "CFM56-7B",
+      "model": "CFM56-7B",
+      "priorite": "En Cours",
+      "statut": "En Cours"
+    },
+    {
+      "id_demande": "D-01011",
+      "esn": "ESN-1011",
+      "id_moteur": "ESN-1011",
+      "client": "SIA",
+      "site": "BE-Bruxelles",
+      "id_shop": "BRU",
+      "type": "LEAP-1A",
+      "model": "LEAP-1A",
+      "priorite": "En Cours",
+      "statut": "En Cours"
+    },
+    {
+      "id_demande": "D-00875",
+      "esn": "ESN-0875",
+      "id_moteur": "ESN-0875",
+      "client": "DAL",
+      "site": "FR-Montereau",
+      "id_shop": "MON",
+      "type": "CFM56-7B",
+      "model": "CFM56-7B",
+      "priorite": "Conforme",
+      "statut": "Conforme"
+    },
+    {
+      "id_demande": "D-00986",
+      "esn": "ESN-0986",
+      "id_moteur": "ESN-0986",
+      "client": "EZY",
+      "site": "FR-Villaroche",
+      "id_shop": "VIL",
+      "type": "LEAP-1B",
+      "model": "LEAP-1B",
+      "priorite": "Conforme",
+      "statut": "Conforme"
+    },
+    {
+      "id_demande": "D-00912",
+      "esn": "ESN-0912",
+      "id_moteur": "ESN-0912",
+      "client": "AFR",
+      "site": "FR-Montereau",
+      "id_shop": "MON",
+      "type": "CFM56-7B",
+      "model": "CFM56-7B",
+      "priorite": "Conforme",
+      "statut": "Conforme"
+    },
+    {
+      "id_demande": "D-00971",
+      "esn": "ESN-0971",
+      "id_moteur": "ESN-0971",
+      "client": "UAE",
+      "site": "FR-Montereau",
+      "id_shop": "MON",
+      "type": "LEAP-1A",
+      "model": "LEAP-1A",
+      "priorite": "AOG Critique",
+      "statut": "AOG Critique"
+    },
+    {
+      "id_demande": "D-01055",
+      "esn": "ESN-1055",
+      "id_moteur": "ESN-1055",
+      "client": "AFR",
+      "site": "FR-Toulouse",
+      "id_shop": "TLS",
+      "type": "GE90-115B",
+      "model": "GE90-115B",
+      "priorite": "AOG Critique",
+      "statut": "AOG Critique"
+    },
+    {
+      "id_demande": "D-01062",
+      "esn": "ESN-1062",
+      "id_moteur": "ESN-1062",
+      "client": "DLH",
+      "site": "BE-Liège",
+      "id_shop": "LGG",
+      "type": "CFM56-5B",
+      "model": "CFM56-5B",
+      "priorite": "En Retard",
+      "statut": "En Retard"
+    },
+    {
+      "id_demande": "D-01078",
+      "esn": "ESN-1078",
+      "id_moteur": "ESN-1078",
+      "client": "DAL",
+      "site": "FR-Le Creusot",
+      "id_shop": "CRE",
+      "type": "M88-2",
+      "model": "M88-2",
+      "priorite": "Conforme",
+      "statut": "Conforme"
+    }
   ],
   "kpisLabels": {
     "tatMoyen": "TAT moyen réel (jours)",
@@ -55,77 +376,350 @@
     "aogCritiques": "AOG critiques actifs"
   },
   "modulesP85": [
-    { "module": "Aubes HP Monocristal" },
-    { "module": "Ressuage CND" },
-    { "module": "Révision Carter Fan" },
-    { "module": "Banc d'Essais Recette" },
-    { "module": "Revêtement Aubes LP" }
+    {
+      "module": "Aubes HP Monocristal"
+    },
+    {
+      "module": "Ressuage CND"
+    },
+    {
+      "module": "Révision Carter Fan"
+    },
+    {
+      "module": "Banc d'Essais Recette"
+    },
+    {
+      "module": "Revêtement Aubes LP"
+    }
   ],
   "waterfall": {
     "cibleLabel": "TAT Cible Contractuel",
     "etapes": [
-      { "etape": "Attente pièces (rupture)" },
-      { "etape": "Aléas CND / ressources banc" },
-      { "etape": "Fast-track client" },
-      { "etape": "Dérives logistiques navette" }
+      {
+        "etape": "Attente pièces (rupture)"
+      },
+      {
+        "etape": "Aléas CND / ressources banc"
+      },
+      {
+        "etape": "Fast-track client"
+      },
+      {
+        "etape": "Dérives logistiques navette"
+      }
     ]
   },
   "gates": [
-    { "gate": "G1 Démontage" },
-    { "gate": "G2 Contrôle CND" },
-    { "gate": "G3 Usinage / Réparation" },
-    { "gate": "G4 Recette Banc Test" },
-    { "gate": "G5 Remontage Final" }
+    {
+      "gate": "G1 Démontage"
+    },
+    {
+      "gate": "G2 Contrôle CND"
+    },
+    {
+      "gate": "G3 Usinage / Réparation"
+    },
+    {
+      "gate": "G4 Recette Banc Test"
+    },
+    {
+      "gate": "G5 Remontage Final"
+    }
   ],
   "pieces": [
-    { "pn": "PM-01125", "libelle": "Aubes HP Monocristal", "site": "Montereau", "statut": "Critique" },
-    { "pn": "PM-02847", "libelle": "Disques LLP Compresseur", "site": "Villaroche", "statut": "Critique" },
-    { "pn": "PM-03381", "libelle": "Arbres HP (rotors)", "site": "Villaroche", "statut": "Critique" },
-    { "pn": "PM-01530", "libelle": "Joints Fan & Turbine", "site": "Châtellerault", "statut": "Modéré" },
-    { "pn": "PM-00912", "libelle": "Injecteurs Carburant", "site": "Bruxelles", "statut": "Modéré" },
-    { "pn": "PM-04102", "libelle": "Collets Bagues Segments", "site": "Châtellerault", "statut": "Veille" },
-    { "pn": "PM-00684", "libelle": "Carters Basse Pression", "site": "Bruxelles", "statut": "Veille" }
+    {
+      "id_piece_pn": "P01125",
+      "pn": "P01125",
+      "libelle": "Aubes HP Monocristal",
+      "site": "FR-Montereau",
+      "id_shop": "MON",
+      "type_repair": "Aubes Turbine HP",
+      "disponibilite_pct": 74,
+      "confiance_appro_j": 5,
+      "statut": "Critique"
+    },
+    {
+      "id_piece_pn": "P02847",
+      "pn": "P02847",
+      "libelle": "Disques LLP Compresseur",
+      "site": "FR-Villaroche",
+      "id_shop": "VIL",
+      "type_repair": "Compresseurs",
+      "disponibilite_pct": 68,
+      "confiance_appro_j": 6,
+      "statut": "Critique"
+    },
+    {
+      "id_piece_pn": "P03381",
+      "pn": "P03381",
+      "libelle": "Arbres HP (rotors)",
+      "site": "FR-Villaroche",
+      "id_shop": "VIL",
+      "type_repair": "Compresseurs",
+      "disponibilite_pct": 72,
+      "confiance_appro_j": 5,
+      "statut": "Critique"
+    },
+    {
+      "id_piece_pn": "P01530",
+      "pn": "P01530",
+      "libelle": "Joints Fan & Turbine",
+      "site": "FR-Châtellerault",
+      "id_shop": "CHL",
+      "type_repair": "Usinage Base",
+      "disponibilite_pct": 84,
+      "confiance_appro_j": 3,
+      "statut": "Modéré"
+    },
+    {
+      "id_piece_pn": "P00912",
+      "pn": "P00912",
+      "libelle": "Injecteurs Carburant",
+      "site": "BE-Bruxelles",
+      "id_shop": "BRU",
+      "type_repair": "Contrôles CND",
+      "disponibilite_pct": 86,
+      "confiance_appro_j": 3,
+      "statut": "Modéré"
+    },
+    {
+      "id_piece_pn": "P04102",
+      "pn": "P04102",
+      "libelle": "Calculateurs FADEC",
+      "site": "FR-Saint-Quentin",
+      "id_shop": "SQY",
+      "type_repair": "FADEC & Systèmes",
+      "disponibilite_pct": 94,
+      "confiance_appro_j": 2,
+      "statut": "Veille"
+    },
+    {
+      "id_piece_pn": "P00684",
+      "pn": "P00684",
+      "libelle": "Carters Forgés",
+      "site": "FR-Gennevilliers",
+      "id_shop": "GEN",
+      "type_repair": "Forge & Ébauches",
+      "disponibilite_pct": 96,
+      "confiance_appro_j": 2,
+      "statut": "Veille"
+    },
+    {
+      "id_piece_pn": "P05118",
+      "pn": "P05118",
+      "libelle": "Nacelles & Inverseurs",
+      "site": "FR-Toulouse",
+      "id_shop": "TLS",
+      "type_repair": "Intégration Nacelles",
+      "disponibilite_pct": 71,
+      "confiance_appro_j": 6,
+      "statut": "Critique"
+    },
+    {
+      "id_piece_pn": "P05230",
+      "pn": "P05230",
+      "libelle": "Capteurs Banc d'Essai",
+      "site": "BE-Liège",
+      "id_shop": "LGG",
+      "type_repair": "Bancs d'Essais",
+      "disponibilite_pct": 85,
+      "confiance_appro_j": 4,
+      "statut": "Modéré"
+    },
+    {
+      "id_piece_pn": "P05342",
+      "pn": "P05342",
+      "libelle": "Disques Forgés Lourds",
+      "site": "FR-Le Creusot",
+      "id_shop": "CRE",
+      "type_repair": "Forge Disques HP",
+      "disponibilite_pct": 95,
+      "confiance_appro_j": 2,
+      "statut": "Veille"
+    }
   ],
   "retardsOps": [
-    { "operation": "Usinage Carter Fan" },
-    { "operation": "Ressuage CND" },
-    { "operation": "Revêtement Aubes HP" },
-    { "operation": "Recette Banc d'Essais" },
-    { "operation": "Montage Final Modules" }
+    {
+      "operation": "Usinage Carter Fan"
+    },
+    {
+      "operation": "Ressuage CND"
+    },
+    {
+      "operation": "Revêtement Aubes HP"
+    },
+    {
+      "operation": "Recette Banc d'Essais"
+    },
+    {
+      "operation": "Montage Final Modules"
+    }
   ],
   "routes": [
-    { "route": "Montereau ➔ Villaroche" },
-    { "route": "Châtellerault ➔ Bruxelles" },
-    { "route": "Villaroche ➔ Châtellerault" },
-    { "route": "Montereau ➔ Bruxelles" }
+    {
+      "route": "FR-Montereau ➔ FR-Villaroche",
+      "shop_source": "FR-Montereau",
+      "shop_dest": "FR-Villaroche",
+      "delai_transit_j": 1.2
+    },
+    {
+      "route": "FR-Châtellerault ➔ BE-Bruxelles",
+      "shop_source": "FR-Châtellerault",
+      "shop_dest": "BE-Bruxelles",
+      "delai_transit_j": 2.4
+    },
+    {
+      "route": "FR-Villaroche ➔ FR-Saint-Quentin",
+      "shop_source": "FR-Villaroche",
+      "shop_dest": "FR-Saint-Quentin",
+      "delai_transit_j": 1.5
+    },
+    {
+      "route": "FR-Gennevilliers ➔ FR-Montereau",
+      "shop_source": "FR-Gennevilliers",
+      "shop_dest": "FR-Montereau",
+      "delai_transit_j": 1.8
+    },
+    {
+      "route": "FR-Bordeaux ➔ FR-Villaroche",
+      "shop_source": "FR-Bordeaux",
+      "shop_dest": "FR-Villaroche",
+      "delai_transit_j": 2.8
+    },
+    {
+      "route": "FR-Toulouse ➔ FR-Villaroche",
+      "shop_source": "FR-Toulouse",
+      "shop_dest": "FR-Villaroche",
+      "delai_transit_j": 3.1
+    },
+    {
+      "route": "BE-Liège ➔ BE-Bruxelles",
+      "shop_source": "BE-Liège",
+      "shop_dest": "BE-Bruxelles",
+      "delai_transit_j": 1.0
+    },
+    {
+      "route": "FR-Le Creusot ➔ FR-Montereau",
+      "shop_source": "FR-Le Creusot",
+      "shop_dest": "FR-Montereau",
+      "delai_transit_j": 2.2
+    }
   ],
   "ratioLean": [
-    { "composante": "Temps de travail à valeur ajoutée" },
-    { "composante": "Attente passive pièces & outillage" },
-    { "composante": "Transfert logistique & navettes" }
+    {
+      "composante": "Temps de travail à valeur ajoutée"
+    },
+    {
+      "composante": "Attente passive pièces & outillage"
+    },
+    {
+      "composante": "Transfert logistique & navettes"
+    }
   ],
   "chargeAteliers": [
-    { "atelier": "VIL-01 Usinage Rotors" },
-    { "atelier": "MON-01 Turbine Haute P." },
-    { "atelier": "MON-02 Chambre Combustion" },
-    { "atelier": "CHL-01 Usinage Base" },
-    { "atelier": "BRU-01 CND Ressuage" },
-    { "atelier": "BRU-02 Revêtements" }
+    {
+      "atelier": "VIL-01 Usinage Rotors"
+    },
+    {
+      "atelier": "MON-01 Turbine Haute P."
+    },
+    {
+      "atelier": "MON-02 Chambre Combustion"
+    },
+    {
+      "atelier": "CHL-01 Usinage Base"
+    },
+    {
+      "atelier": "BRU-01 CND Ressuage"
+    },
+    {
+      "atelier": "SQY-01 FADEC & Systèmes"
+    },
+    {
+      "atelier": "GEN-01 Forge & Ébauches"
+    },
+    {
+      "atelier": "TLS-01 Intégration Nacelles"
+    },
+    {
+      "atelier": "LGG-01 Bancs d'Essais Débit"
+    },
+    {
+      "atelier": "CRE-01 Forge Disques HP"
+    }
   ],
   "seuilCharge": 85,
   "heatmap": {
-    "semaines": ["S36", "S37", "S38", "S39", "S40"],
-    "sites": ["Montereau", "Villaroche", "Châtellerault", "Bruxelles"]
+    "semaines": [
+      "S36",
+      "S37",
+      "S38",
+      "S39",
+      "S40"
+    ],
+    "sites": [
+      "FR-Montereau",
+      "FR-Villaroche",
+      "FR-Châtellerault",
+      "BE-Bruxelles",
+      "FR-Saint-Quentin",
+      "FR-Gennevilliers",
+      "FR-Bordeaux",
+      "FR-Toulouse",
+      "BE-Liège",
+      "FR-Le Creusot"
+    ]
   },
   "cfd": {
-    "jours": ["J1", "J2", "J3", "J4", "J5", "J6", "J7", "J8", "J9", "J10"]
+    "jours": [
+      "J1",
+      "J2",
+      "J3",
+      "J4",
+      "J5",
+      "J6",
+      "J7",
+      "J8",
+      "J9",
+      "J10"
+    ]
   },
   "goulots": [
-    { "poste": "Tour CN 5-axes USI-04" },
-    { "poste": "Ressuage CND-02" },
-    { "poste": "Centre d'Équilibrage EQU-01" },
-    { "poste": "Aléseuse ALE-03" },
-    { "poste": "Banc d'Essais BAN-01" },
-    { "poste": "Soudeuse LAS-02" }
+    {
+      "id_station": "USI-04",
+      "station": "Tour CN 5-axes USI-04",
+      "poste": "Tour CN 5-axes USI-04",
+      "seuil_saturation": 85
+    },
+    {
+      "id_station": "CND-02",
+      "station": "Ressuage CND-02",
+      "poste": "Ressuage CND-02",
+      "seuil_saturation": 85
+    },
+    {
+      "id_station": "EQU-01",
+      "station": "Centre d'Équilibrage EQU-01",
+      "poste": "Centre d'Équilibrage EQU-01",
+      "seuil_saturation": 85
+    },
+    {
+      "id_station": "ALE-03",
+      "station": "Aléseuse ALE-03",
+      "poste": "Aléseuse ALE-03",
+      "seuil_saturation": 85
+    },
+    {
+      "id_station": "BAN-01",
+      "station": "Banc d'Essais BAN-01",
+      "poste": "Banc d'Essais BAN-01",
+      "seuil_saturation": 85
+    },
+    {
+      "id_station": "LAS-02",
+      "station": "Soudeuse LAS-02",
+      "poste": "Soudeuse LAS-02",
+      "seuil_saturation": 85
+    }
   ]
 }
