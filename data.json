@@ -1,0 +1,131 @@
+{
+  "meta": {
+    "source": "Simulateur Cadrage Décisionnel Maestro — Jeu de données de démonstration MRO",
+    "perimetre": "Flottes CFM56-7B / LEAP-1A / LEAP-1B sur 4 centres Safran (Villaroche, Montereau, Châtellerault, Bruxelles)",
+    "actualise": "2026-09-12",
+    "licence": "Données fictives à des fins de démonstration",
+    "generation": "Ce fichier contient uniquement la structure des objets, les libellés et la donnée non chiffrée. Les valeurs chiffrées des graphiques Chart.js sont générées aléatoirement côté client selon des règles de cohérence, avec un seed stable (persistance entre sessions)."
+  },
+  "sites": [
+    { "code": "VIL", "nom": "Villaroche", "ateliers": "Compresseur & Rotors", "profil": "Modèles LEAP" },
+    { "code": "MON", "nom": "Montereau", "ateliers": "Chambre de combustion & Turbine", "profil": "CFM56 à haute tension" },
+    { "code": "CHL", "nom": "Châtellerault", "ateliers": "Usinage base & Carter", "profil": "Gamme nominale" },
+    { "code": "BRU", "nom": "Bruxelles", "ateliers": "Contrôles CND & Revêtements", "profil": "Services aéro encapsulés" }
+  ],
+  "modeles": [
+    { "famille": "CFM56-7B" },
+    { "famille": "LEAP-1A" },
+    { "famille": "LEAP-1B" }
+  ],
+  "decompoTAT": [
+    { "site": "Villaroche (VIL)" },
+    { "site": "Montereau (MON)" },
+    { "site": "Châtellerault (CHL)" },
+    { "site": "Bruxelles (BRU)" }
+  ],
+  "respectClients": [
+    { "code": "AFR", "nom": "Air France" },
+    { "code": "DLH", "nom": "Lufthansa" },
+    { "code": "DAL", "nom": "Delta Air Lines" },
+    { "code": "RYR", "nom": "Ryanair" }
+  ],
+  "alertesESN": [
+    { "esn": "ESN-9842", "client": "RYR", "site": "MON", "model": "CFM56-7B", "statut": "AOG Critique" },
+    { "esn": "ESN-1021", "client": "DLH", "site": "MON", "model": "LEAP-1A", "statut": "AOG Critique" },
+    { "esn": "ESN-0957", "client": "AFR", "site": "VIL", "model": "LEAP-1A", "statut": "En Retard" },
+    { "esn": "ESN-0993", "client": "DAL", "site": "VIL", "model": "LEAP-1B", "statut": "En Retard" },
+    { "esn": "ESN-1034", "client": "RYR", "site": "CHL", "model": "CFM56-7B", "statut": "En Retard" },
+    { "esn": "ESN-1042", "client": "DLH", "site": "CHL", "model": "LEAP-1B", "statut": "En Retard" },
+    { "esn": "ESN-0908", "client": "AFR", "site": "BRU", "model": "CFM56-7B", "statut": "En Cours" },
+    { "esn": "ESN-1011", "client": "DLH", "site": "BRU", "model": "LEAP-1A", "statut": "En Cours" },
+    { "esn": "ESN-0875", "client": "DAL", "site": "MON", "model": "CFM56-7B", "statut": "Conforme" },
+    { "esn": "ESN-0986", "client": "RYR", "site": "VIL", "model": "LEAP-1B", "statut": "Conforme" },
+    { "esn": "ESN-0912", "client": "AFR", "site": "MON", "model": "CFM56-7B", "statut": "Conforme" },
+    { "esn": "ESN-0971", "client": "DAL", "site": "MON", "model": "LEAP-1A", "statut": "AOG Critique" }
+  ],
+  "kpisLabels": {
+    "tatMoyen": "TAT moyen réel (jours)",
+    "tatCible": "TAT cible contractualisé",
+    "slaRespect": "Respect SLA global (%)",
+    "slaCible": "Cible SLA théorique",
+    "deriveEncours": "Dérive d'en-cours (jours)",
+    "deriveSeuil": "Seuil d'alerte dérive",
+    "conformiteP85": "Conformité P85 (%)",
+    "dossiersOuverts": "Dossiers ouverts",
+    "aogCritiques": "AOG critiques actifs"
+  },
+  "modulesP85": [
+    { "module": "Aubes HP Monocristal" },
+    { "module": "Ressuage CND" },
+    { "module": "Révision Carter Fan" },
+    { "module": "Banc d'Essais Recette" },
+    { "module": "Revêtement Aubes LP" }
+  ],
+  "waterfall": {
+    "cibleLabel": "TAT Cible Contractuel",
+    "etapes": [
+      { "etape": "Attente pièces (rupture)" },
+      { "etape": "Aléas CND / ressources banc" },
+      { "etape": "Fast-track client" },
+      { "etape": "Dérives logistiques navette" }
+    ]
+  },
+  "gates": [
+    { "gate": "G1 Démontage" },
+    { "gate": "G2 Contrôle CND" },
+    { "gate": "G3 Usinage / Réparation" },
+    { "gate": "G4 Recette Banc Test" },
+    { "gate": "G5 Remontage Final" }
+  ],
+  "pieces": [
+    { "pn": "PM-01125", "libelle": "Aubes HP Monocristal", "site": "Montereau", "statut": "Critique" },
+    { "pn": "PM-02847", "libelle": "Disques LLP Compresseur", "site": "Villaroche", "statut": "Critique" },
+    { "pn": "PM-03381", "libelle": "Arbres HP (rotors)", "site": "Villaroche", "statut": "Critique" },
+    { "pn": "PM-01530", "libelle": "Joints Fan & Turbine", "site": "Châtellerault", "statut": "Modéré" },
+    { "pn": "PM-00912", "libelle": "Injecteurs Carburant", "site": "Bruxelles", "statut": "Modéré" },
+    { "pn": "PM-04102", "libelle": "Collets Bagues Segments", "site": "Châtellerault", "statut": "Veille" },
+    { "pn": "PM-00684", "libelle": "Carters Basse Pression", "site": "Bruxelles", "statut": "Veille" }
+  ],
+  "retardsOps": [
+    { "operation": "Usinage Carter Fan" },
+    { "operation": "Ressuage CND" },
+    { "operation": "Revêtement Aubes HP" },
+    { "operation": "Recette Banc d'Essais" },
+    { "operation": "Montage Final Modules" }
+  ],
+  "routes": [
+    { "route": "Montereau ➔ Villaroche" },
+    { "route": "Châtellerault ➔ Bruxelles" },
+    { "route": "Villaroche ➔ Châtellerault" },
+    { "route": "Montereau ➔ Bruxelles" }
+  ],
+  "ratioLean": [
+    { "composante": "Temps de travail à valeur ajoutée" },
+    { "composante": "Attente passive pièces & outillage" },
+    { "composante": "Transfert logistique & navettes" }
+  ],
+  "chargeAteliers": [
+    { "atelier": "VIL-01 Usinage Rotors" },
+    { "atelier": "MON-01 Turbine Haute P." },
+    { "atelier": "MON-02 Chambre Combustion" },
+    { "atelier": "CHL-01 Usinage Base" },
+    { "atelier": "BRU-01 CND Ressuage" },
+    { "atelier": "BRU-02 Revêtements" }
+  ],
+  "seuilCharge": 85,
+  "heatmap": {
+    "semaines": ["S36", "S37", "S38", "S39", "S40"],
+    "sites": ["Montereau", "Villaroche", "Châtellerault", "Bruxelles"]
+  },
+  "cfd": {
+    "jours": ["J1", "J2", "J3", "J4", "J5", "J6", "J7", "J8", "J9", "J10"]
+  },
+  "goulots": [
+    { "poste": "Tour CN 5-axes USI-04" },
+    { "poste": "Ressuage CND-02" },
+    { "poste": "Centre d'Équilibrage EQU-01" },
+    { "poste": "Aléseuse ALE-03" },
+    { "poste": "Banc d'Essais BAN-01" },
+    { "poste": "Soudeuse LAS-02" }
+  ]
+}

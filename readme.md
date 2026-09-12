@@ -11,10 +11,10 @@ Ce déploiement s'inscrit dans une démarche active **d'amélioration continue**
 2. **La fiabilisation de la donnée et des algorithmes de calcul :** Éliminer les divergences entre les barèmes constructeurs théoriques, les déclaratifs manuels en atelier et les pointages réels au poste.
 3. **L'optimisation des flux industriels :** Lisser la charge entre les différents centres spécialisés (Villaroche, Montereau, Châtellerault, Bruxelles) et maîtriser les encours physiques (WIP).
 
-## Rôle & Enjeux du Consultant / Lead Data Supervisor
+## Rôle & Enjeux PO Data & Gouvernance
 
-Le consultant qui supervise et développe les usages de cet outil décisionnel agit comme pivot entre les directions métiers et les équipes data. Ses missions prioritaires recouvrent :
-- **L'arbitrage de la source de vérité (Golden Source) :** Garantir la cohérence entre l'ERP industriel, le MES d'atelier et les référentiels de pièces.
+Le consultant PO qui supervise et développe les usages de cet outil décisionnel agit comme pivot entre les directions métiers et les équipes data. Ses missions prioritaires recouvrent :
+- **L'arbitrage de la source de vérité (Golden Source) :** Garantir la cohérence entre l'ERP industriel, l'outil MAESTRO et les référentiels.
 - **La supervision de la qualité et du cycle de vie des données :** Définir les seuils d'intégrité, les règles de gestion des données manquantes et les politiques de conservation/agrégation.
-- **La normalisation des règles de calcul (Data Dictionary) :** Fixer des définitions mathématiques partagées (ex. exclusion ou inclusion des jours de gel client, distinction médiane vs moyenne, pondération de la charge).
+- **La normalisation des règles de calcul (Data Dictionary) :** Fixer des définitions mathématiques partagées (ex. exclusion ou inclusion des jours ouvrés, distinction médiane vs moyenne, pondération de la charge).
 - **L'éthique et la sémiologie de restitution :** Proposer des visualisations fidèles qui évitent les biais cognitifs, incitent à l'action corrective et respectent les habilitations de sécurité (RLS/RBAC).

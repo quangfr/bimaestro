@@ -19,7 +19,7 @@ Ce document constitue le référentiel textuel, méthodologique et technique syn
 ## Étape 0 : Contexte & Documentation
 
 > **En-tête de l'interface :** Étape 0 : Contexte & Documentation  
-> **Comportement :** La page Étape 0 charge et affiche le contenu des fichiers Markdown du dossier racine via un sélecteur en haut (`readme.md` par défaut, puis `content.md`, `AGENTS.md`, `svg_illustrations.md`).
+> **Comportement :** La page Étape 0 charge et affiche le contenu des fichiers Markdown du dossier racine via un sélecteur en haut (`readme.md` par défaut, puis `content.md`, `AGENTS.md`, `svg_illustrations.md`, `data.json`). Les fichiers `.json` (`data.json`) sont affichés en JSON formaté (pretty-print) dans un bloc mono-police.
 
 ### 0.1 Contenu par défaut (readme.md)
 Le fichier `readme.md`, affiché par défaut, porte le **contexte opérationnel** et le **rôle du consultant / data lead supervisor** :
@@ -315,6 +315,7 @@ erDiagram
 
 > **Question de cadrage :** Quels visuels utiliser pour piloter les délais et les engagements clients ?  
 > **En-tête de l'interface :** Étape 4 : Sélectionner les visuels pour le Délai (TAT) (`📊 Dataviz & Conception Graphique`)
+> **Rendu Chart.js (Étape 4) :** Les cartes d'options disposent d'un panneau Chart.js à droite (titres et sous-titres `metaInfo`, canvas `#step-4-canvas`). Les valeurs chiffrées sont générées côté client (PRNG seedé `maestro_seed`, persistant) sur la base des libellés de `data.json` — mêmes règles de cohérence que le Scénario Final (Étape 7, filtre).
 
 ### Les 8 Graphiques Disponibles pour le Délai :
 - **4.A : TAT Médian & Bornes 5%-95% par Moteur** (Distribution statistique en boxplot avec valeur médiane $P_{50}$ et bornes $P_{5} - P_{95}$ pour CFM56-7B, LEAP-1A, LEAP-1B).  
@@ -454,6 +455,7 @@ graph TD
 
 > **Question de cadrage :** Quels visuels choisir pour repérer les goulots d'étranglement et la surcharge ?  
 > **En-tête de l'interface :** Étape 6 : Sélectionner les visuels pour la Saturation des Ateliers (`📊 Dataviz & Conception Graphique`)
+> **Rendu Chart.js (Étape 6) :** Les cartes d'options disposent d'un panneau Chart.js à droite (titres et sous-titres `metaInfo`, canvas `#step-6-canvas`). Les valeurs chiffrées sont générées côté client (PRNG seedé `maestro_seed`, persistant) sur la base des libellés de `data.json` — mêmes règles de cohérence que le Scénario Final (Étape 7, filtre).
 
 ### Les 8 Graphiques de Saturation :
 - **6.A : Top Pièces Manquantes par Site** (Heures d'attente cumulées et volume des pièces critiques en rupture par centre : Aubes HP, Disques LLP, Joints, Injecteurs).  
