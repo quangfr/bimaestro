@@ -154,5 +154,5 @@ npx -y live-server --port=8080 --no-browser --entry-file=index.html
 URL locale : `http://localhost:8080`.
 
 ### Déploiement Cloud
-- **Firebase Hosting :** [https://gomaestro.web.app](https://gomaestro.web.app)
+- **Firebase Hosting :** [https://gomaestro-app.web.app](https://gomaestro-app.web.app)
 - **GitHub Pages :** [https://quangfr.github.io/maestro/](https://quangfr.github.io/maestro/)

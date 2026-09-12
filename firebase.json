@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "gomaestro",
+    "site": "gomaestro-app",
     "public": ".",
     "ignore": [
       "firebase.json",
