@@ -50,7 +50,7 @@
   <nav class="w-full max-w-6xl flex justify-start sm:justify-center gap-1.5 shrink-0 mb-2 overflow-x-auto pb-1.5 px-1 whitespace-nowrap scrollbar-thin" id="nav-tabs">
     <button onclick="switchStep(1)" id="tab-1"
       class="px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-blue-600 text-white shadow-md shadow-blue-500/20">
-      <span>1️⃣</span> Objectif Métier
+      <span>1️⃣</span> Objectif
     </button>
     <button onclick="switchStep(2)" id="tab-2"
       class="px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-slate-600 border border-slate-200 hover:text-blue-600 hover:bg-slate-50 shadow-sm">
@@ -58,19 +58,19 @@
     </button>
     <button onclick="switchStep(3)" id="tab-3"
       class="px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-slate-600 border border-slate-200 hover:text-blue-600 hover:bg-slate-50 shadow-sm">
-      <span>3️⃣</span> Modèle TAT
+      <span>3️⃣</span> Calcul
     </button>
     <button onclick="switchStep(4)" id="tab-4"
       class="px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-slate-600 border border-slate-200 hover:text-blue-600 hover:bg-slate-50 shadow-sm">
-      <span>4️⃣</span> Visuel Délai
+      <span>4️⃣</span> Délai
     </button>
     <button onclick="switchStep(5)" id="tab-5"
       class="px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-slate-600 border border-slate-200 hover:text-blue-600 hover:bg-slate-50 shadow-sm">
-      <span>5️⃣</span> Visuel Saturation
+      <span>5️⃣</span> Saturation
     </button>
     <button onclick="switchStep(6)" id="tab-6"
       class="px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-slate-600 border border-slate-200 hover:text-blue-600 hover:bg-slate-50 shadow-sm">
-      <span>🏁</span> Synthèse & Dashboard
+      <span>🏁</span> Synthèse
     </button>
   </nav>
 
@@ -1017,7 +1017,7 @@
               class="bg-slate-50 border border-slate-200 p-2 rounded-lg flex flex-col justify-between hover:border-blue-500 transition shadow-sm">
               <label for="select-q1"
                 class="text-[9px] text-blue-700 font-bold uppercase tracking-wider mb-1 flex items-center gap-1">
-                <span>1️⃣</span> Objectif Métier
+                <span>1️⃣</span> Objectif
               </label>
               <select id="select-q1" onchange="onSummarySelectChange(1, this.value)"
                 class="bg-white text-slate-800 font-medium text-[11px] rounded border border-slate-300 px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm">
@@ -1034,7 +1034,7 @@
               class="bg-slate-50 border border-slate-200 p-2 rounded-lg flex flex-col justify-between hover:border-blue-500 transition shadow-sm">
               <label for="select-q2"
                 class="text-[9px] text-blue-700 font-bold uppercase tracking-wider mb-1 flex items-center gap-1">
-                <span>2️⃣</span> Granularité Fait
+                <span>2️⃣</span> Données
               </label>
               <select id="select-q2" onchange="onSummarySelectChange(2, this.value)"
                 class="bg-white text-slate-800 font-medium text-[11px] rounded border border-slate-300 px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm">
@@ -1050,7 +1050,7 @@
               class="bg-slate-50 border border-slate-200 p-2 rounded-lg flex flex-col justify-between hover:border-blue-500 transition shadow-sm">
               <label for="select-q3"
                 class="text-[9px] text-blue-700 font-bold uppercase tracking-wider mb-1 flex items-center gap-1">
-                <span>3️⃣</span> Méthode TAT
+                <span>3️⃣</span> Calcul
               </label>
               <select id="select-q3" onchange="onSummarySelectChange(3, this.value)"
                 class="bg-white text-slate-800 font-medium text-[11px] rounded border border-slate-300 px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm">
@@ -1067,7 +1067,7 @@
               class="bg-slate-50 border border-slate-200 p-2 rounded-lg flex flex-col justify-between hover:border-blue-500 transition shadow-sm">
               <label for="select-q4"
                 class="text-[9px] text-blue-700 font-bold uppercase tracking-wider mb-1 flex items-center gap-1">
-                <span>4️⃣</span> Visuel Délai
+                <span>4️⃣</span> Délai
               </label>
               <select id="select-q4" onchange="onSummarySelectChange(4, this.value)"
                 class="bg-white text-slate-800 font-medium text-[11px] rounded border border-slate-300 px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm">
@@ -1088,7 +1088,7 @@
               class="bg-slate-50 border border-slate-200 p-2 rounded-lg col-span-1 sm:col-span-1 flex flex-col justify-between hover:border-blue-500 transition shadow-sm">
               <label for="select-q5"
                 class="text-[9px] text-blue-700 font-bold uppercase tracking-wider mb-1 flex items-center gap-1">
-                <span>5️⃣</span> Visuel Saturation
+                <span>5️⃣</span> Saturation
               </label>
               <select id="select-q5" onchange="onSummarySelectChange(5, this.value)"
                 class="bg-white text-slate-800 font-medium text-[11px] rounded border border-slate-300 px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm">
@@ -1422,9 +1422,11 @@
       if (q1 === 'D') {
         reco = `Table de faits <strong>${q2 === 'A' ? 'FAIT_DEMANDES_MRO' : (q2 === 'B' ? 'FAIT_PACKAGES_SITE' : 'FAIT_OPERATIONS')}</strong> enrichie avec les colonnes <code>Jours_Retard = MAX(0, Date_Livraison_Reelle - Date_SLA_Contractuelle)</code> et <code>Montant_Penalite = Jours_Retard * Bareme_Journalier</code>. Modélisation temporelle calibrée selon la méthode <strong>${metaInfo[3][q3].title}</strong>.`;
       } else if (q1 === 'A') {
-        reco = `Mise en place d'alertes DirectQuery / alertes Power Automate sur les dossiers à J-3 du délai critique SLA avec seuil de déviation calculé via <strong>${metaInfo[3][q3].title}</strong>.`;
+        reco = `Tour de contrôle temps réel : Modèle DirectQuery / rafraîchissement horaire sur <strong>${q2 === 'A' ? 'FAIT_DEMANDES_MRO' : (q2 === 'B' ? 'FAIT_PACKAGES_SITE' : 'FAIT_OPERATIONS')}</strong> avec alertes Power Automate sur dossiers critiques et calcul dynamique selon <strong>${metaInfo[3][q3].title}</strong>.`;
+      } else if (q1 === 'B') {
+        reco = `Pilotage contractuel & SLA : Modèle tabulaire en étoile reliant les contrats cadres et statuts de gel chrono (pièces/appro) aux faits <strong>${q2 === 'A' ? 'FAIT_DEMANDES_MRO' : (q2 === 'B' ? 'FAIT_PACKAGES_SITE' : 'FAIT_OPERATIONS')}</strong> avec conformité évaluée via <strong>${metaInfo[3][q3].title}</strong>.`;
       } else {
-        reco = `Dashboard analytique optimisé en mode Import avec agrégations automatiques pour la granularité <strong>${metaInfo[2][q2].title}</strong> et mesures DAX dynamiques pour le calcul <strong>${metaInfo[3][q3].title}</strong>.`;
+        reco = `Optimisation flux & capacités : Dashboard en mode Import avec agrégations automatiques pour la granularité <strong>${metaInfo[2][q2].title}</strong>, matrice de saturation ateliers / machines et mesures DAX de charge calibrées par <strong>${metaInfo[3][q3].title}</strong>.`;
       }
       if (recoEl) recoEl.innerHTML = reco;
 
