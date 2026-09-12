@@ -94,7 +94,7 @@ Je souhaite adapter Maestro au domaine industriel suivant : "[Décrire le domain
 
 ---
 
-## 4. Guide de Prompting IA : Granularité, Modélisation du Calcul & Mesure de Fiabilité du Prédictive (ML)
+## 4. Guide de Prompting IA : Granularité, Modélisation du Calcul & Mesure de Fiabilité
 
 Le choix de la granularité conditionne directement la capacité prédictive du modèle et le niveau de certitude offert aux planificateurs.
 
