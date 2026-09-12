@@ -70,10 +70,10 @@ Ce fichier centralise l'intégralité des contenus rédactionnels, explications 
 
 ---
 
-## Étape 2 : Granularité & Modélisation des Données
+## Étape 2 : Données
 
-> **Question :** Quel est le niveau de détail unitaire de la table de faits centrale ?
-> **Description du besoin :** La granularité définit la cardinalité de la table centrale, la complexité des jointures dimensionnelles et les capacités de forage (drill-down).
+> **Question :** Quelles sont les tables qui permettent le calcul selon le niveau de détail unitaire (Granularité de la table centrale) ?
+> **Description du besoin :** La structure des tables conditionne directement les méthodes de calcul de délai possibles à l'Étape 3. **Seul le niveau 2.C (Micro)** dispose de la table de référence des opérations (`REF_OPERATIONS_THEORIQUES`) avec la **durée de traitement théorique** par type de moteur et par type de réparation. En **2.B (Méso)**, le modèle repose exclusivement sur les **données historiques d'atelier** enregistrées (`Duree_Atelier_Historique`), ce qui rend **l'option 3.A ("Délais théoriques") indisponible**.
 
 ---
 
@@ -84,7 +84,7 @@ Ce fichier centralise l'intégralité des contenus rédactionnels, explications 
   Niveau d'agrégation macroscopique. On suit la demande globale d'une visite moteur complète (Shop Visit / ESN) depuis sa réception jusqu'à son expédition certifiée. Idéal pour le suivi global du TAT contractuel et l'exposition aux pénalités de restitution vis-à-vis des compagnies aériennes.
 - **Accès aux délais de transit :** 
   Non détaillé. Les transits sont agrégés dans un forfait logistique global ou inclus dans le TAT total du moteur.
-- **Modèle de données associé :**
+- **Modèle de données associé & Tables de calcul :**
   - **Table de faits :** `FAIT_DEMANDES_MRO` (~1,5k lig/an)
     - Champs clés : `ID_Demande` (PK), `FK_Client`, `FK_Moteur`, `FK_Contrat`, `FK_Date_Entree`, `Duree_Reelle_Jours`, `Jours_Retard_SLA`, `Montant_Penalite_EUR`.
   - **Dimensions reliées (1:N) :**
@@ -100,14 +100,16 @@ Ce fichier centralise l'intégralité des contenus rédactionnels, explications 
 
 ### Option 2.B : Méso - La Réparation du Module (Shop Operation)
 - **Icône / Emoji :** 🏢
-- **Sous-titre :** 1 ligne = 1 lot d'opérations / module par site (`FAIT_PACKAGES_SITE`)
+- **Sous-titre :** 1 ligne = 1 lot d'opérations / module par site (`FAIT_PACKAGES_SITE`) - *Données historiques*
 - **Description métier :**
   Niveau intermédiaire calqué sur les lots sous-ensembles / modules moteur (Fan, Compresseur HP, Chambre de Combustion, Turbine BP, Boîte d'engrenages AGB). Permet d'analyser les chemins critiques et les flux d'avancement par centre de travail ou site industriel.
 - **Accès aux délais de transit inter-ateliers :** 
-  ✅ **Oui, explicitement disponible.** Ce niveau capture précisément la durée des navettes et transferts physiques entre les différents sites et ateliers de réparation (ex: navettes routières ou transferts entre Villaroche, Montereau, Châtellerault, Bruxelles), permettant de dissocier le temps d'usinage/réparation en atelier (`Duree_Atelier_Jours`) du délai de transit logistique inter-sites (`Duree_Navette_Jours`).
-- **Modèle de données associé :**
-  - **Table de faits :** `FAIT_PACKAGES_SITE` (~15k lig/an)
-    - Champs clés : `ID_Lot_Package` (PK), `FK_Demande_MRO`, `FK_Sous_Ensemble`, `FK_Site_Safran`, `FK_Date_Envoi`, `Duree_Atelier_Jours`, `Duree_Navette_Jours` *(Délai transit inter-ateliers)*, `TAT_Package_Total`.
+  ✅ **Oui, explicitement disponible.** Ce niveau capture précisément la durée des navettes et transferts physiques entre les différents sites et ateliers de réparation (ex: navettes routières ou transferts entre Villaroche, Montereau, Châtellerault, Bruxelles), permettant de dissocier le temps d'usinage/réparation en atelier (`Duree_Atelier_Historique`) du délai de transit logistique inter-sites (`Duree_Navette_Transit`).
+- **Nature des données & Impact sur le calcul :**
+  ⚠️ **Basé exclusivement sur les données historiques d'atelier.** Il n'existe pas de table de barème théorique unitaire à ce niveau. Par conséquent, **l'option 3.A ("Délais théoriques de traitement") n'est pas disponible** avec l'option 2.B (on s'appuie sur la distribution historique des délais réels 3.B, le taux de charge 3.C ou la simulation dynamique 3.D).
+- **Modèle de données associé & Tables de calcul :**
+  - **Table de faits :** `FAIT_PACKAGES_SITE` (~15k lig/an - Données Historiques)
+    - Champs clés : `ID_Lot_Package` (PK), `FK_Demande_MRO`, `FK_Sous_Ensemble`, `FK_Site_Safran`, `FK_Date_Envoi`, `Duree_Atelier_Historique`, `Duree_Navette_Transit` *(Délai transit inter-ateliers)*, `TAT_Package_Total`.
   - **Dimensions reliées (1:N) :**
     - `DIM_DEMANDE_MRO` (`ID_Demande`, ESN_Moteur, Client_Nom, Date_Promesse_SLA)
     - `DIM_SOUS_ENSEMBLE` (`ID_Module`, Nom_Sous_Ensemble, Famille_Technologique, Criticite_Maint)
@@ -121,21 +123,25 @@ Ce fichier centralise l'intégralité des contenus rédactionnels, explications 
 
 ### Option 2.C : Micro - L'Opération Technique (Shop Task)
 - **Icône / Emoji :** 🔧
-- **Sous-titre :** 1 ligne = 1 opération de gamme ou 1 pointage par type de moteur (`FAIT_OPERATIONS_REPARATION`)
+- **Sous-titre :** 1 ligne = 1 opération de gamme ou 1 pointage (`FAIT_OPERATIONS_REPARATION`) - *Seule option avec Table Théorique*
 - **Description métier :**
   Niveau le plus fin du système d'information industriel (MES / ERP). Chaque ligne représente une opération élémentaire de gamme ou un pointage sur poste (ex: tournage carter, ressuage CND, équilibrage dynamique, passage banc d'essai) avec qualification Part-145 requise.
 - **Accès aux délais de transit inter-ateliers :** 
-  ✅ **Oui, au niveau le plus granulaire.** Permet de mesurer non seulement les transferts physiques inter-ateliers et inter-bâtiments, mais également les temps de roulage internes, les délais de mise en bac navette et les temps d'attente en zone tampon avant prise en charge sur la machine suivante (`Temps_Attente_h` et transferts inter-îlots).
-- **Modèle de données associé :**
-  - **Table de faits :** `FAIT_OPERATIONS_REPARATION` (>250k lig/an)
-    - Champs clés : `ID_Op_Reparation` (PK), `FK_Type_Reparation`, `FK_Moteur`, `FK_Lot_Package`, `FK_Date`, `Temps_Reparation_h`, `Cout_Maint_EUR`, `Temps_Attente_h` *(Transit inter-ateliers / buffers)*.
+  ✅ **Oui, au niveau le plus granulaire.** Permet de mesurer non seulement les transferts physiques inter-ateliers et inter-bâtiments, mais également les temps de roulage internes, les délais de mise en bac navette et les temps d'attente en zone tampon avant prise en charge sur la machine suivante (`Temps_Transit_Buffer_h` et transferts inter-îlots).
+- **Nature des données & Présence de la table théorique :**
+  ⭐ **Seul niveau doté de la table des opérations théoriques (`REF_OPERATIONS_THEORIQUES`).** Cette table de référence fournit pour chaque croisement `Type_Moteur` (CFM56, LEAP-1A, LEAP-1B) et `Type_Reparation` (Tournage, Ressuage, Équilibrage...) la **durée de traitement théorique standard** (`Duree_Theorique_h`). L'option 3.A y est donc pleinement calculable et comparable aux pointages réels (`Temps_Reel_Historique_h`).
+- **Modèle de données associé & Tables de calcul :**
+  - **Table de référence des calculs théoriques :** `REF_OPERATIONS_THEORIQUES`
+    - Champs clés : `ID_Op_Ref` (PK), `Type_Moteur`, `Type_Reparation`, `Duree_Theorique_h` *(Durée standard théorique)*.
+  - **Table de faits :** `FAIT_OPERATIONS_REPARATION` (>250k lig/an - Pointages & Réalisé)
+    - Champs clés : `ID_Op_Reparation` (PK), `FK_Operation_Ref`, `FK_Poste_Machine`, `FK_Lot_Package`, `FK_Temps_Slot`, `Temps_Reel_Historique_h`, `Temps_Transit_Buffer_h` *(Transit inter-ateliers / buffers)*, `Ecart_Theorique_h`.
   - **Dimensions reliées (1:N) :**
+    - `REF_OPERATIONS_THEORIQUES` (`ID_Op_Ref`, Type_Moteur, Type_Reparation, Duree_Theorique_h)
     - `DIM_POSTE_MACHINE` (`ID_Poste`, Nom_Machine, Ilot_Atelier, Taux_Charge_Cible)
-    - `DIM_TACHE_GAMME` (`ID_Operation`, Libelle_Operation, Code_Gamme_MRO, Qualif_Requise)
     - `DIM_PACKAGE` (`ID_Lot`, ESN_Moteur_Ref, Module_Concerne, Statut_Avancement)
     - `DIM_TEMPS_SLOT` (`Slot_Key`, Date_Jour, Equipe_Shift, Creneau_Heure)
 - **Avantages & Limites :**
-  - Finesse maximale pour l'optimisation Lean, détection des gaspillages de manutention et calcul précis des coûts de revient.
+  - Finesse maximale pour l'optimisation Lean, détection des gaspillages de manutention et calcul précis de l'écart Gamme vs Réalisé.
   - Volumétrie élevée nécessitant des agrégations Power BI pour les rapports de synthèse.
 
 ---
@@ -206,9 +212,9 @@ Le tableau ci-dessous explicite le comportement du calcul selon la granularité 
   - *Formule DAX :* `TAT_Actif_Jours = DIVIDE(Fact_VisiteMoteur[Total_Heures_Pointees], 7, 0) -- base 7h/jour ouvré`
 
 #### Cas 2.B (Méso - Work Package / Module)
-- **Avec 3.A (Brut) :**
-  - *Diagnostic :* Calcul sur le chemin critique du Work Package : le TAT moteur global correspond au délai entre le premier démarrage de WP et la dernière fin de WP.
-  - *Formule DAX :* `TAT_WP_Brut = DATEDIFF(Fact_Module_WP[Date_Debut_Plan], Fact_Module_WP[Date_Fin_Reelle], DAY)`
+- **Avec 3.A (Délais théoriques) :**
+  - *Diagnostic :* ❌ **NON DISPONIBLE.** Le niveau 2.B se base exclusivement sur les données historiques d'atelier (`FAIT_PACKAGES_SITE`). Sans table de barème théorique unitaire (disponible uniquement en 2.C), ce calcul théorique ne peut être exécuté.
+  - *Alternative recommandée :* Basculer sur 3.B (distribution des délais médians historiques) ou sur le niveau 2.C si l'analyse théorique est indispensable.
 - **Avec 3.B (Ouvré) :**
   - *Diagnostic :* Compte les jours ouvrés consommés module par module, puis identifie le module le plus long de la chaîne critique.
   - *Formule DAX :* `TAT_WP_Ouvre = CALCULATE(COUNTROWS(Dim_Date), DATESBETWEEN(Dim_Date[Date], Fact_Module_WP[Date_Debut_Plan], Fact_Module_WP[Date_Fin_Reelle]), Dim_Date[Est_Ouvre] = TRUE)`
@@ -220,9 +226,9 @@ Le tableau ci-dessous explicite le comportement du calcul selon la granularité 
   - *Formule DAX :* `Ratio_Valeur_Ajoutee_Module = DIVIDE(Fact_Module_WP[Heures_Pointees], Fact_Module_WP[TAT_WP_Ouvre] * 7)`
 
 #### Cas 2.C (Micro - Pointage / Opération)
-- **Avec 3.A (Brut) :**
-  - *Diagnostic :* Agrégation montante de millions de lignes requise pour reconstituer le délai calendaire global. Déconseillé en direct, privilégier une table pré-agrégée.
-  - *Formule DAX :* `TAT_Moteur_Reconstitue = DATEDIFF(MIN(Fact_Pointage_Operation[Timestamp_Debut]), MAX(Fact_Pointage_Operation[Timestamp_Fin]), DAY)`
+- **Avec 3.A (Délais théoriques) :**
+  - *Diagnostic :* ✅ **DISPONIBLE & IDÉAL.** Seule option disposant de la table `REF_OPERATIONS_THEORIQUES` croisant `Type_Moteur` et `Type_Reparation`. Permet de sommer les durées standards de gamme et de comparer directement avec le temps réel pointé (`Ecart_Theorique_h`).
+  - *Formule DAX :* `TAT_Theorique_Op = SUMX(REF_OPERATIONS_THEORIQUES, [Duree_Theorique_h])`
 - **Avec 3.B (Ouvré) :**
   - *Diagnostic :* Calcul basé sur les créneaux d'ouverture de l'atelier appliqués à la séquence d'opérations.
   - *Formule DAX :* `Duree_Ouvree_Operation_H = DATEDIFF(Fact_Pointage_Operation[Timestamp_Debut], Fact_Pointage_Operation[Timestamp_Fin], MINUTE) / 60`
