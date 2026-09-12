@@ -17,16 +17,41 @@ L'objectif de Maestro est de transformer une expression de besoin métier en sp�
                                  (Structure/Dimensions) (Clés & Relations)
 ```
 
-### Contraintes SAP IBP / Analytics Stories à respecter lors du prototypage :
-1. **Modèle de données IBP :** Basé sur des *Master Data Types* (Site, Moteur, Client, Pièce), des *Key Figures* (TAT, WIP Hours, SLA Compliance) et des *Planning Levels* (combinaisons dimensionnelles).
-2. **Bibliothèque de visualisations Analytics Stories :** Boxplot, barres empilées/groupées, cartes numériques de KPIs avec seuils de statut, waterfall/variance, heatmaps 2D et frises chronologiques/jalons. Éviter les types exotiques non supportés nativement dans SAP Analytics Cloud.
-3. **Logique de calcul IBP :** Distinction stricte entre calculs au niveau de base (*Base Planning Level*) et agrégations dynamiques (*Aggregated Key Figures*), équivalents aux calculs DAX présentés dans l'outil.
+### Contraintes Spécifiques SAP IBP & Analytics Stories à respecter lors du prototypage :
+
+#### 1. Contraintes Modèle de Données & Architecture SAP IBP
+1. **Typologie stricte des données (Master Data Types) :**
+   - Distinction impérative entre *Simple MDT* (ex: `SITE`, `CUSTOMER`), *Compound MDT* (ex: `PRDFAMILY`), et *Reference MDT*.
+   - Définition obligatoire des clés primaires racines (*Root Attributes*) pour chaque objet métier.
+2. **Planning Levels & Granularité dimensionnelle :**
+   - Toutes les *Key Figures* doivent être rattachées à un niveau de planification précis (*Base Planning Level* ex: `WKPRODLOCCUST`).
+   - Impossibilité de mixer arbitrairement des granularités sans règles formelles d'agrégation / désagrégation (ex: répartir du Macro vers le Micro requiert un ratio proportionnel ou un profil de pondération).
+3. **Logique de calcul & Fonctions Key Figures IBP :**
+   - Séparation stricte entre calculs au niveau de base (*Base Level Calculation*) et agrégations dynamiques (*Aggregated Key Figures* via `SUM`, `AVG`, `MAX`, `MIN`).
+   - Pas de calculs itératifs non bornés : les fonctions IBP supportées en temps réel sont déterministes (ex: `IF`, `ISNULL`, `PERIODID`, opérateurs arithmétiques, fonctions d'agrégation d'attributs).
+   - Les calculs complexes (régressions, machine learning lourd) s'exécutent en batch via les algorithmes du moteur de prévision IBP ou Python/HANA PAL, et non à la volée dans la cellule.
+4. **Versioning & Scénarios de simulation :**
+   - Gestion native des versions (Baseline, Optimiste, Dégradé) et des scénarios What-If sans altérer la donnée réelle.
+
+#### 2. Limites & Contraintes Ergonomiques de SAP Analytics Stories (SAC)
+1. **Catalogue de visualisations restreint :**
+   - Pas de graphiques arbitraires ou de canvas customisés sans développer des *Custom Widgets* (Web Components SAC nécessitant hébergement externe et maintenance).
+   - Se limiter aux composants natifs : Cartes KPI, Bar/Column (standard, groupé, 100%), Boxplot, Waterfall, Heatmap matricielle, Bullet Chart, Scatter/Bubble, Treemap, Donut/Pie, Milestones/Timeline standard.
+2. **Limites de volumétrie et performances du navigateur :**
+   - Plafond de points de données rendus simultanément par widget (seuil de performance SAC pour éviter le gel du navigateur : souvent limité entre 500 et 5 000 points selon le type de graphique).
+   - Le niveau Micro (opérations unitaires de pointage atelier) ne peut pas être affiché brut en masse : il doit être filtré ou agrégé préalablement via des *Input Controls* ou *Page Filters*.
+3. **Calculs à la volée (Calculated Measures SAC) vs Backend IBP :**
+   - Les formules dans SAC Stories sont limitées en complexité par rapport à du DAX ou SQL complet (pas de boucles complexes ni de jointures dynamiques multi-sources sans modèle fédéré).
+   - Privilégier le calcul des Key Figures dans le moteur IBP plutôt que de surcharger la couche de restitution SAC.
+4. **Interactivité et liaisons de filtres (Linked Analysis) :**
+   - Les interactions croisées (*Linked Analysis*) entre widgets doivent être soigneusement configurées pour éviter des requêtes redondantes vers le backend HANA/IBP.
+   - Les seuils d'alertes visuels (conditionnels) doivent être alignés sur des seuils numériques fixes ou des mesures cibles déclarées dans le modèle.
 
 ---
 
-## 2. Guide de Prompting IA : Concevoir & Tester les Graphiques à partir d'une Question Métier
+## 2. Guide de Prompting IA : Conception, Arbitrage & Limites Techniques
 
-Cette section fournit le canevas exact de prompt pour interroger une IA lorsqu'il s'agit de choisir les types de graphiques, axes, dimensions et filtres selon le besoin.
+Cette section fournit les canevas exacts de prompt pour interroger une IA selon l'angle d'analyse : arbitrages graphiques sous contraintes SAC, ou cadrage du modèle de données et des calculs sous contraintes SAP IBP.
 
 ### Méthodologie d'Arbitrage Graphique (Catalogue SAC)
 - **Alerte & Escalade (AOG, retards) :** Numeric KPI Cards (avec badge de statut seuillé), Bullet Charts (réel vs objectif SLA), Tables opérationnelles nominatives avec mise en forme conditionnelle.
@@ -37,33 +62,49 @@ Cette section fournit le canevas exact de prompt pour interroger une IA lorsqu'i
 - **Matrice de densité & Charge capacitaire :** Heatmap 2D (Site ou Poste × Période temporelle), Bubble Chart (Volume × TAT moyen × Taille = Pénalités).
 - **Séquencement & Suivi de projet :** Milestones Timeline / Gantt épuré (franchissement des jalons G1 à G5).
 
-### Template de Prompt IA : Conception de Graphique Analytics Story
+### Prompt IA 1 : Cadrage Graphique & Limites Ergonomiques d'Analytics Stories (SAC)
 ```markdown
-Agis en tant qu'architecte de tableaux de bord SAP IBP / SAC Analytics Stories.
-Je dois répondre à la question métier suivante : "[Insérer la question, ex: Quels postes ou familles de moteurs concentrent les dérives de délai et menacent les engagements clients ?]".
+Agis en tant qu'Architecte de Tableaux de Bord & Expert SAP Analytics Stories (SAC).
+Contexte : Conception d'un tableau de bord de pilotage industriel MRO / aéronautique.
+Question métier à traiter : "[Insérer la question, ex: Quels ateliers concentrent les goulots d'étranglement et risquent de générer des pénalités contractuelles ?]".
 
-En te basant sur le catalogue standard de visualisations de SAP Analytics Cloud (SAC) :
-1. Recommande le(s) type(s) de graphique(s) optimal(aux) parmi :
-   - Bar / Column Chart (Classique, Empilé, 100%, Groupé)
-   - Boxplot (Dispersion et percentiles P5/P50/P95)
-   - Numeric KPI Card avec micro-tendance Sparkline et statut dynamique
-   - Bullet Chart (Valeur réelle vs Objectif contractuel vs Seuil d'alerte)
-   - Waterfall / Variance Chart (Cascade cumulative des retards ou écarts)
-   - Heatmap Matrix (Charge 2D : Postes × Semaines)
-   - Treemap (Part de charge ou goulots hiérarchiques par atelier)
-   - Combined Bar & Line Chart (Volume d'en-cours en barres + Lead time moyen en courbe)
-   - Scatter / Bubble Plot (Corrélation Dérapage SLA vs Pénalités financières €)
-   - Milestones Timeline (Passage des jalons et franchissement des Gates)
-   - Radar / Spider Chart (Évaluation multi-dimensionnelle par site)
-2. Définis les dimensions d'axes :
-   - Axe X / Catégories (Planning Level, Granularité temporelle, Entité)
-   - Axe Y / Valeurs (Key Figures, Mesures de base ou agrégées)
-3. Spécifie les options visuelles avancées :
-   - Fractionnement couleur (Legend / Color Dimension)
-   - Lignes de référence / Seuils d'alerte conditionnels (Vert / Orange / Rouge)
-   - Règles de tri par défaut (ex: tri décroissant sur le montant d'exposition financière)
-4. Liste les filtres de Story et Input Controls nécessaires (Site, Compagnie cliente, Modèle moteur, Urgence).
-5. Propose la formule de Key Figure SAP IBP ou la mesure calculée SAC correspondante.
+En intégrant rigoureusement les LIMITES NATIVES de SAP Analytics Stories (SAC) :
+1. Diagnostic de faisabilité & Alternatives :
+   - Identifie si le besoin nécessite un type visuel exotique (ex: diagramme de Sankey, réseau dynamique, Gantt multi-niveaux complexe).
+   - Si oui, propose la meilleure alternative standard native SAC (ex: Waterfall, Heatmap 2D, Stacked Bar ou Bullet Chart) pour éviter le développement lourd d'un Custom Widget.
+2. Conception visuelle standardisée :
+   - Sélectionne le(s) composant(s) SAC recommandés (KPI Card, Boxplot, Treemap, Combo Chart...).
+   - Définis les dimensions d'axes (Catégories / Colonnes) et les Key Figures / Mesures associées.
+   - Spécifie les dimensions de couleur (Legend/Color Dimension) et les lignes de référence (ex: SLA contractuel ou seuil P85).
+3. Respect des contraintes de volumétrie & de performance SAC :
+   - Comment structurer les filtres d'en-tête (Story Filters) et sélecteurs (Input Controls) pour ne jamais dépasser le plafond de points de données par widget (seuil d'affichage fluide) ?
+   - Quel niveau d'agrégation par défaut recommandes-tu à l'ouverture de la page pour préserver la réactivité de l'application ?
+4. Règles de mise en forme conditionnelle (Thresholds) :
+   - Définis les paliers numériques de couleur (Vert / Orange / Rouge) opposables aux opérationnels.
+5. Mesures calculées SAC (Calculated Measures) :
+   - Rédige la formule de calcul SAC requise pour la vue, en précisant si ce calcul doit être fait côté Story (Calculated Measure) ou délégué en amont au moteur IBP pour des raisons de performance.
+```
+
+### Prompt IA 2 : Spécification & Contraintes Modèle / Calculs SAP-IBP
+```markdown
+Agis en tant qu'Architecte Solution SAP Integrated Business Planning (SAP IBP for Supply Chain).
+Contexte : Cadrage du modèle de données et des règles de calcul pour le suivi du TAT (Turn Around Time) et de la charge capacitaire MRO.
+Problématique métier à modéliser : "[Insérer le sujet, ex: Calcul du délai prévisionnel pondéré par le niveau de saturation atelier et ventilation de la charge sur les postes critiques]".
+
+En respectant rigoureusement les CONTRAINTES ARCHITECTURALES DE SAP IBP :
+1. Modélisation Master Data Types (MDT) & Clés racines :
+   - Spécifie les Master Data Types requis (Simple, Compound, Reference) avec leurs Root Attributes (ex: `SITEID`, `ENGINEMODEL`, `REPAIRSHOP`, `WORKCENTER`).
+   - Vérifie la cohérence des relations d'intégrité référentielle entre tables de faits et référentiels.
+2. Définition des Planning Levels :
+   - Quel est le Base Planning Level exact pour stocker l'indicateur (ex: `WKLOCPRDRES` : Semaine - Site - Famille Moteur - Poste de charge) ?
+   - Quels sont les Planning Levels intermédiaires nécessaires pour assurer la cohérence des agrégations montantes (vers la macro-visite) ou de la désagrégation descendante (vers l'opération) ?
+3. Règles de Calcul des Key Figures (Base vs Aggregated) :
+   - Rédige la formule exacte de la Key Figure au niveau de base (*Base Level Expression*) en respectant les fonctions déterministes autorisées par IBP (`IF`, `ISNULL`, arithmétique).
+   - Rédige l'expression d'agrégation (*Aggregation Expression*) sur la dimension temporelle et dimensionnelle (ex: `SUM`, `AVG`, `MIN`, `MAX`).
+4. Gestion des Scénarios & Simulation de Capacité :
+   - Comment paramétrer la Key Figure pour supporter la simulation temps réel (Version Baseline vs Scénarios What-If d'augmentation de charge ou d'aléas de pièces) ?
+5. Stratégie de Découpage des Calculs (Temps réel vs Batch) :
+   - Précise si le calcul peut être exécuté dynamiquement lors de la consultation ou s'il doit être planifié via un opérateur batch IBP / Statistical Forecasting / Scripting HANA.
 ```
 
 ---
