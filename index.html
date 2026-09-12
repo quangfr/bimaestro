@@ -237,7 +237,7 @@
           </div>
           <span id="canvas-badge"
             class="px-2.5 py-1 bg-blue-50 border border-blue-200 text-blue-700 text-[11px] font-bold rounded-lg shadow-sm">
-            Demande Globale (Macro)
+            Shop Visit (Macro)
           </span>
         </div>
 
@@ -245,8 +245,8 @@
           <div class="lg:col-span-4 flex flex-col justify-between space-y-2">
             <div onclick="selectGranularity('A')" id="opt-2-A"
               class="option-card active glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex-1 flex flex-col justify-center">
-              <div class="text-xs md:text-sm font-bold text-slate-900 flex items-center gap-2"><span>📦</span> A. Demande globale ESN (Macro)</div>
-              <p class="text-[11px] text-slate-600 mt-1 leading-snug"><strong>1 ligne = 1 visite atelier / ESN moteur.</strong> Analyse globale du TAT contractuel et pénalités de restitution.</p>
+              <div class="text-xs md:text-sm font-bold text-slate-900 flex items-center gap-2"><span>📦</span> A. Macro - La Demande Globale (Shop Visit)</div>
+              <p class="text-[11px] text-slate-600 mt-1 leading-snug"><strong>1 ligne = 1 visite atelier / ESN moteur.</strong> Analyse globale du TAT contractuel et pénalités de restitution. Délais de transit agrégés au niveau global.</p>
               <div class="text-[9.5px] text-slate-500 mt-1.5 bg-slate-50 rounded p-1.5 border border-slate-200 font-mono space-y-0.5">
                 <div><span class="text-blue-700 font-bold">FAIT_DEMANDES_MRO</span> (~1,5k lig/an)</div>
                 <div class="text-slate-500">PK: ID_Demande | FK: Client, Moteur, Contrat, Date_Entree</div>
@@ -255,18 +255,18 @@
             </div>
             <div onclick="selectGranularity('B')" id="opt-2-B"
               class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex-1 flex flex-col justify-center">
-              <div class="text-xs md:text-sm font-bold text-slate-900 flex items-center gap-2"><span>🏢</span> B. Packages & Sites (Méso)</div>
-              <p class="text-[11px] text-slate-600 mt-1 leading-snug"><strong>1 ligne = 1 lot sous-ensemble expédié vers un site.</strong> Pilote la logistique inter-sites (Villaroche, Montereau, Bruxelles).</p>
+              <div class="text-xs md:text-sm font-bold text-slate-900 flex items-center gap-2"><span>🏢</span> B. Méso - La Réparation du Module (Shop Operation)</div>
+              <p class="text-[11px] text-slate-600 mt-1 leading-snug"><strong>1 ligne = 1 lot sous-ensemble / module expédié.</strong> <span class="text-emerald-700 font-semibold">Accès aux délais de transit entre ateliers</span> (navettes Villaroche, Montereau, Bruxelles) distingués du temps d'atelier.</p>
               <div class="text-[9.5px] text-slate-500 mt-1.5 bg-slate-50 rounded p-1.5 border border-slate-200 font-mono space-y-0.5">
                 <div><span class="text-emerald-700 font-bold">FAIT_PACKAGES_SITE</span> (~15k lig/an)</div>
-                <div class="text-slate-500">PK: ID_Lot_Package | FK: Demande, Module, Site, Date_Transfert</div>
+                <div class="text-slate-500">PK: ID_Lot_Package | FK: Demande, Module, Site, Date_Envoi</div>
                 <div class="text-emerald-700 font-medium">Dimensions : DIM_SOUS_ENSEMBLE, DIM_SITE_SAFRAN, DIM_DEMANDE_MRO, DIM_CALENDRIER</div>
               </div>
             </div>
             <div onclick="selectGranularity('C')" id="opt-2-C"
               class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex-1 flex flex-col justify-center">
-              <div class="text-xs md:text-sm font-bold text-slate-900 flex items-center gap-2"><span>🔧</span> C. Opérations & Types de Réparation (Micro)</div>
-              <p class="text-[11px] text-slate-600 mt-1 leading-snug"><strong>1 ligne = 1 type de réparation / opération par type de moteur.</strong> Suivi détaillé des gammes de réparation (usinage 5 axes, ressuage CND, équilibrage, banc).</p>
+              <div class="text-xs md:text-sm font-bold text-slate-900 flex items-center gap-2"><span>🔧</span> C. Micro - L'Opération Technique (Shop Task)</div>
+              <p class="text-[11px] text-slate-600 mt-1 leading-snug"><strong>1 ligne = 1 opération de gamme par type de moteur.</strong> <span class="text-emerald-700 font-semibold">Accès aux délais de transit inter-ateliers & inter-îlots</span>, manutention, bacs tampons et temps machine.</p>
               <div class="text-[9.5px] text-slate-500 mt-1.5 bg-slate-50 rounded p-1.5 border border-slate-200 font-mono space-y-0.5">
                 <div><span class="text-amber-700 font-bold">FAIT_OPERATIONS_REPARATION</span> (>250k lig/an)</div>
                 <div class="text-slate-500">PK: ID_Op_Reparation | FK: Type_Moteur, Type_Reparation, Package, Date</div>
@@ -948,9 +948,9 @@
         'D': { title: "Suivi Retard & Pénalités", desc: "Jours de dérapage ouvrés & exposition financière (€)", icon: "💰" }
       },
       2: {
-        'A': { title: "Demande Globale (Macro)", desc: "1 ligne = 1 dossier / ESN moteur (FAIT_DEMANDES_MRO)", icon: "📦" },
-        'B': { title: "Packages / Sites (Méso)", desc: "1 ligne = 1 lot d'opérations par site (FAIT_PACKAGES_SITE)", icon: "🏢" },
-        'C': { title: "Opérations & Réparations (Micro)", desc: "1 ligne = 1 type de réparation par type de moteur", icon: "🔧" }
+        'A': { title: "La Demande Globale (Shop Visit)", desc: "1 ligne = 1 visite globale ESN (FAIT_DEMANDES_MRO) • Transits forfaitaires", icon: "📦" },
+        'B': { title: "La Réparation du Module (Shop Operation)", desc: "1 ligne = 1 lot module par site (FAIT_PACKAGES_SITE) • Accès aux transits inter-ateliers", icon: "🏢" },
+        'C': { title: "L'Opération Technique (Shop Task)", desc: "1 ligne = 1 opération de gamme (FAIT_OPERATIONS) • Accès aux transits inter-ateliers & tampons", icon: "🔧" }
       },
       3: {
         'A': { title: "Délais Théoriques de Traitement", desc: "Temps standards par type de moteur (gamme & transit)", icon: "➕" },
@@ -1054,9 +1054,9 @@
       }
       const badge = document.getElementById('canvas-badge');
       if (badge) {
-        if (opt === 'A') badge.textContent = "Demande Globale (Macro)";
-        else if (opt === 'B') badge.textContent = "Packages / Sites (Méso)";
-        else badge.textContent = "Opérations Unitaires (Micro)";
+        if (opt === 'A') badge.textContent = "Shop Visit (Macro)";
+        else if (opt === 'B') badge.textContent = "Shop Operation (Méso)";
+        else badge.textContent = "Shop Task (Micro)";
       }
       drawSchema(opt);
       renderStep3TablePreview();
@@ -1921,11 +1921,17 @@
         'D': 'Modélisation avancée (Probabiliste multi-factorielle)'
       };
 
+      const levelLabels = {
+        'A': 'Shop Visit (Macro)',
+        'B': 'Shop Operation (Méso)',
+        'C': 'Shop Task (Micro)'
+      };
+
       if (titleEl) {
         titleEl.innerHTML = `📋 Extrait de <span class="font-mono text-blue-700 font-bold ml-1">${tableNames[q2]}</span>`;
       }
       if (badgeEl) {
-        badgeEl.textContent = `Niveau ${q2} (${q2 === 'A' ? 'Macro' : q2 === 'B' ? 'Méso' : 'Micro'}) + Méthode 3${q3}`;
+        badgeEl.textContent = `${levelLabels[q2]} + Méthode 3${q3}`;
       }
 
       // Structure des colonnes et données d'exemple selon la combinaison

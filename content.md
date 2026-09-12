@@ -77,59 +77,66 @@ Ce fichier centralise l'intégralité des contenus rédactionnels, explications 
 
 ---
 
-### Option 2.A : Macro - La Demande Globale (Visite Moteur / Shop Visit)
-- **Icône / Emoji :** 🛩️
-- **Entité modélisée :** `Fact_VisiteMoteur` (1 ligne = 1 visite complète d'un moteur en atelier)
+### Option 2.A : Macro - La Demande Globale (Shop Visit)
+- **Icône / Emoji :** 📦
+- **Sous-titre :** 1 ligne = 1 visite atelier / ESN moteur (`FAIT_DEMANDES_MRO`)
 - **Description métier :**
-  Niveau d'agrégation le plus élevé. On suit la commande client ou la visite d'atelier globale du moteur (ex: révision complète CFM56 / LEAP) depuis sa réception jusqu'à son expédition certifiée (Release EASA Form 1).
+  Niveau d'agrégation macroscopique. On suit la demande globale d'une visite moteur complète (Shop Visit / ESN) depuis sa réception jusqu'à son expédition certifiée. Idéal pour le suivi global du TAT contractuel et l'exposition aux pénalités de restitution vis-à-vis des compagnies aériennes.
+- **Accès aux délais de transit :** 
+  Non détaillé. Les transits sont agrégés dans un forfait logistique global ou inclus dans le TAT total du moteur.
 - **Modèle de données associé :**
-  - **Table de faits :** `Fact_VisiteMoteur`
-    - Champs : `ID_Visite` (PK), `ID_Client`, `ID_Moteur`, `Date_Reception`, `Date_Livraison`, `Date_SLA_Contractuel`, `Montant_Devis_EUR`, `Penalite_Jour_EUR`, `TAT_Total_Jours`.
-  - **Dimensions :**
-    - `Dim_Client` (`ID_Client`, Nom, Type_Contrat, Segment_Flotte)
-    - `Dim_Moteur` (`ID_Moteur`, Type_Moteur, Num_Serie, Cycles_Depuis_Neuf)
-    - `Dim_Date` (`Date_Key`, Date, Mois, Trimestre, Annee)
+  - **Table de faits :** `FAIT_DEMANDES_MRO` (~1,5k lig/an)
+    - Champs clés : `ID_Demande` (PK), `FK_Client`, `FK_Moteur`, `FK_Contrat`, `FK_Date_Entree`, `Duree_Reelle_Jours`, `Jours_Retard_SLA`, `Montant_Penalite_EUR`.
+  - **Dimensions reliées (1:N) :**
+    - `DIM_CLIENT` (`ID_Client`, Nom_Client, Flotte_Active, SLA_Contractuel_Standard)
+    - `DIM_MOTEUR` (`ESN_Moteur`, Famille_Moteur, Heures_Vol_TSN, Cycles_Vol_CSN)
+    - `DIM_CONTRAT_SLA` (`ID_Contrat`, Type_Engagement, SLA_Cible_Jours, Seuil_Alerte_P85)
+    - `DIM_CALENDRIER` (`Date_Key`, Semaine_Fiscale, Mois_Annee, Est_Ouvre_Safran)
 - **Avantages & Limites :**
-  - Volume de données très léger (< 100k lignes).
-  - Réponses instantanées pour les tableaux de bord exécutifs.
-  - Impossible d'isoler l'étape ou le module responsable d'un retard sans aller dans les détails inférieurs.
+  - Volume très léger (< 10k lignes), réponses instantanées pour la Direction.
+  - Impossibilité d'isoler le sous-ensemble ou l'atelier responsable d'un goulot d'étranglement.
 
 ---
 
-### Option 2.B : Méso - Le Sous-Ensemble / Module (Work Package)
-- **Icône / Emoji :** ⚙️
-- **Entité modélisée :** `Fact_Module_WP` (1 ligne = 1 module / lot de maintenance)
+### Option 2.B : Méso - La Réparation du Module (Shop Operation)
+- **Icône / Emoji :** 🏢
+- **Sous-titre :** 1 ligne = 1 lot d'opérations / module par site (`FAIT_PACKAGES_SITE`)
 - **Description métier :**
-  Niveau intermédiaire calqué sur l'organisation des lignes de production MRO (ex: Module Fan, Compresseur HP, Chambre de Combustion, Turbine BP, Boîte d'engrenages / AGB). Permet d'analyser les chemins critiques et les flux parallèles entre baies de montage.
+  Niveau intermédiaire calqué sur les lots sous-ensembles / modules moteur (Fan, Compresseur HP, Chambre de Combustion, Turbine BP, Boîte d'engrenages AGB). Permet d'analyser les chemins critiques et les flux d'avancement par centre de travail ou site industriel.
+- **Accès aux délais de transit inter-ateliers :** 
+  ✅ **Oui, explicitement disponible.** Ce niveau capture précisément la durée des navettes et transferts physiques entre les différents sites et ateliers de réparation (ex: navettes routières ou transferts entre Villaroche, Montereau, Châtellerault, Bruxelles), permettant de dissocier le temps d'usinage/réparation en atelier (`Duree_Atelier_Jours`) du délai de transit logistique inter-sites (`Duree_Navette_Jours`).
 - **Modèle de données associé :**
-  - **Table de faits :** `Fact_Module_WP`
-    - Champs : `ID_WorkPackage` (PK), `ID_Visite` (FK), `ID_Module`, `ID_Atelier`, `Date_Debut_Plan`, `Date_Fin_Reelle`, `Heures_Allouees`, `Heures_Pointees`, `Delai_Attente_Pieces_Jours`.
-  - **Dimensions :**
-    - `Dim_VisiteMoteur` (`ID_Visite`, ID_Client, Num_Dossier_MRO, Statut_Visite)
-    - `Dim_Module_Ref` (`ID_Module`, Libelle_Module, Section_Moteur, Poids_Standard)
-    - `Dim_Atelier` (`ID_Atelier`, Ligne_Assemblage, Responsable_Ligne, Site_MRO)
+  - **Table de faits :** `FAIT_PACKAGES_SITE` (~15k lig/an)
+    - Champs clés : `ID_Lot_Package` (PK), `FK_Demande_MRO`, `FK_Sous_Ensemble`, `FK_Site_Safran`, `FK_Date_Envoi`, `Duree_Atelier_Jours`, `Duree_Navette_Jours` *(Délai transit inter-ateliers)*, `TAT_Package_Total`.
+  - **Dimensions reliées (1:N) :**
+    - `DIM_DEMANDE_MRO` (`ID_Demande`, ESN_Moteur, Client_Nom, Date_Promesse_SLA)
+    - `DIM_SOUS_ENSEMBLE` (`ID_Module`, Nom_Sous_Ensemble, Famille_Technologique, Criticite_Maint)
+    - `DIM_SITE_SAFRAN` (`ID_Site`, Nom_Site, Specialite_Atelier, Capacite_Lots_Hebdo)
+    - `DIM_CALENDRIER` (`Date_Key`, Semaine_Fiscale, Navette_Planifiee, Est_Ouvre_Atelier)
 - **Avantages & Limites :**
-  - Meilleur équilibre entre volume (100k - 2M lignes) et granularité opérationnelle.
-  - Permet le suivi des goulets d'étranglement par centre de travail sans descendre dans l'excès de détail des pointages.
+  - Excellent compromis volumétrie / finesse analytique.
+  - Isole parfaitement les frottements logistiques inter-sites sans noyer l'utilisateur dans le détail de chaque coup d'outil.
 
 ---
 
-### Option 2.C : Micro - L'Opération Élementaire (Gamme / Task Card)
-- **Icône / Emoji :** 📋
-- **Entité modélisée :** `Fact_Pointage_Operation` (1 ligne = 1 opération de gamme ou 1 pointage)
+### Option 2.C : Micro - L'Opération Technique (Shop Task)
+- **Icône / Emoji :** 🔧
+- **Sous-titre :** 1 ligne = 1 opération de gamme ou 1 pointage par type de moteur (`FAIT_OPERATIONS_REPARATION`)
 - **Description métier :**
-  Niveau le plus fin du système d'information industriel (MES / ERP). Chaque ligne représente un geste technique validé (ex: contrôle FPI ressuage pale rotor, équilibrage dynamique arbre turbine, dépose carter) avec matricule du mécanicien certifié et horodatage au centième.
+  Niveau le plus fin du système d'information industriel (MES / ERP). Chaque ligne représente une opération élémentaire de gamme ou un pointage sur poste (ex: tournage carter, ressuage CND, équilibrage dynamique, passage banc d'essai) avec qualification Part-145 requise.
+- **Accès aux délais de transit inter-ateliers :** 
+  ✅ **Oui, au niveau le plus granulaire.** Permet de mesurer non seulement les transferts physiques inter-ateliers et inter-bâtiments, mais également les temps de roulage internes, les délais de mise en bac navette et les temps d'attente en zone tampon avant prise en charge sur la machine suivante (`Temps_Attente_h` et transferts inter-îlots).
 - **Modèle de données associé :**
-  - **Table de faits :** `Fact_Pointage_Operation`
-    - Champs : `ID_Operation` (PK), `ID_WorkPackage` (FK), `ID_Tache_Ref`, `ID_Technicien`, `Timestamp_Debut`, `Timestamp_Fin`, `Temps_Standard_H`, `Temps_Pointe_H`, `Code_Arret`.
-  - **Dimensions :**
-    - `Dim_WorkPackage` (`ID_WorkPackage`, ID_Visite, Module, Priorite)
-    - `Dim_Tache` (`ID_Tache_Ref`, Code_ATA, Libelle_Tache, Qualification_Requise)
-    - `Dim_Technicien` (`ID_Technicien`, Nom, Equipe, Certifications_EASA)
+  - **Table de faits :** `FAIT_OPERATIONS_REPARATION` (>250k lig/an)
+    - Champs clés : `ID_Op_Reparation` (PK), `FK_Type_Reparation`, `FK_Moteur`, `FK_Lot_Package`, `FK_Date`, `Temps_Reparation_h`, `Cout_Maint_EUR`, `Temps_Attente_h` *(Transit inter-ateliers / buffers)*.
+  - **Dimensions reliées (1:N) :**
+    - `DIM_POSTE_MACHINE` (`ID_Poste`, Nom_Machine, Ilot_Atelier, Taux_Charge_Cible)
+    - `DIM_TACHE_GAMME` (`ID_Operation`, Libelle_Operation, Code_Gamme_MRO, Qualif_Requise)
+    - `DIM_PACKAGE` (`ID_Lot`, ESN_Moteur_Ref, Module_Concerne, Statut_Avancement)
+    - `DIM_TEMPS_SLOT` (`Slot_Key`, Date_Jour, Equipe_Shift, Creneau_Heure)
 - **Avantages & Limites :**
-  - Exhaustivité totale, indispensable pour le calcul des coûts de revient et des productivités individuelles/équipes.
-  - Volumétrie massive (10M à 50M+ lignes).
-  - Nécessite des tables d'agrégation dans Power BI pour conserver des temps d'affichage fluides.
+  - Finesse maximale pour l'optimisation Lean, détection des gaspillages de manutention et calcul précis des coûts de revient.
+  - Volumétrie élevée nécessitant des agrégations Power BI pour les rapports de synthèse.
 
 ---
 
