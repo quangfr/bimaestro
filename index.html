@@ -479,10 +479,16 @@
         <div class="mb-2">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
             <h2 class="text-sm md:text-base font-bold text-blue-700">Étape 2 : Données (Granularité & Tables pour le calcul)</h2>
-            <span id="canvas-badge"
-              class="px-2.5 py-0.5 bg-blue-50 border border-blue-200 text-blue-700 text-[10px] font-bold rounded-full shadow-sm self-start sm:self-auto">
-              Shop Visit (Macro)
-            </span>
+            <div class="flex items-center gap-1.5 self-start sm:self-auto">
+              <span id="canvas-badge"
+                class="px-2.5 py-0.5 bg-blue-50 border border-blue-200 text-blue-700 text-[10px] font-bold rounded-full shadow-sm">
+                Shop Visit (Macro)
+              </span>
+              <button id="schema-toggle" onclick="toggleSchemaView()" title="Basculer entre le schéma SVG et le code Mermaid"
+                class="px-2 py-0.5 text-[9.5px] font-bold rounded-full border shadow-sm transition flex items-center gap-1 bg-white text-slate-600 border-slate-200 hover:border-blue-500 hover:text-blue-600">
+                <span>👁</span> SVG <span class="text-slate-300">/</span> Mermaid
+              </button>
+            </div>
           </div>
           <p class="text-[11px] text-slate-500">Quelles tables permettent le calcul selon le niveau de détail unitaire ?</p>
           
@@ -599,17 +605,22 @@
           </div>
 
           <div
-            class="lg:col-span-7 bg-slate-50/80 rounded-xl p-2 border border-slate-200 shadow-sm flex flex-col items-center justify-between overflow-x-auto w-full">
-            <div class="w-full min-w-[320px] max-w-[640px] flex justify-center overflow-x-auto">
-              <canvas id="schemaCanvas" width="640" height="360"
-                class="w-full max-w-[640px] max-h-[360px] h-auto shrink-0"></canvas>
+            class="lg:col-span-7 bg-slate-50/80 rounded-xl p-2 border border-slate-200 shadow-sm flex flex-col items-center overflow-x-auto w-full min-w-0">
+            <div id="schema-svg-view" class="w-full min-w-[320px] max-w-[640px] flex flex-col items-center overflow-x-auto">
+              <div class="w-full min-w-[320px] max-w-[640px] flex justify-center overflow-x-auto">
+                <canvas id="schemaCanvas" width="640" height="360"
+                  class="w-full max-w-[640px] max-h-[360px] h-auto shrink-0"></canvas>
+              </div>
+              <div class="w-full text-center mt-1.5 text-[10.5px] text-slate-500 flex flex-wrap justify-center gap-3 sm:gap-4 border-t border-slate-200 pt-1">
+                <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-blue-600"></span> Table de Faits (Centrale)</span>
+                <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-emerald-600"></span> Tables de Dimensions (1 : N)</span>
+                <span class="flex items-center gap-1.5"><span class="text-amber-600 font-bold text-xs">🔑 PK</span> Clé Primaire</span>
+                <span class="flex items-center gap-1.5"><span class="text-blue-600 font-bold text-xs">🔗 FK</span> Clé Étrangère</span>
+                <span class="flex items-center gap-1.5"><span class="text-purple-600 font-bold text-xs">📐</span> Mesures / Métriques</span>
+              </div>
             </div>
-            <div class="w-full text-center mt-1.5 text-[10.5px] text-slate-500 flex flex-wrap justify-center gap-3 sm:gap-4 border-t border-slate-200 pt-1">
-              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-blue-600"></span> Table de Faits (Centrale)</span>
-              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-emerald-600"></span> Tables de Dimensions (1 : N)</span>
-              <span class="flex items-center gap-1.5"><span class="text-amber-600 font-bold text-xs">🔑 PK</span> Clé Primaire</span>
-              <span class="flex items-center gap-1.5"><span class="text-blue-600 font-bold text-xs">🔗 FK</span> Clé Étrangère</span>
-              <span class="flex items-center gap-1.5"><span class="text-purple-600 font-bold text-xs">📐</span> Mesures / Métriques</span>
+            <div id="schema-mermaid-view" class="hidden w-full min-w-[320px] max-w-[640px] text-center">
+              <pre class="text-left bg-slate-900 text-slate-100 rounded-lg p-3 overflow-x-auto text-[11px] leading-relaxed whitespace-pre-wrap"><code id="schema-mermaid-code" class="language-mermaid"></code></pre>
             </div>
           </div>
         </div>
@@ -3337,6 +3348,174 @@
       container.innerHTML = svg;
     }
 
+    // --- Étape 2 : Code Mermaid des 3 schémas relationnels (à garder identique dans content.md) ---
+    const SCHEMA_MERMAID = {
+      A: `erDiagram
+    VISIT ||--o{ ENGINE : "moteur ESN"
+    VISIT }o--|| CONTRACT_SLA : "client + engagement"
+    VISIT }o--|| TRANSITS : "transit forfaitaire"
+    VISIT }o--|| CALENDAR : "date entrée / livraison"
+    ENGINE ||--o{ ENGINE_PARTS : "filtre par modèle"
+    VISIT }o--|| ENGINE_PARTS : "kit pièces (start_req_date, dispo %)"
+
+    VISIT {
+        string id_visit PK "1 ligne = 1 visite"
+        string id_moteur FK "engine (ESN)"
+        string priorite "AOG / Normal"
+        date date_entree "start"
+        date date_livraison "end"
+        string id_kit_pieces FK "engine_parts"
+        number tat_realise_j "TAT global (j)"
+        number derapage_sla_j "Écart contractuel"
+        number penalites_eur "Exposition (€)"
+    }
+    ENGINE {
+        string id_moteur PK "Numéro ESN"
+        string type "CFM56-5B/7B, LEAP-1A/1B"
+        string modele "Sous-variante"
+        string client "Compagnie"
+    }
+    ENGINE_PARTS {
+        string id_piece_pn PK "Part Number"
+        string modele_moteur "Filtre modèle"
+        number disponibilite_pct "Dispo %"
+        number confiance_appro_j "Intervalle +/-"
+    }
+    CONTRACT_SLA {
+        string id_contrat PK
+        string client
+        number sla_cible_jours
+        number penalite_jour_eur
+    }
+    TRANSITS {
+        string id_liaison PK
+        string site_depart
+        string site_arrivee
+        number delai_transit_j
+    }
+    CALENDAR {
+        date date PK
+        string semaine
+        boolean jour_ouvre
+    }`,
+      B: `erDiagram
+    VISIT ||--o{ REPAIR : "visite moteur"
+    SHOP ||--o{ REPAIR : "atelier spécialisé"
+    TRANSITS ||--o{ REPAIR : "navette inter-ateliers"
+    CALENDAR ||--o{ REPAIR : "date début / fin"
+    REPAIR ||--o{ ENGINE_PARTS : "pièces selon type de réparation"
+
+    REPAIR {
+        string id_repair PK "1 ligne = 1 réparation module"
+        string id_visite FK "visit"
+        string id_shop FK "atelier"
+        string type_repair "Gamme saisie (HP, BP...)"
+        date date_debut "start"
+        date date_fin "end"
+        string id_kit_module FK "engine_parts"
+        number tat_atelier_j "Délai atelier (j)"
+        number duree_navette_j "Transit inter-ateliers"
+    }
+    VISIT {
+        string id_visit PK "1 ligne = 1 visite moteur"
+        string id_moteur FK
+        string priorite "AOG / Normal"
+    }
+    SHOP {
+        string id_shop PK "Centre de réparation"
+        string nom
+        string type_of_repairs "Spécialités"
+        string stations "Postes rattachés"
+    }
+    TRANSITS {
+        string id_liaison PK
+        string shop_source
+        string shop_dest
+        number duree_transit_j "durée des transits (length)"
+    }
+    CALENDAR {
+        date date PK
+        string semaine
+        boolean jour_ouvre
+    }
+    ENGINE_PARTS {
+        string id_piece_pn PK "Part Number"
+        string type_repair "Lié par type de réparation"
+        number disponibilite_pct "Dispo %"
+        number confiance_appro_j "Intervalle +/-"
+    }`,
+      C: `erDiagram
+    VISIT ||--o{ TASK : "visite moteur"
+    REPAIR ||--o{ TASK : "réparation parente"
+    STATION ||--o{ TASK : "poste de réparation"
+    DUREE_TACHES ||--o{ TASK : "durée théorique (type engine + type task)"
+    SHOP ||--o{ STATION : "atelier"
+    CAPACITY ||--o{ STATION : "capacité / occupation"
+    SCHEDULE ||--o{ STATION : "calendrier des réparations"
+    ENGINE_PARTS }o--|| TASK : "composant pointé au poste"
+
+    TASK {
+        string id_task PK "1 ligne = 1 tâche unitaire"
+        string id_visite FK
+        string id_repair FK
+        string id_station FK "poste"
+        string operation "type task"
+        date horodatage_debut "start"
+        date horodatage_fin "end"
+        string id_composant FK "engine_parts"
+        number duree_pointee_h "Durée réelle (h)"
+    }
+    STATION {
+        string id_station PK "Poste de réparation"
+        string id_shop FK "atelier"
+        string type_of_repairs
+        number seuil_saturation "85 %"
+    }
+    DUREE_TACHES {
+        string type_engine PK
+        string type_task PK
+        number duree_gamme_h "Durée théorique (length)"
+    }
+    CAPACITY {
+        string id_station PK
+        number taux_occupation_reel
+        number heures_dispo
+    }
+    SCHEDULE {
+        string id_station PK
+        string creneau
+        string shift
+    }
+    ENGINE_PARTS {
+        string id_piece_pn PK "Part Number"
+        string id_station FK "Composant unitaire au poste"
+        number disponibilite_pct "Dispo %"
+        number confiance_appro_j "Intervalle +/-"
+    }`
+    };
+
+    let schemaViewMode = 'svg';
+
+    function updateMermaidCode(granularity) {
+      const codeEl = document.getElementById('schema-mermaid-code');
+      if (codeEl) codeEl.textContent = SCHEMA_MERMAID[granularity] || SCHEMA_MERMAID.A;
+    }
+
+    function toggleSchemaView() {
+      const svgView = document.getElementById('schema-svg-view');
+      const mermaidView = document.getElementById('schema-mermaid-view');
+      const btn = document.getElementById('schema-toggle');
+      schemaViewMode = schemaViewMode === 'svg' ? 'mermaid' : 'svg';
+      if (svgView) svgView.classList.toggle('hidden', schemaViewMode !== 'svg');
+      if (mermaidView) mermaidView.classList.toggle('hidden', schemaViewMode !== 'mermaid');
+      if (btn) {
+        btn.classList.toggle('bg-blue-600', schemaViewMode === 'mermaid');
+        btn.classList.toggle('text-white', schemaViewMode === 'mermaid');
+        btn.classList.toggle('border-blue-600', schemaViewMode === 'mermaid');
+      }
+      updateMermaidCode(selections[2] || 'A');
+    }
+
     function drawSchema(granularity) {
       const canvas = document.getElementById('schemaCanvas');
       if (!canvas || !canvas.getContext) return;
@@ -3752,6 +3931,8 @@
           dY += 20;
         });
       });
+
+      updateMermaidCode(granularity);
     }
 
     function renderStep3TablePreview() {

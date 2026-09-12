@@ -78,7 +78,8 @@ xychart-beta
 ## Étape 2 : Modèle
 
 > **Question de cadrage :** Quelles tables permettent le calcul selon le niveau de détail unitaire ?  
-> **En-tête de l'interface :** Étape 2 : Données (Granularité & Tables pour le calcul)
+> **En-tête de l'interface :** Étape 2 : Données (Granularité & Tables pour le calcul)  
+> **Bouton d'affichage :** en haut à droite, le bouton `schema-toggle` bascule entre la vue SVG (`schemaCanvas`) et le code Mermaid (`SCHEMA_MERMAID` dans `index.html`), identique aux diagrammes `erDiagram` ci-dessous.
 
 ### Les 3 Niveaux de Granularité :
 
@@ -89,6 +90,57 @@ xychart-beta
   - **Fait central :** `visit` (`id_visit`, `id_moteur`, `priorité_saisie`, `date_entrée [start]`, `date_livraison`, `id_kit_pièces`, `tat_réalisé_j`, `dérapage_sla_j`, `pénalités_eur`).
   - **Dimensions liées (1:N) :** `engine` (type, modèle, client), `contract_sla` (client, sla_cible_jours, pénalité_jour_eur), `transits` (site_départ, site_arrivée, délai_transit_j), `calendar` (date, semaine, ouvré), `engine_parts` (modèle_moteur, dispo %, intervalle confiance +/-, lien date start).
 
+```mermaid
+erDiagram
+    VISIT ||--o{ ENGINE : "moteur ESN"
+    VISIT }o--|| CONTRACT_SLA : "client + engagement"
+    VISIT }o--|| TRANSITS : "transit forfaitaire"
+    VISIT }o--|| CALENDAR : "date entrée / livraison"
+    ENGINE ||--o{ ENGINE_PARTS : "filtre par modèle"
+    VISIT }o--|| ENGINE_PARTS : "kit pièces (start_req_date, dispo %)"
+
+    VISIT {
+        string id_visit PK "1 ligne = 1 visite"
+        string id_moteur FK "engine (ESN)"
+        string priorite "AOG / Normal"
+        date date_entree "start"
+        date date_livraison "end"
+        string id_kit_pieces FK "engine_parts"
+        number tat_realise_j "TAT global (j)"
+        number derapage_sla_j "Écart contractuel"
+        number penalites_eur "Exposition (€)"
+    }
+    ENGINE {
+        string id_moteur PK "Numéro ESN"
+        string type "CFM56-5B/7B, LEAP-1A/1B"
+        string modele "Sous-variante"
+        string client "Compagnie"
+    }
+    ENGINE_PARTS {
+        string id_piece_pn PK "Part Number"
+        string modele_moteur "Filtre modèle"
+        number disponibilite_pct "Dispo %"
+        number confiance_appro_j "Intervalle +/-"
+    }
+    CONTRACT_SLA {
+        string id_contrat PK
+        string client
+        number sla_cible_jours
+        number penalite_jour_eur
+    }
+    TRANSITS {
+        string id_liaison PK
+        string site_depart
+        string site_arrivee
+        number delai_transit_j
+    }
+    CALENDAR {
+        date date PK
+        string semaine
+        boolean jour_ouvre
+    }
+```
+
 #### Option 2.B : Méso — Réparation par Atelier (`repair`)
 - **Granularité :** 1 ligne = 1 réparation module par atelier `repair (type, visit, shop, start, end)`.
 - **Transits logistiques :** Navettes physiques mesurées via `durée des transits (shop, shop, length)`.
@@ -96,12 +148,112 @@ xychart-beta
   - **Fait central :** `repair` (`id_réparation`, `id_visite`, `id_atelier`, `type_réparation_saisi`, `date_début [start]`, `date_fin`, `id_kit_module`, `tat_atelier_j`, `durée_navette_j`).
   - **Dimensions liées (1:N) :** `visit` (moteur, priorité, client), `shop` (nom, spécialités, postes), `durée des transits` (atelier_source, atelier_dest, délai_transit_j), `calendar`, `engine_parts` (lié par type de réparation).
 
+```mermaid
+erDiagram
+    VISIT ||--o{ REPAIR : "visite moteur"
+    SHOP ||--o{ REPAIR : "atelier spécialisé"
+    TRANSITS ||--o{ REPAIR : "navette inter-ateliers"
+    CALENDAR ||--o{ REPAIR : "date début / fin"
+    REPAIR ||--o{ ENGINE_PARTS : "pièces selon type de réparation"
+
+    REPAIR {
+        string id_repair PK "1 ligne = 1 réparation module"
+        string id_visite FK "visit"
+        string id_shop FK "atelier"
+        string type_repair "Gamme saisie (HP, BP...)"
+        date date_debut "start"
+        date date_fin "end"
+        string id_kit_module FK "engine_parts"
+        number tat_atelier_j "Délai atelier (j)"
+        number duree_navette_j "Transit inter-ateliers"
+    }
+    VISIT {
+        string id_visit PK "1 ligne = 1 visite moteur"
+        string id_moteur FK
+        string priorite "AOG / Normal"
+    }
+    SHOP {
+        string id_shop PK "Centre de réparation"
+        string nom
+        string type_of_repairs "Spécialités"
+        string stations "Postes rattachés"
+    }
+    TRANSITS {
+        string id_liaison PK
+        string shop_source
+        string shop_dest
+        number duree_transit_j "durée des transits (length)"
+    }
+    CALENDAR {
+        date date PK
+        string semaine
+        boolean jour_ouvre
+    }
+    ENGINE_PARTS {
+        string id_piece_pn PK "Part Number"
+        string type_repair "Lié par type de réparation"
+        number disponibilite_pct "Dispo %"
+        number confiance_appro_j "Intervalle +/-"
+    }
+```
+
 #### Option 2.C : Micro — Tâche sur Poste (`task`)
 - **Granularité :** 1 ligne = 1 tâche technique pointée sur poste `task (visit, repair, station, type)`.
 - **Référentiel des durées théoriques :** Seule option disposant de la table de référence `durée des tâches (type engine, type task, length)`.
 - **Modélisation relationnelle Canvas :**
   - **Fait central :** `task` (`id_pointage_tâche`, `id_visite`, `id_réparation`, `id_poste`, `opération_saisie`, `horodatage_début [start]`, `horodatage_fin`, `id_composant_task`, `durée_pointée_h`).
   - **Dimensions liées (1:N) :** `durée des tâches` (type engine, type task, durée_gamme_h), `station` (atelier, spécialités, seuil saturation 85%), `capacity` (taux d'occupation réel, heures dispo), `schedule` (créneau, shift), `engine_parts` (composant unitaire au poste).
+
+```mermaid
+erDiagram
+    VISIT ||--o{ TASK : "visite moteur"
+    REPAIR ||--o{ TASK : "réparation parente"
+    STATION ||--o{ TASK : "poste de réparation"
+    DUREE_TACHES ||--o{ TASK : "durée théorique (type engine + type task)"
+    SHOP ||--o{ STATION : "atelier"
+    CAPACITY ||--o{ STATION : "capacité / occupation"
+    SCHEDULE ||--o{ STATION : "calendrier des réparations"
+    ENGINE_PARTS }o--|| TASK : "composant pointé au poste"
+
+    TASK {
+        string id_task PK "1 ligne = 1 tâche unitaire"
+        string id_visite FK
+        string id_repair FK
+        string id_station FK "poste"
+        string operation "type task"
+        date horodatage_debut "start"
+        date horodatage_fin "end"
+        string id_composant FK "engine_parts"
+        number duree_pointee_h "Durée réelle (h)"
+    }
+    STATION {
+        string id_station PK "Poste de réparation"
+        string id_shop FK "atelier"
+        string type_of_repairs
+        number seuil_saturation "85 %"
+    }
+    DUREE_TACHES {
+        string type_engine PK
+        string type_task PK
+        number duree_gamme_h "Durée théorique (length)"
+    }
+    CAPACITY {
+        string id_station PK
+        number taux_occupation_reel
+        number heures_dispo
+    }
+    SCHEDULE {
+        string id_station PK
+        string creneau
+        string shift
+    }
+    ENGINE_PARTS {
+        string id_piece_pn PK "Part Number"
+        string id_station FK "Composant unitaire au poste"
+        number disponibilite_pct "Dispo %"
+        number confiance_appro_j "Intervalle +/-"
+    }
+```
 
 ---
 

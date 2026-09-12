@@ -1,134 +1,67 @@
 # AGENTS.md - Guide de Développement & Règles pour Agents IA (Maestro)
 
-> **Objectif de ce document :**  
-> Ce référentiel sert de contexte opérationnel prioritaire pour toute IA ou développeur intervenant sur le projet **Maestro**. Il garantit la **fiabilité**, la **vitesse d'exécution**, la **cohérence métier Safran MRO** et prévient les régressions techniques et fonctionnelles.
+> **Objectif de ce document :**
+> Contexte opérationnel pour toute IA ou développeur intervenant sur le projet **Maestro**. Ce guide est **purement technique** : il identifie les fichiers du projet, leurs responsabilités et les règles de gestion du vibe coding. Tout contenu métier/fonctionnel de l'application relève exclusivement de `content.md` (synchronisé avec `index.html`) — il ne doit **pas** être dupliqué ici.
 
 ---
 
-## 1. Vue d'Ensemble du Projet
+## 1. Rôle des Fichiers du Projet
 
-- **Nom du projet :** Maestro - Assistant de Cadrage MRO Safran ✈️
-- **Rôle de l'application :** Simulateur interactif d'aide à la décision et de cadrage de modélisation dimensionnelle (Power BI / DAX / Tabulaire) pour la maintenance de moteurs aéronautiques (CFM56, LEAP-1A, LEAP-1B).
-- **Architecture technique :**
-  - **Front-end :** Page unique autonome (SPA Vanilla) contenue dans `index.html`.
-  - **Styling :** Tailwind CSS (CDN) avec thème clair professionnel Safran (palette ardoise, bleu industriel, blanc glassmorphism).
-  - **Graphismes vectoriels :** SVG dynamiques inline et Canvas 2D interactif pour le schéma relationnel de données.
-  - **Documentation & Référentiel métier :** `content.md` synchronisé avec le code de `index.html`.
-  - **Hébergement :** 
-    - GitHub Pages : `https://quangfr.github.io/maestro/`
-    - Firebase Hosting : `https://maestro-safran.web.app`
+| Fichier | Responsabilité |
+| :--- | :--- |
+| `index.html` | **Application SPA unique** : balisage, stylage (Tailwind CDN), SVG inline, Canvas 2D et scripts JS. Contient tout le code exécutable. |
+| `content.md` | **Référentiel métier & fonctionnel** synchronisé avec `index.html` : libellés, règles, formules DAX, schémas relationnels et diagrammes Mermaid. Source unique du contenu de l'application. |
+| `readme.md` | Contexte opérationnel Safran MRO affiché par défaut dans l'**Étape 0** (lecteur Markdown). |
+| `svg_illustrations.md` | Archive des snippets SVG des cartes d'options (étapes 1 à 6). |
+| `AGENTS.md` | Le présent guide technique pour agents IA. |
+| `firebase.json` / `.firebaserc` | Configuration du déploiement Firebase Hosting (`public: "."`). |
 
----
-
-## 2. Règles Fondamentales & Règles Métier
-
-### 2.1 Les 8 Étapes du Simulateur (Onglets 1 mot)
-0. **Étape 0 : Contexte** (Contexte & Documentation)
-   - Affichage du contenu des fichiers Markdown du dossier racine via un sélecteur en haut : `readme.md` (par défaut), `content.md`, `AGENTS.md`, `svg_illustrations.md`.
-   - `readme.md` porte le contexte métier (déploiement BI Safran MRO, amélioration continue & product discovery) et les missions du consultant / data lead supervisor (arbitrage de la source de vérité, dictionnaire des métriques, éthique visuelle).
-   - La **Méthodologie Data & Gouvernance** reste détaillée dans les guides méthodologiques des étapes 1 à 6.
-
-1. **Étape 1 : Objectif** (Cadrage métier prioritaire)
-   - `1.A` : Urgence opérationnelle (AOG temps réel).
-   - `1.B` : Engagements contractuels (SLA globaux par compagnie).
-   - `1.C` : Optimisation des capacités (Équilibrage multi-sites & saturation).
-   - `1.D` : Suivi Retard & Pénalités (Dérapage en jours ouvrés & exposition en €).
-   - `1.E` : Logistique et Approvisionnement (Disponibilité stock, délais fournisseurs et kits complets).
-   - `1.F` : Data Gouvernance (Suivre les usages métiers, fiabiliser la donnée et s'assurer de la pertinence des modèles via écart prévisionnel vs effectif).
-   - *Règle des badges d'usage :* Les cartes des étapes 4 et 6 portent des tags d'usages (`Opérationnel`, `Contractuel`, `Pilotage`, `Financier`, `Logistique`, `Gouvernance`). Tous les usages associés à chaque carte sont affichés sous forme de badges compacts (sans le mot "Usage"), et le badge correspondant à l'objectif actif en Étape 1 est mis en valeur avec un contour distinctif et sa couleur thématique.
-
-2. **Étape 2 : Données** (Granularité & Tables pour le calcul)
-   - `2.A` (Demande - visit) : 1 ligne = 1 visite complète moteur `visit (engine, priority, start, end)`. Transits forfaitaires, vision globale. Table dimensionnelle `pièces du moteur (engine_parts)` liée par `type visit` et filtrée par `model` + disponibilité (%), intervalle de confiance (+/-) et lien date `start`.
-   - `2.B` (Réparation - repair) : 1 ligne = 1 réparation module par atelier `repair (type, visit, shop, start, end)`. **Données historiques d'atelier** + navettes physiques inter-ateliers via `durée des transits (shop, shop, length)`. Table dimensionnelle `pièces du moteur (engine_parts)` liée par `type repair`.
-   - `2.C` (Tâche - task) : 1 ligne = 1 tâche technique unitaire pointée sur poste `task (visit, start, end, station, type, repair)`. **Seule option disposant de la table de référence des durées théoriques** `durée des tâches (type engine, type task, length)` croisant `type engine` et `type task`. Table dimensionnelle `pièces du moteur (engine_parts)` liée par `type task`.
-
-3. **Étape 3 : TAT** (Méthode de calcul du Turn Around Time TAT)
-   - `3.A` : Délais théoriques de traitement (Gamme standard + forfaits transit).
-     > ⚠️ **RÈGLE STRICTE :** L'option **3.A est INDISPONIBLE en 2.B** (car 2.B repose sur les données historiques d'atelier). En cas de sélection de 2.B, 3.A doit être grisée, désactivée et la sélection doit automatiquement basculer sur 3.B si 3.A était active.
-   - `3.B` : Table des délais moyens (Percentiles réels $P_{5}$, $P_{50}$ médian, $P_{95}$).
-   - `3.C` : Délais selon le taux d'occupation atelier (Modélisation de saturation à l'approche de 85%).
-   - `3.D` : Modélisation avancée (Simulation dynamique probabiliste multi-factorielle).
-
-4. **Étape 4 : Délai** (Visualisation des Délais & Engagements TAT - 8 options)
-   - `4.A` : TAT Médian & Bornes 5%-95% (Distribution statistique boxplot par moteur CFM56, LEAP-1A, LEAP-1B).
-   - `4.B` : Décomposition du TAT par Site (Barres empilées : attente, réparation, transfert par site VIL, MON, CHL, BRU).
-   - `4.C` : Respect des Délais Contractuels par Client & Moteur (Écart moyen TAT contractuel vs effectif + % de non-respect SLA).
-   - `4.D` : Tableau d'Alertes Nominatives (Listing nominatif ESN avec statut couleur de la demande : AOG, En Retard, En Cours, Conforme).
-   - `4.E` : Cartes KPIs Synthétiques (TAT moyen réel & taux de respect SLA global).
-   - `4.F` : Barres vs Seuils Cibles P85 (Durée réelle par sous-ensemble face au seuil de tolérance P85).
-   - `4.G` : Waterfall des Dérives TAT (Cascade cumulative des écarts contractuel vs réel : stock, CND, fast-track).
-   - `4.H` : Jalons de Traversée (Gates G1 à G3 avec chemin critique actif et alertes goulots).
-
-5. **Étape 5 : Capacité** (Méthode d'évaluation de la Capacité & des Demandes)
-   - `5.A` : Prévisions des Demandes (Plan S&OP, déposes fermes annoncées & créneaux réservés).
-   - `5.B` : Demandes Effectives à l'Instant (En-cours physique réel WIP et pièces pointées en direct).
-   - `5.C` : Capacité & Approvisionnement Pièces (Disponibilité magasin pièces de rechange, lead times OEM & kits complets OTIF).
-   - `5.D` : Prévisions Multi-factorielles Avancées (Rebuts CND/ressuage, disponibilité des bancs d'essais, outillages & attrition pièces LLP).
-
-6. **Étape 6 : Saturation** (Visualisation de la Saturation / Capacité - 8 options)
-   - `6.A` : Top Pièces Manquantes par Site (Heures d'attente cumulées et volume des ruptures sur chaîne).
-   - `6.B` : Retards par Réparation & Moteur (% des demandes avec attente imprévue par type d'opération).
-   - `6.C` : Top Routes de Transfert Inter-Sites (% des demandes en sous-traitance et délai navette moyen en jours).
-   - `6.D` : Ratio Attente vs Travail Effectif (Donut lead time isolant valeur ajoutée vs attente passive).
-   - `6.E` : Barres de Charge vs Seuil 85% (Taux d'occupation atelier face à la ligne rouge critique des 85%).
-   - `6.F` : Heatmap Hebdomadaire / Site (Matrice de saturation temporelle semaines S36-S39 par site).
-   - `6.G` : Courbes Entrées vs Sorties WIP (Cumulative Flow Diagram et zone d'accumulation d'en-cours).
-   - `6.H` : Treemap des Goulots d'Atelier (Surfaces proportionnelles au volume d'en-cours bloqué par machine).
-
-7. **Étape 7 : Synthèse** (Slide Décisionnel & Dashboard Projeté)
-   - Tableau de bord en temps réel alimenté par l'objet global `selections = { 1, 2, 3, 4, 5, 6 }`.
-   - Menus déroulants interactifs de modification directe (`#select-q1` à `#select-q6`) synchronisés avec les pages étapes.
-   - Recommandations d'architecture BI et mesures DAX adaptées au profil choisi.
-
----
-
-## 3. Structure des Fichiers & Conventions
+Structure :
 
 ```text
-├── index.html        # Fichier principal : application SPA, balisage, SVG, Canvas 2D, scripts JS
-├── content.md        # Référentiel des contenus textuels, formules DAX et illustrations SVG complètes
-├── AGENTS.md         # Le présent guide technique et méthodologique pour agents IA
-├── readme.md         # Présentation globale utilisateur du projet
-├── firebase.json     # Configuration de déploiement Firebase Hosting (public: ".")
-└── .firebaserc       # Définition du projet Firebase (sherpa-5938b / maestro-safran)
+├── index.html          # Application SPA (code exécutable)
+├── content.md          # Référentiel métier synchronisé avec index.html
+├── readme.md           # Contexte opérationnel (affiché en Étape 0)
+├── svg_illustrations.md# Archive des snippets SVG d'illustration
+├── AGENTS.md           # Le présent guide technique
+├── firebase.json       # Config Firebase Hosting (public: ".")
+└── .firebaserc         # Projet Firebase (sherpa-5938b / maestro-safran)
 ```
-
-### Règle d'or de Synchronisation :
-Chaque modification apportée à la logique, aux libellés ou aux schémas dans `index.html` **doit être immédiatement répercutée dans `content.md`** et vice-versa.
 
 ---
 
-## 4. Précautions Techniques pour l'Édition du Code
+## 2. Règles Techniques de Gestion du Vibe Coding
 
-1. **Environnement Shell Windows / PowerShell :**
-   - Ne jamais utiliser l'opérateur `&&` pour enchaîner des commandes (provoque une erreur de syntaxe en PowerShell).
-   - Utiliser systématiquement le point-virgule `;` pour séparer les commandes :
+1. **Règle d'or de synchronisation :** toute modification de logique, de libellés ou de schémas dans `index.html` **doit** être répercutée dans `content.md` et vice-versa. Les diagrammes Mermaid de l'Étape 2 (`SCHEMA_MERMAID` dans `index.html` et section `Étape 2` de `content.md`) sont volontairement identiques : les garder synchronisés.
+
+2. **Environnement Shell Windows / PowerShell :**
+   - Ne jamais utiliser l'opérateur `&&` (erreur de syntaxe en PowerShell).
+   - Séparer les commandes par `;` :
      ```powershell
      git add index.html content.md; git commit -m "..."; git push origin main
      ```
 
-2. **Édition de `index.html` :**
-   - Ce fichier contient plus de 2100 lignes.
-   - Toujours privilégier `replace_file_content` avec un bloc cible précis et vérifié plutôt que des réécritures complètes.
-   - Respecter les IDs HTML existants (`schemaCanvas`, `step3-table-container`, `select-q1` à `select-q5`, `opt-X-Y`, `tab-X`).
+3. **Édition de `index.html` (+2100 lignes) :**
+   - Privilégier des remplacements ciblés et vérifiés plutôt que des réécritures complètes.
+   - Respecter les IDs existants : `schemaCanvas`, `schema-svg-view`, `schema-mermaid-view`, `schema-toggle`, `md-file-select`, `md-render`, `step3-table-container`, `select-q1` à `select-q6`, `opt-X-Y`, `tab-X`.
+   - La fonction `drawSchema(granularity)` (`A`/`B`/`C`) dessine le schéma relationnel de l'Étape 2 sur `schemaCanvas` (vue SVG). Le bouton `schema-toggle` en haut à droite bascule entre la vue SVG et la vue code Mermaid (`schema-mermaid-code`), alimentée par `SCHEMA_MERMAID`.
 
-3. **Fonction Canvas `drawSchema(granularity)` :**
-   - En `A` : Faits `visit (engine, priority, start, end)` + Dimensions `engine (type, model, customer)`, `contract_sla`, `durée des transits`, `calendar` + `pièces moteur [engine_parts] (part_ref, model, dispo_rate, confidence_margin, start_req_date)`.
-   - En `B` : Faits `repair (type, visit, shop, start, end)` + Dimensions `visit`, `shop [centre de réparation] (type of repairs*, stations*)`, `durée des transits (shop, shop, length)`, `calendar` + `pièces moteur [engine_parts] (part_ref, model, dispo_rate, confidence_margin, start_req_date)`.
-   - En `C` : Faits `task (visit, start, end, station, type, repair)` + Dimension de calcul `durée des tâches (type engine, type task, length)` + Dimensions `station [poste de réparation] (shop, type of repairs)`, `capacité, occupation, disponibilité des stations`, `calendrier des réparations des stations` + `pièces moteur [engine_parts] (part_ref, model, dispo_rate, confidence_margin, start_req_date)`.
+4. **Étape 0 — Lecteur Markdown :** la page Étape 0 charge à la volée (via `fetch`) les fichiers `*.md` du dossier racine (`ROOT_MD_FILES` dans le script) et les rend avec marked.js (CDN). Ne jamais copier le contenu des `.md` dans le HTML. Nécessite un serveur HTTP (file:// bloque le fetch).
+
+5. **Règles métier contraintes dans le code :** les contraintes fonctionnelles conditionnant le comportement des options (ex. 3.A indisponible en 2.B, badges d'usages) sont documentées dans `content.md`. Toute évolution de ces règles doit partir de `content.md`, puis être reportée dans `index.html`.
 
 ---
 
-## 5. Workflow de Validation & Déploiement
+## 3. Workflow de Validation & Déploiement
 
 À la fin de chaque demande utilisateur impliquant une modification :
 
 1. **Vérification de l'intégrité :**
    - Contrôler que `index.html` et `content.md` sont rigoureusement synchronisés.
-   - S'assurer que le script s'exécute sans erreur de syntaxe (`node -e "..."`).
+   - Vérifier la syntaxe du script : `node -e "..."`.
 
 2. **Git Commit, Push & Déploiement Firebase :**
-   > ⚠️ **RÈGLE STRICTE DE DÉPLOIEMENT :** Ne committer, pusher sur GitHub et déployer sur Firebase Hosting **QUE si l'utilisateur le demande explicitement** dans sa commande. En l'absence de demande explicite, valider les modifications localement et présenter le résultat sans lancer de déploiement automatique.
+   > ⚠️ **RÈGLE STRICTE DE DÉPLOIEMENT :** Ne committer, pusher sur GitHub et déployer sur Firebase Hosting **QUE si l'utilisateur le demande explicitement** dans sa commande. En l'absence de demande explicite, valider localement et présenter le résultat sans lancer de déploiement automatique.
    - Si demandé par l'utilisateur :
      ```powershell
      git add <fichiers modifiés>; git commit -m "<type>: <description claire>"; git push origin main
