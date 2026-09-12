@@ -90,6 +90,36 @@ Ce document archive l'ensemble des snippets SVG utilisés pour illustrer les car
 </svg>
 ```
 
+### Option 1.F : Data Gouvernance
+```xml
+<svg class="w-full h-full" viewBox="0 0 100 85">
+  <!-- Axes -->
+  <line x1="10" y1="68" x2="92" y2="68" stroke="#cbd5e1" stroke-width="1.2" />
+  <line x1="10" y1="12" x2="10" y2="68" stroke="#cbd5e1" stroke-width="1.2" />
+
+  <!-- Aire d'écart / dérive entre prévisionnel et réel -->
+  <path d="M 12 55 Q 35 48, 55 32 T 90 20 L 90 35 Q 70 42, 55 46 T 12 55 Z" fill="#c084fc" opacity="0.25" />
+
+  <!-- Courbe Prévisionnelle (Pointillés bleus) -->
+  <path d="M 12 55 Q 35 48, 55 32 T 90 20" fill="none" stroke="#6366f1" stroke-width="1.8" stroke-dasharray="3,2" />
+
+  <!-- Courbe Réelle Constatée / Effectif (Trait continu violet) -->
+  <path d="M 12 55 Q 35 52, 55 46 T 90 35" fill="none" stroke="#9333ea" stroke-width="2" />
+
+  <!-- Point d'écart et étiquette -->
+  <circle cx="75" cy="24" r="2" fill="#6366f1" />
+  <circle cx="75" cy="40" r="2" fill="#9333ea" />
+  <line x1="75" y1="24" x2="75" y2="40" stroke="#dc2626" stroke-width="1.2" stroke-dasharray="1.5,1.5" />
+  <text x="80" y="34" font-size="6.5" font-weight="bold" fill="#dc2626">Δ -16%</text>
+
+  <!-- Légende -->
+  <line x1="16" y1="76" x2="28" y2="76" stroke="#6366f1" stroke-width="1.5" stroke-dasharray="2,2" />
+  <text x="31" y="78" font-size="5.5" font-semibold fill="#4338ca">Prévu</text>
+  <line x1="56" y1="76" x2="68" y2="76" stroke="#9333ea" stroke-width="1.5" />
+  <text x="71" y="78" font-size="5.5" font-semibold fill="#7e22ce">Effectif</text>
+</svg>
+```
+
 ---
 
 ## Étape 2 : Données
@@ -189,7 +219,7 @@ Ce document archive l'ensemble des snippets SVG utilisés pour illustrer les car
 
 ## Étape 4 : Délai
 
-#### Option 4.A : TAT Médian & Bornes 5%-95%
+### Option 4.A : TAT Médian & Bornes 5%-95%
 ```xml
 <svg class="w-full h-full" viewBox="0 0 100 85">
   <line x1="8" y1="72" x2="92" y2="72" stroke="#cbd5e1" stroke-width="1" />

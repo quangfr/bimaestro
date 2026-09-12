@@ -13,6 +13,7 @@ Ce document constitue le référentiel textuel, méthodologique et technique syn
 - [Étape 5 : Capacité (Méthode d'évaluation de la Capacité Atelier)](#étape-5--capacité)
 - [Étape 6 : Saturation (Visualisations de la Charge Atelier)](#étape-6--saturation)
 - [Étape 7 : Synthèse, Profils & Dashboard Dérivé](#étape-7--synthèse-profils--dashboard-dérivé)
+- [Stratégie de Génération de Données & Moteur Pseudo-Aléatoire Seedé](#stratégie-de-génération-de-données--moteur-pseudo-aléatoire-seedé)
 
 ---
 
@@ -40,26 +41,50 @@ Le fichier `readme.md`, affiché par défaut, porte le **contexte opérationnel*
    - *Sous-titre :* Alerte temps réel AOG & escalade immédiate
    - *Description :* Alerter en direct sur les moteurs à risque d'immobilisation avion (**AOG**). Escalade immédiate vers les chefs d'atelier dès dérive critique.
    - *Orientation de restitution :* Badges d'alerte rouge clignotant, identification des ESN en souffrance.
+   - *Exemples de questions métiers cibles :*
+     - Quels réacteurs en atelier risquent de clouer un appareil au sol sous 48h ?
+     - Quel chef d'atelier doit être alerté en priorité sur une dérive critique ?
+     - Quels dossiers urgents doivent préempter les créneaux d'usinage et de banc ?
 2. **Option 1.B : Engagements contractuels (SLA)**
    - *Sous-titre :* Respect des SLA & vision globale par compagnie
    - *Description :* Garantir le respect des **SLA** et du TAT moyen par compagnie aérienne et typologie de contrat.
    - *Orientation de restitution :* Jauges de conformité contractuelle, décompte des dossiers livrés dans les temps.
+   - *Exemples de questions métiers cibles :*
+     - Quel est le taux de respect des SLA engagés auprès d'Air France ou Delta ?
+     - Quel contrat MRO génère les dépassements de TAT moyen les plus récurrents ?
+     - Comment benchmarke-t-on le TAT effectif vs contractuel par type de flotte ?
 3. **Option 1.C : Optimisation des capacités**
    - *Sous-titre :* Lissage de charge & élimination des goulets ateliers
    - *Description :* Équilibrer les charges multi-sites (Montereau, Villaroche, Bruxelles), lisser les goulets et l'usinage.
    - *Orientation de restitution :* Comparatif capacitaire inter-sites et détection des îlots saturés.
+   - *Exemples de questions métiers cibles :*
+     - Quel site Safran approche du seuil critique de 85% de saturation ?
+     - Peut-on réorienter des modules CFM56 de Montereau vers Bruxelles ?
+     - Où se situent les goulets d'usinage retardant le passage sur banc ?
 4. **Option 1.D : Suivi Retard & Pénalités**
    - *Sous-titre :* Dérapage en jours ouvrés & exposition financière (€)
    - *Description :* Mesurer le dérapage en **jours ouvrés** au-delà du SLA et chiffrer l'exposition financière (€).
    - *Orientation de restitution :* Exposition financière cumulée, compteurs d'ESN sous pénalités journalières.
+   - *Exemples de questions métiers cibles :*
+     - Quel montant de pénalités contractuelles court aujourd'hui sur les visites en retard ?
+     - Quels moteurs accumulent plus de 5 jours de dérive financièrement pénalisante ?
+     - Quel barème financier s'applique par jour ouvré supplémentaire sur chaque client ?
 5. **Option 1.E : Logistique et Approvisionnement**
    - *Sous-titre :* Disponibilité stock, délais fournisseurs et kits complets
    - *Description :* Suivre les pièces en stock, les délais fournisseurs et éliminer les ruptures bloquant la réparation.
    - *Orientation de restitution :* Taux de service OTIF, détection des kits incomplets (aubes HP, LLP).
+   - *Exemples de questions métiers cibles :*
+     - Quelles pièces critiques (aubes monocristal, LLP) manquent à l'appel pour fermer un kit ?
+     - Quel est le taux de service OTIF de nos sous-traitants et équipementiers ?
+     - Combien d'heures d'attente atelier sont directement causées par une rupture magasin ?
 6. **Option 1.F : Data Gouvernance**
    - *Sous-titre :* Suivi des usages métiers, fiabilisation & pertinence des modèles
    - *Description :* Suivre les usages métiers, fiabiliser la donnée et s'assurer de la pertinence des modèles en mesurant l'écart prévisionnel vs effectif.
    - *Orientation de restitution :* Dérive des algorithmes, contrôle qualité des tables et suivi de l'adoption décisionnelle.
+   - *Exemples de questions métiers cibles :*
+     - Quel est l'écart moyen entre les durées de réparation prévues et constatées en atelier ?
+     - Les chefs d'atelier et ordonnanceurs consultent-ils régulièrement les rapports BI ?
+     - Quels modèles prédictifs subissent une dérive statistique nécessitant un recalibrage ?
 
 ```mermaid
 %%{init: {'theme': 'base'}}%%
@@ -576,3 +601,65 @@ pie title "Répartition du Lead Time Global MRO"
    - Cadre droit : Visualisation de la saturation calibrée selon l'option choisie en Étape 6 (de 6.A à 6.H) avec axes explicites et valeurs par défaut.
 5. **Recommandations d'Architecture BI & Mesures DAX Déduites :**
    - Formulations automatiques suggérant les colonnes calculées, les liens d'étoile avec le calendrier industriel ouvré et les règles de partitionnement DirectQuery / Import selon la combinaison `[Q1, Q2, Q3, Q4, Q5, Q6]`.
+
+---
+
+## Stratégie de Génération de Données & Moteur Pseudo-Aléatoire Seedé
+
+Cette section formalise la stratégie d'ingénierie des données et de mock dynamique déployée dans Maestro, garantissant à la fois **l'indépendance de la structure**, **la reproductibilité des tests** et **la cohérence physique des indicateurs**.
+
+### 1. Découplage Structure vs Métriques Chiffrées
+Afin d'assurer une étanchéité totale entre la nomenclature métier et les calculs dynamiques :
+- **`data.json` ne contient AUCUN chiffre figé :** il agit comme un catalogue de référence déclarant uniquement les dimensions, entités réelles (10 sites Safran MRO, 7 compagnies aériennes réelles, 6 familles moteurs, références de pièces au format `Pxxxxx`, demandes au format `D-xxxxx`) et liens structurels.
+- **Les visualisations Chart.js sont alimentées à chaud :** les séries temporelles, percentiles, pourcentages de saturation et matrices de charge sont instanciés dynamiquement en mémoire via la fonction `buildMaestroData(base)`.
+
+```text
+┌─────────────────────────┐       ┌──────────────────────────────┐
+│       data.json         │       │    Mulberry32 (PRNG Seed)    │
+│  (Structure & Entités)  │       │   (Reproductibilité session) │
+└────────────┬────────────┘       └──────────────┬───────────────┘
+             │                                   │
+             └───────────────┬───────────────────┘
+                             ▼
+                 ┌───────────────────────┐
+                 │  buildMaestroData()   │
+                 │ (Règles de Cohérence) │
+                 └───────────┬───────────┘
+                             ▼
+                 ┌───────────────────────┐
+                 │ Tableaux & Graphiques │
+                 │ (Chart.js 4.4 + DAX)  │
+                 └───────────────────────┘
+```
+
+### 2. Reproductibilité & Stabilité par PRNG Seedé (`Mulberry32`)
+Pour éviter le clignotement des valeurs d'une interaction à l'autre tout en permettant des variations contrôlées :
+- L'algorithme pseudo-aléatoire **Mulberry32** (générateur 32 bits rapide et uniforme) est initialisé avec une graine (`seed`) fixe (valeur par défaut : `42`).
+- Cette graine est persistée dans le `localStorage` du navigateur (`maestro_seed`).
+- **Bénéfice didactique :** un utilisateur ou formateur retrouve exactement le même jeu d'essai lors d'une démonstration, tout en pouvant régénérer un jeu alternatif cohérent via `resetFilters()`.
+
+### 3. Règles de Cohérence Physique Industrielle MRO
+Le moteur de mock applique un ensemble d'invariants mathématiques et opérationnels pour garantir la crédibilité décisionnelle :
+
+1. **Hiérarchie Stricte des Percentiles ($P_5 < P_{50} < P_{95}$) :**
+   - La médiane $P_{50}$ est calibrée sur le standard constructeur de la famille moteur (ex: ~14.9j pour CFM56-7B, ~21.6j pour LEAP-1A, ~26.2j pour GE90-115B).
+   - La borne basse $P_5$ est contrainte entre 60% et 70% de la médiane ($P_{50}$).
+   - La borne haute $P_{95}$ est contrainte entre 140% et 165% de la médiane ($P_{50}$).
+2. **Décomposition Additive du TAT (100% du délai total) :**
+   - Pour chaque site, le TAT global décomposé respecte : $\text{TAT} = \text{Réparation (9 à 12.5j)} + \text{Attente (2.5 à 7j)} + \text{Transfert Navette (1.5 à 4j)}$.
+3. **Statut d'Urgence et Modélisation des Pénalités Financières :**
+   - Un dossier `Conforme` a un retard contractuel nul ($\Delta_{\text{SLA}} = 0$).
+   - Un dossier `En Retard` subit un retard de 2 à 5 jours.
+   - Un dossier `AOG Critique` subit un retard sévère de 8 à 18 jours.
+   - Les pénalités financières encourues sont mathématiquement calculées par la formule :
+     $$\text{Pénalités (€)} = \text{Retard (jours)} \times \text{Barème journalier contractuel (1 500 € à 2 500 € / j)}$$
+4. **Détection des Goulots d'Atelier & Seuil Critique de 85% :**
+   - Les heures de rupture de stock sont directement proportionnelles au statut de criticité du composant (Critique : 55 à 90h, Modéré : 30 à 55h, Veille : 10 à 30h).
+   - Les îlots et machines dont la charge dépasse 85% déclenchent automatiquement un code couleur ambre/rouge sur les jauges et la heatmap 2D (Étape 6.F).
+
+### 4. Guide de Transposition à un Autre Domaine Métier
+Pour injecter des données d'un autre secteur industriel (ex: ferroviaire ou naval) :
+1. Remplacer les entités de `data.json` par vos matériels, centres techniques et clients.
+2. Ajuster l'objet `p50Base` dans `index.html` avec les durées nominales de vos interventions.
+3. Conserver le moteur `buildMaestroData()` : il propagera automatiquement des données chiffrées cohérentes, plausibles et visuellement démonstratives dans l'ensemble des 8 visualisations de délai et 8 visualisations de charge.
+
