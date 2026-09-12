@@ -1,7 +1,7 @@
-# GO-MAESTRO - Prototype & Guide de Prompts IA pour le Cadrage Décisionnel MRO (vs MAESTRO SAP IBP) 🚀
+# BIMAESTRO - Prototype & Guide de Prompts IA pour le Cadrage Décisionnel MRO (vs MAESTRO SAP IBP) 🚀
 
 > **Guide Opérationnel & Catalogue de Prompts IA** pour concevoir, prototyper et éprouver des tableaux de bord industriels.  
-> **Distinction & Contexte applicatif :** **Go-Maestro** est le prototype agile interactif (SPA HTML/Chart.js) servant d'environnement d'idéation et de test rapide, à distinguer de l'outil industriel cible **MAESTRO** basé sur **SAP Integrated Business Planning (SAP IBP)** et ses **Analytics Stories (SAP Analytics Cloud)**. Il permet d'itérer à haute cadence avec l'IA avant d'engager les développements dans l'écosystème officiel SAP.
+> **Distinction & Contexte applicatif :** **BiMaestro** est le prototype agile interactif (SPA HTML/Chart.js) servant d'environnement d'idéation et de test rapide, à distinguer de l'outil industriel cible **MAESTRO** basé sur **SAP Integrated Business Planning (SAP IBP)** et ses **Analytics Stories (SAP Analytics Cloud)**. Il permet d'itérer à haute cadence avec l'IA avant d'engager les développements dans l'écosystème officiel SAP.
 
 ---
 
