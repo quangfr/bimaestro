@@ -28,11 +28,12 @@
    - `1.B` : Engagements contractuels (SLA globaux par compagnie).
    - `1.C` : Optimisation des capacités (Équilibrage multi-sites & saturation).
    - `1.D` : Suivi Retard & Pénalités (Dérapage en jours ouvrés & exposition en €).
+   - `1.E` : Logistique et Approvisionnement (Disponibilité stock, délais fournisseurs et kits complets).
 
 2. **Étape 2 : Données** (Granularité & Tables pour le calcul)
-   - `2.A` (Demande - visit) : 1 ligne = 1 visite complète moteur `visit (engine, priority, start, end)`. Transits forfaitaires, vision globale.
-   - `2.B` (Réparation - repair) : 1 ligne = 1 réparation module par atelier `repair (type, visit, shop, start, end)`. **Données historiques d'atelier** + navettes physiques inter-ateliers via `durée des transits (shop, shop, length)`. Pas de barème théorique unitaire.
-   - `2.C` (Tâche - task) : 1 ligne = 1 tâche technique unitaire pointée sur poste `task (visit, start, end, station, type, repair)`. **Seule option disposant de la table de référence des durées théoriques** `durée des tâches (type engine, type task, length)` croisant `type engine` et `type task`.
+   - `2.A` (Demande - visit) : 1 ligne = 1 visite complète moteur `visit (engine, priority, start, end)`. Transits forfaitaires, vision globale. Table dimensionnelle `pièces du moteur (engine_parts)` liée par `type visit` et filtrée par `model` + disponibilité (%), intervalle de confiance (+/-) et lien date `start`.
+   - `2.B` (Réparation - repair) : 1 ligne = 1 réparation module par atelier `repair (type, visit, shop, start, end)`. **Données historiques d'atelier** + navettes physiques inter-ateliers via `durée des transits (shop, shop, length)`. Table dimensionnelle `pièces du moteur (engine_parts)` liée par `type repair`.
+   - `2.C` (Tâche - task) : 1 ligne = 1 tâche technique unitaire pointée sur poste `task (visit, start, end, station, type, repair)`. **Seule option disposant de la table de référence des durées théoriques** `durée des tâches (type engine, type task, length)` croisant `type engine` et `type task`. Table dimensionnelle `pièces du moteur (engine_parts)` liée par `type task`.
 
 3. **Étape 3 : TAT** (Méthode de calcul du Turn Around Time TAT)
    - `3.A` : Délais théoriques de traitement (Gamme standard + forfaits transit).
@@ -44,28 +45,20 @@
 4. **Étape 4 : Délai** (Visualisation des Délais & Engagements TAT)
    - `4.A` : Cartes KPIs Synthétiques (TAT moyen, % SLA).
    - `4.B` : Barres vs Seuils Cibles (Durée réelle vs barres $P_{50}$ / $P_{85}$).
-   - `4.C` : Barres Empilées (Décomposition Usinage / Valeur vs Transit inter-sites).
+   - `4.C` : Barres Décomposées (Attente, Transfert, Réparation).
    - `4.D` : Tableau d'Alertes Nominatives (Listing nominatif ESN / Packages / Postes).
-   - `4.E` : Histogramme Distribution TAT (Tranches de jours <20j, 20-30j, 30-40j, >40j).
-   - `4.F` : Box-Plot & Dispersion (Médiane, quartiles Q1/Q3 et moustaches par famille moteur).
-   - `4.G` : Waterfall des Dérives (Cascade cumulative des retards pièces/CND vs SLA).
-   - `4.H` : Jalons de Traversée Gates (Jalons industriels Gate 1 Démontage, Gate 2 Contrôle, Gate 3 Banc).
 
 5. **Étape 5 : Capacité** (Méthode d'évaluation de la Capacité & des Demandes)
-   - `5.A` : Capacité Nominale Standard (Heures d'ouverture calendrier et effectifs théoriques).
+   - `5.A` : Prévisions des Demandes (Plan S&OP, déposes fermes annoncées & créneaux réservés).
    - `5.B` : Demandes Effectives à l'Instant (En-cours physique réel WIP et pièces pointées en direct).
-   - `5.C` : Prévisions des Demandes (Plan S&OP, déposes fermes annoncées & créneaux réservés).
-   - `5.D` : Prévisions Multi-factorielles Avancées (Modélisation prédictive IA, cycles TSN/CSN, météo & aléas).
+   - `5.C` : Capacité & Approvisionnement Pièces (Disponibilité magasin pièces de rechange, lead times OEM & kits complets OTIF).
+   - `5.D` : Prévisions Multi-factorielles Avancées (Rebuts CND/ressuage, disponibilité des bancs d'essais, outillages & attrition pièces LLP).
 
 6. **Étape 6 : Saturation** (Visualisation de la Saturation / Capacité)
    - `6.A` : Barres de Charge vs Seuil 85%.
    - `6.B` : Heatmap Hebdomadaire / Site.
    - `6.C` : Courbes Entrées vs Sorties (Dérive en-cours WIP).
    - `6.D` : Ratio Attente vs Travail Effectif (Donut lead time).
-   - `6.E` : Jauge Tachymètre de Saturation Globale (Cadran à aiguille avec seuils vert/jaune/rouge).
-   - `6.F` : Radar Poly-compétences & Postes Clés (Adéquation charge pointée vs capacité Part-145).
-   - `6.G` : Diagramme Spaghetti / Flux de Transfert (Trajets et intensité des navettes inter-sites).
-   - `6.H` : Treemap des Goulots par Atelier/Machine (Surfaces proportionnelles au WIP bloqué).
 
 7. **Étape 7 : Synthèse** (Slide Décisionnel & Dashboard Projeté)
    - Tableau de bord en temps réel alimenté par l'objet global `selections = { 1, 2, 3, 4, 5, 6 }`.
@@ -105,9 +98,9 @@ Chaque modification apportée à la logique, aux libellés ou aux schémas dans 
    - Respecter les IDs HTML existants (`schemaCanvas`, `step3-table-container`, `select-q1` à `select-q5`, `opt-X-Y`, `tab-X`).
 
 3. **Fonction Canvas `drawSchema(granularity)` :**
-   - En `A` : Faits `visit (engine, priority, start, end)` + Dimensions `engine (type, model, customer)`, `contract_sla`, `durée des transits`, `calendar`.
-   - En `B` : Faits `repair (type, visit, shop, start, end)` + Dimensions `visit`, `shop [centre de réparation] (type of repairs*, stations*)`, `durée des transits (shop, shop, length)`, `calendar`.
-   - En `C` : Faits `task (visit, start, end, station, type, repair)` + Dimension de calcul `durée des tâches (type engine, type task, length)` + Dimensions `station [poste de réparation] (shop, type of repairs)`, `capacité, occupation, disponibilité des stations`, `calendrier des réparations des stations`.
+   - En `A` : Faits `visit (engine, priority, start, end)` + Dimensions `engine (type, model, customer)`, `contract_sla`, `durée des transits`, `calendar` + `pièces moteur [engine_parts] (part_ref, model, dispo_rate, confidence_margin, start_req_date)`.
+   - En `B` : Faits `repair (type, visit, shop, start, end)` + Dimensions `visit`, `shop [centre de réparation] (type of repairs*, stations*)`, `durée des transits (shop, shop, length)`, `calendar` + `pièces moteur [engine_parts] (part_ref, model, dispo_rate, confidence_margin, start_req_date)`.
+   - En `C` : Faits `task (visit, start, end, station, type, repair)` + Dimension de calcul `durée des tâches (type engine, type task, length)` + Dimensions `station [poste de réparation] (shop, type of repairs)`, `capacité, occupation, disponibilité des stations`, `calendrier des réparations des stations` + `pièces moteur [engine_parts] (part_ref, model, dispo_rate, confidence_margin, start_req_date)`.
 
 ---
 
@@ -116,21 +109,19 @@ Chaque modification apportée à la logique, aux libellés ou aux schémas dans 
 À la fin de chaque demande utilisateur impliquant une modification :
 
 1. **Vérification de l'intégrité :**
-   - Contrôler que `index.html` et `content.md` sont synchronisés.
-   - S'assurer que le script s'exécute sans erreur de syntaxe.
+   - Contrôler que `index.html` et `content.md` sont rigoureusement synchronisés.
+   - S'assurer que le script s'exécute sans erreur de syntaxe (`node -e "..."`).
 
-2. **Git Commit & Push :**
-   ```powershell
-   git add <fichiers modifiés>; git commit -m "<type>: <description claire>"; git push origin main
-   ```
+2. **Git Commit, Push & Déploiement Firebase :**
+   > ⚠️ **RÈGLE STRICTE DE DÉPLOIEMENT :** Ne committer, pusher sur GitHub et déployer sur Firebase Hosting **QUE si l'utilisateur le demande explicitement** dans sa commande. En l'absence de demande explicite, valider les modifications localement et présenter le résultat sans lancer de déploiement automatique.
+   - Si demandé par l'utilisateur :
+     ```powershell
+     git add <fichiers modifiés>; git commit -m "<type>: <description claire>"; git push origin main
+     npx -y firebase-tools deploy --only hosting
+     ```
 
-3. **Déploiement Firebase Hosting :**
-   ```powershell
-   npx -y firebase-tools deploy --only hosting
-   ```
-
-4. **Restitution à l'utilisateur :**
-   - Fournir un résumé concis des changements.
+3. **Restitution à l'utilisateur :**
+   - Fournir un résumé concis des changements effectués.
    - Rappeler les deux URLs de consultation :
      - Firebase : [https://maestro-safran.web.app](https://maestro-safran.web.app)
      - GitHub Pages : [https://quangfr.github.io/maestro/](https://quangfr.github.io/maestro/)

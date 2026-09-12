@@ -20,6 +20,14 @@ Ce fichier centralise l'intégralité des contenus rédactionnels, explications 
 
 > **Question :** Quel est l'objectif décisionnel principal du rapport ?
 > **Description du besoin :** Le choix de la finalité conditionne l'ergonomie, la fréquence de rafraîchissement des données et le niveau d'agrégation requis pour les comités.
+>
+> **🧭 Méthodologie Data & Gouvernance — Cadrage du Persona Métier & Enjeux Décisionnels :**
+> 1. *Propriétaire métier (Data Owner) :* Qui porte la responsabilité décisionnelle (Directeur de site, CSM client, Chef d'atelier ou Approvisionneur) ?
+> 2. *Pouvoir d'arbitrage :* Quelle décision formelle est prise sur la donnée (escalade AOG, contestation SLA, dérogation stock) ?
+> 3. *Niveau d'habilitation (RBAC) :* Qui a le droit de voir quoi (vue par contrat client, vision globale Safran ou cloisonnement site) ?
+> 4. *Pacte de service (SLA du rapport) :* Quel engagement de fraîcheur de donnée (Direct live horaire vs consolidation consolidée hebdo) ?
+> 5. *Impact de non-conformité :* Quel coût financier, contractuel ou de réputation en cas d'erreur de pilotage ?
+> 6. *Rituel de gouvernance :* Dans quelle instance officielle la donnée est-elle arbitrée (War room quotidienne, Comité de direction, Revue S&OP) ?
 
 ---
 
@@ -124,10 +132,47 @@ Ce fichier centralise l'intégralité des contenus rédactionnels, explications 
 
 ---
 
+### Option 1.E : Logistique et Approvisionnement
+- **Icône / Emoji :** 📦
+- **Sous-titre :** Disponibilité stock, délais fournisseurs et kits complets
+- **Description métier :**
+  Suivre les pièces en stock, les délais de livraison fournisseurs et éviter les pièces manquantes bloquant la réparation.
+- **Impact BI & Architecture :**
+  - Modèle dimensionnel reliant la table de faits à la dimension `pièces du moteur (engine_parts)`.
+  - Cible : Responsables Approvisionnements & Magasin MRO, Ordonnanceurs d'assemblage, Gestionnaires de flotte.
+  - KPI phares : Taux de service magasin OTIF, nombre de kits en rupture sur chaîne, lead time moyen fournisseurs vs TAT.
+- **Illustration SVG :**
+```xml
+<svg class="w-full h-full" viewBox="0 0 100 85">
+  <rect x="8" y="8" width="84" height="28" rx="4" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.3" />
+  <text x="16" y="21" font-size="8" font-weight="bold" fill="#1e40af">Aubes HP Monocristal</text>
+  <rect x="16" y="25" width="48" height="6" rx="2" fill="#bfdbfe" />
+  <rect x="16" y="25" width="42" height="6" rx="2" fill="#2563eb" />
+  <text x="74" y="30" font-size="7.5" font-weight="bold" fill="#1e40af">88% Stock</text>
+
+  <rect x="8" y="40" width="84" height="28" rx="4" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.3" />
+  <text x="16" y="53" font-size="8" font-weight="bold" fill="#92400e">Disque LLP Turbine</text>
+  <rect x="16" y="57" width="48" height="6" rx="2" fill="#fde68a" />
+  <rect x="16" y="57" width="22" height="6" rx="2" fill="#d97706" />
+  <text x="72" y="62" font-size="7.5" font-weight="bold" fill="#b45309">Lead: 18j ⚠️</text>
+</svg>
+```
+
+
+---
+
 ## Étape 2 : Données
 
 > **Question :** Quelles sont les tables qui permettent le calcul selon le niveau de détail unitaire (Granularité de la table centrale) ?
-> **Description du besoin :** La structure des tables conditionne directement les méthodes de calcul de délai possibles à l'Étape 3 et de capacité à l'Étape 5. **Seul le niveau 2.C (task)** dispose de la table de référence `durée des tâches (type engine, type task, length)` avec la **durée de traitement théorique standard** par type de moteur et tâche. En **2.B (repair)**, le modèle repose sur les **données historiques d'atelier** enregistrées et la table `durée des transits (shop, shop, length)`, ce qui rend **l'option 3.A ("Délais théoriques") indisponible**.
+> **Description du besoin :** La structure des tables conditionne directement les méthodes de calcul de délai possibles à l'Étape 3 et de capacité à l'Étape 5.
+>
+> **🧭 Méthodologie Data & Gouvernance — Gestion du Patrimoine Données & Traçabilité :**
+> 1. *Source de vérité unique (Golden Source) :* L'ERP Safran, le MES atelier ou le système de suivi commercial fait-il foi ?
+> 2. *Data Stewardship & Rôles :* Qui certifie la qualité et valide la saisie des pointages d'opérations sur les postes ?
+> 3. *Complétude & exhaustivité :* Existe-t-il des trous dans la raquette sur les gammes standards ou les tables de transits ?
+> 4. *Intégrité référentielle :* Les identifiants ESN moteur, numéros d'OF et codes postes sont-ils unifiés et normés ?
+> 5. *Linéage & Traçabilité Part-145 :* Peut-on justifier l'historique et la conformité légale de chaque mesure auprès de l'OSAC/EASA ?
+> 6. *Gestion du cycle de vie (Archivage) :* Quelle durée de rétention des données unitaires vs historisation agrégée ?
 
 ---
 
@@ -143,6 +188,7 @@ Ce fichier centralise l'intégralité des contenus rédactionnels, explications 
     - Champs clés : `id_visit` (PK), `engine_id` (FK), `priority`, `date_start` (FK), `date_end` (FK), `tat_days` (Mesure), `sla_delay_days` (Mesure), `penalty_eur` (Mesure).
   - **Dimensions reliées (1:N) :**
     - `engine (type, model, customer)` (`engine_id` PK, `type`, `model`, `customer`)
+    - `pièces du moteur (engine_parts)` (`part_id` PK, `engine_model` FK, `disponibilité_pct`, `marge_confiance_j`, `date_besoin` liée à `start`)
     - `contract_sla` (`contract_id` PK, `customer`, `sla_target_days`, `penalty_rate_day`)
     - `durée des transits` (`transit_id` PK, `shop_from`, `shop_to`, `length`)
     - `calendar` (`date` PK, `fiscal_week`, `month_year`, `is_workday`)
@@ -181,6 +227,7 @@ Ce fichier centralise l'intégralité des contenus rédactionnels, explications 
   - **Dimensions reliées (1:N) :**
     - `visit (engine, priority, start, end)` (`visit_id` PK, `engine`, `priority`, `customer`)
     - `shop [centre de réparation] (type of repairs*, stations*)` (`shop_id` PK, `shop_name`, `type of repairs*`, `stations*`)
+    - `pièces du moteur (engine_parts)` (`part_id` PK, `modèle_moteur` FK, `type_réparation_module`, `disponibilité_pct`, `marge_confiance_j`, `date_besoin` liée à `start`)
     - `durée des transits (shop, shop, length)` (`transit_id` PK, `shop`, `shop_dest`, `length`)
     - `calendar` (`date` PK, `fiscal_week`, `shuttle_day`, `is_workday`)
 - **Illustration SVG de la carte réponse :**
@@ -218,6 +265,7 @@ Ce fichier centralise l'intégralité des contenus rédactionnels, explications 
   - **Dimensions reliées (1:N) :**
     - `durée des tâches (type engine, type task, length)` (`task_theo_id` PK, `type engine`, `type task`, `length`)
     - `station [poste de réparation] (shop, type of repairs)` (`station_id` PK, `shop`, `type of repairs`, `target_occupancy`)
+    - `pièces du moteur (engine_parts)` (`part_id` PK, `modèle_moteur` FK, `type_tâche_op`, `disponibilité_pct`, `marge_confiance_h`, `date_besoin` liée à `start`)
     - `capacité, occupation, disponibilité des stations` (`capacity_id` PK, `station`, `occupation`, `disponibilité`)
     - `calendrier des réparations des stations` (`schedule_id` PK, `station`, `repair_slot`, `shift_team`)
 - **Illustration SVG de la carte réponse :**
@@ -243,6 +291,14 @@ Ce fichier centralise l'intégralité des contenus rédactionnels, explications 
 
 > **Question :** Selon quelle formule et calendrier le délai de traversée (TAT) doit-il être calculé ?
 > **Description du besoin :** Le TAT peut être calculé par barème théorique, par distribution statistique empirique (percentiles), selon le niveau d'engorgement des ateliers ou par modélisation dynamique multi-factorielle.
+>
+> **🧭 Méthodologie Data & Gouvernance — Dictionnaire des Métriques & Auditabilité du Calcul :**
+> 1. *Définition certifiée (Data Dictionary) :* Le TAT est-il validé par toutes les parties (brut calendaire, ouvré ou net gelé client) ?
+> 2. *Auditabilité & Reproductibilité :* Les auditeurs clients ou financiers peuvent-ils recalculer et prouver la même valeur à l'identique ?
+> 3. *Transparence des hypothèses :* Les règles de suspension de chrono ("Stop-the-clock") ou de lissage sont-elles documentées ?
+> 4. *Biais statistique & Représentativité :* L'échantillon historique utilisé (médiane $P_{50}$) exclut-il les visites aberrantes ou prototypes ?
+> 5. *Robustesse & Validité dans le temps :* La formule résiste-t-elle aux changements d'organisation atelier et aux nouveaux moteurs ?
+> 6. *Acceptation par les parties prenantes :* Les compagnies aériennes reconnaissent-elles juridiquement cette modalité de décompte ?
 
 ---
 
@@ -250,7 +306,7 @@ Ce fichier centralise l'intégralité des contenus rédactionnels, explications 
 - **Icône / Emoji :** ➕
 - **Sous-titre :** Somme arithmétique des temps de gammes standards et forfaits logistiques
 - **Description métier :**
-  Délais théoriques de traitement par (demande/package/opération par type de moteur selon la réponse en 2). Utilisé pour le devis commercial initial et la référence théorique constructeur.
+  Délais théoriques de traitement. Utilisé pour le devis commercial initial et la référence théorique constructeur.
 - **Disponibilité selon Étape 2 :**
   - En **2.A (Macro)** : Forfaits constructeurs et logistiques globaux.
   - En **2.B (Méso)** : ❌ **Indisponible** (modèle basé uniquement sur l'historique réalisé).
@@ -378,12 +434,25 @@ Le tableau ci-dessous explicite le comportement du calcul selon la granularité 
 
 > **Question :** Sous quelle forme graphique visualiser le flux des délais et les risques de retard ?
 > **Description du besoin :** Le visuel doit permettre d'identifier immédiatement les écarts par rapport aux objectifs contractuels ou cibles industrielles.
+>
+> **🧭 Méthodologie Data & Gouvernance — Standard de Restitution & Éthique de Restitution :**
+> 1. *Intégrité d'interprétation :* Le visuel évite-t-il les effets d'échelle trompeurs ou les faux sentiments d'urgence ?
+> 2. *Standard Corporate Safran :* Les codes couleurs (vert conforme, orange aléas, rouge AOG) respectent-ils la charte MRO ?
+> 3. *Neutralité & Fidélité :* Les seuils d'alerte (SLA, $P_{85}$) sont-ils objectivement opposables à tous les acteurs ?
+> 4. *Accessibilité & Clarté cognitive :* Le lecteur novice comprend-il immédiatement l'action requise sans formation poussée ?
+> 5. *Protection des données sensibles :* Les pénalités financières (€) doivent-elles être masquées selon le profil utilisateur ?
+> 6. *Responsabilité de l'action :* Le graphique permet-il d'assigner sans ambiguïté un responsable au déblocage ?
 
 ---
 
 ### Option 4.A : Cartes KPIs Synthétiques
 - **Icône / Emoji :** ⏱️
 - **Sous-titre :** TAT moyen glissant, % respect SLA et écart-type de dérive
+- **Spécifications Data & Dataviz :**
+  - **Type de graphique :** Scorecard / Cartes KPIs & Jauge circulaire
+  - **Axes :** N/A (Indicateurs scalaires agrégés)
+  - **Dimensions :** Filtres contextuels d'en-tête (Site atelier, Modèle moteur, Compagnie cliente)
+  - **Mesures représentées :** TAT moyen glissant (jours), Taux de conformité SLA (%), Retard moyen cumulé
 - **Description métier :**
   Indicateurs phares en gros chiffres : TAT moyen glissant, taux de respect des engagements contractuels et écart-type de dérive. Clarté maximale en un coup d'œil pour le management.
 - **Illustration SVG :**
@@ -404,6 +473,11 @@ Le tableau ci-dessous explicite le comportement du calcul selon la granularité 
 ### Option 4.B : Barres vs Seuils Cibles
 - **Icône / Emoji :** 📊
 - **Sous-titre :** Durée réelle vs barres de tolérance contractuelles ($P_{50}$ et $P_{85}$)
+- **Spécifications Data & Dataviz :**
+  - **Type de graphique :** Barres Horizontales avec Ligne de Mire / Seuil d'alerte
+  - **Axes :** Axe X = Durée constatée (jours ouvrés ou heures) • Axe Y = Entité (Compagnie, Module, Poste)
+  - **Dimensions :** Compagnie cliente (2.A), Package module (2.B), Poste de travail (2.C)
+  - **Mesures représentées :** TAT Réel constaté vs Seuil contractuel garanti ($P_{85}$ SLA ou temps de gamme alloué)
 - **Description métier :**
   Comparaison visuelle directe de la durée réelle par sous-ensemble face aux barres de tolérance contractuelles ($P_{50}$ et $P_{85}$). Met immédiatement en évidence les packages qui dérapent.
 - **Illustration SVG :**
@@ -427,26 +501,35 @@ Le tableau ci-dessous explicite le comportement du calcul selon la granularité 
 
 ---
 
-### Option 4.C : Barres Empilées Usinage vs Transit
+### Option 4.C : Barres Décomposées (Attente, Transfert, Réparation)
 - **Icône / Emoji :** 🚚
-- **Sous-titre :** Décomposition Usinage / Valeur Ajoutée vs Transit inter-sites
+- **Sous-titre :** Décomposition Usinage / Valeur Ajoutée vs Attente passive vs Transit inter-sites
+- **Spécifications Data & Dataviz :**
+  - **Type de graphique :** Barres Empilées 100% ou en Valeur Absolue
+  - **Axes :** Axe X = Jours cumulés • Axe Y = Ligne de révision / Famille moteur (CFM56, LEAP)
+  - **Dimensions :** Catégories physiques du délai (Temps de Gamme/Usinage, Navettes inter-ateliers, Attente pièces/bacs)
+  - **Mesures représentées :** Somme des heures ou jours passés par jalon de traversée
 - **Description métier :**
-  Décomposition du Turn Around Time pour isoler le temps de valeur ajoutée (usinage/réparation) du temps logistique inter-sites. Démontre aux clients si un retard vient des ateliers ou des transferts.
+  Décomposition du Turn Around Time en 3 composantes physiques clés : temps de valeur ajoutée (usinage / montage), attente passive en stock/file et transferts logistiques routiers entre sites. Permet d'isoler précisément l'origine des retards.
 - **Illustration SVG :**
 ```xml
 <svg class="w-full h-full" viewBox="0 0 100 85">
-  <text x="6" y="20" font-size="7.5" font-bold fill="#64748b">Lot 1</text>
-  <rect x="26" y="10" width="42" height="13" rx="2" fill="#3b82f6" />
-  <rect x="68" y="10" width="24" height="13" rx="2" fill="#f59e0b" />
+  <text x="6" y="20" font-size="7.5" font-bold fill="#64748b">CFM</text>
+  <rect x="26" y="10" width="32" height="13" rx="1.5" fill="#3b82f6" />
+  <rect x="59" y="10" width="18" height="13" rx="1.5" fill="#f59e0b" />
+  <rect x="78" y="10" width="16" height="13" rx="1.5" fill="#ef4444" />
 
-  <text x="6" y="46" font-size="7.5" font-bold fill="#64748b">Lot 2</text>
-  <rect x="26" y="36" width="34" height="13" rx="2" fill="#3b82f6" />
-  <rect x="60" y="36" width="32" height="13" rx="2" fill="#f59e0b" />
+  <text x="6" y="44" font-size="7.5" font-bold fill="#64748b">LEAP</text>
+  <rect x="26" y="34" width="38" height="13" rx="1.5" fill="#3b82f6" />
+  <rect x="65" y="34" width="14" height="13" rx="1.5" fill="#f59e0b" />
+  <rect x="80" y="34" width="16" height="13" rx="1.5" fill="#ef4444" />
 
-  <circle cx="28" cy="70" r="3.5" fill="#3b82f6" />
-  <text x="35" y="73" font-size="7" fill="#64748b">Atelier</text>
-  <circle cx="62" cy="70" r="3.5" fill="#f59e0b" />
-  <text x="69" y="73" font-size="7" fill="#64748b">Transit</text>
+  <rect x="8" y="66" width="6" height="6" rx="1" fill="#3b82f6" />
+  <text x="16" y="72" font-size="6" fill="#64748b">Répar.</text>
+  <rect x="40" y="66" width="6" height="6" rx="1" fill="#f59e0b" />
+  <text x="48" y="72" font-size="6" fill="#64748b">Transf.</text>
+  <rect x="74" y="66" width="6" height="6" rx="1" fill="#ef4444" />
+  <text x="82" y="72" font-size="6" fill="#64748b">Attente</text>
 </svg>
 ```
 
@@ -455,6 +538,11 @@ Le tableau ci-dessous explicite le comportement du calcul selon la granularité 
 ### Option 4.D : Tableau d'Alertes Nominatives
 - **Icône / Emoji :** 📋
 - **Sous-titre :** Listing opérationnel détaillé nominatif ESN trié par criticité
+- **Spécifications Data & Dataviz :**
+  - **Type de graphique :** Table / Matrice avec Mise en Forme Conditionnelle
+  - **Axes :** Lignes = Dossiers unitaires ESN • Colonnes = Indicateurs de pilotage
+  - **Dimensions :** Identifiant ESN Moteur, Compagnie cliente, Centre de réparation, Statut AOG
+  - **Mesures représentées :** Dépassement contractuel (Jours ouvrés), Pénalités journalières encourues (€)
 - **Description métier :**
   Listing opérationnel détaillé avec statut couleur (vert/orange/rouge), ESN moteur, client, jours d'écart et action requise. Support quotidien des réunions de production et de crise MRO.
 - **Illustration SVG :**
@@ -476,213 +564,134 @@ Le tableau ci-dessous explicite le comportement du calcul selon la granularité 
 
 ---
 
-### Option 4.E : Histogramme Distribution TAT
-- **Icône / Emoji :** 📶
-- **Sous-titre :** Distribution statistique par tranches de délais (<20j, 20-30j, 30-40j, >40j)
-- **Description métier :**
-  Distribution par tranches de délais pour débusquer la traîne d'anomalies et valider la capabilité Six Sigma du processus de maintenance.
-- **Illustration SVG :**
-```xml
-<svg class="w-full h-full" viewBox="0 0 100 85">
-  <line x1="10" y1="70" x2="90" y2="70" stroke="#cbd5e1" stroke-width="1.2" />
-  <rect x="14" y="46" width="14" height="24" rx="2" fill="#93c5fd" />
-  <rect x="32" y="20" width="14" height="50" rx="2" fill="#2563eb" />
-  <rect x="50" y="32" width="14" height="38" rx="2" fill="#60a5fa" />
-  <rect x="68" y="52" width="14" height="18" rx="2" fill="#f87171" />
-  <text x="39" y="15" font-size="6.5" font-weight="bold" fill="#1d4ed8" text-anchor="middle">Pic P50</text>
-  <text x="75" y="47" font-size="6" font-weight="bold" fill="#dc2626" text-anchor="middle">>SLA</text>
-  <text x="50" y="80" font-size="6.5" fill="#64748b" text-anchor="middle">Tranches de jours TAT</text>
-</svg>
-```
-
----
-
-### Option 4.F : Box-Plot & Dispersion
-- **Icône / Emoji :** 📉
-- **Sous-titre :** Boîtes à moustaches révélant médiane, quartiles et valeurs extrêmes
-- **Description métier :**
-  Boîtes à moustaches révélant la médiane, quartiles Q1/Q3 et valeurs extrêmes par famille moteur (CFM56 vs LEAP). Mesure la variabilité et le risque contractuel.
-- **Illustration SVG :**
-```xml
-<svg class="w-full h-full" viewBox="0 0 100 85">
-  <line x1="28" y1="12" x2="28" y2="68" stroke="#64748b" stroke-width="1.2" />
-  <line x1="22" y1="12" x2="34" y2="12" stroke="#64748b" stroke-width="1.2" />
-  <line x1="22" y1="68" x2="34" y2="68" stroke="#64748b" stroke-width="1.2" />
-  <rect x="18" y="24" width="20" height="30" rx="2" fill="#dbeafe" stroke="#2563eb" stroke-width="1.2" />
-  <line x1="18" y1="36" x2="38" y2="36" stroke="#1e40af" stroke-width="2" />
-  <text x="28" y="80" font-size="6.5" font-weight="bold" fill="#475569" text-anchor="middle">CFM56</text>
-
-  <line x1="72" y1="8" x2="72" y2="72" stroke="#64748b" stroke-width="1.2" />
-  <line x1="66" y1="8" x2="78" y2="8" stroke="#64748b" stroke-width="1.2" />
-  <line x1="66" y1="72" x2="78" y2="72" stroke="#64748b" stroke-width="1.2" />
-  <rect x="62" y="20" width="20" height="38" rx="2" fill="#fef3c7" stroke="#d97706" stroke-width="1.2" />
-  <line x1="62" y1="34" x2="82" y2="34" stroke="#b45309" stroke-width="2" />
-  <circle cx="72" cy="6" r="2" fill="#dc2626" />
-  <text x="72" y="80" font-size="6.5" font-weight="bold" fill="#475569" text-anchor="middle">LEAP-1A</text>
-</svg>
-```
-
----
-
-### Option 4.G : Waterfall des Dérives
-- **Icône / Emoji :** 🌊
-- **Sous-titre :** Cascade cumulative expliquant l'écart entre TAT contractuel et TAT réel
-- **Description métier :**
-  Cascade cumulative expliquant l'écart entre TAT contractuel convenu et TAT réel final (+attente pièce, +aléa contrôle, -gain fast track). Clé pour la négociation de litiges.
-- **Illustration SVG :**
-```xml
-<svg class="w-full h-full" viewBox="0 0 100 85">
-  <line x1="8" y1="72" x2="94" y2="72" stroke="#cbd5e1" stroke-width="1.2" />
-  <rect x="10" y="32" width="14" height="40" rx="1.5" fill="#3b82f6" />
-  <text x="17" y="28" font-size="6" font-bold fill="#1d4ed8" text-anchor="middle">18j Cible</text>
-  <rect x="28" y="20" width="13" height="12" rx="1.5" fill="#ef4444" />
-  <text x="34" y="16" font-size="6" font-bold fill="#dc2626" text-anchor="middle">+3j Pièce</text>
-  <rect x="45" y="12" width="13" height="8" rx="1.5" fill="#f59e0b" />
-  <text x="51" y="8" font-size="6" font-bold fill="#b45309" text-anchor="middle">+2j CND</text>
-  <rect x="62" y="16" width="13" height="6" rx="1.5" fill="#10b981" />
-  <text x="68" y="27" font-size="5.5" font-bold fill="#059669" text-anchor="middle">-1j Shift</text>
-  <rect x="79" y="16" width="14" height="56" rx="1.5" fill="#1e40af" />
-  <text x="86" y="12" font-size="6" font-bold fill="#1e3a8a" text-anchor="middle">22j Réel</text>
-</svg>
-```
-
----
-
-### Option 4.H : Jalons de Traversée (Gates)
-- **Icône / Emoji :** 🚩
-- **Sous-titre :** Suivi des passages de jalons industriels (Gates G1, G2, G3, G4)
-- **Description métier :**
-  Gantt simplifié suivant le passage des portes industrielles (Gate 1 Démontage, Gate 2 Contrôle, Gate 3 Remontage, Gate 4 Banc). Alerte sur le chemin critique actif.
-- **Illustration SVG :**
-```xml
-<svg class="w-full h-full" viewBox="0 0 100 85">
-  <line x1="10" y1="18" x2="88" y2="18" stroke="#cbd5e1" stroke-width="2" />
-  <circle cx="20" cy="18" r="6" fill="#10b981" />
-  <text x="20" y="21" font-size="6" font-weight="bold" fill="#ffffff" text-anchor="middle">G1</text>
-  <text x="20" y="32" font-size="6" fill="#059669" text-anchor="middle">Démont.</text>
-
-  <circle cx="50" cy="18" r="6" fill="#3b82f6" />
-  <text x="50" y="21" font-size="6" font-weight="bold" fill="#ffffff" text-anchor="middle">G2</text>
-  <text x="50" y="32" font-size="6" fill="#1d4ed8" text-anchor="middle">Usinage</text>
-
-  <circle cx="80" cy="18" r="6" fill="#ef4444" />
-  <text x="80" y="21" font-size="6" font-weight="bold" fill="#ffffff" text-anchor="middle">G3</text>
-  <text x="80" y="32" font-size="6" fill="#dc2626" text-anchor="middle">Banc Test</text>
-
-  <rect x="15" y="44" width="70" height="28" rx="4" fill="#f8fafc" stroke="#e2e8f0" />
-  <text x="50" y="57" font-size="7" font-weight="bold" fill="#334155" text-anchor="middle">Chemin Critique Actif</text>
-  <text x="50" y="66" font-size="6" fill="#dc2626" text-anchor="middle">Retard +2j sur Gate 3</text>
-</svg>
-```
-
----
-
 ## Étape 5 : Méthode d'Évaluation de la Capacité Atelier
 
 > **Question :** Sur quelle base modéliser la capacité et la charge théorique ou prévisionnelle ?
-> **Description du besoin :** La capacité peut être calibrée selon les standards nominaux d'ouverture, le suivi en direct des demandes effectives dans l'instant (WIP réel pointé), le plan de charge contractuel prévisionnel (S&OP) ou une modélisation prédictive multi-factorielle.
+> **Description du besoin :** La capacité peut être calibrée selon le plan de charge S&OP, les demandes effectives instantanées (WIP réel pointé), la disponibilité des pièces de rechange ou une modélisation multi-factorielle des aléas MRO.
+>
+> **🧭 Méthodologie Data & Gouvernance — Gouvernance du Plan Capacitaire & Accords de Service :**
+> 1. *Autorité d'engagement :* Qui valide le plan capacitaire officiel (Directeur Industriel vs Ventes & Programmes) ?
+> 2. *Contrats d'interface Fournisseurs :* Les lead times des équipementiers OEM reposent-ils sur des engagements contractuels opposables ?
+> 3. *Fiabilité des prévisions S&OP :* Quel historique de respect des créneaux de déposes par les compagnies partenaires ?
+> 4. *Synchronisation des silos :* Comment assurer la cohérence entre la cellule Achats Pièces et l'ordonnancement Atelier ?
+> 5. *Gouvernance des dérogations :* Quelle procédure formelle autorise l'utilisation de pièces d'occasion ou cannibalisées ?
+> 6. *Gestion des risques d'attrition :* Les règles de mise au rebut aux CND sont-elles certifiées par les autorités de navigabilité ?
 
 ---
 
-### Option 5.A : Capacité Nominale Standard
-- **Icône / Emoji :** 🏗️
-- **Sous-titre :** Heures d'ouverture calendrier et effectifs théoriques
+### Option 5.A : Prévisions des Demandes (Plan S&OP)
+- **Icône / Emoji :** 🗓️
+- **Sous-titre :** Plan industriel et commercial, déposes fermes annoncées & créneaux réservés
 - **Description métier :**
-  Modélisation sur barèmes fixes d'ouverture des postes ou lignes d'assemblage selon les équipes Part-145 déclarées. Référence théorique pour l'évaluation du capacitaire brut Safran.
-- **Formule DAX type :** `SUMX(DIM_POSTE, [Heures_Ouverture] * [Effectifs_Theoriques])`
+  Intégration du carnet de commandes prévisionnel et des programmes de révision négociés avec les compagnies clientes. Permet d'anticiper les vagues de déposes moteurs à 3-6 mois.
 - **Illustration SVG :**
 ```xml
 <svg class="w-full h-full" viewBox="0 0 50 50">
-  <rect x="6" y="8" width="38" height="14" rx="2" fill="#ede9fe" stroke="#8b5cf6" stroke-width="1.2" />
-  <text x="25" y="18" font-size="7" font-weight="bold" text-anchor="middle" fill="#5b21b6">35h / tech</text>
-  <line x1="12" y1="28" x2="38" y2="28" stroke="#cbd5e1" stroke-width="1.5" />
-  <rect x="10" y="32" width="12" height="12" rx="2" fill="#c4b5fd" />
-  <rect x="28" y="32" width="12" height="12" rx="2" fill="#c4b5fd" />
+  <rect x="5" y="6" width="40" height="38" rx="4" fill="#fefce8" stroke="#ca8a04" stroke-width="1.2" />
+  <rect x="5" y="6" width="40" height="10" rx="3" fill="#ca8a04" />
+  <circle cx="14" cy="11" r="1.5" fill="#ffffff" />
+  <circle cx="25" cy="11" r="1.5" fill="#ffffff" />
+  <circle cx="36" cy="11" r="1.5" fill="#ffffff" />
+  <path d="M 12 24 L 20 32 L 38 18" fill="none" stroke="#854d0e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
 </svg>
 ```
 
 ---
 
-### Option 5.B : Demandes Effectives à l'Instant
-- **Icône / Emoji :** 📍
-- **Sous-titre :** En-cours physique réel (WIP) et pièces pointées en direct
+### Option 5.B : Demandes Effectives à l'Instant (WIP)
+- **Icône / Emoji :** ⚡
+- **Sous-titre :** Charge en-cours réelle (Work-In-Progress) et dossiers pointés en direct
 - **Description métier :**
-  Mesure en direct de la charge générée par les demandes actuellement dans l'atelier : moteurs en cours de démontage, sous-ensembles en transit et opérations en attente immédiate devant les machines.
-- **Formule DAX type :** `COUNTROWS(FILTER(FAIT, [Statut] = "EN_COURS"))`
+  Calcul en temps réel basé sur le cumul des heures des dossiers et moteurs physiquement présents dans les ateliers. Révèle la tension immédiate sur le plancher sans spéculation.
 - **Illustration SVG :**
 ```xml
 <svg class="w-full h-full" viewBox="0 0 50 50">
-  <circle cx="25" cy="25" r="18" fill="none" stroke="#e2e8f0" stroke-width="4" />
-  <circle cx="25" cy="25" r="18" fill="none" stroke="#2563eb" stroke-width="4" stroke-dasharray="113" stroke-dashoffset="30" stroke-linecap="round" />
-  <text x="25" y="27" font-size="9" font-weight="black" text-anchor="middle" fill="#0f172a">WIP</text>
-  <text x="25" y="37" font-size="6" font-weight="bold" text-anchor="middle" fill="#2563eb">Live</text>
+  <rect x="6" y="6" width="38" height="38" rx="4" fill="#eff6ff" stroke="#2563eb" stroke-width="1.2" />
+  <path d="M 25 10 L 16 26 L 24 26 L 22 40 L 34 22 L 26 22 Z" fill="#2563eb" />
+  <circle cx="25" cy="25" r="18" fill="none" stroke="#93c5fd" stroke-width="1.5" stroke-dasharray="4,2" />
 </svg>
 ```
 
 ---
 
-### Option 5.C : Prévisions des Demandes (Plan S&OP)
-- **Icône / Emoji :** 📅
-- **Sous-titre :** Déposes fermes annoncées & créneaux réservés
+### Option 5.C : Capacité & Approvisionnement Pièces
+- **Icône / Emoji :** 📦
+- **Sous-titre :** Disponibilité magasin pièces de rechange, lead times OEM & kits complets
 - **Description métier :**
-  Adéquation face au plan de charge prévisionnel consolidé à moyen terme (S&OP) : engagements fermes des compagnies aériennes, déposes programmées pour révision majeure et créneaux réservés.
-- **Formule DAX type :** `SUM(PLAN_CHARGE_SOP[Demandes_Previsionnelles_Heures])`
+  Évaluation de la capacité réelle d'avancement conditionnée par le taux de service pièces critiques (LLP, aubes HP, carters), les délais d'approvisionnement des équipementiers et la constitution des kits de révision complets (Kitting OTIF).
 - **Illustration SVG :**
 ```xml
 <svg class="w-full h-full" viewBox="0 0 50 50">
-  <rect x="8" y="10" width="34" height="30" rx="3" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.2" />
-  <line x1="8" y1="18" x2="42" y2="18" stroke="#3b82f6" stroke-width="1.5" />
-  <circle cx="15" cy="25" r="2" fill="#2563eb" />
-  <circle cx="25" cy="25" r="2" fill="#2563eb" />
-  <circle cx="35" cy="25" r="2" fill="#93c5fd" />
-  <circle cx="15" cy="33" r="2" fill="#2563eb" />
-  <circle cx="25" cy="33" r="2" fill="#ef4444" />
+  <rect x="7" y="8" width="36" height="34" rx="3" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.2" />
+  <path d="M 11 17 L 25 10 L 39 17 L 25 24 Z" fill="#bbf7d0" stroke="#16a34a" stroke-width="1" />
+  <path d="M 11 17 L 11 34 L 25 41 L 25 24 Z" fill="#86efac" stroke="#16a34a" stroke-width="1" />
+  <path d="M 39 17 L 39 34 L 25 41 L 25 24 Z" fill="#4ade80" stroke="#16a34a" stroke-width="1" />
+  <circle cx="37" cy="13" r="6" fill="#16a34a" />
+  <path d="M 34 13 L 36 15 L 40 11" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
 </svg>
 ```
 
 ---
 
 ### Option 5.D : Prévisions Multi-factorielles Avancées
-- **Icône / Emoji :** 🧠
-- **Sous-titre :** Modélisation prédictive IA, cycles TSN/CSN, météo & aléas
+- **Icône / Emoji :** 🔮
+- **Sous-titre :** Rebuts CND/ressuage, disponibilité des bancs d'essais, outillages & attrition pièces LLP
 - **Description métier :**
-  Algorithme prédictif dynamique estimant les arrivées de moteurs et modules selon l'historique d'exploitation avion : taux d'usure des aubes, cycles vol (CSN), zones climatiques sévères (sable/chaleur) et probabilité d'aléas.
-- **Formule DAX / Algo type :** `FORECAST_CAPACITY_AI(CYCLES_VOL, CLIMAT, TAUX_REBUTS_HIST)`
+  Modélisation prédictive intégrant les facteurs critiques réels MRO aéronautique : taux de rebuts aux contrôles non destructifs (CND/courants de Foucault), disponibilité et goulets des bancs d'essais moteur, tensions outillages spécifiques et attrition des pièces à durée de vie limitée (LLP).
 - **Illustration SVG :**
 ```xml
 <svg class="w-full h-full" viewBox="0 0 50 50">
-  <path d="M 8 36 Q 18 16, 28 26 T 44 12" fill="none" stroke="#8b5cf6" stroke-width="2" />
-  <circle cx="44" cy="12" r="3" fill="#ef4444" />
-  <line x1="8" y1="42" x2="44" y2="42" stroke="#94a3b8" stroke-width="1" />
-  <text x="25" y="47" font-size="5.5" font-weight="bold" text-anchor="middle" fill="#64748b">IA Predictive</text>
+  <rect x="6" y="6" width="38" height="38" rx="4" fill="#faf5ff" stroke="#a855f7" stroke-width="1.2" />
+  <circle cx="25" cy="25" r="13" fill="none" stroke="#c084fc" stroke-width="2" stroke-dasharray="3,2" />
+  <circle cx="25" cy="25" r="5" fill="#7e22ce" />
+  <line x1="25" y1="8" x2="25" y2="12" stroke="#9333ea" stroke-width="2" />
+  <line x1="25" y1="38" x2="25" y2="42" stroke="#9333ea" stroke-width="2" />
+  <line x1="8" y1="25" x2="12" y2="25" stroke="#9333ea" stroke-width="2" />
+  <line x1="38" y1="25" x2="42" y2="25" stroke="#9333ea" stroke-width="2" />
 </svg>
 ```
 
 ---
 
-## Étape 6 : Visualisation de la Saturation & Charge Atelier
+## Étape 6 : Visualisation de la Saturation / Capacité
 
-> **Question :** Quel visuel privilégier pour piloter l'adéquation entre le plan de travail et les moyens disponibles ?
-> **Description du besoin :** Visualiser la saturation pour anticiper les embouteillages d'atelier ou les sous-charges d'équipes.
+> **Question :** Quel type de visuel illustre le mieux la saturation ou la capacité des ateliers ?
+> **Description du besoin :** 4 formats opérationnels usuels pour surveiller la charge, repérer les îlots goulots et anticiper les surcharges physiques.
+>
+> **🧭 Méthodologie Data & Gouvernance — Pilotage des Tensions & Protocoles d'Arbitrage :**
+> 1. *Protocole d'escalade au seuil 85% :* Quel circuit de décision officiel se déclenche dès l'entrée en zone de saturation critique ?
+> 2. *Arbitrage inter-sites équitable :* Quelle gouvernance tranche le délestage d'un atelier vers un autre (VIL, MON, CHL, BRU) ?
+> 3. *Responsabilité sur l'en-cours (WIP) :* Qui rend compte des dérives de lead time causées par l'accumulation d'en-cours ?
+> 4. *Transparence de la file d'attente :* La ventilation temps utile vs temps d'attente est-elle partagée en toute neutralité avec le Lean ?
+> 5. *Données de sous-traitance :* Les goulets chez les partenaires externes sont-ils monitorés avec les mêmes exigences de gouvernance ?
+> 6. *Mesure de l'impact social & capacitaire :* Comment la donnée de saturation est-elle partagée avec le management des ressources humaines ?
 
 ---
 
 ### Option 6.A : Barres de Charge vs Seuil 85%
-- **Icône / Emoji :** 🚦
-- **Sous-titre :** Taux d'occupation machine/banc face à la ligne critique des 85%
+- **Icône / Emoji :** 📊
+- **Sous-titre :** Taux d'occupation par atelier avec seuil d'alerte critique
+- **Spécifications Data & Dataviz :**
+  - **Type de graphique :** Barres Horizontales avec Seuil Critique (Target / Benchmark line)
+  - **Axes :** Axe X = Taux de charge (%) • Axe Y = Ateliers / Postes de maintenance
+  - **Dimensions :** Sites MRO Safran (Villaroche, Montereau, Châtellerault, Bruxelles) ou Lignes de production
+  - **Mesures représentées :** Ratio Charge / Capacité nominale (%), Ligne de mire seuil de congestion à 85%
 - **Description métier :**
-  Taux d'occupation machine/banc face à la ligne rouge critique des 85% au-delà de laquelle l'encombrement explose. Changement de couleur dynamique (bleu < 85%, rouge clignotant au-delà).
+  Barres de charge par atelier (Villaroche, Montereau, Châtellerault, Bruxelles) avec ligne de mire à 85% (seuil critique de dégradation exponentielle du TAT).
 - **Illustration SVG :**
 ```xml
 <svg class="w-full h-full" viewBox="0 0 100 85">
-  <text x="8" y="20" font-size="7.5" font-semibold fill="#64748b">VIL-01</text>
-  <rect x="32" y="10" width="45" height="13" rx="2" fill="#3b82f6" />
-
-  <text x="8" y="46" font-size="7.5" font-semibold fill="#64748b">MON-01</text>
-  <rect x="32" y="36" width="62" height="13" rx="2" fill="#ef4444" />
-
-  <line x1="68" y1="5" x2="68" y2="58" stroke="#d97706" stroke-dasharray="2.5,2.5" stroke-width="1.8" />
-  <text x="68" y="70" font-size="7" font-bold text-anchor="middle" fill="#d97706">Seuil Critique 85%</text>
+  <line x1="12" y1="72" x2="94" y2="72" stroke="#cbd5e1" stroke-width="1.2" />
+  <rect x="18" y="32" width="12" height="40" rx="1.5" fill="#10b981" />
+  <text x="24" y="80" font-size="6" fill="#64748b" text-anchor="middle">MON</text>
+  <rect x="36" y="16" width="12" height="56" rx="1.5" fill="#ef4444" />
+  <text x="42" y="80" font-size="6" fill="#64748b" text-anchor="middle">VIL</text>
+  <rect x="54" y="24" width="12" height="48" rx="1.5" fill="#f59e0b" />
+  <text x="60" y="80" font-size="6" fill="#64748b" text-anchor="middle">CHL</text>
+  <rect x="72" y="38" width="12" height="34" rx="1.5" fill="#10b981" />
+  <text x="78" y="80" font-size="6" fill="#64748b" text-anchor="middle">BRU</text>
+  <line x1="12" y1="26" x2="94" y2="26" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="3,2" />
+  <text x="88" y="23" font-size="5" font-weight="bold" fill="#dc2626">85%</text>
 </svg>
 ```
 
@@ -690,23 +699,39 @@ Le tableau ci-dessous explicite le comportement du calcul selon la granularité 
 
 ### Option 6.B : Heatmap Hebdomadaire / Site
 - **Icône / Emoji :** 🗓️
-- **Sous-titre :** Matrice thermique des volumes par site industriel et par semaine
+- **Sous-titre :** Grille thermique des charges par semaine et par centre MRO
+- **Spécifications Data & Dataviz :**
+  - **Type de graphique :** Heatmap Matricielle Thermique (Matrix Grid)
+  - **Axes :** Axe X = Semaines fiscales Safran (S12..S15) • Axe Y = Centres industriels / Ateliers
+  - **Dimensions :** Semaine calendaire, Atelier MRO, Ligne de montage / réparation
+  - **Mesures représentées :** Heures planifiées d'atelier, Ratio charge/capacité, Gradient d'alerte (vert <75%, orange 75-85%, rouge >85%)
 - **Description métier :**
-  Matrice croisant sites industriels et semaines calendaires pour repérer les pics saisonniers d'entrées moteurs. Gradient thermique de bleu (fluide) à rouge vif (goulot d'étranglement).
+  Matrice semaine × atelier colorée en dégradé vert/jaune/rouge selon le ratio Charge / Capacité. Donne une vision instantanée des tensions d'effectifs sur l'année.
 - **Illustration SVG :**
 ```xml
 <svg class="w-full h-full" viewBox="0 0 100 85">
-  <rect x="10" y="10" width="16" height="16" rx="2.5" fill="#dbeafe" stroke="#93c5fd" />
-  <rect x="31" y="10" width="16" height="16" rx="2.5" fill="#3b82f6" />
-  <rect x="52" y="10" width="16" height="16" rx="2.5" fill="#ef4444" />
-  <rect x="73" y="10" width="16" height="16" rx="2.5" fill="#dbeafe" stroke="#93c5fd" />
+  <text x="14" y="22" font-size="5.5" font-weight="bold" fill="#64748b">VIL</text>
+  <rect x="24" y="14" width="14" height="12" rx="1" fill="#fee2e2" />
+  <rect x="42" y="14" width="14" height="12" rx="1" fill="#ef4444" />
+  <rect x="60" y="14" width="14" height="12" rx="1" fill="#f87171" />
+  <rect x="78" y="14" width="14" height="12" rx="1" fill="#fca5a5" />
 
-  <rect x="10" y="32" width="16" height="16" rx="2.5" fill="#dbeafe" stroke="#93c5fd" />
-  <rect x="31" y="32" width="16" height="16" rx="2.5" fill="#ef4444" />
-  <rect x="52" y="32" width="16" height="16" rx="2.5" fill="#b91c1c" />
-  <rect x="73" y="32" width="16" height="16" rx="2.5" fill="#3b82f6" />
+  <text x="14" y="40" font-size="5.5" font-weight="bold" fill="#64748b">MON</text>
+  <rect x="24" y="32" width="14" height="12" rx="1" fill="#d1fae5" />
+  <rect x="42" y="32" width="14" height="12" rx="1" fill="#10b981" />
+  <rect x="60" y="32" width="14" height="12" rx="1" fill="#fef3c7" />
+  <rect x="78" y="32" width="14" height="12" rx="1" fill="#d1fae5" />
 
-  <text x="50" y="66" font-size="8" font-bold text-anchor="middle" fill="#dc2626">Pic Semaine 38 (Rouge)</text>
+  <text x="14" y="58" font-size="5.5" font-weight="bold" fill="#64748b">CHL</text>
+  <rect x="24" y="50" width="14" height="12" rx="1" fill="#fef3c7" />
+  <rect x="42" y="50" width="14" height="12" rx="1" fill="#f59e0b" />
+  <rect x="60" y="50" width="14" height="12" rx="1" fill="#d1fae5" />
+  <rect x="78" y="50" width="14" height="12" rx="1" fill="#10b981" />
+
+  <text x="31" y="74" font-size="5.5" fill="#94a3b8" text-anchor="middle">S12</text>
+  <text x="49" y="74" font-size="5.5" fill="#94a3b8" text-anchor="middle">S13</text>
+  <text x="67" y="74" font-size="5.5" fill="#94a3b8" text-anchor="middle">S14</text>
+  <text x="85" y="74" font-size="5.5" fill="#94a3b8" text-anchor="middle">S15</text>
 </svg>
 ```
 
@@ -714,141 +739,58 @@ Le tableau ci-dessous explicite le comportement du calcul selon la granularité 
 
 ### Option 6.C : Courbes Entrées vs Sorties (WIP)
 - **Icône / Emoji :** 📈
-- **Sous-titre :** Différentiel de flux et suivi de l'en-cours Work-In-Progress
+- **Sous-titre :** Dérive de l'en-cours physique et ciseaux de flux industriels
+- **Spécifications Data & Dataviz :**
+  - **Type de graphique :** Courbes Cumulées de Flux / Diagramme de Flux Cumulé (CFD)
+  - **Axes :** Axe X = Axe chronologique (Semaines Safran) • Axe Y = Nombre cumulé de moteurs / modules
+  - **Dimensions :** Nature du flux (Entrées / Déposes fermes vs Sorties / Restitutions livrées)
+  - **Mesures représentées :** Volume cumulé des entrées, Volume cumulé des sorties, Écart différentiel (En-cours physique WIP & dérive de lead time)
 - **Description métier :**
-  Diagramme de flux cumulé mesurant l'écart entre arrivées et restitutions. Détecte l'accumulation anormale d'en-cours si la courbe d'entrée s'écarte de la courbe de sortie.
+  Courbe cumulative des réceptions vs livraisons moteurs. L'écartement des courbes matérialise visuellement le gonflement de l'en-cours et l'allongement mécanique du TAT (loi de Little).
 - **Illustration SVG :**
 ```xml
 <svg class="w-full h-full" viewBox="0 0 100 85">
-  <path d="M 10 58 Q 40 50, 60 22 Q 80 16, 92 12" fill="none" stroke="#2563eb" stroke-width="2.2" />
-  <path d="M 10 60 Q 40 56, 60 52 Q 80 48, 92 46" fill="none" stroke="#059669" stroke-width="2.2" />
-  <text x="82" y="10" font-size="7.5" font-bold fill="#2563eb">In (Entrées)</text>
-  <text x="82" y="58" font-size="7.5" font-bold fill="#059669">Out (Sorties)</text>
-  <text x="50" y="75" font-size="7.5" font-bold text-anchor="middle" fill="#dc2626">Zone Dérive WIP</text>
+  <line x1="12" y1="72" x2="94" y2="72" stroke="#cbd5e1" stroke-width="1.2" />
+  <path d="M 14 65 Q 40 45, 88 18" fill="none" stroke="#2563eb" stroke-width="2.2" />
+  <path d="M 14 68 Q 45 60, 88 38" fill="none" stroke="#10b981" stroke-width="2.2" />
+  <path d="M 50 48 L 50 61" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="2,2" />
+  <text x="56" y="56" font-size="6" font-weight="bold" fill="#dc2626">WIP +18%</text>
+  <text x="76" y="16" font-size="5.5" font-weight="bold" fill="#1d4ed8">Entrées</text>
+  <text x="76" y="44" font-size="5.5" font-weight="bold" fill="#047857">Sorties</text>
 </svg>
 ```
 
 ---
 
 ### Option 6.D : Ratio Attente vs Travail Effectif
-- **Icône / Emoji :** ⏳
-- **Sous-titre :** Donut d'efficience et part du lead time passée en attente passive
+- **Icône / Emoji :** ⏱️
+- **Sous-titre :** Décomposition temps de gamme vs temps d'attente passif (WIP)
+- **Spécifications Data & Dataviz :**
+  - **Type de graphique :** Donut Chart / Ratio Part de Voix Lean (Valeur Ajoutée vs Non-VA)
+  - **Axes :** N/A (Proportions circulaires sur base 100%)
+  - **Dimensions :** Catégorie d'activité Lean (Temps d'usinage / montage à Valeur Ajoutée vs Temps d'attente passif / transit)
+  - **Mesures représentées :** % Temps Contact productif vs % Temps en file d'attente / navette, Total Lead Time global
 - **Description métier :**
-  Donut d'efficience mesurant la proportion du cycle de vie passée en attente passive d'un technicien ou d'un slot disponible. Démontre que fluidifier les files d'attente est plus rentable qu'accélérer l'usinage.
+  Donut chart comparant le temps d'usinage / montage à valeur ajoutée et le temps passé en file d'attente ou en attente d'approvisionnement pièce. Fondement du Lean MRO Safran.
 - **Illustration SVG :**
 ```xml
 <svg class="w-full h-full" viewBox="0 0 100 85">
-  <circle cx="36" cy="38" r="22" fill="none" stroke="#3b82f6" stroke-width="6.5" />
-  <circle cx="36" cy="38" r="22" fill="none" stroke="#ef4444" stroke-width="6.5" stroke-dasharray="138" stroke-dashoffset="80" />
-  <text x="68" y="30" font-size="8" font-bold fill="#dc2626">42% Attente</text>
-  <text x="68" y="46" font-size="8" font-bold fill="#2563eb">58% Usinage</text>
-  <text x="50" y="73" font-size="7.5" font-semibold text-anchor="middle" fill="#64748b">Ratio Lead Time Réel</text>
-</svg>
-```
-
----
-
-### Option 6.E : Jauge Tachymètre de Saturation
-- **Icône / Emoji :** 🎯
-- **Sous-titre :** Cadran à aiguille avec seuils vert (<70%), orange (70-85%) et rouge (>85%)
-- **Description métier :**
-  Cadran à aiguille avec zones d'alerte pour lecture instantanée. Permet aux chefs d'ateliers de repérer immédiatement le franchissement de la zone rouge de saturation.
-- **Illustration SVG :**
-```xml
-<svg class="w-full h-full" viewBox="0 0 100 85">
-  <path d="M 18 62 A 38 38 0 0 1 50 16" fill="none" stroke="#10b981" stroke-width="8" stroke-linecap="round" />
-  <path d="M 50 16 A 38 38 0 0 1 74 30" fill="none" stroke="#f59e0b" stroke-width="8" />
-  <path d="M 74 30 A 38 38 0 0 1 82 62" fill="none" stroke="#ef4444" stroke-width="8" stroke-linecap="round" />
-  <circle cx="50" cy="62" r="5" fill="#1e293b" />
-  <line x1="50" y1="62" x2="72" y2="34" stroke="#1e293b" stroke-width="2.5" stroke-linecap="round" />
-  <circle cx="50" cy="62" r="2.5" fill="#ffffff" />
-  <text x="50" y="78" font-size="9" font-weight="black" text-anchor="middle" fill="#dc2626">88 %</text>
-</svg>
-```
-
----
-
-### Option 6.F : Radar Poly-compétences & Postes Clés
-- **Icône / Emoji :** 🕸️
-- **Sous-titre :** Diagramme radar comparant la capacité qualifiée Part-145 face à la charge réelle
-- **Description métier :**
-  Diagramme radar comparant la capacité qualifiée (techniciens certifiés Part-145) face à la charge réelle pointée par spécialité technique (CND, usinage, équilibrage, banc test).
-- **Illustration SVG :**
-```xml
-<svg class="w-full h-full" viewBox="0 0 100 85">
-  <polygon points="50,15 80,35 70,68 30,68 20,35" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1" />
-  <polygon points="50,26 69,39 63,60 37,60 31,39" fill="none" stroke="#e2e8f0" stroke-width="1" />
-  <line x1="50" y1="45" x2="50" y2="15" stroke="#94a3b8" stroke-width="0.8" />
-  <line x1="50" y1="45" x2="80" y2="35" stroke="#94a3b8" stroke-width="0.8" />
-  <line x1="50" y1="45" x2="70" y2="68" stroke="#94a3b8" stroke-width="0.8" />
-  <line x1="50" y1="45" x2="30" y2="68" stroke="#94a3b8" stroke-width="0.8" />
-  <line x1="50" y1="45" x2="20" y2="35" stroke="#94a3b8" stroke-width="0.8" />
-  <polygon points="50,18 76,37 66,54 34,64 24,37" fill="#3b82f6" fill-opacity="0.3" stroke="#2563eb" stroke-width="1.8" />
-  <text x="50" y="11" font-size="5.5" font-weight="bold" fill="#475569" text-anchor="middle">CND</text>
-  <text x="86" y="36" font-size="5.5" font-weight="bold" fill="#475569">Usinage</text>
-  <text x="73" y="75" font-size="5.5" font-weight="bold" fill="#475569">Banc</text>
-  <text x="27" y="75" font-size="5.5" font-weight="bold" fill="#475569">Montage</text>
-  <text x="14" y="36" font-size="5.5" font-weight="bold" fill="#475569">Contrôle</text>
-</svg>
-```
-
----
-
-### Option 6.G : Diagramme Spaghetti / Flux de Transfert
-- **Icône / Emoji :** 🔄
-- **Sous-titre :** Visualisation cartographique des flux physiques et intensité des navettes
-- **Description métier :**
-  Visualisation cartographique des flux physiques et intensité des rotations de navettes entre sites Safran (Villaroche, Montereau, Châtellerault, Bruxelles) pour dimensionner la logistique.
-- **Illustration SVG :**
-```xml
-<svg class="w-full h-full" viewBox="0 0 100 85">
-  <circle cx="25" cy="30" r="10" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5" />
-  <text x="25" y="33" font-size="6" font-weight="bold" fill="#1e40af" text-anchor="middle">VIL</text>
-
-  <circle cx="75" cy="24" r="10" fill="#fef3c7" stroke="#d97706" stroke-width="1.5" />
-  <text x="75" y="27" font-size="6" font-weight="bold" fill="#b45309" text-anchor="middle">MON</text>
-
-  <circle cx="50" cy="65" r="10" fill="#fee2e2" stroke="#dc2626" stroke-width="1.5" />
-  <text x="50" y="68" font-size="6" font-weight="bold" fill="#991b1b" text-anchor="middle">CHL</text>
-
-  <path d="M 35 28 Q 50 18, 65 24" fill="none" stroke="#2563eb" stroke-width="2.5" />
-  <path d="M 70 34 Q 65 52, 57 58" fill="none" stroke="#ef4444" stroke-width="3" stroke-dasharray="3,2" />
-  <path d="M 43 59 Q 32 48, 27 40" fill="none" stroke="#10b981" stroke-width="1.8" />
-  <text x="50" y="14" font-size="6" font-weight="bold" fill="#2563eb" text-anchor="middle">Flux Dense (14/j)</text>
-</svg>
-```
-
----
-
-### Option 6.H : Treemap des Goulots d'Atelier
-- **Icône / Emoji :** 🗂️
-- **Sous-titre :** Surfaces proportionnelles au volume d'en-cours WIP bloqué
-- **Description métier :**
-  Surfaces proportionnelles au volume d'en-cours bloqué, colorées par sévérité de saturation. Permet d'identifier immédiatement la ressource critique à débloquer en priorité.
-- **Illustration SVG :**
-```xml
-<svg class="w-full h-full" viewBox="0 0 100 85">
-  <rect x="8" y="8" width="52" height="42" rx="2" fill="#ef4444" />
-  <text x="34" y="26" font-size="7" font-weight="bold" fill="#ffffff" text-anchor="middle">Tour CN 5A</text>
-  <text x="34" y="36" font-size="6" fill="#fee2e2" text-anchor="middle">94% (48h WIP)</text>
-
-  <rect x="62" y="8" width="30" height="42" rx="2" fill="#f59e0b" />
-  <text x="77" y="26" font-size="6.5" font-weight="bold" fill="#ffffff" text-anchor="middle">CND</text>
-  <text x="77" y="36" font-size="5.5" fill="#fef3c7" text-anchor="middle">86%</text>
-
-  <rect x="8" y="52" width="40" height="25" rx="2" fill="#3b82f6" />
-  <text x="28" y="66" font-size="6.5" font-weight="bold" fill="#ffffff" text-anchor="middle">Banc Test</text>
-  <text x="28" y="73" font-size="5.5" fill="#dbeafe" text-anchor="middle">74%</text>
-
-  <rect x="50" y="52" width="42" height="25" rx="2" fill="#10b981" />
-  <text x="71" y="66" font-size="6.5" font-weight="bold" fill="#ffffff" text-anchor="middle">Équilibrage</text>
-  <text x="71" y="73" font-size="5.5" fill="#d1fae5" text-anchor="middle">62%</text>
+  <circle cx="50" cy="42" r="28" fill="none" stroke="#fee2e2" stroke-width="12" />
+  <circle cx="50" cy="42" r="28" fill="none" stroke="#2563eb" stroke-width="12" stroke-dasharray="176" stroke-dashoffset="120" stroke-linecap="round" />
+  <text x="50" y="39" font-size="10" font-weight="black" fill="#1e293b" text-anchor="middle">32%</text>
+  <text x="50" y="49" font-size="5" font-weight="bold" fill="#64748b" text-anchor="middle">VA REEL</text>
+  <text x="50" y="78" font-size="6" font-weight="bold" fill="#dc2626" text-anchor="middle">68% File / Attente</text>
 </svg>
 ```
 
 ---
 
 ## Étape 7 : Synthèse, Profils & Recommandations
+
+> **Question :** Comment structurer la restitution finale pour engager les parties prenantes ?
+> **Description du besoin :** Le slide de synthèse consolide l'ensemble de la chaîne de décision (de l'objectif métier aux choix d'architecture).
+
+---
 
 En fonction de la combinaison des choix effectués aux étapes 1 à 6, le système déduit le **Profil Décisionnel MRO** :
 
@@ -865,3 +807,29 @@ En fonction de la combinaison des choix effectués aux étapes 1 à 6, le systè
 4. **Profil Planification Stratégique & Capacitaire (S&OP Planner)** :
    - Dominante : Étape 1.D + Granularité Macro 2.A + Capacité 5.C + Charge/Capacité 6.A.
    - Recommandation : Modélisation mixte associant le carnet de commandes fermes et les prévisions de déposes moteur.
+
+---
+
+## Les 8 Graphiques Usuels Disponibles (4 en Étape 4 & 4 en Étape 6)
+
+L'application retient exclusivement les **8 graphiques de référence** les plus efficaces et pragmatiques en production industrielle :
+
+| Étape | Clé | Type de Visuel | Rôle Décisionnel MRO Safran |
+| :--- | :--- | :--- | :--- |
+| **Étape 4 (Délai)** | **4.A** | ⏱️ Cartes KPIs Synthétiques | Vue d'ensemble instantanée : TAT moyen glissant et taux de conformité SLA |
+| **Étape 4 (Délai)** | **4.B** | 📊 Barres vs Seuils Cibles | Comparatif direct de la durée par ligne / atelier face au seuil de tolérance P85 |
+| **Étape 4 (Délai)** | **4.C** | 🚚 Barres Décomposées | Décomposition physique en 3 blocs : Attente passive, Transfert et Réparation |
+| **Étape 4 (Délai)** | **4.D** | 📋 Tableau d'Alertes Nominatives | Listing opérationnel unitaire par ESN moteur, client et montant de pénalité (€) |
+| **Étape 6 (Saturation)** | **6.A** | 🚦 Barres de Charge vs Seuil 85% | Contrôle du point d'engorgement critique (85%) par site ou îlot machine |
+| **Étape 6 (Saturation)** | **6.B** | 🗓️ Heatmap Hebdomadaire / Site | Matrice thermique temporelle des pics de tension d'effectifs et charges |
+| **Étape 6 (Saturation)** | **6.C** | 📈 Courbes Entrées vs Sorties (WIP) | Suivi du volume d'en-cours physique et de la dérive du lead time (Loi de Little) |
+| **Étape 6 (Saturation)** | **6.D** | ⏳ Ratio Attente vs Travail Effectif | Donut Lean MRO dissociant le temps de valeur ajoutée de la file d'attente |
+
+> **Absence de restriction sur les étapes de calcul :**  
+> Pour les étapes analytiques (Étape 2 Données, Étape 3 TAT, Étape 5 Capacité), aucune limitation n'est imposée.  
+> Les choix de calcul du TAT (Étape 3) et d'évaluation de la capacité (Étape 5) modulent dynamiquement les indicateurs synthétiques de l'Étape 7 :
+> - **3.B / 5.B** : Affichage sous forme $P_{50}$ ($P_{5} - P_{95}$) révélant la dispersion optimiste vs pessimiste sans mention redondante de médiane, avec mention `Effectif` pour l'en-cours.
+> - **3.C / 5.C** : Indication explicite d'un degré de certitude précédé des mentions *"Sur la base de la charge machine"* (3.C) et *"Sur la base de la charge S&OP"* (5.C).
+> - **3.D / 5.D** : Indice de certitude prédictif multi-factoriel (IA).
+> - **5.A** : Sous-titre synthétique épuré en *"Théorique"*.
+> - **Barre de filtres interactive (Étape 7)** : Sélecteur de date calendaire jour dans le futur couplé à l'affichage dynamique de la **Date Prévisionnelle de sortie** (= date sélectionnée + TAT médian constaté). Filtrage par Site, Client, Modèle moteur recalculant instantanément les indicateurs et volumes avec cohérence métier.
