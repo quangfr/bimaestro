@@ -49,40 +49,40 @@ Le projet MAESTRO s'articule autour des acteurs décisionnels de la maintenance 
 
 ### Options Décisionnelles (1.A à 1.F) :
 
-1. **Option 1.A : Engagements contractuels & Removal Plan (CSPM)**
+1. **Option 1.A : SLA & Removal Plan (CSPM)**
    - *Personas SAE :* CSPM • FTM, EOWN, NTPL
    - *Sous-titre :* Respect des SLA, dates Shop Visit & removal plan PERF
-   - *Description :* Gérer la relation contractuelle de maintenance avec les compagnies clientes. Charger le **removal plan** client depuis **PERF** vers **SAP IBP**, suivre les dates programmées de Shop Visit (entrée et sortie atelier), sécuriser les **SLA** et lever les alertes en cas de déviation.
+   - *Description :* Gérer la maintenance des moteurs clients : suivre les dates d'entrée et de sortie d'atelier, respecter les **SLA** et alerter en cas de dérive.
    - *Orientation de restitution :* Jauges de conformité contractuelle, décompte des dossiers livrés dans les temps et suivi du removal plan PERF synchronisé.
 
-2. **Option 1.B : Équilibrage réseau 12-36 mois & Slotting (NTPL)**
+2. **Option 1.B : Équilibrage Réseau & Slots (NTPL)**
    - *Personas SAE :* NTPL • DMMG, SHPL, GBO
    - *Sous-titre :* Charge/capacité multi-ateliers, MPS vs S&OP & slotting réseau
-   - *Description :* Piloter la planification et le slotting moyen/long terme (**12–36 mois**) across all shops. Équilibrer la charge/capacité réseau pour les moteurs et modules (**MM, SM**), assurer l'adhérence **MPS vs S&OP** et arbitrer les flux d'induction pour éliminer les créneaux perdus (**lost slots**).
+   - *Description :* Planifier à **12–36 mois** la charge des ateliers réseau, équilibrer la charge et la capacité (moteurs et modules) et réduire les créneaux inutilisés.
    - *Orientation de restitution :* Comparatif capacitaire inter-sites (VIL, CHL, MON, BRU) et détection des îlots saturés (> 85%).
 
-3. **Option 1.C : Volumes IBP, mix d'activités & coûts SV (FINC)**
+3. **Option 1.C : Volumes & Coûts SV (FINC)**
    - *Personas SAE :* FINC • CSPM, EOWN, S&OP
    - *Sous-titre :* Pénalités de retard (€), mix moteurs/modules & IBP to Cost Tracker
-   - *Description :* Suivre les prévisions d'activité (volumes d'induction, charge globale, mix moteurs/modules **MM/SM**) et leur impact financier. Analyser les écarts budget vs réel, chiffrer les pénalités de retard et exporter les données IBP pour fiabiliser le cost tracking (**IBP to Cost Tracker**).
+   - *Description :* Suivre les volumes d'activité et leur impact financier : écarts budget vs réel, pénalités de retard et coûts des révisions.
    - *Orientation de restitution :* Exposition financière cumulée, compteurs d'ESN sous pénalités journalières et impact sur les coûts de Shop Visit.
 
-4. **Option 1.D : Ordonnancement atelier & aléas court terme (SHPL)**
+4. **Option 1.D : Ordonnancement Atelier (SHPL)**
    - *Personas SAE :* SHPL • EOWN, NTPL
    - *Sous-titre :* Aléas quotidiens (pannes, retards), flux MM/SM & MPS Adherence
-   - *Description :* Organiser les activités de Shop Visit au sein de son atelier et équilibrer charge/capacité locale. Réajuster le planning court terme face aux aléas quotidiens (**delays, breakdowns, absences**), séquencer l'arrivée des moteurs et modules (**MM, SM, internes, isolés ou sous-traités**) et optimiser les ressources critiques.
+   - *Description :* Organiser les réparations dans son atelier, équilibrer charge et capacité, et ajuster le planning face aux aléas quotidiens (pannes, retards, absences).
    - *Orientation de restitution :* Vue d'ordonnancement d'atelier avec 2 lignes de flux (moteurs complets et modules), gestion des aléas machines et réaffectation dynamique de slots.
 
-5. **Option 1.E : Consolidation de la demande & workscopes (DMMG & FTM)**
+5. **Option 1.E : Demande & Workscopes (DMMG & FTM)**
    - *Personas SAE :* DMMG & FTM • GBO, CSPM, S&OP
    - *Sous-titre :* Demande multi-sources, workscopes Walk & variance début/fin SV
-   - *Description :* Consolider et fiabiliser les prévisions de Shop Visit multi-sources (compagnies, loueurs, flotte interne) via la **Monthly Demand Review**. Intégrer les **workscopes techniques** dans **Walk**, surveiller la variance de workscope entre l'entrée et la sortie d'atelier, et alimenter les cycles S&OP/MTP.
+   - *Description :* Consolider les prévisions d'entrées d'atelier (clients, loueurs, flotte interne) et suivre l'évolution du contenu des réparations entre l'entrée et la sortie.
    - *Orientation de restitution :* Courbe de prévision de la demande multi-sources, suivi de la dérive prévu vs réalisé et analyse de la variance des workscopes Walk.
 
-6. **Option 1.F : Qualité des données & Fiabilité des modèles (DGOV)**
+6. **Option 1.F : Qualité des Données & Modèles (DGOV)**
    - *Personas SAE :* DGOV • FTM, NTPL, SHPL, CSPM
    - *Sous-titre :* Complétude de saisie, benchmark des méthodes de calcul & certitude
-   - *Description :* Auditer la qualité du patrimoine de données MRO : mesurer le taux de complétude des saisies pointées en atelier, benchmarker les 4 méthodes de calcul (forfait standard, distribution réelle P50, charge/goulots et simulation probabiliste) face au TAT effectif de référence, et certifier le niveau de confiance des prévisions.
+   - *Description :* Contrôler la qualité des données de maintenance et s'assurer que les **4 méthodes de calcul** donnent des résultats proches de la réalité.
    - *Orientation de restitution :* Histogrammes comparatifs des méthodes de calcul (TAT et Capacité vs effectif réel), jauge de complétude et score de fiabilité statistique.
 
 ---
@@ -129,7 +129,7 @@ Le panneau latéral droit de l'Étape 2 propose un sélecteur à 2 vues :
 
 Le modèle propose deux perspectives décisionnelles complémentaires selon le niveau de détail souhaité :
 
-#### 📈 Option 2.A : Niveau de Consolidation Demande (Granularité Dossier / Macro)
+#### 📈 Option 2.A : Macro — Consolidation Demande (Granularité Dossier)
 - **Granularité :** 1 ligne = 1 demande de révision moteur consolidée.
 - **👥 Personas Cibles :** `CSPM`, `EOWN`, `FINC`, `DMMG`, `DGOV`.
 - **🧩 Dimensions Clés :** `ID_DEMANDE` + `ENGINE_TYPE` + `DEMANDEUR` + `TIMEPROFILE` (Semaine ou Mois).
@@ -160,11 +160,11 @@ Le modèle propose deux perspectives décisionnelles complémentaires selon le n
 
 ```mermaid
 erDiagram
-    MDT_MAINTENANCE_REQUEST ||--o{ MDT_INTERVENTION : "détail des lignes (1:N)"
-    MDT_MAINTENANCE_REQUEST }o--|| TIMEPROFILE : "profil temporel (S/M)"
-    MDT_MAINTENANCE_REQUEST }o--|| CONTRACT_SLA : "engagements SLA client"
+    MDT_MAINTENANCE_REQUEST ||--o{ MDT_INTERVENTION : "1 demande → N interventions (1:N)"
+    MDT_MAINTENANCE_REQUEST }o--|| TIMEPROFILE : "N demandes → 1 période (N:1)"
+    MDT_MAINTENANCE_REQUEST }o--|| CONTRACT_SLA : "N demandes → 1 contrat SLA (N:1)"
 
-    MDT_MAINTENANCE_REQUEST {
+    MDT_MAINTENANCE_REQUEST ["Demande de Maintenance Moteur"] {
         string ID_DEMANDE PK "D-2026-000123"
         string DEMANDEUR "Air France (AFR)"
         date DATE_DEMANDE "2026-03-01"
@@ -172,36 +172,36 @@ erDiagram
         string ENGINE_TYPE "LEAP-1A26"
         string NIVEAU_URGENCE_GLOBAL "Haute (AOG)"
         string COMMENTAIRE_GLOBAL "Dépose suite FOD"
-        int INTERVENTION_COUNT KF "3"
-        float URGENCY_WEIGHT KF "3.0"
-        float TOTAL_ENGINE_TAT KF "21.5 j"
+        int INTERVENTION_COUNT "3"
+        float URGENCY_WEIGHT "3.0"
+        float TOTAL_ENGINE_TAT "21.5 j"
     }
-    TIMEPROFILE {
+    TIMEPROFILE ["Profil Temporel"] {
         string ID_PERIOD PK "2026-W10"
         date START_DATE "2026-03-02"
         date END_DATE "2026-03-08"
         boolean IS_WORKING_DAY "true"
     }
-    CONTRACT_SLA {
+    CONTRACT_SLA ["Contrat SLA Client"] {
         string ID_CONTRAT PK "CTR-AFR-01"
         string DEMANDEUR "Air France (AFR)"
         float SLA_CIBLE_JOURS "18.0 j"
         float PENALITE_JOUR_EUR "2500 EUR"
     }
-    MDT_INTERVENTION {
+    MDT_INTERVENTION ["Intervention d'Atelier"] {
         string ID_INTERVENTION PK "I-2026-000123-01"
         string ID_DEMANDE FK "D-2026-000123"
         string TYPE_REPARATION "T-AUBTUR"
         string PRECISION_AUTRE "Usinage aubes HP"
         string SHOP_ASSIGNE "S-MON"
         string DONNEES_TECHNIQUES "DOC-NDT-2026-442"
-        float INTERVENTION_TAT KF "32.5 h"
+        float INTERVENTION_TAT "32.5 h"
     }
 ```
 
 ---
 
-#### 🎯 Option 2.B : Niveau Interventions & Planification d'Atelier (Granularité Fine)
+#### 🎯 Option 2.B : Atelier — Lignes d'Intervention (Granularité Fine)
 - **Granularité :** 1 ligne = 1 intervention unitaire sur une **station de réparation** (`STATION_ASSIGNEE`) située dans un **shop** (`SHOP_ASSIGNE`).
 - **👥 Personas Cibles :** `SHPL`, `FTM`, `NTPL`, `EOWN`, `DGOV`.
 - **🧩 Dimensions Clés :** `ID_DEMANDE` + `ID_INTERVENTION` + `STATION_ASSIGNEE` (`S-XXX-YY`) + `SHOP_ASSIGNE` (`S-XXX`) + `TIMEPROFILE` (Semaine ou Jour).
@@ -258,14 +258,14 @@ erDiagram
 
 ```mermaid
 erDiagram
-    MDT_MAINTENANCE_REQUEST ||--o{ MDT_INTERVENTION : "contient (ID_DEMANDE)"
-    SHOP ||--o{ STATION : "contient 3 a 10 stations (1:N)"
-    STATION ||--o{ MDT_INTERVENTION : "accueille intervention (1:N)"
-    SHOP ||--o{ MDT_INTERVENTION : "shop de rattachement (1:N)"
-    TIMEPROFILE ||--o{ MDT_INTERVENTION : "horodatage (Jour / Semaine)"
-    DUREE_STANDARDS ||--o{ MDT_INTERVENTION : "duree estimee (type)"
+    MDT_MAINTENANCE_REQUEST ||--o{ MDT_INTERVENTION : "1 demande → N interventions (1:N)"
+    SHOP ||--o{ STATION : "1 shop → 3 à 10 stations (1:N)"
+    STATION ||--o{ MDT_INTERVENTION : "1 station → N interventions (1:N)"
+    SHOP ||--o{ MDT_INTERVENTION : "1 shop → N interventions (1:N)"
+    TIMEPROFILE ||--o{ MDT_INTERVENTION : "1 période → N interventions (1:N)"
+    DUREE_STANDARDS ||--o{ MDT_INTERVENTION : "1 standard → N interventions (1:N)"
 
-    MDT_INTERVENTION {
+    MDT_INTERVENTION ["Intervention d'Atelier"] {
         string ID_DEMANDE PK "D-2026-000123"
         string ID_INTERVENTION PK "I-2026-000123-01"
         string TYPE_REPARATION "T-AUBTUR"
@@ -273,35 +273,35 @@ erDiagram
         string STATION_ASSIGNEE FK "S-MON-01"
         string SHOP_ASSIGNE FK "S-MON"
         string DONNEES_TECHNIQUES "DOC-NDT-2026-442"
-        float ESTIMATED_REPAIR_DURATION KF "18.5 h"
-        float SHOP_QUEUE_TIME KF "12.0 h"
-        float INTERVENTION_TAT KF "32.5 h"
+        float ESTIMATED_REPAIR_DURATION "18.5 h"
+        float SHOP_QUEUE_TIME "12.0 h"
+        float INTERVENTION_TAT "32.5 h"
     }
-    STATION {
+    STATION ["Station de Réparation"] {
         string ID_STATION PK "S-MON-01"
         string SHOP_ASSIGNE FK "S-MON"
         string NOM_STATION "Usinage Aubes HP Tour CN"
         string TYPE_REPARATION "T-AUBTUR"
         float SEUIL_SATURATION "85.0 %"
     }
-    SHOP {
+    SHOP ["Atelier (Shop)"] {
         string SHOP_ASSIGNE PK "S-MON"
         string NOM_ATELIER "Montereau"
         int NB_STATIONS "6"
         float CAPACITE_HEBDO "1450.0 h"
     }
-    MDT_MAINTENANCE_REQUEST {
+    MDT_MAINTENANCE_REQUEST ["Demande de Maintenance Moteur"] {
         string ID_DEMANDE PK "D-2026-000123"
         string DEMANDEUR "Air France (AFR)"
         string ENGINE_TYPE "LEAP-1A26"
         string NIVEAU_URGENCE_GLOBAL "Haute (AOG)"
     }
-    DUREE_STANDARDS {
+    DUREE_STANDARDS ["Durées Standards"] {
         string ENGINE_TYPE PK "LEAP-1A26"
         string TYPE_REPARATION PK "T-AUBTUR"
         float DUREE_STANDARD_H "18.5 h"
     }
-    TIMEPROFILE {
+    TIMEPROFILE ["Profil Temporel"] {
         string ID_PERIOD PK "2026-W10"
         date DATE_DEBUT "2026-03-02"
         date DATE_FIN "2026-03-08"
@@ -395,47 +395,47 @@ Le modèle relie les MDTs et les Planning Levels aux Key Figures de calcul suiva
 > - **`<>` :** Descriptif structuré technique et autoporteur en Markdown aligné sur l'interface et les possibilités natives de SAP-IBP et SAC (titre, composant SAC, modèle MDT IBP, axes X/Y, dimensions, mesures et Key Figures, règles et seuils d'alerte) avec bouton de copie rapide pour injection directe dans un prompt IA.
 
 ### Les 9 Graphiques Disponibles pour le Délai :
-- **4.A : TAT Médian & Bornes 5%-95% par Moteur**  
+- **4.A : TAT Médian & Bornes (P5-P95)**  
   *Personas cibles :* FTM & NTPL.  
   *Analytics SAC / IBP :* Boxplot / Barres de Dispersion (Percentiles P5-P50-P95) | Axes : X = `ENGINE_TYPE` (CFM56-7B, LEAP-1A, LEAP-1B) • Y = `TOTAL_ENGINE_TAT` (jours) | Mesures : `P50_MEDIAN_TAT`, `P5_LOWER_TAT`, `P95_UPPER_TAT`.  
   *Rendu :* Distribution statistique avec étiquettes de valeurs par défaut sur les médianes et bornes.  
   *Badges personas & usages :* `NTPL`, `DMMG`, `FTM`, `DGOV`.
-- **4.B : Décomposition du TAT par Phase Dossier**  
+- **4.B : Décomposition du TAT**  
   *Personas cibles :* CSPM & DMMG.  
   *Analytics SAC / IBP :* Stacked Bar Chart / Barres Empilées Horizontales | Axes : X = `ENGINE_TYPE` (CFM56-7B, CFM56-5B, LEAP-1A, LEAP-1B, GE90-115B) • Y = Mesures Cumulées (jours) | Mesures : `TEMPS_REVISION_ATELIER`, `ATTENTE_VALIDATION_APPRO`, `TRANSIT_LOGISTIQUE`.  
   *Rendu :* Barres empilées décomposant le TAT global de la visite (Atelier, Attente appro/client, Transit) avec affichage systématique des valeurs en jours.  
   *Badges personas & usages :* `CSPM`, `DMMG`, `EOWN`.
-- **4.C : Respect des Délais Contractuels par Client & Moteur**  
+- **4.C : Respect des Délais Clients**  
   *Personas cibles :* CSPM & FINC.  
   *Analytics SAC / IBP :* Dual-Axis Combination Chart / Barres Groupées & Ligne % | Axes : X = `DEMANDEUR` (Air France, Lufthansa, Delta Air Lines, Ryanair), `ENGINE_TYPE` • Y1 = `TOTAL_ENGINE_TAT` (jours) • Y2 = `SLA_NON_RESPECT_PCT` (%) | Mesures : `SLA_CIBLE_JOURS`, `TOTAL_ENGINE_TAT`, `SLA_NON_RESPECT_PCT`.  
   *Rendu :* Barres groupées et courbe combinée avec étiquettes de valeurs actives en permanence.  
   *Badges personas & usages :* `CSPM`, `FTM`, `FINC`.
-- **4.D : Tableau d'Alertes Nominatives des Demandes**  
+- **4.D : Tableau d'Alertes des Demandes**  
   *Personas cibles :* EOWN & CSPM.  
   *Analytics SAC / IBP :* Table Matrice SAC avec Seuils Conditionnels | Axes : Lignes = `MDT_MAINTENANCE_REQUEST` (`ID_DEMANDE`) • Colonnes = Attributs & Mesures | Dimensions : `ID_DEMANDE` (D-2026-XXXXXX), `DEMANDEUR`, `ENGINE_TYPE`, `NIVEAU_URGENCE_GLOBAL` | Mesures : `TOTAL_ENGINE_TAT`, `TAT_DELAY_DAYS`, `PENALITE_JOUR_EUR`, `TOTAL_PENALTIES`.  
   *Rendu :* Répartition catégorisée (Conforme, En cours, Retard, AOG critique) avec badges et pénalités de retard.  
   *Badges personas & usages :* `EOWN`, `CSPM`, `SHPL`.
-- **4.E : Cartes KPIs Synthétiques**  
+- **4.E : Cartes KPIs**  
   *Personas cibles :* CSPM & Direction MRO.  
   *Analytics SAC / IBP :* Numeric Multi-KPI Tile (Cartes Métriques SAC) | Axes : N/A (Indicateurs scalaires agrégés) | Dimensions : `PROGRAMME_MOTEUR`, `TIMEPROFILE` | Mesures : `AVG_TOTAL_ENGINE_TAT`, `SLA_COMPLIANCE_RATE`, `CRITICAL_WIP_DEVIATION`.  
   *Rendu :* Cartes métriques scalaires et indicateurs de volume global des demandes avec affichage direct des valeurs.  
   *Badges personas & usages :* `CSPM`, `NTPL`, `FTM`.
-- **4.F : Barres vs Seuils Cibles P85 par Flotte**  
+- **4.F : Barres vs Seuils Cibles P85**  
   *Personas cibles :* FTM & CSPM.  
   *Analytics SAC / IBP :* Horizontal Bar Chart avec Reference Line (Seuil Cible P85) | Axes : X = `TOTAL_ENGINE_TAT` (jours) • Y = `ENGINE_TYPE` (CFM56-7B, CFM56-5B, LEAP-1A, LEAP-1B, GE90-115B) | Mesures : `ACTUAL_TOTAL_TAT`, `P85_CONTRACTUAL_THRESHOLD`.  
   *Rendu :* Barres horizontales avec seuils cibles SLA P85 par motorisation et valeurs exactes en bout de barre.  
   *Badges personas & usages :* `FTM`, `CSPM`, `DMMG`.
-- **4.G : Waterfall des Dérives TAT**  
+- **4.G : Waterfall des Dérives**  
   *Personas cibles :* FINC & CSPM.  
   *Analytics SAC / IBP :* Waterfall / Cascade Chart (Bridge Analysis SAC) | Axes : X = `CAUSE_DERIVE` (SLA_CIBLE, WAITING_PARTS, UNPLANNED_CND, FAST_TRACK, TAT_REEL) • Y = `CUMULATIVE_ENGINE_TAT` (Variance Cumulée en jours) | Mesures : `TAT_VARIANCE_DAYS`, `CUMULATIVE_ENGINE_TAT`.  
   *Rendu :* Cascade de barres flottantes avec delta chiffré sur chaque composante de retard au dossier.  
   *Badges personas & usages :* `FINC`, `CSPM`, `DMMG`.
-- **4.H : Heatmap d'Occupation Réseau par Site (S34-S42)**  
+- **4.H : Heatmap Occupation Réseau (S34-S42)**  
   *Personas cibles :* NTPL & Direction Industrielle.  
   *Analytics SAC / IBP :* Heatmap Matrix SAC (Tension Capacitaire Multi-Sites) | Axes : X = Semaines Calendaires (S34 à S42) • Y = Centres SAE MRO (10 sites réseau) | Dimensions : `SITE_MRO` (10 centres SAE), `SEMAINE_CALENDAIRE` (S34 à S42) | Mesures : `TAUX_OCCUPATION_PCT` (%), `SEUIL_VIGILANCE` (80%), `SEUIL_CRITIQUE` (95%).  
   *Rendu :* Matrice thermique croisant les 10 centres MRO SAE en Y et les 9 semaines S34 à S42 en X avec échelle trichromatique de charge (Vert < 80%, Jaune 80-95%, Rouge > 95%).  
   *Badges personas & usages :* `NTPL`, `Direction Industrielle`, `FTM`.
-- **4.I : Comparatif TAT Demande selon les 4 Méthodes vs Réel (DGOV)**  
+- **4.I : Comparatif 4 Méthodes vs Réel**  
   *Personas cibles :* DGOV & FTM.  
   *Analytics SAC / IBP :* Dual-Axis Clustered Bar & Deviation Line Chart | Axes : X = `METHODE_CALCUL` (D-SOP, D-STA, D-CAP, D-ML) • Y1 = `TAT_ESTIME_JOURS` • Y2 = `%_VARIANCE_VS_EFFECTIF` | Dimensions : `METHODE_CALCUL_TAT` (D-SOP, D-STA, D-CAP, D-ML), `STATUT_CERTITUDE` | Mesures : `TAT_CALCULE_JOURS`, `TAT_EFFECTIF_REF` (18.2 j), `ECART_RELATIF_PCT`, `DATA_COMPLETENESS_RATE` (93.4%).  
   *Rendu :* Histogramme à barres comparant le TAT calculé de chaque méthode face au TAT effectif de référence, avec ligne de % d'écart et taux de complétude des saisies.  
@@ -584,47 +584,47 @@ xychart-beta
 > - **`<>` :** Descriptif technique structuré et autoporteur en Markdown aligné sur l'interface et les possibilités natives de SAP-IBP et SAC (titre, composant SAC, modèle MDT IBP, dimensions, mesures et Key Figures, filtres, règles et seuils d'alerte) avec bouton copier.
 
 ### Les 9 Graphiques de Saturation :
-- **6.A : Taux de Retard des Interventions par Shop**  
+- **6.A : Taux de Retard par Shop**  
   *Personas cibles :* SHPL & NTPL.  
   *Analytics SAC / IBP :* Column / Bar Chart avec Seuil de Tolérance (10%) | Axes : X = `SHOP_ASSIGNE` (`S-XXX`) • Y = `% INTERVENTION_DELAY_RATE` | Dimensions : `SHOP_ASSIGNE` (S-MON, S-VIL, S-CHL, S-BRU, S-TLS, S-SQY, S-GEN, S-BDX, S-LGG, S-CRE) | Mesures : `INTERVENTION_DELAY_RATE` (%), `SEUIL_RETARD_TOLERANCE` (10%), `TOTAL_INTERVENTIONS_COUNT`.  
   *Rendu :* Barres de taux de retard par atelier face à la ligne de seuil de tolérance (10%), avec coloration d'alerte (rouge si ≥ 15%, ambre si ≥ 10%).  
   *Badges personas & usages :* `SHPL`, `NTPL`, `DGOV`.
-- **6.B : Retards par Type d'Intervention & Shop**  
+- **6.B : Retards par Type & Shop**  
   *Personas cibles :* FTM & DMMG.  
   *Analytics SAC / IBP :* Clustered Column Chart (Comparatif Types d'Intervention) | Axes : X = `TYPE_REPARATION` (`T-XXXXXX`) • Y = `% UNPLANNED_DELAY_RATE` | Dimensions : `TYPE_REPARATION` (T-INSCND, T-AUBTUR, T-BANESS, T-EQUROT), `SHOP_ASSIGNE` (S-MON, S-VIL, S-BRU) | Mesures : `DELAYED_INTERVENTIONS_PCT`, `AVG_SLIPPAGE_HOURS`.  
   *Rendu :* Barres groupées par type d'intervention et atelier avec pourcentages affichés par défaut.  
   *Badges personas & usages :* `FTM`, `DMMG`, `SHPL`, `DGOV`.
-- **6.C : Top Routes de Transfert Inter-Shops**  
+- **6.C : Routes de Transfert Inter-Shops**  
   *Personas cibles :* NTPL & SHPL.  
   *Analytics SAC / IBP :* Dual-Axis Combination Bar & Line Chart (Flux & Délais) | Axes : X = `ROUTE_TRANSFERT` (Origine ➔ Destination) • Y1 = Part Volume (%) • Y2 = `TRANSIT_DAYS` | Dimensions : `SHOP_SOURCE` ➔ `SHOP_DEST` (S-MON ➔ S-VIL, S-CHL ➔ S-BRU, S-VIL ➔ S-SQY) | Mesures : `INTER_SHOP_TRANSFER_VOLUME_PCT`, `AVG_TRANSIT_DURATION_DAYS`.  
   *Rendu :* Barres de volume de flux d'interventions combinées à la courbe des délais de navette avec valeurs visibles sur chaque point et barre.  
   *Badges personas & usages :* `NTPL`, `SHPL`, `DMMG`.
-- **6.D : Décomposition du Délai Moyen d'Intervention par Shop**  
+- **6.D : Décomposition du Délai par Shop**  
   *Personas cibles :* SHPL & Continuous Improvement.  
   *Analytics SAC / IBP :* Horizontal Stacked Bar Chart (Délai Moyen Décomposé) | Axes : X = Heures Moyennes de Traitement (h) • Y = `SHOP_ASSIGNE` (`S-XXX`) | Dimensions : `SHOP_ASSIGNE` (10 shops SAE), `STATUT_TEMPS` (Attente File/Pièces, Réparation Effective, Transfert Logistique) | Mesures : `AVG_QUEUE_HOURS`, `AVG_REPAIR_HOURS`, `AVG_TRANSIT_HOURS`, `TOTAL_INTERVENTION_HOURS`.  
   *Rendu :* Barres horizontales empilées décomposant pour chaque shop le délai moyen en attente file/pièces (ambre), usinage/réparation effectif (bleu) et transit logistique (violet).  
   *Badges personas & usages :* `SHPL`, `DMMG`, `DGOV`.
-- **6.E : Taux de Charge par Station de Réparation (S-XXX-YY)**  
+- **6.E : Taux de Charge par Station**  
   *Personas cibles :* SHPL & NTPL.  
   *Analytics SAC / IBP :* Horizontal Bar Chart avec Threshold Line (Seuil de Saturation 85%) | Axes : X = `TAUX_OCCUPATION_STATION` (%) • Y = `ID_STATION` (`S-XXX-YY`) | Dimensions : `ID_STATION` (S-MON-01 à S-CRE-03, 3 à 10 stations par shop), `SHOP_ASSIGNE` (`S-XXX`) | Mesures : `TAUX_OCCUPATION_STATION` (%), `SEUIL_SATURATION_CRITIQUE` (85%).  
   *Rendu :* Barres horizontales de charge par station face à la ligne rouge critique des 85%, isolant les machines et baies goulots.  
   *Badges personas & usages :* `SHPL`, `NTPL`.
-- **6.F : Heatmap d'Occupation des Stations par Shop**  
+- **6.F : Heatmap d'Occupation des Stations**  
   *Personas cibles :* SHPL & Continuous Improvement.  
   *Analytics SAC / IBP :* Heatmap Matrix SAC (Saturation Stations Shop) | Axes : X = Semaines Calendaires (S34 à S42) • Y = Stations de Réparation du Shop (`S-MON-YY`) | Dimensions : `SHOP_ASSIGNE` (S-MON), `ID_STATION` (S-MON-01 à S-MON-06), `SEMAINE_CALENDAIRE` (S34..S42) | Mesures : `WORKLOAD_TENSION_RATE` (%), `SEUIL_SATURATION_CRITIQUE` (85%).  
   *Rendu :* Matrice thermique croisant les stations du shop (en Y) et les semaines calendaires S34 à S42 (en X) avec code couleur de saturation (rouge ≥ 90%, ambre ≥ 85%).  
   *Badges personas & usages :* `SHPL`, `NTPL`, `DMMG`.
-- **6.G : Courbes Entrées vs Sorties d'Interventions (WIP)**  
+- **6.G : Entrées vs Sorties (WIP)**  
   *Personas cibles :* DMMG & NTPL.  
   *Analytics SAC / IBP :* Cumulative Flow Diagram (Area / Multi-Line Chart SAC) | Axes : X = `TIMEPROFILE` (Jours Ouvrés J1-J10) • Y = Cumul Lignes d'Intervention | Dimensions : `FLUX_DIRECTION` (Cumul Lignes Interventions Lancées vs Clôturées) | Mesures : `CUMULATIVE_INTERVENTION_INDUCTION`, `CUMULATIVE_INTERVENTION_RELEASE`, `SHOP_WIP_INTERVENTIONS`.  
   *Rendu :* Courbes d'accumulation avec volumes d'interventions visibles par défaut sur chaque jalon journalier.  
   *Badges personas & usages :* `DMMG`, `NTPL`, `FINC`, `DGOV`.
-- **6.H : Treemap Temps Passé & Retard par Moteur / Réparation (Shop)**  
+- **6.H : Treemap Temps & Retards**  
   *Personas cibles :* SHPL & EOWN.  
   *Analytics SAC / IBP :* Interactive Hierarchical Treemap (Drill-down Moteur ➔ Réparation) | Axes : N/A (Taille du Bloc = Temps Passé en Heures • Couleur = Taux de Retard %) | Dimensions : Niveau 1 = `ENGINE_TYPE` (CFM56-7B, LEAP-1A...) ➔ Niveau 2 = `TYPE_REPARATION` (T-AUBTUR, T-COMHOT...) | Mesures : `TEMPS_PASSE_HEURES`, `TAUX_RETARD_INTERVENTIONS` (%), `SEUILS_RETARD` (8% / 15%).  
   *Rendu :* Treemap interactive à deux niveaux sur le shop : vue initiale par type de moteur, drill-down au clic pour explorer la répartition par type de réparation. Coloration trichromatique selon le taux de retard (vert < 8%, ambre 8-15%, rouge > 15%).  
   *Badges personas & usages :* `SHPL`, `EOWN`, `NTPL`.
-- **6.I : Comparatif Capacité Interventions selon 4 Méthodes vs Réel (DGOV)**  
+- **6.I : Comparatif 4 Méthodes vs Réel**  
   *Personas cibles :* DGOV & NTPL.  
   *Analytics SAC / IBP :* Clustered Bar & Deviation Line Chart (Benchmark Capacité) | Axes : X = `METHODE_PREVISION` (C-SOP, C-STA, C-LOG, C-ML) • Y1 = `CAPACITE_SIMULEE_INTERVENTIONS` • Y2 = `%_DEVIATION_VS_EFFECTIF` | Dimensions : `METHODE_CHARGE_CAPA` (C-SOP, C-STA, C-LOG, C-ML), `INTERVALLE_CERTITUDE` | Mesures : `CAPACITE_PREVUE_INTERVENTIONS`, `CAPACITE_EFFECTIVE_REF` (124 interventions), `ECART_CHARGE_PCT`, `TAUX_COMPLETUDE_MES` (96.1%).  
   *Rendu :* Histogramme à barres comparant la charge/capacité simulée de chaque méthode face au débit effectif mesuré, avec courbe du pourcentage d'écart et taux de complétude des données.  
@@ -830,7 +830,7 @@ Afin d'offrir une flexibilité maximale aux utilisateurs, experts métiers, arch
 2. **Saisie Graphique & Personnalisation Complète :**
    - **Labels et Données :** modification à la volée du libellé de chaque point, saisie des valeurs numériques, ajout de nouvelles lignes (`+ Ajouter une ligne`) ou suppression de points (`✕`).
    - **Titres des Axes & Légende :** édition dynamique des titres de l'Axe X et de l'Axe Y, case à cocher d'activation/désactivation de la légende.
-   - **Séries & Palette de Couleurs :** modification du nom des séries de données et sélection de la couleur via un nuancier direct (Bleu Safran, Émeraude Conforme, Ambre Vigilance, Rouge Critique, etc.) ou sélecteur couleur natif.
+   - **Séries & Palette de Couleurs :** modification du nom des séries de données et sélection de la couleur via un nuancier direct (Bleu SAE, Émeraude Conforme, Ambre Vigilance, Rouge Critique, etc.) ou sélecteur couleur natif.
 3. **Application & Persistance Locale (`localStorage`) :**
    - Le bouton `✓ Appliquer` sauvegarde l'état personnalisé sous la clé `maestro_custom_chart_{step}_{opt}` et régénère immédiatement le graphique Chart.js.
    - Les personnalisations sont conservées entre les rechargements de page et les changements d'étape.
