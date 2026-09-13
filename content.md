@@ -115,7 +115,7 @@ xychart-beta
 
 > **Question de cadrage :** Quelles tables et niveaux de granularité permettent le calcul du Turn Around Time (TAT) et la planification d'atelier ?  
 > **En-tête de l'interface :** Étape 2 : Données (Granularité & Tables pour le calcul)  
-> **Bouton d'affichage :** En haut à gauche du panel de droite, le bouton `schema-toggle` bascule entre la vue texte des règles métier (`txt` / `schema-rules-view`), la vue SVG interactive (`svg` / `schemaCanvas`) et le code Mermaid (`<>` / `SCHEMA_MERMAID` dans `index.html`), rigoureusement synchronisés avec les diagrammes `erDiagram` et définitions ci-dessous. L'onglet `txt` affiche **exclusivement** les éléments propres à l'option sélectionnée : uniquement les données et règles de **Demande** sous l'option 2.A (`#schema-rules-2a`), ou uniquement les données et règles d'**Intervention** sous l'option 2.B (`#schema-rules-2b`).
+> **Bouton d'affichage :** En haut à gauche du panel de droite, le bouton `schema-toggle` bascule entre la vue texte Markdown du modèle sémantique (`ai` / `#schema-rules-view`), la vue SVG interactive (`svg` / `schemaCanvas`) et le code Mermaid (`<>` / `SCHEMA_MERMAID` dans `index.html`), rigoureusement synchronisés avec les diagrammes `erDiagram` et définitions ci-dessous. L'onglet `ai` affiche un modèle sémantique Markdown épuré et directement copiable (bouton unicode `⧉`), avec ancres rapides vers l'en-tête de **Demande** (2.A) et les **Interventions d'Ateliers** (2.B).
 
 ---
 
@@ -146,6 +146,11 @@ Les fondations du modèle de données reposent sur deux structures maîtres : l'
 ---
 
 ### 2. 🎛️ Planning Levels (Niveaux de Granularité des Calculs)
+
+Le panneau latéral droit de l'Étape 2 propose un sélecteur à 3 vues :
+- **Vue Spécification Modèle (`<>`) :** Référentiel unifié des métadonnées, formats d'identifiants, dimensions et key figures (avec ancres de défilement fluide vers `# 2.A` ou `# 2.B` selon la sélection active).
+- **Vue SVG interactive (`svg`) :** Schéma relationnel entité-association dessiné sur Canvas HTML5 / SVG avec clés PK/FK.
+- **Vue Modèle Mermaid ERD (`uml`) :** Code source Mermaid ERD copiable pour rendu de diagramme UML entité-association.
 
 Le modèle propose deux perspectives décisionnelles complémentaires selon le niveau de détail souhaité :
 
@@ -401,7 +406,10 @@ Le modèle relie les MDTs et les Planning Levels aux Key Figures de calcul suiva
 
 > **Question de cadrage :** Quels visuels utiliser pour piloter les délais des demandes de maintenance (MDT_MAINTENANCE_REQUEST) et les engagements clients ?  
 > **En-tête de l'interface :** Étape 4 : Sélectionner les visuels pour le Délai (TAT)  
-> **Rendu Chart.js (Étape 4) :** Les cartes d'options disposent d'un panneau Chart.js à droite (titres et sous-titres avec description explicite de la mesure et des axes X et Y, canvas `#step-4-canvas`). Les valeurs graphiques sont affichées par défaut sur chaque point, barre ou tranche via `chartjs-plugin-datalabels`. Les données reflètent le modèle macro des demandes de visite (`MDT_MAINTENANCE_REQUEST`) avec les flottes de moteurs (*CFM56-7B, CFM56-5B, LEAP-1A, LEAP-1B, GE90-115B, M88-2*).
+> **Rendu Chart.js & Modes de Vue (Étape 4) :** Les cartes d'options disposent d'un panneau à droite piloté par un sélecteur à 3 modes :
+> - **`js` :** Vue graphique Chart.js interactive avec infobulles et étiquettes de données (`chartjs-plugin-datalabels`).
+> - **`ui` :** Éditeur visuel de configuration avec application à la volée (modification des libellés, valeurs numériques par série, axes X/Y, titre de légende et palette de couleurs) avec persistance locale `localStorage`.
+> - **`<>` :** Descriptif structuré technique et autoporteur en Markdown (titre, type de visuel, modèle de fait, axes X/Y, dimensions, mesures, règles de rendu) avec bouton de copie rapide pour injection directe dans un prompt IA de génération de code.
 
 ### Les 9 Graphiques Disponibles pour le Délai :
 - **4.A : TAT Médian & Bornes 5%-95% par Moteur**  
@@ -439,11 +447,11 @@ Le modèle relie les MDTs et les Planning Levels aux Key Figures de calcul suiva
   *Analytics SAC / IBP :* Waterfall / Cascade Chart (Bridge Analysis SAC) | Axes : X = `CAUSE_DERIVE` (SLA_CIBLE, WAITING_PARTS, UNPLANNED_CND, FAST_TRACK, TAT_REEL) • Y = `CUMULATIVE_ENGINE_TAT` (Variance Cumulée en jours) | Mesures : `TAT_VARIANCE_DAYS`, `CUMULATIVE_ENGINE_TAT`.  
   *Rendu :* Cascade de barres flottantes avec delta chiffré sur chaque composante de retard au dossier.  
   *Badges personas & usages :* `FINC`, `CSPM`, `DMMG`.
-- **4.H : Jalons de Traversée (Gates de la Demande)**  
-  *Personas cibles :* EOWN & SHPL.  
-  *Analytics SAC / IBP :* Milestone Timeline / Chronogramme de Traversée Part-145 | Axes : X = `TIMEPROFILE` (`DATE_DEBUT` / `DATE_FIN`) • Y = `GATE_JALON` (G1 Démontage, G2 Contrôle CND, G3 Remontage, G4 Banc Test & Clôture) | Mesures : `PLANNED_GATE_DURATION`, `ACTUAL_GATE_DURATION`, `CRITICAL_PATH_SLIPPAGE`.  
-  *Rendu :* Chronogramme avec valeurs affichées par jalon de traversée moteur et chemin critique mis en exergue.  
-  *Badges personas & usages :* `EOWN`, `SHPL`, `FTM`.
+- **4.H : Heatmap d'Occupation Réseau par Site (S34-S42)**  
+  *Personas cibles :* NTPL & Direction Industrielle.  
+  *Analytics SAC / IBP :* Heatmap Matrix SAC (Tension Capacitaire Multi-Sites) | Axes : X = Semaines Calendaires (S34 à S42) • Y = Centres SAE MRO (10 sites réseau) | Dimensions : `SITE_MRO` (10 centres SAE), `SEMAINE_CALENDAIRE` (S34 à S42) | Mesures : `TAUX_OCCUPATION_PCT` (%), `SEUIL_VIGILANCE` (80%), `SEUIL_CRITIQUE` (95%).  
+  *Rendu :* Matrice thermique croisant les 10 centres MRO SAE en Y et les 9 semaines S34 à S42 en X avec échelle trichromatique de charge (Vert < 80%, Jaune 80-95%, Rouge > 95%).  
+  *Badges personas & usages :* `NTPL`, `Direction Industrielle`, `FTM`.
 - **4.I : Comparatif TAT Demande selon les 4 Méthodes vs Réel (DGOV)**  
   *Personas cibles :* DGOV & FTM.  
   *Analytics SAC / IBP :* Dual-Axis Clustered Bar & Deviation Line Chart | Axes : X = `METHODE_CALCUL` (D-SOP, D-STA, D-CAP, D-ML) • Y1 = `TAT_ESTIME_JOURS` • Y2 = `%_VARIANCE_VS_EFFECTIF` | Dimensions : `METHODE_CALCUL_TAT` (D-SOP, D-STA, D-CAP, D-ML), `STATUT_CERTITUDE` | Mesures : `TAT_CALCULE_JOURS`, `TAT_EFFECTIF_REF` (18.2 j), `ECART_RELATIF_PCT`, `DATA_COMPLETENESS_RATE` (93.4%).  
@@ -511,7 +519,18 @@ graph TD
     style F fill:#fee2e2,stroke:#dc2626,stroke-width:2px
 ```
 
-#### 5. Benchmark TAT Demande : 4 Méthodes vs Effectif Référence (Illustration 4.I)
+#### 5. Heatmap d'Occupation Réseau par Site (Illustration 4.H)
+```mermaid
+%%{init: {'theme': 'base'}}%%
+xychart-beta
+    title "Heatmap d'Occupation Réseau par Site (10 centres SAE MRO) : Charge Moyenne S34..S42 (%)"
+    x-axis ["S-MON", "S-VIL", "S-CHL", "S-BRU", "S-TLS", "S-SQY", "S-GEN", "S-BDX", "S-LGG", "S-CRE"]
+    y-axis "% Taux d'Occupation Réseau" 0 --> 110
+    bar [98, 96, 88, 86, 82, 79, 76, 74, 71, 68]
+    line [80, 80, 80, 80, 80, 80, 80, 80, 80, 80]
+```
+
+#### 6. Benchmark TAT Demande : 4 Méthodes vs Effectif Référence (Illustration 4.I)
 ```mermaid
 %%{init: {'theme': 'base'}}%%
 xychart-beta
@@ -576,7 +595,10 @@ xychart-beta
 
 > **Question de cadrage :** Quels visuels choisir pour repérer les goulots d'intervention et la surcharge des ateliers (`S-XXX`) ?  
 > **En-tête de l'interface :** Étape 6 : Sélectionner les visuels pour la Saturation des Interventions en Atelier  
-> **Rendu Chart.js (Étape 6) :** Les cartes d'options disposent d'un panneau Chart.js à droite (titres et sous-titres avec description explicite de la mesure et des axes X et Y, canvas `#step-6-canvas`). Les valeurs graphiques sont affichées par défaut sur chaque point, barre ou tranche via `chartjs-plugin-datalabels`. Les données sont générées sur la base des lignes d'intervention (`MDT_INTERVENTION`) avec les 10 shops SAE (`S-XXX`), les gammes (`T-XXXXXX`) et les postes d'usinage/contrôle.
+> **Rendu Chart.js & Modes de Vue (Étape 6) :** Les cartes d'options disposent d'un panneau à droite piloté par un sélecteur à 3 modes :
+> - **`js` :** Vue graphique Chart.js interactive (dont Treemap 6.H avec drill-down au clic Moteurs ➔ Réparations et Heatmap 6.F par semaine).
+> - **`ui` :** Éditeur visuel de configuration avec application à la volée (libellés, valeurs par série, axes X/Y, légende, couleurs) avec persistance `localStorage`.
+> - **`<>` :** Descriptif technique structuré et autoporteur en Markdown pour génération IA (titre, type, modèle de fait, dimensions, mesures, filtres et règles de rendu) avec bouton copier.
 
 ### Les 9 Graphiques de Saturation :
 - **6.A : Taux de Retard des Interventions par Shop**  
@@ -606,8 +628,8 @@ xychart-beta
   *Badges personas & usages :* `SHPL`, `NTPL`.
 - **6.F : Heatmap d'Occupation des Stations par Shop**  
   *Personas cibles :* SHPL & Continuous Improvement.  
-  *Analytics SAC / IBP :* Heatmap Matrix SAC (Saturation Stations Shop) | Axes : X = Jours Ouvrés (Lundi à Vendredi) • Y = Stations de Réparation du Shop (`S-MON-YY`) | Dimensions : `SHOP_ASSIGNE` (S-MON), `ID_STATION` (S-MON-01 à S-MON-06), `JOUR_SEMAINE` | Mesures : `WORKLOAD_TENSION_RATE` (%), `SEUIL_SATURATION_CRITIQUE` (85%).  
-  *Rendu :* Matrice thermique croisant les stations du shop (en Y) et les jours ouvrés de la semaine (en X) avec code couleur de saturation (rouge ≥ 90%, ambre ≥ 85%).  
+  *Analytics SAC / IBP :* Heatmap Matrix SAC (Saturation Stations Shop) | Axes : X = Semaines Calendaires (S34 à S42) • Y = Stations de Réparation du Shop (`S-MON-YY`) | Dimensions : `SHOP_ASSIGNE` (S-MON), `ID_STATION` (S-MON-01 à S-MON-06), `SEMAINE_CALENDAIRE` (S34..S42) | Mesures : `WORKLOAD_TENSION_RATE` (%), `SEUIL_SATURATION_CRITIQUE` (85%).  
+  *Rendu :* Matrice thermique croisant les stations du shop (en Y) et les semaines calendaires S34 à S42 (en X) avec code couleur de saturation (rouge ≥ 90%, ambre ≥ 85%).  
   *Badges personas & usages :* `SHPL`, `NTPL`, `DMMG`.
 - **6.G : Courbes Entrées vs Sorties d'Interventions (WIP)**  
   *Personas cibles :* DMMG & NTPL.  
@@ -616,8 +638,8 @@ xychart-beta
   *Badges personas & usages :* `DMMG`, `NTPL`, `FINC`, `DGOV`.
 - **6.H : Treemap Temps Passé & Retard par Moteur / Réparation (Shop)**  
   *Personas cibles :* SHPL & EOWN.  
-  *Analytics SAC / IBP :* Interactive Hierarchical Treemap (Drill-down Moteur ➔ Réparation) | Axes : N/A (Taille du Bloc = Temps Passé en Heures • Couleur = Taux de Retard %) | Dimensions : Niveau 1 = `ENGINE_TYPE` (CFM56-7B, LEAP-1A...) ➔ Niveau 2 = `TYPE_REPARATION` (T-AUBTUR, T-COMHOT...) | Mesures : `TEMPS_PASSE_HEURES`, `TAUX_RETARD_INTERVENTIONS` (%), `SEUIL_RETARD` (10%).  
-  *Rendu :* Treemap interactive à deux niveaux sur le shop : vue initiale par type de moteur, drill-down au clic pour explorer la répartition par type de réparation. Coloration selon le taux de retard (vert < 10%, ambre 10-15%, rouge ≥ 15%).  
+  *Analytics SAC / IBP :* Interactive Hierarchical Treemap (Drill-down Moteur ➔ Réparation) | Axes : N/A (Taille du Bloc = Temps Passé en Heures • Couleur = Taux de Retard %) | Dimensions : Niveau 1 = `ENGINE_TYPE` (CFM56-7B, LEAP-1A...) ➔ Niveau 2 = `TYPE_REPARATION` (T-AUBTUR, T-COMHOT...) | Mesures : `TEMPS_PASSE_HEURES`, `TAUX_RETARD_INTERVENTIONS` (%), `SEUILS_RETARD` (8% / 15%).  
+  *Rendu :* Treemap interactive à deux niveaux sur le shop : vue initiale par type de moteur, drill-down au clic pour explorer la répartition par type de réparation. Coloration trichromatique selon le taux de retard (vert < 8%, ambre 8-15%, rouge > 15%).  
   *Badges personas & usages :* `SHPL`, `EOWN`, `NTPL`.
 - **6.I : Comparatif Capacité Interventions selon 4 Méthodes vs Réel (DGOV)**  
   *Personas cibles :* DGOV & NTPL.  
@@ -686,22 +708,22 @@ xychart-beta
 ```mermaid
 %%{init: {'theme': 'base'}}%%
 xychart-beta
-    title "Heatmap d'Occupation des Stations (Shop S-MON) : Charge Hebdo (%)"
+    title "Heatmap d'Occupation des Stations (Shop S-MON) : Charge Moyenne S34..S42 (%)"
     x-axis ["S-MON-01 (Aubes)", "S-MON-02 (Comb.)", "S-MON-03 (CND)", "S-MON-04 (Usin.)", "S-MON-05 (Équil.)", "S-MON-06 (FOD)"]
-    y-axis "% Charge Journalière Moyenne" 0 --> 100
-    bar [94, 88, 86, 82, 79, 72]
+    y-axis "% Charge Hebdomadaire Moyenne" 0 --> 100
+    bar [92, 86, 84, 81, 77, 69]
     line [85, 85, 85, 85, 85, 85]
 ```
 
-#### 7. Treemap Temps Passé & Taux de Retard par Moteur Shop S-MON (Illustration 6.H)
+#### 7. Treemap Temps Passé & Taux de Retard Trichromatique Shop S-MON (Illustration 6.H)
 ```mermaid
 %%{init: {'theme': 'base'}}%%
 xychart-beta
-    title "Treemap Shop S-MON : Temps Passé par Moteur (h) et Taux de Retard (%)"
+    title "Treemap Shop S-MON : Temps Passé (h) & Taux de Retard Trichromatique (<8% Vert, 8-15% Jaune, >15% Rouge)"
     x-axis ["CFM56-7B", "LEAP-1A", "CFM56-5B", "LEAP-1B", "GE90-115B"]
     y-axis "Temps Passé (Heures)" 0 --> 500
     bar [480, 390, 290, 240, 160]
-    line [16.2, 18.5, 11.4, 8.6, 6.2]
+    line [16.5, 18.2, 11.4, 7.2, 5.8]
 ```
 
 #### 8. Benchmark Capacité Interventions Shop : 4 Méthodes vs Débit Réel (Illustration 6.I)
@@ -811,4 +833,26 @@ Pour injecter des données d'un autre secteur industriel (ex: ferroviaire ou nav
 1. Remplacer les entités de `data.json` par vos matériels, centres techniques et clients.
 2. Ajuster l'objet `p50Base` dans `index.html` avec les durées nominales de vos interventions.
 3. Conserver le moteur `buildMaestroData()` : il propagera automatiquement des données chiffrées cohérentes, plausibles et visuellement démonstratives dans l'ensemble des 8 visualisations de délai et 8 visualisations de charge.
+
+---
+
+## Mode Éditeur Visuel & Configuration Chart.js Dynamique (Étapes 4 & 6)
+
+Afin d'offrir une flexibilité maximale aux utilisateurs, experts métiers, architectes BI et développeurs, les panneaux de graphiques des **Étapes 4 et 6** disposent d'un mode de configuration visuelle interactif en direct :
+
+1. **Bascule Graphique / Éditeur / Spécification IA (`chart-toggle`) :**
+   - Bouton `js` : affiche la vue graphique standard Chart.js (rendu canvas responsive haute performance).
+   - Bouton `<>` : bascule instantanément vers l'éditeur visuel de configuration ergonomique.
+   - Bouton `ai` : affiche la spécification technique en pur texte Markdown, compacte, auto-porteuse et immédiatement exploitable par une IA pour générer le composant Chart.js (v4+) : métadonnées du graphique, source, grain, cartographie des axes, dimensions, mesures DAX clés, règles métier et palette couleur, sans dépendance vis-à-vis des autres étapes du questionnaire.
+2. **Saisie Graphique & Personnalisation Complète :**
+   - **Labels et Données :** modification à la volée du libellé de chaque point, saisie des valeurs numériques, ajout de nouvelles lignes (`+ Ajouter une ligne`) ou suppression de points (`✕`).
+   - **Titres des Axes & Légende :** édition dynamique des titres de l'Axe X et de l'Axe Y, case à cocher d'activation/désactivation de la légende.
+   - **Séries & Palette de Couleurs :** modification du nom des séries de données et sélection de la couleur via un nuancier direct (Bleu Safran, Émeraude Conforme, Ambre Vigilance, Rouge Critique, etc.) ou sélecteur couleur natif.
+3. **Application & Persistance Locale (`localStorage`) :**
+   - Le bouton `✓ Appliquer` sauvegarde l'état personnalisé sous la clé `maestro_custom_chart_{step}_{opt}` et régénère immédiatement le graphique Chart.js.
+   - Les personnalisations sont conservées entre les rechargements de page et les changements d'étape.
+4. **Réinitialisation Usine (`↻`) & Boutons de Copie Unicodes :**
+   - Le bouton `↻` purge la personnalisation dans le `localStorage` et restitue la configuration standard d'origine du modèle.
+   - Les vues `ai` et `<>` disposent en haut à droite d'un bouton de copie unicode discret (`⧉`) avec accusé de confirmation instantané (`✓`).
+
 

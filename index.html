@@ -708,12 +708,12 @@
             class="lg:col-span-8 bg-slate-50/80 rounded-xl p-2 border border-slate-200 shadow-sm flex flex-col items-stretch justify-between h-full max-h-full min-h-0 overflow-hidden w-full min-w-0 relative">
             <div id="schema-toggle"
               class="absolute top-1.5 left-1.5 z-10 flex items-start rounded-lg border border-slate-200 bg-white shadow-sm overflow-hidden">
-              <button type="button" data-view="txt" onclick="toggleSchemaView('txt')"
-                class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">txt</button>
+              <button type="button" data-view="ai" onclick="toggleSchemaView('ai')"
+                class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">&lt;&gt;</button>
               <button type="button" data-view="svg" onclick="toggleSchemaView('svg')"
                 class="px-2 py-0.5 text-[9.5px] font-bold bg-blue-600 text-white transition">svg</button>
               <button type="button" data-view="mermaid" onclick="toggleSchemaView('mermaid')"
-                class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">&lt;&gt;</button>
+                class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">uml</button>
             </div>
             <div id="schema-svg-view" class="w-full flex-1 flex flex-col items-center justify-between overflow-hidden pt-6">
               <div class="w-full flex-1 flex items-center justify-center overflow-hidden">
@@ -731,269 +731,28 @@
             <div id="schema-mermaid-view" class="hidden w-full flex-1 flex flex-col min-h-0 relative overflow-hidden">
               <div class="flex items-center justify-between pb-1 shrink-0">
                 <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Modèle Mermaid ERD</span>
-                <button type="button" id="schema-copy-btn" onclick="copyMermaidSchema()" class="px-2 py-0.5 text-[10px] font-bold rounded bg-slate-700 hover:bg-blue-600 text-white transition flex items-center gap-1 shadow-sm">
-                  <span>📋</span> Copier le code
+                <button type="button" id="schema-copy-btn" onclick="copyMermaidSchema()" title="Copier le code Mermaid" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
+                  ⧉
                 </button>
               </div>
               <pre class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-3 overflow-x-auto overflow-y-auto text-[11px] leading-relaxed whitespace-pre-wrap select-all"><code id="schema-mermaid-code" class="language-mermaid"></code></pre>
             </div>
-            <!-- Vue Sémantique & Métadonnées (txt) -->
-            <div id="schema-rules-view" class="hidden w-full flex-1 flex flex-col min-h-0 relative overflow-hidden pt-7">
-              <div class="flex items-center justify-between pb-1.5 shrink-0 border-b border-slate-200 mb-2">
-                <div class="flex items-center gap-2">
-                  <span class="text-sm">📐</span>
-                  <span class="text-xs sm:text-sm font-bold text-slate-800 uppercase tracking-wider">Sémantique & Métadonnées</span>
+            <!-- Vue Sémantique Texte Markdown (ai) -->
+            <div id="schema-rules-view" class="hidden w-full flex-1 flex flex-col min-h-0 relative overflow-hidden pt-6">
+              <div class="flex items-center justify-between pb-1 shrink-0">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Modèle Sémantique (Markdown)</span>
+                  <span id="schema-ai-badge" class="text-[9px] font-semibold bg-blue-50 text-blue-700 px-1.5 py-0.2 rounded border border-blue-200">2.A Demande</span>
                 </div>
-                <span id="schema-rules-badge" class="text-[10.5px] font-semibold bg-blue-50 text-blue-700 px-2.5 py-0.5 rounded-md border border-blue-200">2.A : Demandes (Macro)</span>
-              </div>
-              <div class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden pr-1 space-y-2.5 text-xs">
-                <!-- ================= VUE 2.A : CONSOLIDATION DEMANDE ================= -->
-                <div id="schema-rules-2a" class="space-y-2.5">
-                  <!-- Card 1 : Entité Fait & Format Identifiant Demande -->
-                  <div class="bg-white rounded-lg p-3 border border-blue-200 shadow-2xs">
-                    <div class="flex items-center justify-between font-bold text-slate-800 text-xs sm:text-[13px] mb-2">
-                      <span class="flex items-center gap-1.5"><span class="text-blue-600 text-sm">📁</span> Entité Centrale : MDT_MAINTENANCE_REQUEST</span>
-                      <span class="text-[10.5px] bg-blue-50 text-blue-700 border border-blue-200 px-2 py-0.5 rounded font-mono font-semibold">D-YYYY-XXXXXX</span>
-                    </div>
-                    <div class="bg-blue-50/50 rounded-md p-2.5 border border-blue-100 text-[11.5px] sm:text-xs space-y-1.5 leading-relaxed">
-                      <div class="text-slate-700"><strong>Grain :</strong> 1 ligne = 1 demande globale de visite / révision moteur (Dossier Macro consolidé).</div>
-                      <div class="text-slate-700"><strong>Règle Identifiant (PK) :</strong> <code>D-YYYY-XXXXXX</code> (<code>D</code> pour Demande, <code>YYYY</code> année d'induction, <code>XXXXXX</code> compteur séquentiel 6 chiffres).</div>
-                      <div class="text-slate-700"><strong>Exemples concrets :</strong> <code class="text-blue-700 font-bold">D-2026-000123</code>, <code class="text-blue-700 font-bold">D-2026-000124</code>, <code class="text-blue-700 font-bold">D-2026-000125</code>.</div>
-                    </div>
-                  </div>
-
-                  <!-- Card 2 : Dimensions & Attributs Métier du Dossier Demande -->
-                  <div class="bg-white rounded-lg p-3 border border-slate-200 shadow-2xs">
-                    <div class="flex items-center justify-between font-bold text-slate-800 text-xs sm:text-[13px] mb-2">
-                      <span class="flex items-center gap-1.5"><span class="text-blue-600 text-sm">🏷️</span> Attributs Métier & Dimensions de la Demande</span>
-                      <span class="text-[10px] sm:text-[10.5px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-semibold">7 Clients • 6 Flottes</span>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] sm:text-xs">
-                      <div class="bg-slate-50 rounded p-2 border border-slate-200 space-y-0.5">
-                        <div class="font-bold text-slate-800 flex items-center gap-1"><span class="text-blue-600">✈️</span> DEMANDEUR (7 Clients réels)</div>
-                        <div class="text-slate-600 leading-normal"><code>AFR</code> (Air France), <code>CCA</code> (Air China), <code>EZY</code> (easyJet), <code>DLH</code> (Lufthansa), <code>DAL</code> (Delta), <code>UAE</code> (Emirates), <code>SIA</code> (Singapore).</div>
-                      </div>
-                      <div class="bg-slate-50 rounded p-2 border border-slate-200 space-y-0.5">
-                        <div class="font-bold text-slate-800 flex items-center gap-1"><span class="text-blue-600">⚙️</span> PROGRAMME & ENGINE_TYPE</div>
-                        <div class="text-slate-600 leading-normal font-mono text-[10.5px] sm:text-[11px]">CFM56-7B, CFM56-5B, LEAP-1A, LEAP-1B, GE90-115B, M88-2</div>
-                      </div>
-                      <div class="bg-slate-50 rounded p-2 border border-slate-200 space-y-0.5">
-                        <div class="font-bold text-slate-800 flex items-center gap-1"><span class="text-amber-600">🚨</span> NIVEAU_URGENCE_GLOBAL</div>
-                        <div class="text-slate-600 leading-normal">Criticité opérationnelle : <code>Haute / AOG</code> (priorité max), <code>Moyenne</code> (standard), <code>Basse</code> (planifiée).</div>
-                      </div>
-                      <div class="bg-slate-50 rounded p-2 border border-slate-200 space-y-0.5">
-                        <div class="font-bold text-slate-800 flex items-center gap-1"><span class="text-slate-600">📅</span> DATE_DEMANDE & COMMENTAIRE</div>
-                        <div class="text-slate-600 leading-normal">Horodatage d'induction usine + observations dépose sous aile & antécédents de vol.</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Card 3 : Mesures & Key Figures Consolidées -->
-                  <div class="bg-white rounded-lg p-3 border border-slate-200 shadow-2xs">
-                    <div class="flex items-center justify-between font-bold text-slate-800 text-xs sm:text-[13px] mb-2">
-                      <span class="flex items-center gap-1.5"><span class="text-purple-600 text-sm">📐</span> Key Figures Consolidées (Mesures Dossier)</span>
-                      <span class="text-[10px] sm:text-[10.5px] bg-purple-50 text-purple-700 border border-purple-200 px-2 py-0.5 rounded font-semibold">Agrégations Macro</span>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px] sm:text-xs">
-                      <div class="bg-purple-50/50 rounded p-2 border border-purple-100 space-y-0.5">
-                        <div class="font-bold text-purple-900 font-mono text-[11.5px] sm:text-xs">INTERVENTION_COUNT</div>
-                        <div class="text-slate-600 text-[10.5px] sm:text-[11px] mt-0.5 leading-normal"><code>COUNT(ID_INTERVENTION)</code> : volume d'opérations requises pour la visite moteur (1 à 6).</div>
-                      </div>
-                      <div class="bg-purple-50/50 rounded p-2 border border-purple-100 space-y-0.5">
-                        <div class="font-bold text-purple-900 font-mono text-[11.5px] sm:text-xs">URGENCY_WEIGHT</div>
-                        <div class="text-slate-600 text-[10.5px] sm:text-[11px] mt-0.5 leading-normal">Coefficient prioritaire : <code>3.0</code> (AOG), <code>2.0</code> (Moyenne), <code>1.0</code> (Basse).</div>
-                      </div>
-                      <div class="bg-purple-50/50 rounded p-2 border border-purple-100 space-y-0.5">
-                        <div class="font-bold text-purple-900 font-mono text-[11.5px] sm:text-xs">TOTAL_ENGINE_TAT</div>
-                        <div class="text-slate-600 text-[10.5px] sm:text-[11px] mt-0.5 leading-normal">Délai total consolidé de la visite moteur en jours (somme série ou chemin critique).</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- ================= VUE 2.B : LIGNES D'INTERVENTION ================= -->
-                <div id="schema-rules-2b" class="hidden space-y-2.5">
-                  <!-- Card 1 : Entité Fait & Format Identifiant Intervention -->
-                  <div class="bg-white rounded-lg p-3 border border-emerald-200 shadow-2xs">
-                    <div class="flex items-center justify-between font-bold text-slate-800 text-xs sm:text-[13px] mb-2">
-                      <span class="flex items-center gap-1.5"><span class="text-emerald-600 text-sm">🔧</span> Entité Centrale : MDT_INTERVENTION</span>
-                      <span class="text-[10.5px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded font-mono font-semibold">I-YYYY-XXXXXX-ZZ</span>
-                    </div>
-                    <div class="bg-emerald-50/50 rounded-md p-2.5 border border-emerald-100 text-[11.5px] sm:text-xs space-y-1.5 leading-relaxed">
-                      <div class="text-slate-700"><strong>Grain :</strong> 1 ligne = 1 intervention unitaire sur une <strong>station de réparation</strong> située dans un <strong>shop</strong> (Débit réf : 124 int/mois).</div>
-                      <div class="text-slate-700"><strong>Clés Primaires & Étrangères :</strong> PK composite <code>ID_DEMANDE</code> + <code>ID_INTERVENTION</code> • FK vers Shop <code>SHOP_ASSIGNE</code> (<code>S-XXX</code>) • FK vers Station <code>STATION_ASSIGNEE</code> (<code>S-XXX-YY</code>).</div>
-                      <div class="text-slate-700"><strong>Exemples concrets :</strong> <code class="text-emerald-700 font-bold">I-2026-000123-01</code> affectée sur station <code class="text-purple-700 font-bold">S-MON-01</code> (Usinage Aubes HP) du shop <code class="text-amber-700 font-bold">S-MON</code> (Montereau).</div>
-                    </div>
-                  </div>
-
-                  <!-- Card 2 : Stations de Réparation : 3 à 10 Stations par Shop (S-XXX-YY) -->
-                  <div class="bg-white rounded-lg p-3 border border-purple-200 shadow-2xs">
-                    <div class="flex items-center justify-between font-bold text-slate-800 text-xs sm:text-[13px] mb-2">
-                      <span class="flex items-center gap-1.5"><span class="text-purple-600 text-sm">🤖</span> Stations de Réparation : 3 à 10 par Shop (S-XXX-YY)</span>
-                      <span class="text-[10.5px] bg-purple-50 text-purple-700 border border-purple-200 px-2 py-0.5 rounded font-mono font-semibold">S-XXX-YY (48 stations)</span>
-                    </div>
-                    <div class="bg-purple-50/50 rounded-md p-2 border border-purple-100 text-[11px] sm:text-xs text-slate-700 mb-2">
-                      <strong>Règle d'architecture :</strong> Une intervention a lieu sur une <strong>station de réparation</strong> qui se trouve dans un <strong>shop</strong>. Chaque shop dispose de <strong>3 à 10 stations</strong> dédiées ou spécialisées (seuil d'alerte saturation à <strong>85%</strong>).
-                    </div>
-                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-1.5 text-[10.5px] sm:text-[11.5px]">
-                      <div class="bg-slate-50 rounded p-1.5 border border-slate-200">
-                        <div class="font-bold text-slate-800 font-mono text-[11px] sm:text-xs">S-VIL <span class="font-sans font-normal text-purple-700 font-bold text-[10px]">(8 stations)</span></div>
-                        <div class="text-[9.5px] text-slate-600 font-mono mt-0.5 leading-tight">S-VIL-01 à 08<br><span class="text-slate-500">Équilibrage, CND, Révision</span></div>
-                      </div>
-                      <div class="bg-slate-50 rounded p-1.5 border border-slate-200">
-                        <div class="font-bold text-slate-800 font-mono text-[11px] sm:text-xs">S-MON <span class="font-sans font-normal text-purple-700 font-bold text-[10px]">(6 stations)</span></div>
-                        <div class="text-[9.5px] text-slate-600 font-mono mt-0.5 leading-tight">S-MON-01 à 06<br><span class="text-slate-500">Aubes HP/BP, Chaudes, FOD</span></div>
-                      </div>
-                      <div class="bg-slate-50 rounded p-1.5 border border-slate-200">
-                        <div class="font-bold text-slate-800 font-mono text-[11px] sm:text-xs">S-CHL <span class="font-sans font-normal text-purple-700 font-bold text-[10px]">(5 stations)</span></div>
-                        <div class="text-[9.5px] text-slate-600 font-mono mt-0.5 leading-tight">S-CHL-01 à 05<br><span class="text-slate-500">Démontage, Carters, CND</span></div>
-                      </div>
-                      <div class="bg-slate-50 rounded p-1.5 border border-slate-200">
-                        <div class="font-bold text-slate-800 font-mono text-[11px] sm:text-xs">S-BRU <span class="font-sans font-normal text-purple-700 font-bold text-[10px]">(6 stations)</span></div>
-                        <div class="text-[9.5px] text-slate-600 font-mono mt-0.5 leading-tight">S-BRU-01 à 06<br><span class="text-slate-500">Bancs essais, CND, FOD</span></div>
-                      </div>
-                      <div class="bg-slate-50 rounded p-1.5 border border-slate-200">
-                        <div class="font-bold text-slate-800 font-mono text-[11px] sm:text-xs">S-TLS <span class="font-sans font-normal text-purple-700 font-bold text-[10px]">(5 stations)</span></div>
-                        <div class="text-[9.5px] text-slate-600 font-mono mt-0.5 leading-tight">S-TLS-01 à 05<br><span class="text-slate-500">Intégration, Banc, Arbre</span></div>
-                      </div>
-                      <div class="bg-slate-50 rounded p-1.5 border border-slate-200">
-                        <div class="font-bold text-slate-800 font-mono text-[11px] sm:text-xs">S-SQY <span class="font-sans font-normal text-purple-700 font-bold text-[10px]">(4 stations)</span></div>
-                        <div class="text-[9.5px] text-slate-600 font-mono mt-0.5 leading-tight">S-SQY-01 à 04<br><span class="text-slate-500">Équilibrage, Plasma</span></div>
-                      </div>
-                      <div class="bg-slate-50 rounded p-1.5 border border-slate-200">
-                        <div class="font-bold text-slate-800 font-mono text-[11px] sm:text-xs">S-GEN <span class="font-sans font-normal text-purple-700 font-bold text-[10px]">(4 stations)</span></div>
-                        <div class="text-[9.5px] text-slate-600 font-mono mt-0.5 leading-tight">S-GEN-01 à 04<br><span class="text-slate-500">Laser aubes, Traitement</span></div>
-                      </div>
-                      <div class="bg-slate-50 rounded p-1.5 border border-slate-200">
-                        <div class="font-bold text-slate-800 font-mono text-[11px] sm:text-xs">S-BDX <span class="font-sans font-normal text-purple-700 font-bold text-[10px]">(3 stations)</span></div>
-                        <div class="text-[9.5px] text-slate-600 font-mono mt-0.5 leading-tight">S-BDX-01 à 03<br><span class="text-slate-500">Pales fan titane, Ressuage</span></div>
-                      </div>
-                      <div class="bg-slate-50 rounded p-1.5 border border-slate-200">
-                        <div class="font-bold text-slate-800 font-mono text-[11px] sm:text-xs">S-LGG <span class="font-sans font-normal text-purple-700 font-bold text-[10px]">(4 stations)</span></div>
-                        <div class="text-[9.5px] text-slate-600 font-mono mt-0.5 leading-tight">S-LGG-01 à 04<br><span class="text-slate-500">Homologation, Radio X</span></div>
-                      </div>
-                      <div class="bg-slate-50 rounded p-1.5 border border-slate-200">
-                        <div class="font-bold text-slate-800 font-mono text-[11px] sm:text-xs">S-CRE <span class="font-sans font-normal text-purple-700 font-bold text-[10px]">(3 stations)</span></div>
-                        <div class="text-[9.5px] text-slate-600 font-mono mt-0.5 leading-tight">S-CRE-01 à 03<br><span class="text-slate-500">Forge aubes, Combusteur</span></div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Card 3 : Ateliers : 10 Shops & 2 à 4 Types par Shop -->
-                  <div class="bg-white rounded-lg p-3 border border-slate-200 shadow-2xs">
-                    <div class="flex items-center justify-between font-bold text-slate-800 text-xs sm:text-[13px] mb-2">
-                      <span class="flex items-center gap-1.5"><span class="text-amber-600 text-sm">🏭</span> Ateliers : 10 Shops (S-XXX) & 2 à 4 Types par Shop</span>
-                      <span class="text-[10px] sm:text-[10.5px] bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded font-semibold">Règle : 2-4 types / shop</span>
-                    </div>
-                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-1.5 text-[10.5px] sm:text-[11.5px]">
-                      <div class="bg-slate-50 rounded p-1.5 border border-slate-200">
-                        <div class="font-bold text-slate-800 font-mono text-[11.5px] sm:text-xs">S-VIL <span class="font-sans font-normal text-slate-500 text-[10px]">(4 types)</span></div>
-                        <div class="text-[9.5px] sm:text-[10px] text-slate-600 font-mono mt-0.5 leading-tight">T-EQUROT, T-COMHOT, T-INSCND, T-MAJLOU</div>
-                      </div>
-                      <div class="bg-slate-50 rounded p-1.5 border border-slate-200">
-                        <div class="font-bold text-slate-800 font-mono text-[11.5px] sm:text-xs">S-MON <span class="font-sans font-normal text-slate-500 text-[10px]">(3 types)</span></div>
-                        <div class="text-[9.5px] sm:text-[10px] text-slate-600 font-mono mt-0.5 leading-tight">T-AUBTUR, T-COMHOT, T-FODREP</div>
-                      </div>
-                      <div class="bg-slate-50 rounded p-1.5 border border-slate-200">
-                        <div class="font-bold text-slate-800 font-mono text-[11.5px] sm:text-xs">S-CHL <span class="font-sans font-normal text-slate-500 text-[10px]">(3 types)</span></div>
-                        <div class="text-[9.5px] sm:text-[10px] text-slate-600 font-mono mt-0.5 leading-tight">T-MAJLOU, T-REVCAR, T-INSCND</div>
-                      </div>
-                      <div class="bg-slate-50 rounded p-1.5 border border-slate-200">
-                        <div class="font-bold text-slate-800 font-mono text-[11.5px] sm:text-xs">S-BRU <span class="font-sans font-normal text-slate-500 text-[10px]">(3 types)</span></div>
-                        <div class="text-[9.5px] sm:text-[10px] text-slate-600 font-mono mt-0.5 leading-tight">T-INSCND, T-BANESS, T-FODREP</div>
-                      </div>
-                      <div class="bg-slate-50 rounded p-1.5 border border-slate-200">
-                        <div class="font-bold text-slate-800 font-mono text-[11.5px] sm:text-xs">S-TLS <span class="font-sans font-normal text-slate-500 text-[10px]">(3 types)</span></div>
-                        <div class="text-[9.5px] sm:text-[10px] text-slate-600 font-mono mt-0.5 leading-tight">T-MAJLOU, T-BANESS, T-EQUROT</div>
-                      </div>
-                      <div class="bg-slate-50 rounded p-1.5 border border-slate-200">
-                        <div class="font-bold text-slate-800 font-mono text-[11.5px] sm:text-xs">S-SQY <span class="font-sans font-normal text-slate-500 text-[10px]">(2 types)</span></div>
-                        <div class="text-[9.5px] sm:text-[10px] text-slate-600 font-mono mt-0.5 leading-tight">T-EQUROT, T-REVCAR</div>
-                      </div>
-                      <div class="bg-slate-50 rounded p-1.5 border border-slate-200">
-                        <div class="font-bold text-slate-800 font-mono text-[11.5px] sm:text-xs">S-GEN <span class="font-sans font-normal text-slate-500 text-[10px]">(2 types)</span></div>
-                        <div class="text-[9.5px] sm:text-[10px] text-slate-600 font-mono mt-0.5 leading-tight">T-AUBTUR, T-REVCAR</div>
-                      </div>
-                      <div class="bg-slate-50 rounded p-1.5 border border-slate-200">
-                        <div class="font-bold text-slate-800 font-mono text-[11.5px] sm:text-xs">S-BDX <span class="font-sans font-normal text-slate-500 text-[10px]">(2 types)</span></div>
-                        <div class="text-[9.5px] sm:text-[10px] text-slate-600 font-mono mt-0.5 leading-tight">T-FODREP, T-MAJLOU</div>
-                      </div>
-                      <div class="bg-slate-50 rounded p-1.5 border border-slate-200">
-                        <div class="font-bold text-slate-800 font-mono text-[11.5px] sm:text-xs">S-LGG <span class="font-sans font-normal text-slate-500 text-[10px]">(2 types)</span></div>
-                        <div class="text-[9.5px] sm:text-[10px] text-slate-600 font-mono mt-0.5 leading-tight">T-BANESS, T-INSCND</div>
-                      </div>
-                      <div class="bg-slate-50 rounded p-1.5 border border-slate-200">
-                        <div class="font-bold text-slate-800 font-mono text-[11.5px] sm:text-xs">S-CRE <span class="font-sans font-normal text-slate-500 text-[10px]">(2 types)</span></div>
-                        <div class="text-[9.5px] sm:text-[10px] text-slate-600 font-mono mt-0.5 leading-tight">T-AUBTUR, T-COMHOT</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Card 4 : Réparations : 8 Types & 2 à 3 Modèles par Type -->
-                  <div class="bg-white rounded-lg p-3 border border-slate-200 shadow-2xs">
-                    <div class="flex items-center justify-between font-bold text-slate-800 text-xs sm:text-[13px] mb-2">
-                      <span class="flex items-center gap-1.5"><span class="text-purple-600 text-sm">⚙️</span> Réparations : 8 Types (T-XXXXXX) & 2 à 3 Modèles par Type</span>
-                      <span class="text-[10px] sm:text-[10.5px] bg-purple-50 text-purple-800 border border-purple-200 px-2 py-0.5 rounded font-semibold">Règle : 2-3 moteurs / type</span>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-[11px] sm:text-xs">
-                      <div class="flex items-center justify-between bg-slate-50 rounded px-2 py-1 border border-slate-200">
-                        <div><strong class="font-mono text-purple-800 text-[11.5px] sm:text-xs">T-INSCND</strong> <span class="text-slate-600 text-[10.5px] sm:text-[11px]">(Inspection CND & Endo)</span></div>
-                        <span class="text-[9.5px] sm:text-[10px] font-mono text-slate-700 bg-white px-1.5 py-0.5 rounded border">3 mod : CFM-7B, 5B, LEAP-1A</span>
-                      </div>
-                      <div class="flex items-center justify-between bg-slate-50 rounded px-2 py-1 border border-slate-200">
-                        <div><strong class="font-mono text-purple-800 text-[11.5px] sm:text-xs">T-AUBTUR</strong> <span class="text-slate-600 text-[10.5px] sm:text-[11px]">(Aubes Turbine HP/BP)</span></div>
-                        <span class="text-[9.5px] sm:text-[10px] font-mono text-slate-700 bg-white px-1.5 py-0.5 rounded border">3 mod : CFM-7B, LEAP-1A, GE90</span>
-                      </div>
-                      <div class="flex items-center justify-between bg-slate-50 rounded px-2 py-1 border border-slate-200">
-                        <div><strong class="font-mono text-purple-800 text-[11.5px] sm:text-xs">T-MAJLOU</strong> <span class="text-slate-600 text-[10.5px] sm:text-[11px]">(Maintenance Majeure)</span></div>
-                        <span class="text-[9.5px] sm:text-[10px] font-mono text-slate-700 bg-white px-1.5 py-0.5 rounded border">2 mod : CFM-7B, LEAP-1B</span>
-                      </div>
-                      <div class="flex items-center justify-between bg-slate-50 rounded px-2 py-1 border border-slate-200">
-                        <div><strong class="font-mono text-purple-800 text-[11.5px] sm:text-xs">T-BANESS</strong> <span class="text-slate-600 text-[10.5px] sm:text-[11px]">(Banc d'Essais & Recette)</span></div>
-                        <span class="text-[9.5px] sm:text-[10px] font-mono text-slate-700 bg-white px-1.5 py-0.5 rounded border">3 mod : CFM-5B, LEAP-1B, M88</span>
-                      </div>
-                      <div class="flex items-center justify-between bg-slate-50 rounded px-2 py-1 border border-slate-200">
-                        <div><strong class="font-mono text-purple-800 text-[11.5px] sm:text-xs">T-EQUROT</strong> <span class="text-slate-600 text-[10.5px] sm:text-[11px]">(Équilibrage Rotors & Arbres)</span></div>
-                        <span class="text-[9.5px] sm:text-[10px] font-mono text-slate-700 bg-white px-1.5 py-0.5 rounded border">2 mod : LEAP-1A, LEAP-1B</span>
-                      </div>
-                      <div class="flex items-center justify-between bg-slate-50 rounded px-2 py-1 border border-slate-200">
-                        <div><strong class="font-mono text-purple-800 text-[11.5px] sm:text-xs">T-COMHOT</strong> <span class="text-slate-600 text-[10.5px] sm:text-[11px]">(Chambres Combustion)</span></div>
-                        <span class="text-[9.5px] sm:text-[10px] font-mono text-slate-700 bg-white px-1.5 py-0.5 rounded border">3 mod : CFM-7B, LEAP-1B, GE90</span>
-                      </div>
-                      <div class="flex items-center justify-between bg-slate-50 rounded px-2 py-1 border border-slate-200">
-                        <div><strong class="font-mono text-purple-800 text-[11.5px] sm:text-xs">T-REVCAR</strong> <span class="text-slate-600 text-[10.5px] sm:text-[11px]">(Revêtement Carters)</span></div>
-                        <span class="text-[9.5px] sm:text-[10px] font-mono text-slate-700 bg-white px-1.5 py-0.5 rounded border">2 mod : CFM-5B, M88-2</span>
-                      </div>
-                      <div class="flex items-center justify-between bg-slate-50 rounded px-2 py-1 border border-slate-200">
-                        <div><strong class="font-mono text-purple-800 text-[11.5px] sm:text-xs">T-FODREP</strong> <span class="text-slate-600 text-[10.5px] sm:text-[11px]">(Réparation Impacts FOD)</span></div>
-                        <span class="text-[9.5px] sm:text-[10px] font-mono text-slate-700 bg-white px-1.5 py-0.5 rounded border">2 mod : CFM-7B, LEAP-1A</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Card 5 : Attributs & Key Figures Unitaires d'Atelier -->
-                  <div class="bg-white rounded-lg p-3 border border-slate-200 shadow-2xs">
-                    <div class="flex items-center justify-between font-bold text-slate-800 text-xs sm:text-[13px] mb-2">
-                      <span class="flex items-center gap-1.5"><span class="text-emerald-600 text-sm">⏱️</span> Attributs Opérationnels & Mesures Unitaires</span>
-                      <span class="text-[10px] sm:text-[10.5px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-semibold">Gamme, Stations & Files</span>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px] sm:text-xs">
-                      <div class="bg-slate-50 rounded p-2 border border-slate-200 space-y-0.5">
-                        <div class="font-bold text-slate-800 font-mono text-[11.5px] sm:text-xs">ESTIMATED_REPAIR_DURATION</div>
-                        <div class="text-slate-600 text-[10.5px] sm:text-[11px] mt-0.5 leading-normal">Durée standard de gamme constructeur selon le type de réparation (heures).</div>
-                      </div>
-                      <div class="bg-slate-50 rounded p-2 border border-slate-200 space-y-0.5">
-                        <div class="font-bold text-slate-800 font-mono text-[11.5px] sm:text-xs">SHOP_QUEUE_TIME</div>
-                        <div class="text-slate-600 text-[10.5px] sm:text-[11px] mt-0.5 leading-normal">Temps d'attente file calculé dynamiquement selon la charge de la station et du shop.</div>
-                      </div>
-                      <div class="bg-slate-50 rounded p-2 border border-slate-200 space-y-0.5">
-                        <div class="font-bold text-slate-800 font-mono text-[11.5px] sm:text-xs">INTERVENTION_TAT</div>
-                        <div class="text-slate-600 text-[10.5px] sm:text-[11px] mt-0.5 leading-normal">Délai net unitaire cumulé (attente station + durée gamme + contrôle recette).</div>
-                      </div>
-                    </div>
-                  </div>
+                <div class="flex items-center gap-1">
+                  <button type="button" onclick="scrollSchemaMarkdown('2a')" id="schema-ai-badge-2a" class="text-[9.5px] font-semibold bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded border border-blue-200 hover:bg-blue-100 transition cursor-pointer"># 2.A</button>
+                  <button type="button" onclick="scrollSchemaMarkdown('2b')" id="schema-ai-badge-2b" class="text-[9.5px] font-semibold bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded border border-slate-200 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 transition cursor-pointer"># 2.B</button>
+                  <button type="button" id="schema-ai-copy-btn" onclick="copySchemaMarkdown()" title="Copier le modèle Markdown" class="p-1 ml-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
+                    ⧉
+                  </button>
                 </div>
               </div>
+              <pre id="schema-ai-scroll" class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-3 overflow-x-auto overflow-y-auto text-[11px] leading-relaxed whitespace-pre-wrap select-all font-mono"><code id="schema-ai-code"></code></pre>
             </div>
           </div>
         </div>
@@ -1137,14 +896,8 @@
           <!-- Moitié Droite : Extrait Illustré de la Table de Données Calculée (Dépend de Q2 & Q3) -->
           <div id="step-3-table-panel"
             class="lg:col-span-6 bg-white rounded-xl p-3 border border-slate-200 flex flex-col justify-between h-full max-h-full min-h-0 overflow-hidden shadow-sm relative">
-            <div class="flex items-center justify-between pb-1.5 mb-1.5 shrink-0">
-              <div id="step-3-schema-toggle" class="flex items-center rounded-lg border border-slate-200 bg-white shadow-xs overflow-hidden">
-                <button type="button" title="Vue Tableau" class="px-2.5 py-0.5 text-xs font-bold bg-blue-600 text-white transition cursor-default">▦</button>
-                <button type="button" disabled title="Vue Indisponible" class="px-2.5 py-0.5 text-xs font-bold bg-slate-100 text-slate-400 opacity-50 cursor-not-allowed transition">🀱</button>
-              </div>
-              <span id="step3-table-title" class="hidden"></span>
-              <span id="step3-combo-badge" class="hidden"></span>
-            </div>
+            <span id="step3-table-title" class="hidden"></span>
+            <span id="step3-combo-badge" class="hidden"></span>
 
             <!-- Conteneur du tableau dynamique de données -->
             <div id="step3-table-container" class="flex-1 overflow-x-auto min-h-0 flex flex-col justify-center">
@@ -1312,16 +1065,16 @@
                 class="option-card step-answers-card glass-card rounded-xl border border-slate-200 cursor-pointer flex flex-row items-start gap-3">
                 <div id="opt-4-H-body" class="flex-1 min-w-0">
                   <div class="ans-title font-bold text-slate-900 mb-1 flex items-center gap-1.5">
-                    <span class="text-sm">🚩</span> H. Jalons de Traversée (Gates de la Demande)
+                    <span class="text-sm">🗺️</span> H. Heatmap d'Occupation Réseau par Site (S34-S42)
                   </div>
                   <p class="ans-desc text-slate-600 leading-snug mb-1.5">
-                    Gantt simplifié suivant le passage des portes industrielles (Gate 1 Démontage, Gate 2 Contrôle CND, Gate 3 Remontage, Gate 4 Banc).
+                    Matrice thermique croisant les 10 centres MRO SAE en Y et les 9 semaines S34 à S42 en X avec échelle trichromatique de charge (Vert &lt; 80%, Jaune 80-95%, Rouge &gt; 95%).
                   </p>
                   <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 space-y-0.5">
-                    <div><span class="font-bold text-blue-700">Type :</span> Milestone Timeline / Chronogramme de Traversée Part-145</div>
-                    <div><span class="font-bold text-slate-700">Axes :</span> X = TIMEPROFILE (DATE_DEBUT / DATE_FIN) • Y = GATE_JALON</div>
-                    <div><span class="font-bold text-slate-700">Dimensions :</span> GATE_JALON (G1 Démontage, G2 Contrôle CND, G3 Remontage, G4 Banc Test &amp; Clôture)</div>
-                    <div><span class="font-bold text-emerald-700">Mesures :</span> PLANNED_GATE_DURATION, ACTUAL_GATE_DURATION, CRITICAL_PATH_SLIPPAGE</div>
+                    <div><span class="font-bold text-blue-700">Type :</span> Heatmap Matrix SAC (Tension Capacitaire Multi-Sites)</div>
+                    <div><span class="font-bold text-slate-700">Axes :</span> X = Semaines (S34 à S42) • Y = Centres SAE MRO (S-VIL, S-MON, S-CHL...)</div>
+                    <div><span class="font-bold text-slate-700">Dimensions :</span> SITE_MRO (10 centres SAE), SEMAINE_CALENDAIRE (S34 à S42)</div>
+                    <div><span class="font-bold text-emerald-700">Mesures :</span> TAUX_OCCUPATION_PCT (%), SEUIL_VIGILANCE (80%), SEUIL_CRITIQUE (95%)</div>
                   </div>
                 </div></div>
     <div onclick="selectOption(4, 'I')" id="opt-4-I"
@@ -1343,13 +1096,40 @@
             </div>
             <div id="step-4-chart-panel" class="lg:col-span-7 bg-white rounded-xl p-2.5 border border-slate-200 shadow-sm flex flex-col justify-between h-full max-h-full min-h-0 overflow-hidden">
               <div class="flex items-center justify-between gap-2 shrink-0 pb-1.5 border-b border-slate-200">
-                <span id="step-4-chart-title" class="text-[11px] font-bold text-blue-700">📊 Illustration Chart.js</span>
-                <span id="step-4-chart-sub" class="text-[9px] font-mono font-bold text-slate-500 bg-slate-50 border border-slate-200 rounded px-1.5 py-0.5"></span>
+                <div class="flex items-center gap-2 min-w-0">
+                  <div id="step-4-chart-toggle" class="flex items-center rounded-lg border border-slate-200 bg-white shadow-xs overflow-hidden">
+                    <button type="button" data-view="chart" onclick="toggleChartMode(4, 'chart')" title="Vue Graphique (js)" class="px-2 py-0.5 text-[9.5px] font-bold bg-blue-600 text-white transition">js</button>
+                    <button type="button" data-view="code" onclick="toggleChartMode(4, 'code')" title="Éditeur Visuel de Configuration" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">ui</button>
+                    <button type="button" data-view="ai" onclick="toggleChartMode(4, 'ai')" title="Spécification Chart.js pour IA" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">&lt;&gt;</button>
+                  </div>
+                </div>
+                <div class="flex items-center gap-1.5 shrink-0">
+                  <button id="step-4-chart-reset" type="button" onclick="resetChartCode(4)" title="Réinitialiser le graphique (configuration standard)" class="px-1.5 py-0.5 text-[10px] font-bold text-slate-600 hover:text-blue-700 bg-slate-50 hover:bg-blue-50 border border-slate-200 rounded cursor-pointer transition shadow-2xs">
+                    ↻
+                  </button>
+                </div>
               </div>
-              <div id="step-4-chart-box" class="flex-1 w-full min-h-0 relative overflow-hidden my-1">
-                <canvas id="step-4-canvas" style="display: block; width: 100%; height: 100%;"></canvas>
+              <!-- Vue Graphique (par défaut) -->
+              <div id="step-4-chart-view" class="flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden">
+                <div id="step-4-chart-box" class="flex-1 w-full min-h-0 relative overflow-hidden my-1">
+                  <canvas id="step-4-canvas" style="display: block; width: 100%; height: 100%;"></canvas>
+                </div>
+                <div id="step-4-chart-note" class="shrink-0 text-[9.5px] text-slate-600 bg-slate-50 rounded-lg border border-slate-200 px-2 py-1.5"></div>
               </div>
-              <div id="step-4-chart-note" class="shrink-0 text-[9.5px] text-slate-600 bg-slate-50 rounded-lg border border-slate-200 px-2 py-1.5"></div>
+              <!-- Vue Éditeur Visuel (masquée par défaut) -->
+              <div id="step-4-code-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
+                <div id="step-4-gui-editor" class="flex-1 w-full min-h-0 overflow-y-auto pr-1 space-y-2 text-[11px] text-slate-700"></div>
+              </div>
+              <!-- Vue Spécification Chart.js Prompt IA (ai) -->
+              <div id="step-4-ai-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
+                <div class="flex items-center justify-between pb-1 shrink-0">
+                  <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Spécification Chart.js (IA Prompt)</span>
+                  <button type="button" id="step-4-ai-copy-btn" onclick="copyChartAi(4)" title="Copier la spécification pour l'IA" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
+                    ⧉
+                  </button>
+                </div>
+                <pre class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-2.5 overflow-x-auto overflow-y-auto text-[11px] leading-relaxed whitespace-pre-wrap select-all font-mono"><code id="step-4-ai-code"></code></pre>
+              </div>
             </div>
           </div>
         </div>
@@ -1498,14 +1278,8 @@
           <!-- Moitié Droite : Extrait Illustré du Bilan de Capacité (Dépend de Q2 & Q5) -->
           <div id="step-5-table-panel"
             class="lg:col-span-6 bg-white rounded-xl p-3 border border-slate-200 flex flex-col justify-between h-full max-h-full min-h-0 overflow-hidden shadow-sm relative">
-            <div class="flex items-center justify-between pb-1.5 mb-1.5 shrink-0">
-              <div id="step-5-schema-toggle" class="flex items-center rounded-lg border border-slate-200 bg-white shadow-xs overflow-hidden">
-                <button type="button" title="Vue Tableau" class="px-2.5 py-0.5 text-xs font-bold bg-blue-600 text-white transition cursor-default">▦</button>
-                <button type="button" disabled title="Vue Indisponible" class="px-2.5 py-0.5 text-xs font-bold bg-slate-100 text-slate-400 opacity-50 cursor-not-allowed transition">🀱</button>
-              </div>
-              <span id="step5-table-title" class="hidden"></span>
-              <span id="step5-combo-badge" class="hidden"></span>
-            </div>
+            <span id="step5-table-title" class="hidden"></span>
+            <span id="step5-combo-badge" class="hidden"></span>
 
             <!-- Conteneur du tableau dynamique de capacité -->
             <div id="step5-table-container" class="flex-1 overflow-x-auto min-h-0 flex flex-col justify-center">
@@ -1644,12 +1418,12 @@
                     <span class="text-sm">🗓️</span> F. Heatmap d'Occupation des Stations par Shop
                   </div>
                   <p class="ans-desc text-slate-600 leading-snug mb-1.5">
-                    Matrice thermique mesurant l'intensité de charge journalière de chaque station de réparation (S-MON-01 à S-MON-06) au sein du shop (S-MON) du lundi au vendredi.
+                    Matrice thermique mesurant l'intensité de charge hebdomadaire de chaque station de réparation (S-MON-01 à S-MON-06) au sein du shop (S-MON) sur les semaines S34 à S42.
                   </p>
                   <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
                     <div><span class="font-bold text-blue-700">Type :</span> Heatmap Matrix SAC (Saturation Stations Shop)</div>
-                    <div><span class="font-bold text-slate-700">Axes :</span> X = Jours Ouvrés (Lundi à Vendredi) • Y = Stations de Réparation du Shop (S-XXX-YY)</div>
-                    <div><span class="font-bold text-slate-700">Dimensions :</span> SHOP_ASSIGNE (S-MON), ID_STATION (S-MON-01 à S-MON-06), JOUR_SEMAINE</div>
+                    <div><span class="font-bold text-slate-700">Axes :</span> X = Semaines Calendaires (S34 à S42) • Y = Stations de Réparation du Shop (S-XXX-YY)</div>
+                    <div><span class="font-bold text-slate-700">Dimensions :</span> SHOP_ASSIGNE (S-MON), ID_STATION (S-MON-01 à S-MON-06), SEMAINE_CALENDAIRE (S34..S42)</div>
                     <div><span class="font-bold text-emerald-700">Mesures :</span> WORKLOAD_TENSION_RATE (%), SEUIL_SATURATION_CRITIQUE (85%)</div>
                   </div>
                 </div></div>
@@ -1676,13 +1450,13 @@
                     <span class="text-sm">🗂️</span> H. Treemap Temps Passé &amp; Retard par Moteur / Réparation (Shop)
                   </div>
                   <p class="ans-desc text-slate-600 leading-snug mb-1.5">
-                    Répartition du temps passé d'intervention en atelier par type de moteur avec drill-down interactif au clic par type de réparation. Coloration selon le taux de retard (vert &lt; 10%, ambre 10-15%, rouge ≥ 15%).
+                    Répartition du temps passé d'intervention en atelier par type de moteur avec drill-down interactif au clic par type de réparation. Coloration trichromatique selon le taux de retard (Vert &lt; 8%, Jaune 8-15%, Rouge &gt; 15%).
                   </p>
                   <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
                     <div><span class="font-bold text-blue-700">Type :</span> Interactive Hierarchical Treemap (Drill-down Moteur ➔ Réparation)</div>
                     <div><span class="font-bold text-slate-700">Axes :</span> N/A (Taille du Bloc = Temps Passé en Heures • Couleur = Taux de Retard %)</div>
                     <div><span class="font-bold text-slate-700">Dimensions :</span> Niveau 1 = ENGINE_TYPE (CFM56-7B, LEAP-1A...) ➔ Niveau 2 = TYPE_REPARATION (T-AUBTUR, T-COMHOT...)</div>
-                    <div><span class="font-bold text-emerald-700">Mesures :</span> TEMPS_PASSE_HEURES, TAUX_RETARD_INTERVENTIONS (%), SEUIL_RETARD (10%)</div>
+                    <div><span class="font-bold text-emerald-700">Mesures :</span> TEMPS_PASSE_HEURES, TAUX_RETARD_INTERVENTIONS (%), SEUILS_RETARD (8% / 15%)</div>
                   </div>
                 </div></div>
     <div onclick="selectOption(6, 'I')" id="opt-6-I"
@@ -1705,14 +1479,40 @@
             <div id="step-6-chart-panel" class="lg:col-span-7 bg-white rounded-xl p-2.5 border border-slate-200 shadow-sm flex flex-col justify-between h-full max-h-full min-h-0 overflow-hidden">
               <div class="flex items-center justify-between gap-2 shrink-0 pb-1.5 border-b border-slate-200">
                 <div class="flex items-center gap-2 min-w-0">
-                  <span id="step-6-chart-title" class="text-[11px] font-bold text-blue-700 truncate">📊 Illustration Chart.js</span>
+                  <div id="step-6-chart-toggle" class="flex items-center rounded-lg border border-slate-200 bg-white shadow-xs overflow-hidden">
+                    <button type="button" data-view="chart" onclick="toggleChartMode(6, 'chart')" title="Vue Graphique (js)" class="px-2 py-0.5 text-[9.5px] font-bold bg-blue-600 text-white transition">js</button>
+                    <button type="button" data-view="code" onclick="toggleChartMode(6, 'code')" title="Éditeur Visuel de Configuration" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">ui</button>
+                    <button type="button" data-view="ai" onclick="toggleChartMode(6, 'ai')" title="Spécification Chart.js pour IA" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">&lt;&gt;</button>
+                  </div>
                   <button id="step-6-treemap-reset" type="button" onclick="resetTreemapDrill()" class="hidden text-[9.5px] font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 px-2 py-0.5 rounded cursor-pointer transition shadow-2xs shrink-0">
                     ◀ Revenir aux Moteurs
                   </button>
                 </div>
+                <div class="flex items-center gap-1.5 shrink-0">
+                  <button id="step-6-chart-reset" type="button" onclick="resetChartCode(6)" title="Réinitialiser le graphique (configuration standard)" class="px-1.5 py-0.5 text-[10px] font-bold text-slate-600 hover:text-blue-700 bg-slate-50 hover:bg-blue-50 border border-slate-200 rounded cursor-pointer transition shadow-2xs">
+                    ↻
+                  </button>
+                </div>
               </div>
-              <div id="step-6-chart-box" class="flex-1 w-full min-h-0 relative overflow-hidden my-1">
-                <canvas id="step-6-canvas" style="display: block; width: 100%; height: 100%;"></canvas>
+              <!-- Vue Graphique (par défaut) -->
+              <div id="step-6-chart-view" class="flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden">
+                <div id="step-6-chart-box" class="flex-1 w-full min-h-0 relative overflow-hidden my-1">
+                  <canvas id="step-6-canvas" style="display: block; width: 100%; height: 100%;"></canvas>
+                </div>
+              </div>
+              <!-- Vue Éditeur Visuel (masquée par défaut) -->
+              <div id="step-6-code-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
+                <div id="step-6-gui-editor" class="flex-1 w-full min-h-0 overflow-y-auto pr-1 space-y-2 text-[11px] text-slate-700"></div>
+              </div>
+              <!-- Vue Spécification Chart.js Prompt IA (ai) -->
+              <div id="step-6-ai-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
+                <div class="flex items-center justify-between pb-1 shrink-0">
+                  <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Spécification Chart.js (IA Prompt)</span>
+                  <button type="button" id="step-6-ai-copy-btn" onclick="copyChartAi(6)" title="Copier la spécification pour l'IA" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
+                    ⧉
+                  </button>
+                </div>
+                <pre class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-2.5 overflow-x-auto overflow-y-auto text-[11px] leading-relaxed whitespace-pre-wrap select-all font-mono"><code id="step-6-ai-code"></code></pre>
               </div>
             </div>
           </div>
@@ -1921,7 +1721,7 @@
         'E': { title: "Cartes KPIs Synthétiques", desc: "TAT moyen réel & taux de respect SLA global", icon: "⏱️" },
         'F': { title: "Barres vs Seuils Cibles P85", desc: "Durée réelle par type de moteur face au seuil contractuel P85", icon: "🎯" },
         'G': { title: "Waterfall des Dérives TAT", desc: "Cascade cumulative des écarts contractuel vs réel", icon: "🌊" },
-        'H': { title: "Jalons de Traversée (Gates)", desc: "Passage des jalons G1 à G4 de la demande et alerte chemin critique", icon: "🚩" },
+        'H': { title: "Heatmap d'Occupation Réseau par Site (S34-S42)", desc: "Matrice thermique des 10 centres SAE MRO par semaine S34 à S42 avec seuils vert/jaune/rouge", icon: "🗺️" },
         'I': { title: "Comparatif TAT Demande (4 Méthodes vs Réel)", desc: "Histogramme comparant les 4 méthodes vs TAT effectif (18.2 j)", icon: "🏛️" }
       },
       5: {
@@ -1936,9 +1736,9 @@
         'C': { title: "Routes de Transfert Inter-Shops", desc: "Flux interventions transférées inter-shops et délai navette moyen", icon: "🚚" },
         'D': { title: "Délai Moyen d'Intervention par Shop (Découpé)", desc: "Barres horizontales par shop décomposant attente, réparation et transfert", icon: "📊" },
         'E': { title: "Taux de Charge par Station (S-XXX-YY)", desc: "Barre de charge par station de réparation face au seuil critique de 85%", icon: "🚦" },
-        'F': { title: "Heatmap d'Occupation des Stations par Shop", desc: "Matrice thermique des stations du shop (S-MON) du lundi au vendredi", icon: "🗓️" },
+        'F': { title: "Heatmap d'Occupation des Stations par Shop", desc: "Matrice thermique des stations du shop (S-MON) par semaine S34 à S42", icon: "🗓️" },
         'G': { title: "Courbes Entrées vs Sorties d'Interventions", desc: "Diagramme de flux cumulé (CFD) arrivées / clôtures d'interventions", icon: "📈" },
-        'H': { title: "Treemap Temps Passé & Retard par Moteur / Réparation", desc: "Temps passé par moteur dans le shop avec drill-down par réparation et % retard", icon: "🗂️" },
+        'H': { title: "Treemap Temps Passé & Retard par Moteur / Réparation", desc: "Temps passé par moteur dans le shop avec drill-down par réparation et seuils <8%, 8-15%, >15%", icon: "🗂️" },
         'I': { title: "Comparatif Capacité Interventions vs Réel", desc: "Histogramme comparant les 4 méthodes vs débit effectif (124 interventions)", icon: "🏛️" }
       }
     };
@@ -2409,6 +2209,8 @@
       updateCompatibilities();
 
       drawSchema(opt);
+      if (schemaViewMode === 'mermaid') updateMermaidCode(opt);
+      if (schemaViewMode === 'ai' || schemaViewMode === 'md' || schemaViewMode === 'txt') updateSchemaRulesView(opt);
       renderStep3TablePreview();
       renderStep5TablePreview();
       updateRecap();
@@ -2600,9 +2402,46 @@
         total: Math.round(total * 10) / 10
       };
 
-      // 4.H — Jalons Gates (cible fixe / réalisé avec dérive croissante)
+      // 4.H — Heatmap Taux d'occupation réseau : 10 centres SAE MRO en Y, 9 semaines (S34 à S42) en X
+      const reseauSemaines = ['S34', 'S35', 'S36', 'S37', 'S38', 'S39', 'S40', 'S41', 'S42'];
+      const reseauSites = [
+        'S-VIL (Villaroche)',
+        'S-MON (Montereau)',
+        'S-CHL (Châtellerault)',
+        'S-BRU (Bruxelles)',
+        'S-SQY (Saint-Quentin)',
+        'S-GEN (Gennevilliers)',
+        'S-BDX (Bordeaux)',
+        'S-TLS (Toulouse)',
+        'S-LGG (Liège)',
+        'S-CRE (Le Creusot)'
+      ];
+      // Taux d'occupation en % avec zones vertes (<80%), jaunes (80-95%) et rouges (>95%)
+      const reseauBase = [
+        [92, 94, 98, 97, 95, 91, 88, 86, 84], // S-VIL
+        [95, 97, 99, 101, 98, 96, 92, 89, 87], // S-MON
+        [82, 85, 88, 89, 86, 84, 80, 78, 75], // S-CHL
+        [91, 93, 96, 95, 92, 88, 84, 81, 79], // S-BRU
+        [74, 76, 79, 81, 78, 75, 73, 70, 68], // S-SQY
+        [79, 83, 86, 88, 85, 81, 77, 75, 72], // S-GEN
+        [68, 71, 74, 76, 73, 70, 68, 66, 64], // S-BDX
+        [75, 78, 82, 84, 81, 78, 75, 72, 70], // S-TLS
+        [76, 79, 83, 85, 82, 79, 76, 74, 71], // S-LGG
+        [65, 68, 71, 73, 70, 67, 65, 63, 61]  // S-CRE
+      ];
+      D.heatmapNetwork = {
+        semaines: reseauSemaines,
+        sites: reseauSites,
+        valeurs: reseauSites.map((site, sIdx) =>
+          reseauSemaines.map((sem, wIdx) => {
+            const raw = reseauBase[sIdx] ? reseauBase[sIdx][wIdx] : 75;
+            return rndInt(rng, Math.max(50, raw - 3), Math.min(103, raw + 3));
+          })
+        )
+      };
+      // Rétro-compatibilité D.gates
       const gateCibles = { G1: 5, G2: 8, G3: 4, G4: 4, G5: 3 };
-      D.gates = D.gates.map((g) => {
+      D.gates = (base.gates || []).map((g) => {
         const cibleG = gateCibles[g.gate] || 4;
         const realise = rndDec(rng, cibleG - 0.8, cibleG + 1.6);
         return { gate: g.gate, cible: cibleG, realise: Math.max(0.5, Math.round(realise * 10) / 10), retard: Math.max(0, Math.round((realise - cibleG) * 10) / 10) };
@@ -2688,8 +2527,8 @@
       });
       D.chargeAteliers = shopsList.map(s => ({ atelier: s, charge: rndInt(rng, 60, 95), seuil: seuilCharge }));
 
-      // 6.F — Heatmap d'occupation du shop (S-MON) : stations en Y, jours en X
-      const shopJours = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'];
+      // 6.F — Heatmap d'occupation du shop (S-MON) : stations en Y, semaines S34 à S42 en X
+      const shopSemaines = ['S34', 'S35', 'S36', 'S37', 'S38', 'S39', 'S40', 'S41', 'S42'];
       const shopStations = [
         'S-MON-01 (Aubes HP)',
         'S-MON-02 (Combustion)',
@@ -2700,20 +2539,21 @@
       ];
       D.heatmapShop = {
         shop: 'S-MON (Montereau)',
-        jours: shopJours,
+        semaines: shopSemaines,
+        jours: shopSemaines, // rétro-compatibilité
         stations: shopStations,
         valeurs: shopStations.map((st, stIdx) =>
-          shopJours.map((j, jIdx) => {
-            const baseVal = (stIdx === 0 ? 92 : stIdx === 1 ? 87 : stIdx === 2 ? 82 : stIdx === 3 ? 78 : stIdx === 4 ? 74 : 68) + (jIdx === 2 || jIdx === 3 ? 5 : -3);
-            return rndInt(rng, Math.max(45, baseVal - 5), Math.min(99, baseVal + 5));
+          shopSemaines.map((sem, sIdx) => {
+            const baseVal = (stIdx === 0 ? 93 : stIdx === 1 ? 88 : stIdx === 2 ? 83 : stIdx === 3 ? 78 : stIdx === 4 ? 74 : 68) + (sIdx === 3 || sIdx === 4 ? 4 : -2);
+            return rndInt(rng, Math.max(48, baseVal - 4), Math.min(99, baseVal + 4));
           })
         )
       };
       D.heatmapStation = D.heatmapShop; // rétro-compatibilité
       D.heatmap = {
-        semaines: ['S36', 'S37', 'S38', 'S39', 'S40'],
-        sites: shopsList.slice(0, 6),
-        valeurs: shopsList.slice(0, 6).map(() => [60, 75, 92, 85, 70])
+        semaines: reseauSemaines,
+        sites: reseauSites.slice(0, 6),
+        valeurs: reseauSites.slice(0, 6).map(() => [60, 75, 92, 85, 70, 75, 80, 85, 90])
       };
 
       // 6.G — CFD cumulée (entrées > sorties → WIP croissant)
@@ -2730,59 +2570,59 @@
       D.cfd = { jours: D.cfd.jours, entre, sortie, cumIn: entre, cumOut: sortie };
 
       // 6.H — Treemap temps passé par type de moteur (niveau 1) et type de réparation (drill-down) sur un shop (S-MON)
-      // Couleur = taux de retard (%) : vert < 10%, ambre 10-15%, rouge >= 15%
+      // Seuils trichromatiques : Vert < 8%, Jaune 8-15%, Rouge > 15%
       D.treemapShop = {
         shop: 'S-MON (Montereau)',
         moteurs: [
           {
             moteur: 'CFM56-7B',
-            heures: rndInt(rng, 450, 510),
-            retard: rndDec(rng, 15.5, 17.8),
+            heures: rndInt(rng, 460, 520),
+            retard: rndDec(rng, 16.5, 18.8), // > 15% -> Rouge critique
             reparations: [
-              { type: 'T-AUBTUR (Usinage Aubes HP)', heures: rndInt(rng, 190, 230), retard: rndDec(rng, 18.0, 21.0) },
-              { type: 'T-COMHOT (Chambre Combustion)', heures: rndInt(rng, 130, 155), retard: rndDec(rng, 14.2, 16.5) },
-              { type: 'T-FODREP (Réparation FOD)', heures: rndInt(rng, 70, 90), retard: rndDec(rng, 11.5, 13.8) },
-              { type: 'T-INSCND (Inspection CND)', heures: rndInt(rng, 45, 60), retard: rndDec(rng, 7.5, 9.2) }
+              { type: 'T-AUBTUR (Usinage Aubes HP)', heures: rndInt(rng, 195, 235), retard: rndDec(rng, 18.5, 21.5) }, // Rouge (>15%)
+              { type: 'T-COMHOT (Chambre Combustion)', heures: rndInt(rng, 135, 160), retard: rndDec(rng, 11.5, 14.2) }, // Jaune (8-15%)
+              { type: 'T-FODREP (Réparation FOD)', heures: rndInt(rng, 70, 90), retard: rndDec(rng, 8.8, 11.2) }, // Jaune (8-15%)
+              { type: 'T-INSCND (Inspection CND)', heures: rndInt(rng, 45, 60), retard: rndDec(rng, 5.5, 7.2) } // Vert (<8%)
             ]
           },
           {
             moteur: 'LEAP-1A',
-            heures: rndInt(rng, 360, 420),
-            retard: rndDec(rng, 17.0, 19.8),
+            heures: rndInt(rng, 370, 430),
+            retard: rndDec(rng, 17.5, 20.2), // > 15% -> Rouge critique
             reparations: [
-              { type: 'T-AUBTUR (Usinage Aubes HP)', heures: rndInt(rng, 155, 185), retard: rndDec(rng, 19.5, 22.5) },
-              { type: 'T-COMHOT (Chambre Combustion)', heures: rndInt(rng, 110, 135), retard: rndDec(rng, 16.0, 18.5) },
-              { type: 'T-FODREP (Réparation FOD)', heures: rndInt(rng, 55, 75), retard: rndDec(rng, 13.0, 15.2) },
-              { type: 'T-INSCND (Inspection CND)', heures: rndInt(rng, 30, 45), retard: rndDec(rng, 8.5, 10.5) }
+              { type: 'T-AUBTUR (Usinage Aubes HP)', heures: rndInt(rng, 160, 190), retard: rndDec(rng, 20.0, 23.0) }, // Rouge (>15%)
+              { type: 'T-COMHOT (Chambre Combustion)', heures: rndInt(rng, 115, 140), retard: rndDec(rng, 15.5, 18.0) }, // Rouge (>15%)
+              { type: 'T-FODREP (Réparation FOD)', heures: rndInt(rng, 55, 75), retard: rndDec(rng, 10.0, 13.5) }, // Jaune (8-15%)
+              { type: 'T-INSCND (Inspection CND)', heures: rndInt(rng, 30, 45), retard: rndDec(rng, 6.0, 7.8) } // Vert (<8%)
             ]
           },
           {
             moteur: 'CFM56-5B',
-            heures: rndInt(rng, 270, 315),
-            retard: rndDec(rng, 10.5, 12.8),
+            heures: rndInt(rng, 275, 320),
+            retard: rndDec(rng, 9.8, 12.5), // 8-15% -> Jaune (tension modérée)
             reparations: [
-              { type: 'T-COMHOT (Chambre Combustion)', heures: rndInt(rng, 120, 145), retard: rndDec(rng, 11.8, 13.9) },
-              { type: 'T-AUBTUR (Usinage Aubes HP)', heures: rndInt(rng, 85, 110), retard: rndDec(rng, 10.0, 12.0) },
-              { type: 'T-FODREP (Réparation FOD)', heures: rndInt(rng, 55, 75), retard: rndDec(rng, 8.5, 10.2) }
+              { type: 'T-COMHOT (Chambre Combustion)', heures: rndInt(rng, 125, 150), retard: rndDec(rng, 11.5, 13.5) }, // Jaune
+              { type: 'T-AUBTUR (Usinage Aubes HP)', heures: rndInt(rng, 85, 110), retard: rndDec(rng, 9.0, 11.2) }, // Jaune
+              { type: 'T-FODREP (Réparation FOD)', heures: rndInt(rng, 55, 75), retard: rndDec(rng, 6.2, 7.6) } // Vert (<8%)
             ]
           },
           {
             moteur: 'LEAP-1B',
             heures: rndInt(rng, 220, 260),
-            retard: rndDec(rng, 7.8, 9.5),
+            retard: rndDec(rng, 6.2, 7.8), // < 8% -> Vert (conforme)
             reparations: [
-              { type: 'T-AUBTUR (Usinage Aubes HP)', heures: rndInt(rng, 100, 125), retard: rndDec(rng, 8.8, 10.4) },
-              { type: 'T-COMHOT (Chambre Combustion)', heures: rndInt(rng, 70, 95), retard: rndDec(rng, 7.5, 8.9) },
-              { type: 'T-FODREP (Réparation FOD)', heures: rndInt(rng, 45, 60), retard: rndDec(rng, 6.8, 8.0) }
+              { type: 'T-AUBTUR (Usinage Aubes HP)', heures: rndInt(rng, 100, 125), retard: rndDec(rng, 7.0, 7.9) }, // Vert
+              { type: 'T-COMHOT (Chambre Combustion)', heures: rndInt(rng, 70, 95), retard: rndDec(rng, 6.0, 7.4) }, // Vert
+              { type: 'T-FODREP (Réparation FOD)', heures: rndInt(rng, 45, 60), retard: rndDec(rng, 5.0, 6.5) } // Vert
             ]
           },
           {
             moteur: 'GE90-115B',
             heures: rndInt(rng, 145, 180),
-            retard: rndDec(rng, 5.5, 7.2),
+            retard: rndDec(rng, 4.5, 6.8), // < 8% -> Vert (conforme)
             reparations: [
-              { type: 'T-AUBTUR (Usinage Aubes HP)', heures: rndInt(rng, 80, 105), retard: rndDec(rng, 6.2, 7.8) },
-              { type: 'T-COMHOT (Chambre Combustion)', heures: rndInt(rng, 60, 80), retard: rndDec(rng, 4.8, 6.0) }
+              { type: 'T-AUBTUR (Usinage Aubes HP)', heures: rndInt(rng, 80, 105), retard: rndDec(rng, 5.2, 6.9) }, // Vert
+              { type: 'T-COMHOT (Chambre Combustion)', heures: rndInt(rng, 60, 80), retard: rndDec(rng, 3.8, 5.5) } // Vert
             ]
           }
         ]
@@ -3176,143 +3016,154 @@ function calc4E(k, labels, mult) {
       };
     }
 
-    function calc4H(p, mult) {
-      // Timeline de jalons (milestones timeline) sur frise temporelle avec axe time
-      // Nécessite chartjs-adapter-date-fns, placement horizontal avec axe Y masqué
-      const baseDate = new Date(2026, 8, 1); // 1er Septembre 2026
+    function calc4H(hmNetwork, mult) {
+      const netData = hmNetwork || (maestroData() && maestroData().heatmapNetwork) || {
+        semaines: ['S34', 'S35', 'S36', 'S37', 'S38', 'S39', 'S40', 'S41', 'S42'],
+        sites: [
+          'S-VIL (Villaroche)',
+          'S-MON (Montereau)',
+          'S-CHL (Châtellerault)',
+          'S-BRU (Bruxelles)',
+          'S-SQY (Saint-Quentin)',
+          'S-GEN (Gennevilliers)',
+          'S-BDX (Bordeaux)',
+          'S-TLS (Toulouse)',
+          'S-LGG (Liège)',
+          'S-CRE (Le Creusot)'
+        ],
+        valeurs: [
+          [92, 94, 98, 97, 95, 91, 88, 86, 84],
+          [95, 97, 99, 101, 98, 96, 92, 89, 87],
+          [82, 85, 88, 89, 86, 84, 80, 78, 75],
+          [91, 93, 96, 95, 92, 88, 84, 81, 79],
+          [74, 76, 79, 81, 78, 75, 73, 70, 68],
+          [79, 83, 86, 88, 85, 81, 77, 75, 72],
+          [68, 71, 74, 76, 73, 70, 68, 66, 64],
+          [75, 78, 82, 84, 81, 78, 75, 72, 70],
+          [76, 79, 83, 85, 82, 79, 76, 74, 71],
+          [65, 68, 71, 73, 70, 67, 65, 63, 61]
+        ]
+      };
 
-      let cumDaysCible = 0;
-      let cumDaysRealise = 0;
+      const isMatrixAvailable = typeof Chart !== 'undefined' && Chart.registry && Chart.registry.controllers && Chart.registry.controllers.get('matrix');
+      // Échelle trichromatique : Vert (< 80%), Jaune (80-95%), Rouge (> 95%)
+      const colorByTension = (v) => (v > 95 ? '#ef4444' : v >= 80 ? '#f59e0b' : '#10b981');
 
-      const ciblePoints = [];
-      const realisePoints = [];
-
-      p.forEach((g) => {
-        cumDaysCible += g.cible;
-        cumDaysRealise += Math.round(g.realise * mult * 10) / 10;
-
-        const dCible = new Date(baseDate.getTime() + cumDaysCible * 86400000);
-        const dRealise = new Date(baseDate.getTime() + cumDaysRealise * 86400000);
-
-        ciblePoints.push({
-          x: dCible.toISOString().split('T')[0],
-          y: 0,
-          gate: g.gate,
-          type: 'Cible',
-          days: cumDaysCible
+      if (isMatrixAvailable) {
+        const matrixData = [];
+        netData.sites.forEach((site, sIdx) => {
+          netData.semaines.forEach((sem, wIdx) => {
+            const rawVal = (netData.valeurs[sIdx] && netData.valeurs[sIdx][wIdx]) || 75;
+            const v = Math.round(clampN(rawVal * (0.95 + (mult - 1) * 0.1), 30, 115));
+            matrixData.push({ x: sem, y: site, v: v });
+          });
         });
 
-        realisePoints.push({
-          x: dRealise.toISOString().split('T')[0],
-          y: 0,
-          gate: g.gate,
-          type: 'Réalisé',
-          retard: g.retard,
-          days: cumDaysRealise
-        });
-      });
+        return {
+          config: {
+            type: 'matrix',
+            data: {
+              datasets: [{
+                label: 'Occupation Réseau (%)',
+                data: matrixData,
+                backgroundColor(c) {
+                  const val = c.raw ? c.raw.v : 0;
+                  return colorByTension(val);
+                },
+                borderColor: '#ffffff',
+                borderWidth: 1.5,
+                borderRadius: 3,
+                width({ chart }) {
+                  const a = chart.chartArea;
+                  return a ? Math.max(10, (a.right - a.left) / netData.semaines.length - 3) : 24;
+                },
+                height({ chart }) {
+                  const a = chart.chartArea;
+                  return a ? Math.max(12, (a.bottom - a.top) / netData.sites.length - 2.5) : 22;
+                }
+              }]
+            },
+            options: baseChartOpts({
+              plugins: {
+                legend: { display: false },
+                tooltip: {
+                  callbacks: {
+                    title: (items) => items[0] && items[0].raw ? `${items[0].raw.y} • Semaine ${items[0].raw.x}` : '',
+                    label: (item) => {
+                      if (!item.raw) return '';
+                      const v = item.raw.v;
+                      const statut = v > 95 ? '🚨 Surcharge critique (>95%)' : v >= 80 ? '⚠️ Tension capacitaire (80-95%)' : '🟢 Charge fluide (<80%)';
+                      return [`Taux d'occupation : ${v} %`, `Statut : ${statut}`];
+                    }
+                  }
+                },
+                datalabels: {
+                  display: true,
+                  color: '#ffffff',
+                  font: { size: 8.5, weight: 'bold' },
+                  anchor: 'center',
+                  align: 'center',
+                  formatter: (v) => (v && v.v !== undefined) ? v.v + '%' : ''
+                }
+              },
+              scales: {
+                x: {
+                  type: 'category',
+                  labels: netData.semaines,
+                  title: { display: true, text: 'Axe X : Semaines Calendaires (S34 à S42)', font: { size: 9.5, weight: 'bold' } },
+                  ticks: { font: Object.assign({ size: 9 }, CHART_FONT) },
+                  grid: { display: false }
+                },
+                y: {
+                  type: 'category',
+                  labels: netData.sites,
+                  offset: true,
+                  title: { display: true, text: 'Axe Y : Centres MRO SAE (10 sites réseau)', font: { size: 9.5, weight: 'bold' } },
+                  ticks: { font: Object.assign({ size: 8.5, weight: 'bold' }, CHART_FONT) },
+                  grid: { display: false }
+                }
+              }
+            })
+          },
+          note: 'Heatmap d\'occupation réseau des 10 centres SAE MRO (Y) par semaine S34..S42 (X) : Vert (<80%) = capacité fluide, Jaune (80-95%) = tension capacitaire, Rouge (>95%) = saturation critique (S-VIL, S-MON).'
+        };
+      }
+
+      // Fallback en barres groupées
+      const rows = netData.sites.map((site, sIdx) => ({
+        label: site,
+        data: netData.valeurs[sIdx].map((v) => Math.round(clampN(v * (0.95 + (mult - 1) * 0.1), 0, 115)))
+      }));
 
       return {
         config: {
-          type: 'line',
+          type: 'bar',
           data: {
-            datasets: [
-              {
-                label: 'Jalons Cibles (Planning)',
-                data: ciblePoints,
-                borderColor: '#94a3b8',
-                borderWidth: 2,
-                borderDash: [6, 4],
-                backgroundColor: '#cbd5e1',
-                pointBackgroundColor: '#64748b',
-                pointBorderColor: '#ffffff',
-                pointBorderWidth: 2,
-                pointRadius: 6,
-                pointHoverRadius: 8,
-                fill: false,
-                tension: 0
-              },
-              {
-                label: 'Jalons Réalisés (Chemin Critique)',
-                data: realisePoints,
-                borderColor: '#3b82f6',
-                borderWidth: 3,
-                backgroundColor: 'rgba(59, 130, 246, 0.05)',
-                pointBackgroundColor: realisePoints.map((pt) => pt.retard > 1.2 ? '#ef4444' : pt.retard > 0 ? '#f59e0b' : '#10b981'),
-                pointBorderColor: '#ffffff',
-                pointBorderWidth: 2.5,
-                pointRadius: 8,
-                pointHoverRadius: 10,
-                fill: false,
-                tension: 0
-              }
-            ]
+            labels: netData.semaines,
+            datasets: rows.map((r) => ({
+              label: r.label,
+              data: r.data,
+              backgroundColor: colorByTension(r.data.reduce((a, b) => a + b, 0) / r.data.length),
+              borderRadius: 2
+            }))
           },
           options: baseChartOpts({
             plugins: {
-              legend: {
-                display: true,
-                position: 'top',
-                labels: { boxWidth: 10, boxHeight: 10, font: { size: 9.5, weight: 'bold' } }
-              },
+              legend: { position: 'bottom', labels: { boxWidth: 8, boxHeight: 8, font: { size: 8 } } },
               datalabels: {
-                display: (ctx) => ctx.datasetIndex === 1, // Afficher les repères sur les jalons réels
-                anchor: 'start',
-                align: 'top',
-                offset: 10,
-                backgroundColor: 'rgba(255, 255, 255, 0.92)',
-                borderColor: '#e2e8f0',
-                borderWidth: 1,
-                borderRadius: 4,
-                padding: { top: 3, bottom: 3, left: 6, right: 6 },
-                color: '#0f172a',
-                font: { size: 9, weight: 'bold', family: CHART_FONT.family },
-                formatter: (v, ctx) => {
-                  const pt = ctx.dataset.data[ctx.dataIndex];
-                  const sign = pt.retard > 0 ? ` (+${pt.retard}j)` : ' (OK)';
-                  return `${pt.gate}${sign}`;
-                }
+                display: (ctx) => ctx.dataset.data[ctx.dataIndex] >= 95,
+                anchor: 'end', align: 'top', offset: 1, font: { size: 7.5, weight: 'bold' },
+                formatter: (v) => v + '%'
               },
-              tooltip: {
-                callbacks: {
-                  title: (items) => {
-                    const pt = items[0] && items[0].raw;
-                    return pt ? `📍 ${pt.gate} (${pt.type})` : '';
-                  },
-                  label: (item) => {
-                    const pt = item.raw;
-                    if (!pt) return '';
-                    const retStr = pt.retard !== undefined ? (pt.retard > 0 ? ` • Retard : +${pt.retard} jours` : ' • Conforme SLA') : '';
-                    return `Date : ${pt.x} (Cumul : ${pt.days} jours)${retStr}`;
-                  }
-                }
-              }
+              tooltip: { callbacks: { label: (ctx) => ctx.dataset.label + ' : ' + ctx.parsed.y + ' %' } }
             },
             scales: {
-              x: {
-                type: 'time',
-                time: {
-                  unit: 'day',
-                  tooltipFormat: 'dd/MM/yyyy',
-                  displayFormats: { day: 'dd MMM' }
-                },
-                title: {
-                  display: true,
-                  text: 'Axe X : Chronologie Temporelle du Moteur en Atelier (Dates de passage)',
-                  font: { size: 9.5, weight: 'bold' }
-                },
-                ticks: { font: Object.assign({ size: 9 }, CHART_FONT) },
-                grid: { color: 'rgba(226, 232, 240, 0.6)' }
-              },
-              y: {
-                display: false, // Axe Y masqué pour frise horizontale épurée
-                min: -0.6,
-                max: 0.6
-              }
+              x: { title: { display: true, text: 'Axe X : Semaines S34..S42', font: { size: 9.5, weight: 'bold' } }, ticks: { font: Object.assign({ size: 8.5 }, CHART_FONT) }, grid: { display: false } },
+              y: { min: 0, max: 115, title: { display: true, text: 'Axe Y : Taux d\'Occupation (%)', font: { size: 9.5, weight: 'bold' } }, ticks: { font: { size: 8.5 } } }
             }
           })
         },
-        note: 'Timeline temporelle (Milestones) sur frise horizontale : passage des portes G1 à G5 sur axe date-fns. Repères verts = conforme, orange = alerte, rouge = dérive chemin critique. Axe Y masqué.'
+        note: 'Heatmap d\'occupation réseau par semaine : Vert < 80 %, Jaune 80-95 %, Rouge > 95 %.'
       };
     }
 
@@ -3380,68 +3231,61 @@ function calc4E(k, labels, mult) {
                   afterBody: (items) => {
                     const idx = items[0].dataIndex;
                     const item = p[idx];
-                    return `• Méthode : ${item.nom || item.label}\n• Degré de certitude : ${item.certitude} %\n• Complétude saisies MES : ${item.completude} %`;
+                    return `• Méthode : ${item.nom}\n• Degré de certitude : ${item.certitude} %\n• Complétude saisies : ${item.completude} %`;
                   }
                 }
               }
             },
             scales: {
               x: {
-                title: { display: true, text: 'Axe X : Méthodes de Calcul TAT (D-SOP, D-STA, D-CAP, D-ML)', font: { size: 9.5, weight: 'bold' } },
+                title: { display: true, text: 'Axe X : Méthodes de Calcul de TAT (D-SOP, D-STA, D-CAP, D-ML)', font: { size: 9.5, weight: 'bold' } },
                 ticks: { font: Object.assign({ size: 9 }, CHART_FONT) },
                 grid: { display: false }
               },
               y: {
                 beginAtZero: true,
-                max: 28,
-                title: { display: true, text: 'Axe Y1 : Délai TAT (jours)', font: { size: 9.5, weight: 'bold' } },
+                max: 30,
+                title: { display: true, text: 'Axe Y1 : TAT Moyen Prévu (jours)', font: { size: 9.5, weight: 'bold' } },
                 ticks: { font: { size: 9 } }
               },
               y1: {
                 position: 'right',
-                title: { display: true, text: 'Axe Y2 : % Écart vs Référence (%)', font: { size: 9.5, weight: 'bold' } },
+                title: { display: true, text: 'Axe Y2 : % Variance vs Réel (%)', font: { size: 9.5, weight: 'bold' } },
                 grid: { drawOnChartArea: false },
                 ticks: { font: { size: 9 }, callback: (v) => v + '%' }
               }
             }
           })
         },
-        note: 'Benchmark des 4 méthodes de calcul (D-SOP, D-STA, D-CAP, D-ML) face au TAT effectif de référence (18.2 j). La modélisation avancée D-ML offre le plus faible écart relatif (+2.7%) et la certitude la plus élevée (95%).'
+        note: 'Benchmark des 4 méthodes de calcul (D-SOP, D-STA, D-CAP, D-ML) face au TAT réel de référence (18.2 j). L\'écart le plus faible est obtenu avec D-ML (+2.2%) avec un taux de complétude des saisies de 93.4%.'
       };
     }
 
     function calc6A(retardShops, mult) {
-      const p = retardShops || [];
+      const labels = retardShops.map((r) => r.nom || r.code || r.shop);
+      const data = retardShops.map((r) => Math.round(r.taux_retard * (0.85 + mult / 3) * 10) / 10);
       const seuil = 10;
-      const rows = p.map((x) => {
-        const v = Math.round(clampN(x.taux_retard * (0.9 + mult / 4), 1, 40) * 10) / 10;
-        return { x, v };
-      }).sort((a, b) => b.v - a.v);
-
-      const barColors = rows.map(r => r.v >= 15 ? '#ef4444' : r.v >= 10 ? '#f59e0b' : '#10b981');
-
       return {
         config: {
           type: 'bar',
           data: {
-            labels: rows.map(r => r.x.shop),
+            labels,
             datasets: [
               {
-                type: 'bar',
-                label: 'Taux de Retard (%)',
-                data: rows.map(r => r.v),
-                backgroundColor: barColors,
+                label: '% Interventions en Retard',
+                data,
+                backgroundColor: data.map((v) => (v >= 15 ? '#ef4444' : v >= 10 ? '#f59e0b' : '#3b82f6')),
                 borderRadius: 4
               },
               {
                 type: 'line',
-                label: 'Seuil Tolérance (' + seuil + '%)',
-                data: rows.map(() => seuil),
+                label: 'Seuil tolérance (10%)',
+                data: labels.map(() => seuil),
                 borderColor: '#dc2626',
                 borderWidth: 2,
                 borderDash: [5, 4],
                 pointRadius: 0,
-                backgroundColor: '#dc2626'
+                fill: false
               }
             ]
           },
@@ -3449,43 +3293,42 @@ function calc4E(k, labels, mult) {
             plugins: {
               datalabels: {
                 display: (ctx) => ctx.datasetIndex === 0,
-                anchor: 'end', align: 'top', offset: 2,
+                anchor: 'end',
+                align: 'top',
+                offset: 2,
                 formatter: (v) => v + ' %'
-              },
-              tooltip: {
-                callbacks: {
-                  afterLabel: (ctx) => {
-                    const r = rows[ctx.dataIndex];
-                    return `Atelier : ${r.x.nom || r.x.shop}\nInterventions : ${r.x.total_interventions || 30} dossiers\nStatut : ${r.v >= 15 ? 'Critique' : r.v >= 10 ? 'Alerte' : 'Conforme'}`;
-                  }
-                }
               }
             },
             scales: {
-              x: { title: { display: true, text: 'Axe X : Ateliers & Shops SAE (S-XXX)', font: { size: 9.5, weight: 'bold' } }, ticks: { font: Object.assign({ size: 8.5 }, CHART_FONT) }, grid: { display: false } },
-              y: { beginAtZero: true, max: 25, title: { display: true, text: 'Axe Y : Taux de Retard (%)', font: { size: 9.5, weight: 'bold' } }, ticks: { font: { size: 9 } } }
+              x: { title: { display: true, text: 'Axe X : Centre & Atelier Shop (S-XXX)', font: { size: 9.5, weight: 'bold' } }, ticks: { font: Object.assign({ size: 8.5 }, CHART_FONT) }, grid: { display: false } },
+              y: { beginAtZero: true, max: 25, title: { display: true, text: 'Axe Y : Taux d\'Interventions en Retard (%)', font: { size: 9.5, weight: 'bold' } }, ticks: { font: { size: 9 } } }
             }
           })
         },
-        note: 'Taux de retard des interventions d\'atelier par shop (S-XXX) face au seuil contractuel de tolérance (10%, ligne rouge pointillée). Les shops S-MON et S-BRU dépassent la cible.'
+        note: 'Taux de retard par shop face au seuil contractuel de 10% : rouge = alerte critique (retard ≥ 15%), ambre = tension (≥ 10%), bleu = sous contrôle (< 10%).'
       };
     }
 
-    function calc6B(p, mult) {
-      const m2 = (k) => p.map((o) => Math.round(o[k] * mult * 10) / 10);
+    function calc6B(ops, mult) {
+      const labels = ops.map((o) => o.operation);
+      const cfm = ops.map((o) => Math.round(o.cfm * (0.85 + mult / 3) * 10) / 10);
+      const leap = ops.map((o) => Math.round(o.leap * (0.85 + mult / 3) * 10) / 10);
       return {
         config: {
           type: 'bar',
           data: {
-            labels: p.map((o) => o.operation),
+            labels,
             datasets: [
-              { label: 'CFM56 (% retard)', data: m2('cfm'), backgroundColor: '#3b82f6', borderRadius: 3 },
-              { label: 'LEAP (% retard)', data: m2('leap'), backgroundColor: '#6366f1', borderRadius: 3 }
+              { label: 'CFM56 (% retard)', data: cfm, backgroundColor: '#3b82f6', borderRadius: 3 },
+              { label: 'LEAP (% retard)', data: leap, backgroundColor: '#f59e0b', borderRadius: 3 }
             ]
           },
           options: baseChartOpts({
             plugins: {
-              datalabels: { anchor: 'end', align: 'top', offset: 2, formatter: (v) => v + ' %' }
+              datalabels: {
+                anchor: 'end', align: 'top', offset: 2,
+                formatter: (v) => v + ' %'
+              }
             },
             scales: {
               x: { title: { display: true, text: 'Axe X : Type de Réparation (T-XXXXXX)', font: { size: 9.5, weight: 'bold' } }, ticks: { font: Object.assign({ size: 8.5 }, CHART_FONT) }, grid: { display: false } },
@@ -3548,7 +3391,7 @@ function calc4E(k, labels, mult) {
                 borderRadius: 2
               },
               {
-                label: 'Réparation Effective (h)',
+                label: 'Réparation Effectif VA (h)',
                 data: rows.map(r => r.reparation),
                 backgroundColor: '#3b82f6',
                 borderRadius: 2
@@ -3565,68 +3408,57 @@ function calc4E(k, labels, mult) {
             indexAxis: 'y',
             plugins: {
               datalabels: {
-                color: '#ffffff',
-                font: { size: 8.5, weight: 'bold' },
-                formatter: (v) => v >= 3 ? Math.round(v) + ' h' : ''
+                display: false
               },
               tooltip: {
                 callbacks: {
                   footer: (items) => {
-                    let sum = 0;
-                    items.forEach(i => { sum += i.parsed.x; });
-                    return 'Total TAT Moyen : ' + Math.round(sum * 10) / 10 + ' h';
+                    const idx = items[0].dataIndex;
+                    const r = rows[idx];
+                    const total = Math.round((r.attente + r.reparation + r.transfert) * 10) / 10;
+                    return `• Total intervention : ${total} heures`;
                   }
                 }
               }
             },
             scales: {
-              x: {
-                stacked: true,
-                beginAtZero: true,
-                title: { display: true, text: 'Axe X : Heures Moyennes de Traitement par Intervention (heures)', font: { size: 9.5, weight: 'bold' } },
-                ticks: { font: { size: 9 } }
-              },
-              y: {
-                stacked: true,
-                title: { display: true, text: 'Axe Y : Shops & Ateliers SAE (S-XXX)', font: { size: 9.5, weight: 'bold' } },
-                ticks: { font: { size: 8.5 } }
-              }
+              x: { stacked: true, beginAtZero: true, title: { display: true, text: 'Axe X : Heures Moyennes de Traitement par Intervention', font: { size: 9.5, weight: 'bold' } }, ticks: { font: { size: 9 } } },
+              y: { stacked: true, title: { display: true, text: 'Axe Y : Centres & Ateliers MRO (S-XXX)', font: { size: 9.5, weight: 'bold' } }, ticks: { font: { size: 8.5 } } }
             }
           })
         },
-        note: 'Décomposition du délai moyen de traitement par intervention unitaire en shop (S-XXX) : attente passive en file (orange), réparation effective (bleu) et transit logistique (violet).'
+        note: 'Décomposition du délai moyen par shop : attente file/appro (ambre), usinage/réparation VA (bleu), transit inter-sites (violet).'
       };
     }
 
-    function calc6E(chargeStations, mult) {
-      const p = chargeStations || [];
-      const seuil = (p[0] && p[0].seuil) || 85;
-      const rows = p.map(a => {
-        const val = Math.round(clampN(a.charge * (0.95 + mult / 5), 10, 100));
-        return { a, val };
-      }).sort((x, y) => y.val - x.val);
+    function calc6E(stations, mult) {
+      const dataRows = (stations || []).map(s => ({
+        label: s.nom || s.station || s.id_station,
+        charge: Math.round(s.charge * (0.95 + mult / 10)),
+        seuil: s.seuil || 85
+      }));
 
       return {
         config: {
           type: 'bar',
           data: {
-            labels: rows.map(r => r.a.nom || r.a.id_station),
+            labels: dataRows.map(r => r.label),
             datasets: [
               {
-                label: 'Charge Station (%)',
-                data: rows.map(r => r.val),
-                backgroundColor: rows.map(r => r.val >= seuil ? '#ef4444' : r.val >= 80 ? '#f59e0b' : '#10b981'),
+                label: 'Taux de Charge (%)',
+                data: dataRows.map(r => r.charge),
+                backgroundColor: dataRows.map(r => r.charge >= r.seuil ? '#ef4444' : r.charge >= 80 ? '#f59e0b' : '#3b82f6'),
                 borderRadius: 3
               },
               {
-                label: 'Seuil Critique ' + seuil + '%',
-                data: rows.map(() => seuil),
                 type: 'line',
+                label: 'Seuil Saturation (85%)',
+                data: dataRows.map(r => r.seuil),
                 borderColor: '#dc2626',
                 borderWidth: 2,
                 borderDash: [5, 4],
                 pointRadius: 0,
-                backgroundColor: '#dc2626'
+                fill: false
               }
             ]
           },
@@ -3634,9 +3466,10 @@ function calc4E(k, labels, mult) {
             indexAxis: 'y',
             plugins: {
               datalabels: {
-                display: (ctx) => ctx.datasetIndex === 0,
-                anchor: 'end', align: 'right', offset: 2,
-                formatter: (v) => v + ' %'
+                anchor: 'end',
+                align: 'right',
+                offset: 2,
+                formatter: (v, ctx) => ctx.datasetIndex === 0 ? v + ' %' : ''
               }
             },
             scales: {
@@ -3645,14 +3478,14 @@ function calc4E(k, labels, mult) {
             }
           })
         },
-        note: 'Taux de charge par station de réparation (S-XXX-YY) face au seuil critique de 85 % (ligne rouge). Les postes S-MON-01 (Aubes HP) et S-VIL-01 (Équilibrage) saturent.'
+        note: 'Taux de charge par station de réparation face au seuil de 85% (ligne rouge) : les postes en surchauffe apparaissent en rouge.'
       };
     }
 
     function calc6F(hm, mult) {
       const shopData = hm || (maestroData() && maestroData().heatmapShop) || {
         shop: 'S-MON (Montereau)',
-        jours: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'],
+        semaines: ['S34', 'S35', 'S36', 'S37', 'S38', 'S39', 'S40', 'S41', 'S42'],
         stations: [
           'S-MON-01 (Aubes HP)',
           'S-MON-02 (Combustion)',
@@ -3662,14 +3495,16 @@ function calc4E(k, labels, mult) {
           'S-MON-06 (Recette & FOD)'
         ],
         valeurs: [
-          [92, 89, 96, 95, 87],
-          [85, 88, 91, 89, 82],
-          [78, 84, 88, 86, 75],
-          [72, 79, 84, 80, 71],
-          [68, 74, 80, 78, 65],
-          [62, 69, 75, 73, 58]
+          [92, 94, 98, 97, 95, 91, 88, 86, 84],
+          [85, 88, 91, 89, 87, 85, 82, 80, 78],
+          [78, 84, 88, 86, 83, 80, 78, 76, 74],
+          [72, 79, 84, 80, 78, 75, 73, 71, 69],
+          [68, 74, 80, 78, 75, 72, 70, 68, 65],
+          [62, 69, 75, 73, 70, 67, 65, 62, 59]
         ]
       };
+
+      const semaines = shopData.semaines || shopData.jours || ['S34', 'S35', 'S36', 'S37', 'S38', 'S39', 'S40', 'S41', 'S42'];
 
       const isMatrixAvailable = typeof Chart !== 'undefined' && Chart.registry && Chart.registry.controllers && Chart.registry.controllers.get('matrix');
       const colorsByValue = (v) => (v >= 90 ? '#dc2626' : v >= 85 ? '#ef4444' : v >= 75 ? '#f59e0b' : v >= 60 ? '#3b82f6' : '#10b981');
@@ -3677,10 +3512,10 @@ function calc4E(k, labels, mult) {
       if (isMatrixAvailable) {
         const matrixData = [];
         shopData.stations.forEach((station, sIdx) => {
-          shopData.jours.forEach((jour, jIdx) => {
+          semaines.forEach((sem, jIdx) => {
             const rawVal = (shopData.valeurs[sIdx] && shopData.valeurs[sIdx][jIdx]) || 70;
             const v = Math.round(clampN(rawVal * (0.9 + mult / 3), 10, 100));
-            matrixData.push({ x: jour, y: station, v: v });
+            matrixData.push({ x: sem, y: station, v: v });
           });
         });
 
@@ -3700,7 +3535,7 @@ function calc4E(k, labels, mult) {
                 borderRadius: 3,
                 width({ chart }) {
                   const a = chart.chartArea;
-                  return a ? Math.max(12, (a.right - a.left) / shopData.jours.length - 3) : 24;
+                  return a ? Math.max(12, (a.right - a.left) / semaines.length - 3) : 24;
                 },
                 height({ chart }) {
                   const a = chart.chartArea;
@@ -3713,7 +3548,7 @@ function calc4E(k, labels, mult) {
                 legend: { display: false },
                 tooltip: {
                   callbacks: {
-                    title: (items) => items[0] && items[0].raw ? `${items[0].raw.y} • ${items[0].raw.x}` : '',
+                    title: (items) => items[0] && items[0].raw ? `${items[0].raw.y} • Semaine ${items[0].raw.x}` : '',
                     label: (item) => item.raw ? `Occupation : ${item.raw.v} % (Shop ${shopData.shop})` : ''
                   }
                 },
@@ -3729,8 +3564,8 @@ function calc4E(k, labels, mult) {
               scales: {
                 x: {
                   type: 'category',
-                  labels: shopData.jours,
-                  title: { display: true, text: 'Axe X : Jours Ouvrés de la Semaine (' + (shopData.shop || 'Shop S-MON') + ')', font: { size: 9.5, weight: 'bold' } },
+                  labels: semaines,
+                  title: { display: true, text: 'Axe X : Semaines Calendaires S34..S42 (' + (shopData.shop || 'Shop S-MON') + ')', font: { size: 9.5, weight: 'bold' } },
                   ticks: { font: Object.assign({ size: 9 }, CHART_FONT) },
                   grid: { display: false }
                 },
@@ -3745,7 +3580,7 @@ function calc4E(k, labels, mult) {
               }
             })
           },
-          note: 'Heatmap d\'occupation des stations du shop ' + (shopData.shop || 'S-MON') + ' : matrice thermique avec les stations en axe Y et les jours ouvrés en axe X. S-MON-01 (Aubes HP) sature en milieu de semaine (rouge ≥ 90%).'
+          note: 'Heatmap d\'occupation des stations du shop ' + (shopData.shop || 'S-MON') + ' : matrice thermique avec les stations en axe Y et les semaines S34 à S42 en axe X. S-MON-01 (Aubes HP) sature en milieu de période (rouge ≥ 90%).'
         };
       }
 
@@ -3759,7 +3594,7 @@ function calc4E(k, labels, mult) {
         config: {
           type: 'bar',
           data: {
-            labels: shopData.jours,
+            labels: semaines,
             datasets: rows.map((r) => ({
               label: r.label,
               data: r.data,
@@ -3778,12 +3613,12 @@ function calc4E(k, labels, mult) {
               tooltip: { callbacks: { label: (ctx) => ctx.dataset.label + ' : ' + ctx.parsed.y + ' %' } }
             },
             scales: {
-              x: { title: { display: true, text: 'Axe X : Jours Ouvrés (' + (shopData.shop || 'Shop S-MON') + ')', font: { size: 9.5, weight: 'bold' } }, ticks: { font: Object.assign({ size: 8.5 }, CHART_FONT) }, grid: { display: false } },
+              x: { title: { display: true, text: 'Axe X : Semaines S34..S42 (' + (shopData.shop || 'Shop S-MON') + ')', font: { size: 9.5, weight: 'bold' } }, ticks: { font: Object.assign({ size: 8.5 }, CHART_FONT) }, grid: { display: false } },
               y: { min: 0, max: 105, title: { display: true, text: 'Axe Y : Taux d\'Occupation Stations (%)', font: { size: 9.5, weight: 'bold' } }, ticks: { font: { size: 8.5 } } }
             }
           })
         },
-        note: 'Occupation des stations du shop ' + (shopData.shop || 'S-MON') + ' par jour ouvré : rouge ≥ 90 %, orange ≥ 85 %.'
+        note: 'Occupation des stations du shop ' + (shopData.shop || 'S-MON') + ' par semaine S34..S42 : rouge ≥ 90 %, orange ≥ 85 %.'
       };
     }
 
@@ -3826,7 +3661,8 @@ function calc4E(k, labels, mult) {
     function calc6H(td, mult) {
       const dataRoot = td || (maestroData() && maestroData().treemapShop);
       const isTreemapAvailable = typeof Chart !== 'undefined' && Chart.registry && Chart.registry.controllers && Chart.registry.controllers.get('treemap');
-      const colorByRetard = (retard) => (retard >= 15 ? '#ef4444' : retard >= 10 ? '#f59e0b' : '#10b981');
+      // Seuils trichromatiques : Vert (<8%), Jaune (8-15%), Rouge (>15%)
+      const colorByRetard = (retard) => (retard > 15 ? '#ef4444' : retard >= 8 ? '#f59e0b' : '#10b981');
 
       const isDrilled = !!window._drillTreemapEngine;
       const drillEngine = window._drillTreemapEngine;
@@ -3844,7 +3680,7 @@ function calc4E(k, labels, mult) {
           retard: m.retard
         }));
         currentTitle = `Treemap Shop S-MON — Répartition par Type de Moteur (💡 Cliquer pour drill-down)`;
-        currentNote = `Treemap Shop S-MON (Niveau 1 — Moteurs) : surface = temps passé (heures), couleur = taux de retard (vert < 10%, ambre 10-15%, rouge ≥ 15%). 💡 Cliquez sur un moteur pour déclencher le drill-down par type de réparation.`;
+        currentNote = `Treemap Shop S-MON (Niveau 1 — Moteurs) : surface = temps passé (heures), couleur trichromatique = taux de retard (Vert < 8%, Jaune 8-15%, Rouge > 15%). 💡 Cliquez sur un moteur pour déclencher le drill-down par type de réparation.`;
       } else {
         // Niveau 2 : Décomposition par type de réparation pour le moteur sélectionné
         const mObj = (dataRoot && dataRoot.moteurs ? dataRoot.moteurs : []).find(m => m.moteur === drillEngine) || (dataRoot && dataRoot.moteurs && dataRoot.moteurs[0]);
@@ -3856,7 +3692,7 @@ function calc4E(k, labels, mult) {
           retard: r.retard
         }));
         currentTitle = `Treemap Shop S-MON — Décomposition ${drillEngine} par Type de Réparation`;
-        currentNote = `Treemap Shop S-MON (Niveau 2 — Réparations sur ${drillEngine}) : répartition du temps passé et du taux de retard par gamme opératoire. Cliquez sur "◀ Revenir aux Moteurs" pour remonter au niveau 1.`;
+        currentNote = `Treemap Shop S-MON (Niveau 2 — Réparations sur ${drillEngine}) : surface = temps passé (heures), couleur = taux de retard (Vert < 8%, Jaune 8-15%, Rouge > 15%). Cliquez sur "◀ Revenir aux Moteurs" pour remonter au niveau 1.`;
       }
 
       const totalHeures = currentItems.reduce((acc, it) => acc + it.heures, 0);
@@ -3932,9 +3768,10 @@ function calc4E(k, labels, mult) {
                       const d = item.raw._data || item.raw;
                       if (!d) return '';
                       const drillHint = !isDrilled ? ' • 💡 Cliquer pour décomposer par réparation' : '';
+                      const statut = d.retard > 15 ? '🚨 Retard critique (>15%)' : d.retard >= 8 ? '⚠️ Tension modérée (8-15%)' : '🟢 Conforme (<8%)';
                       return [
                         `Temps passé : ${d.heures} heures (${d.pctTemps}% du total)`,
-                        `Taux de retard : ${d.retard} % (Seuil tolérance : 10%)${drillHint}`
+                        `Taux de retard : ${d.retard} % [${statut}]${drillHint}`
                       ];
                     }
                   }
@@ -4100,7 +3937,7 @@ const STEP_BUILDERS = {
         E: (d, mult) => calc4E(d.kpis, d.kpisLabels, mult),
         F: (d, mult) => calc4F(d.modulesP85, mult),
         G: (d, mult) => calc4G(d.waterfall, mult),
-        H: (d, mult) => calc4H(d.gates, mult),
+        H: (d, mult) => calc4H(d.heatmapNetwork || d.gates, mult),
         I: (d, mult) => calc4I(d.calculsTAT, mult)
       },
       6: {
@@ -4125,7 +3962,7 @@ const STEP_BUILDERS = {
         E: '🎯 Personas : CSPM & Direction MRO • KPIs synthétiques de pilotage de la demande : TAT Wing to Wing moyen, respect SLA global et volumes de demandes.',
         F: '🎯 Personas : FTM & CSPM • Barres vs seuils P85 par flotte moteur : détection des dérives sur les demandes de maintenance.',
         G: '🎯 Personas : FINC & CSPM • Waterfall des dérives TAT de la demande : cascade cumulative de la cible contractuelle au temps réel constaté.',
-        H: '🎯 Personas : EOWN & SHPL • Suivi des jalons de traversée Gates G1→G5 des demandes de maintenance.',
+        H: '🎯 Personas : NTPL & Direction Industrielle • Heatmap d\'occupation réseau des 10 sites MRO sur les semaines S34 à S42. Code trichromatique : Vert < 80%, Jaune 80-95%, Rouge > 95%.',
         I: '🎯 Personas : DGOV & FTM • Histogramme comparatif des 4 méthodes de calcul de TAT vs effectif réel (18.2 j) : variance et complétude.'
       },
       6: {
@@ -4134,9 +3971,9 @@ const STEP_BUILDERS = {
         C: '🎯 Personas : NTPL & SHPL • Flux de sous-traitance et routes de transfert d\'interventions inter-shops (S-XXX).',
         D: '🎯 Personas : SHPL & Continuous Improvement • Décomposition du délai moyen d\'intervention par shop : attente file/pièces, réparation effective et transit logistique.',
         E: '🎯 Personas : SHPL & NTPL • Taux de charge des stations de réparation (S-XXX-YY) face au seuil critique de 85% : repérage des machines et postes saturés.',
-        F: '🎯 Personas : SHPL & Continuous Improvement • Heatmap d\'occupation des stations par shop (S-MON) : tension journalière par station de réparation (S-XXX-YY) du lundi au vendredi.',
+        F: '🎯 Personas : SHPL & Continuous Improvement • Heatmap d\'occupation des stations par shop (S-MON) : tension hebdomadaire par station de réparation (S-XXX-YY) sur les semaines S34 à S42.',
         G: '🎯 Personas : DMMG & NTPL • CFD flux cumulé entrées (inductions) vs sorties (clôtures) des interventions en shop.',
-        H: '🎯 Personas : SHPL & EOWN • Treemap Shop : répartition du temps passé par moteur (niveau 1) et drill-down par réparation (niveau 2). Couleur = taux de retard (vert < 10%, ambre 10-15%, rouge ≥ 15%).',
+        H: '🎯 Personas : SHPL & EOWN • Treemap Shop : répartition du temps passé par moteur (niveau 1) et drill-down par réparation (niveau 2). Couleur trichromatique selon le taux de retard (Vert < 8%, Jaune 8-15%, Rouge > 15%).',
         I: '🎯 Personas : DGOV & NTPL • Histogramme comparatif des 4 méthodes capacitaires vs débit effectif réel (124 interventions) : écart et complétude MES.'
       }
     };
@@ -4155,6 +3992,672 @@ const STEP_BUILDERS = {
       return { config: res.config, title: title, sub: sub, note: note };
     }
 
+    // ===== Gestionnaire du Mode Éditeur Visuel Chart.js Dynamique (Étapes 4 & 6) =====
+    const chartViewMode = { 4: 'chart', 6: 'chart' };
+    const editingChartConfig = { 4: null, 6: null };
+
+    const COLOR_PALETTES = [
+      { name: 'Bleu Safran', color: '#3b82f6' },
+      { name: 'Émeraude Conforme', color: '#10b981' },
+      { name: 'Ambre Vigilance', color: '#f59e0b' },
+      { name: 'Rouge Critique', color: '#ef4444' },
+      { name: 'Violet Spécial', color: '#8b5cf6' },
+      { name: 'Cyan Industriel', color: '#06b6d4' },
+      { name: 'Indigo Nuit', color: '#6366f1' },
+      { name: 'Ardoise / Gris', color: '#64748b' }
+    ];
+
+    function getChartStorageKey(step, opt) {
+      return 'maestro_custom_chart_' + step + '_' + (opt || selections[step]);
+    }
+
+    const CHART_MD_SPECS = {
+      4: {
+        A: {
+          title: "Distribution du TAT Médian et Dispersion P5 - P95 par Famille Moteur",
+          chartType: "Boxplot / Barres Horizontales P5, P50, P95 (indexAxis: y)",
+          model: "MDT_MAINTENANCE_REQUEST (Dossier Macro de Demande)",
+          grain: "1 ligne = 1 demande de visite globale (ID_DEMANDE)",
+          axisX: "Durée du Turn Around Time global de la visite en jours calendaires",
+          axisY: "Famille de motorisation aéronautique (ENGINE_TYPE)",
+          dimensions: ["ENGINE_TYPE (CFM56-7B, LEAP-1A, LEAP-1B, CFM56-5B, GE90-115B, M88-2)", "TIMEPROFILE (Période d'induction)"],
+          measures: [
+            "P50_MEDIAN_TAT (Délai médian réalisé en jours)",
+            "P5_LOWER_TAT (Borne basse 5e percentile - scénario optimiste)",
+            "P95_UPPER_TAT (Borne haute 95e percentile - scénario pessimiste)"
+          ],
+          filters: "Statut demande = Clôturée ou En-cours standard ; Clients tous comptes",
+          businessRules: "P5 ≈ 60-70% de P50 ; P95 ≈ 140-165% de P50. Les barres horizontales s'étendent de 0 à la valeur du percentile avec étiquettes 'XX.X j' en bout de barre."
+        },
+        B: {
+          title: "Décomposition du TAT Dossier par Phase (Atelier, Attente Appro, Transit Logistique)",
+          chartType: "Barres Horizontales Empilées (Stacked Bar, indexAxis: y)",
+          model: "MDT_MAINTENANCE_REQUEST (Dossier Macro de Demande)",
+          grain: "1 ligne = 1 demande de visite globale (ID_DEMANDE)",
+          axisX: "Jours de TAT cumulés décomposés",
+          axisY: "Famille de motorisation (ENGINE_TYPE)",
+          dimensions: ["ENGINE_TYPE (CFM56-7B, CFM56-5B, LEAP-1A, LEAP-1B, GE90-115B, M88-2)", "PHASE_DOSSIER (Atelier, Attente Appro/Client, Transit)"],
+          measures: [
+            "TEMPS_REVISION_ATELIER (Durée nette opérée en atelier MRO - Bleu #3b82f6)",
+            "ATTENTE_VALIDATION_APPRO (Attente pièces de rechange et approbations client - Rouge #ef4444)",
+            "TRANSIT_LOGISTIQUE (Transport et navettes inter-sites réseau - Ambre #f59e0b)"
+          ],
+          filters: "Dossiers de maintenance moteur sur les 12 derniers mois",
+          businessRules: "Empilement horizontal totalisant le TAT moyen du moteur. Affichage d'étiquettes internes centrées en blanc si durée >= 2 jours."
+        },
+        C: {
+          title: "Respect des Engagements Délais par Client et Taux de Non-Respect SLA",
+          chartType: "Dual-Axis Combination Chart (Barres Groupées TAT + Ligne % Non-Respect SLA)",
+          model: "MDT_MAINTENANCE_REQUEST & Table CONTRACT_SLA",
+          grain: "1 ligne = 1 demande de visite globale (ID_DEMANDE)",
+          axisX: "Compagnies Aériennes Clientes (DEMANDEUR : Air France AFR, Air China CCA, easyJet EZY, Lufthansa DLH, Delta DAL, Emirates UAE, Singapore SIA)",
+          axisY: "Axe Y1 (Gauche) = TAT Moyen en Jours • Axe Y2 (Droite) = Taux de Non-Respect SLA en %",
+          dimensions: ["DEMANDEUR (Code & Nom Compagnie)", "ID_CONTRAT (Engagements contractuels)"],
+          measures: [
+            "TAT_CONTRACTUEL_CIBLE (SLA convenu au contrat en jours - Vert #10b981)",
+            "TAT_EFFECTIF_REVISE (TAT moyen réel constaté en jours - Bleu #3b82f6)",
+            "SLA_NON_RESPECT_PCT (Part des dossiers livrés au-delà de l'engagement contractuel en % - Ligne Rouge #dc2626)"
+          ],
+          filters: "Toutes flottes confondues, pondéré par le volume de demandes par compagnie",
+          businessRules: "Axe Y1 débute à 0. Axe Y2 débute à 0% sans grille secondaire. Infobulles comparant le dérapage moyen par compagnie."
+        },
+        D: {
+          title: "Tableau d'Alertes Nominatives des Demandes et Pénalités Encourues",
+          chartType: "Barres Horizontales (indexAxis: y) Triées par Retard Décroissant",
+          model: "MDT_MAINTENANCE_REQUEST (Dossier Macro de Demande)",
+          grain: "1 ligne = 1 demande globale identifiée par ID_DEMANDE (Format: D-YYYY-XXXXXX)",
+          axisX: "Jours de retard au-delà du SLA contractuel",
+          axisY: "Identifiant Demande (ID_DEMANDE / ESN) • Client • Site d'induction",
+          dimensions: ["ID_DEMANDE (D-YYYY-XXXXXX)", "DEMANDEUR (Compagnie cliente)", "ENGINE_TYPE (Modèle moteur)", "NIVEAU_URGENCE_GLOBAL / STATUT"],
+          measures: [
+            "RETARD_SLA_JOURS (Dépassement net par rapport au délai convenu)",
+            "TOTAL_ENGINE_TAT (TAT réel cumulé à date)",
+            "PENALITES_ESTIMEES_EUR (Pénalités contractuelles = Retard × 1500 à 2500 €/jour)"
+          ],
+          filters: "Top 8 des dossiers les plus critiques classés par retard décroissant",
+          businessRules: "Couleurs selon criticité : AOG Critique = Rouge (#ef4444), En Retard = Ambre (#f59e0b), En Cours = Bleu (#3b82f6), Conforme = Vert (#10b981). Étiquette '+X j' en bout de barre."
+        },
+        E: {
+          title: "Cartes KPIs Synthétiques du Pilotage Délais MRO",
+          chartType: "Multi-KPI Horizontal Bar (Indicateurs Scalaires Réel vs Cible, indexAxis: y)",
+          model: "MDT_MAINTENANCE_REQUEST (Dossier Macro de Demande)",
+          grain: "Agrégats macro-décisionnels sur l'ensemble du parc de demandes",
+          axisX: "Valeur de l'indicateur mesuré vs Seuil/Cible (jours ou %)",
+          axisY: "Intitulé du KPI (TAT Moyen Glissant, Taux de Respect SLA, Dérive d'En-Cours WIP)",
+          dimensions: ["INDICATEUR_METIER (Libellé du KPI)"],
+          measures: [
+            "VALEUR_MESUREE (Performance réelle mesurée - Bleu #3b82f6)",
+            "VALEUR_CIBLE (Seuil d'alerte ou objectif contractuel - Gris #cbd5e1)"
+          ],
+          filters: "Périmètre global réseau toutes usines et flottes confondues",
+          businessRules: "Double barre par indicateur permettant la comparaison visuelle immédiate réel vs cible. Formatage d'étiquettes conditionnel ('j' ou '%')."
+        },
+        F: {
+          title: "Durée Réelle par Famille Moteur vs Seuil Contractuel P85",
+          chartType: "Barres Horizontales avec Ligne de Seuil P85 (indexAxis: y)",
+          model: "MDT_MAINTENANCE_REQUEST (Dossier Macro de Demande)",
+          grain: "1 ligne = 1 demande de visite globale (ID_DEMANDE)",
+          axisX: "TAT Total Moteur Réalisé (jours calendaires)",
+          axisY: "Famille de motorisation (ENGINE_TYPE)",
+          dimensions: ["ENGINE_TYPE (CFM56-7B, CFM56-5B, LEAP-1A, LEAP-1B, GE90-115B, M88-2)"],
+          measures: [
+            "ACTUAL_TOTAL_TAT (TAT moyen réalisé par type de moteur)",
+            "P85_CONTRACTUAL_THRESHOLD (Ligne de référence en tirets rouges : engagement contractuel P85 à 24 jours)"
+          ],
+          filters: "Demandes clôturées sur le semestre en cours",
+          businessRules: "Coloration conditionnelle de la barre : Rouge si TAT > Seuil P85, Ambre si TAT > Seuil - 3 jours, Bleu si TAT sous contrôle."
+        },
+        G: {
+          title: "Waterfall des Dérives du TAT (Cascade de Décomposition des Retards)",
+          chartType: "Waterfall / Cascade Chart (Barres Flottantes Cumulatives)",
+          model: "MDT_MAINTENANCE_REQUEST (Dossier Macro de Demande)",
+          grain: "1 ligne = 1 événement contributeur au délai de visite",
+          axisX: "Jalons et Facteurs de Dérive (TAT Cible, Attente Pièces, Aléas CND, Fast-Track, TAT Réel)",
+          axisY: "Durée cumulée de la visite moteur en jours",
+          dimensions: ["CAUSE_DERIVE (Étape ou motif d'écart de gamme)"],
+          measures: [
+            "VARIATION_DELAI_JOURS (Impact positif en rouge ou gain en vert)",
+            "CUMULATIVE_ENGINE_TAT (Niveau cumulé résultant)"
+          ],
+          filters: "Dossier représentatif en dérive moyenne",
+          businessRules: "Première barre grise (Cible 16 j), barres rouges pour allongement de délai (+3.1 j pièces, +2.0 j CND, +1.1 j logistique), barre verte pour accélération (-1.3 j fast-track), dernière barre bleu marine pour TAT Réel final (20.9 j)."
+        },
+        H: {
+          title: "Heatmap d'Occupation Réseau par Site MRO (Semaines S34 à S42)",
+          chartType: "Heatmap Matrix (Grille Thermique Sites en Y × Semaines en X)",
+          model: "MDT_MAINTENANCE_REQUEST & Table Réseau Sites",
+          grain: "1 cellule = Taux d'occupation moyen du centre SAE pour la semaine calendaire",
+          axisX: "Semaines calendaires S34 à S42 (Période glissante 9 semaines)",
+          axisY: "10 Centres Industriels SAE MRO (S-VIL Villaroche, S-MON Montereau, S-CHL Châtellerault, S-BRU Bruxelles, S-SQY Saint-Quentin, S-GEN Gennevilliers, S-BDX Bordeaux, S-TLS Toulouse, S-LGG Liège, S-CRE Le Creusot)",
+          dimensions: ["SITE_MRO (10 centres industriels)", "SEMAINE_CALENDAIRE (S34 à S42)"],
+          measures: [
+            "TAUX_OCCUPATION_PCT (Charge globale du site en % de la capacité nominale)"
+          ],
+          filters: "Capacité globale réseau SAE MRO",
+          businessRules: "Échelle trichromatique stricte : Vert fluide si charge < 80%, Jaune/Ambre si tension 80% à 95%, Rouge saturation critique si charge > 95% (ex: Montereau et Villaroche en surchauffe)."
+        },
+        I: {
+          title: "Benchmark Fiabilité TAT : Comparatif des 4 Méthodes vs Référence Effectif",
+          chartType: "Dual-Axis Clustered Bar & Deviation Line Chart",
+          model: "MDT_MAINTENANCE_REQUEST & Référentiel Méthodologique MRO",
+          grain: "1 ligne = 1 méthode d'estimation du TAT (D-SOP, D-STA, D-CAP, D-ML)",
+          axisX: "Méthodes de calcul du TAT (D-SOP Standard, D-STA Statistique, D-CAP Capacité, D-ML Machine Learning)",
+          axisY: "Axe Y1 (Gauche) = TAT Estimé en Jours • Axe Y2 (Droite) = % Écart relatif vs Réel",
+          dimensions: ["METHODE_CALCUL_TAT (Code et intitulé de la méthode)", "DEGRE_CERTITUDE (%)"],
+          measures: [
+            "TAT_CALCULE_JOURS (Valeur estimée par la méthode en jours - Barres de couleur)",
+            "TAT_EFFECTIF_REF (Valeur réelle constatée de référence : 18.2 jours - Ligne pointillée grise)",
+            "ECART_RELATIF_PCT (% d'écart vs effectif = (Estimé - 18.2) / 18.2 - Ligne Rouge #dc2626)",
+            "DATA_COMPLETENESS_RATE (Taux de complétude des données d'entrée = 93.4%)"
+          ],
+          filters: "Toutes motorisations confondues",
+          businessRules: "L'approche Machine Learning (D-ML) offre l'écart le plus resserré (+2.2% vs 18.2 j). Infobulles détaillant le degré de certitude et la complétude des données de chaque modèle."
+        }
+      },
+      6: {
+        A: {
+          title: "Taux d'Interventions en Retard par Atelier Shop vs Seuil Tolérance 10%",
+          chartType: "Barres Verticales / Colonnes avec Ligne de Seuil",
+          model: "MDT_INTERVENTION (Opérations d'Atelier)",
+          grain: "1 ligne = 1 intervention unitaire sur poste ou atelier (ID_INTERVENTION)",
+          axisX: "Centres & Ateliers Shops SAE (SHOP_ASSIGNE : S-MON, S-VIL, S-CHL, S-BRU, S-TLS, S-SQY, S-GEN, S-BDX, S-LGG, S-CRE)",
+          axisY: "Pourcentage d'interventions accusant un retard (%)",
+          dimensions: ["SHOP_ASSIGNE (10 shops SAE MRO)"],
+          measures: [
+            "INTERVENTION_DELAY_RATE (% d'interventions en retard par rapport à la gamme constructeur)",
+            "SEUIL_RETARD_TOLERANCE (Ligne rouge pointillée à 10.0% de tolérance contractuelle)",
+            "TOTAL_INTERVENTIONS_COUNT (Volume global traité)"
+          ],
+          filters: "Interventions clôturées sur le mois écoulé (référence débit : 124 interventions/mois)",
+          businessRules: "Coloration trichromatique des colonnes : Rouge critique si retard >= 15%, Ambre si retard entre 10% et 15%, Bleu si retard < 10% sous contrôle."
+        },
+        B: {
+          title: "Taux d'Aléa Imprévu par Type d'Intervention : CFM56 vs LEAP",
+          chartType: "Barres Groupées Comparatives (Clustered Column)",
+          model: "MDT_INTERVENTION (Opérations d'Atelier)",
+          grain: "1 ligne = 1 intervention unitaire sur station/shop",
+          axisX: "Types de Réparation (TYPE_REPARATION : T-INSCND, T-AUBTUR, T-MAJLOU, T-BANESS, T-EQUROT, T-COMHOT, T-REVCAR, T-FODREP)",
+          axisY: "Taux de retard imprévu en cours d'opération (%)",
+          dimensions: ["TYPE_REPARATION (8 gammes techniques)", "PROGRAMME_MOTEUR (CFM56 vs LEAP)"],
+          measures: [
+            "RETARD_CFM56_PCT (Taux d'aléa sur flotte mature CFM56 - Bleu #3b82f6)",
+            "RETARD_LEAP_PCT (Taux d'aléa sur nouvelle génération LEAP - Ambre #f59e0b)"
+          ],
+          filters: "Toutes stations confondues",
+          businessRules: "Le programme LEAP accuse systématiquement un surplus d'aléas imprévus (+7 à +12%) en raison de la maturité industrielle et de la complexité des composites."
+        },
+        C: {
+          title: "Top Routes de Transfert Logistique Inter-Shops et Délais Navettes",
+          chartType: "Dual-Axis Combination Horizontal Bar & Line Chart",
+          model: "MDT_INTERVENTION & Flux Logistiques Inter-Sites",
+          grain: "1 ligne = 1 flux de navette inter-shops",
+          axisX: "Axe X1 (Bas) = Part du Flux Logistique Total (%) • Axe X2 (Haut) = Délai Moyen Navette (jours)",
+          axisY: "Routes de transfert (SHOP_SOURCE ➔ SHOP_DEST : S-MON ➔ S-VIL, S-CHL ➔ S-BRU, S-VIL ➔ S-SQY...)",
+          dimensions: ["ROUTE_TRANSFERT (Origine vers Destination)"],
+          measures: [
+            "TRANSFER_VOLUME_PCT (Part du flux d'interventions transitant par cette liaison - Barres bleues)",
+            "AVG_TRANSIT_DURATION_DAYS (Délai moyen de navette aller-retour - Ligne ambre avec points)"
+          ],
+          filters: "Transferts inter-ateliers réalisés sur les 6 derniers mois",
+          businessRules: "Barres bleues associées à l'axe X inférieur (0 à 50%). Ligne ambre associée à l'axe X supérieur (0 à 5 jours). Met en exergue le goulot logistique Montereau-Villaroche."
+        },
+        D: {
+          title: "Décomposition du Délai Moyen d'Intervention par Shop (Attente, Réparation, Transit)",
+          chartType: "Barres Horizontales Empilées (Stacked Bar, indexAxis: y)",
+          model: "MDT_INTERVENTION (Opérations d'Atelier)",
+          grain: "1 ligne = 1 shop industriel (SHOP_ASSIGNE)",
+          axisX: "Heures moyennes de traitement consommées par intervention",
+          axisY: "Ateliers Shops (S-XXX : S-MON, S-VIL, S-CHL, S-BRU, S-TLS, S-SQY, S-GEN, S-BDX, S-LGG, S-CRE)",
+          dimensions: ["SHOP_ASSIGNE (10 ateliers industriels)", "SEGMENT_DURÉE (Attente File/Appro, Réparation VA, Transit)"],
+          measures: [
+            "AVG_QUEUE_HOURS (Attente passive en file et mise à disposition outillage - Ambre #f59e0b)",
+            "AVG_REPAIR_HOURS (Temps d'usinage et révision valeur ajoutée à la station - Bleu #3b82f6)",
+            "AVG_TRANSIT_HOURS (Temps logistique de transit et déchargement - Violet #8b5cf6)"
+          ],
+          filters: "Toutes opérations terminées, normalisées sur base 100",
+          businessRules: "Infobulle avec calcul dynamique du total en heures. Révèle que l'attente passive représente jusqu'à 30% du temps de cycle atelier."
+        },
+        E: {
+          title: "Taux de Charge par Station de Réparation vs Seuil Critique 85%",
+          chartType: "Barres Horizontales avec Ligne de Seuil Critique (indexAxis: y)",
+          model: "MDT_INTERVENTION & Dimension STATION",
+          grain: "1 ligne = 1 station de travail unitaire (ID_STATION : S-XXX-YY, 3 à 10 par shop)",
+          axisX: "Taux d'occupation effectif de la station (%)",
+          axisY: "Poste / Station de réparation (ex: S-MON-01 Aubes HP, S-MON-02 Combustion, S-VIL-01 Équilibrage...)",
+          dimensions: ["ID_STATION (Code station normalisé S-XXX-YY)", "SHOP_ASSIGNE (Shop de rattachement)"],
+          measures: [
+            "TAUX_OCCUPATION_STATION (Heures engagées / Capacité d'ouverture du poste)",
+            "SEUIL_SATURATION_CRITIQUE (Ligne verticale rouge à 85.0% de saturation)"
+          ],
+          filters: "Stations actives du réseau MRO",
+          businessRules: "Coloration conditionnelle : Rouge critique si charge >= 85%, Ambre si charge entre 80% et 85%, Bleu si fluide (<80%). Détecte immédiatement les stations goulots d'étranglement."
+        },
+        F: {
+          title: "Heatmap d'Occupation des Stations du Shop S-MON (Semaines S34 à S42)",
+          chartType: "Heatmap Matrix (Grille Thermique Stations en Y × Semaines en X)",
+          model: "MDT_INTERVENTION & Dimension STATION",
+          grain: "1 cellule = Taux d'occupation hebdomadaire de la station",
+          axisX: "Semaines calendaires S34 à S42 (9 semaines)",
+          axisY: "Stations de réparation du Shop S-MON (S-MON-01 Aubes HP, S-MON-02 Combustion, S-MON-03 Ressuage CND, S-MON-04 Tour CN, S-MON-05 Équilibrage, S-MON-06 Recette)",
+          dimensions: ["ID_STATION (6 stations du shop S-MON)", "SEMAINE_CALENDAIRE (S34 à S42)"],
+          measures: [
+            "WORKLOAD_TENSION_RATE (Taux d'occupation hebdomadaire de la baie en %)"
+          ],
+          filters: "Périmètre restreint au Shop S-MON (Montereau)",
+          businessRules: "Échelle trichromatique : Vert si <75%, Bleu si 75-84%, Ambre si 85-89%, Rouge si >=90%. La station S-MON-01 sature à 98% en semaine S36."
+        },
+        G: {
+          title: "Cumulative Flow Diagram (CFD) : Flux d'Entrées vs Sorties d'Interventions (WIP)",
+          chartType: "Cumulative Flow Diagram (Line Chart Cumulatif Entrées / Sorties)",
+          model: "MDT_INTERVENTION (Opérations d'Atelier)",
+          grain: "1 point = Cumul des opérations inductives et terminées par jour ouvré",
+          axisX: "Chronologie des jours ouvrés (J1 à J10)",
+          axisY: "Volume cumulé de lignes d'interventions en atelier",
+          dimensions: ["TIMEPROFILE (Jours ouvrés)", "FLUX_DIRECTION (Lancements vs Clôtures)"],
+          measures: [
+            "CUMULATIVE_INTERVENTION_INDUCTION (Cumul des interventions injectées en atelier - Bleu #3b82f6)",
+            "CUMULATIVE_INTERVENTION_RELEASE (Cumul des interventions terminées et libérées - Vert #10b981)",
+            "SHOP_WIP_INTERVENTIONS (Écart vertical entre les deux courbes = En-cours d'atelier WIP)"
+          ],
+          filters: "Périmètre de régulation d'atelier sur 10 jours",
+          businessRules: "Remplissage semi-transparent sous chaque courbe. L'écartement grandissant entre la courbe bleue et la courbe verte matérialise l'accumulation d'en-cours WIP."
+        },
+        H: {
+          title: "Treemap Hiérarchique du Temps Passé et Taux de Retard par Moteur / Réparation",
+          chartType: "Treemap Hiérarchique avec Drill-Down (Niveau 1 Moteurs ➔ Niveau 2 Réparations)",
+          model: "MDT_INTERVENTION & Dimension TYPE_REPARATION",
+          grain: "Niveau 1 = Flotte moteur (ENGINE_TYPE) • Niveau 2 = Gamme de réparation (TYPE_REPARATION)",
+          axisX: "Surface du rectangle proportionnelle au temps passé en heures d'intervention",
+          axisY: "Couleur trichromatique selon le taux de retard effectif constaté",
+          dimensions: ["Niveau 1 : ENGINE_TYPE (CFM56-7B, LEAP-1A, CFM56-5B, LEAP-1B, GE90-115B)", "Niveau 2 : TYPE_REPARATION (T-AUBTUR, T-COMHOT, T-FODREP, T-INSCND)"],
+          measures: [
+            "TEMPS_PASSE_HEURES (Volume total d'heures d'intervention consommées)",
+            "TAUX_RETARD_INTERVENTIONS (Pourcentage de dossiers en dérive horaire)"
+          ],
+          filters: "Périmètre du Shop S-MON (Montereau)",
+          businessRules: "Échelle trichromatique : Vert si Retard < 8%, Jaune/Ambre si Retard 8-15%, Rouge si Retard > 15%. Clic sur un moteur pour explorer le détail par réparation ; bouton retour pour remonter."
+        },
+        I: {
+          title: "Benchmark Capacité Atelier : Comparatif des 4 Méthodes vs Débit Réel (124 int/mois)",
+          chartType: "Dual-Axis Clustered Bar & Deviation Line Chart",
+          model: "MDT_INTERVENTION & Référentiel Méthodologique MRO",
+          grain: "1 ligne = 1 méthode de projection de capacité (C-SOP, C-STA, C-LOG, C-ML)",
+          axisX: "Méthodes d'évaluation capacitaire (C-SOP Standard, C-STA Statistique, C-LOG Logistique, C-ML Machine Learning)",
+          axisY: "Axe Y1 (Gauche) = Capacité Simulée (interventions/mois) • Axe Y2 (Droite) = % Écart vs Débit Réel",
+          dimensions: ["METHODE_CHARGE_CAPA (Code et désignation)", "INTERVALLE_CERTITUDE (%)"],
+          measures: [
+            "CAPACITE_SIMULEE_INTERVENTIONS (Nombre d'interventions mensuelles simulées)",
+            "CAPACITE_EFFECTIVE_REF (Débit effectif mesuré en atelier : 124 interventions/mois - Ligne pointillée)",
+            "ECART_CHARGE_PCT (% d'écart vs référence = (Simulé - 124) / 124 - Ligne Rouge)",
+            "TAUX_COMPLETUDE_MES (Taux de complétude des données d'atelier = 96.1%)"
+          ],
+          filters: "Ensemble des 10 ateliers shops SAE",
+          businessRules: "La modélisation avancée C-ML offre la prévision la plus fidèle (126 int/mois, soit +1.6% d'écart). Infobulles avec certification de complétude méthodologique."
+        }
+      }
+    };
+
+    function generateChartMarkdownPrompt(step, opt) {
+      const s = CHART_MD_SPECS[step] && CHART_MD_SPECS[step][opt];
+      if (!s) return `# Spécification Visualisation Chart.js\n\nDonnées en cours d'initialisation...\n`;
+      return `# Spécification Chart.js — ${s.title}
+
+> Visualisation décisionnelle MRO Safran Maestro développée avec Chart.js (v4+).
+
+### Spécification Technique
+- **Type de Graphique :** ${s.chartType}
+- **Source & Grain de Données :** ${s.model} — ${s.grain}
+- **Axe X :** ${s.axisX}
+- **Axe Y :** ${s.axisY}
+
+### Dimensions & Mesures
+- **Dimensions d'Analyse :**
+${s.dimensions.map(d => `  * ${d}`).join('\n')}
+- **Mesures & Indicateurs Clés :**
+${s.measures.map(m => `  * ${m}`).join('\n')}
+
+### Règles Visuelles & Périmètre
+- **Filtres :** ${s.filters}
+- **Règles Métier & Palette :** ${s.businessRules}
+`;
+    }
+
+    function renderChartAiView(step) {
+      const opt = selections[step];
+      const codeEl = document.getElementById('step-' + step + '-ai-code');
+      if (codeEl) {
+        codeEl.textContent = generateChartMarkdownPrompt(step, opt);
+      }
+    }
+
+    function copyChartAi(step) {
+      const opt = selections[step];
+      const text = generateChartMarkdownPrompt(step, opt);
+      const btn = document.getElementById('step-' + step + '-ai-copy-btn');
+      copyTextToClipboard(text).then(() => {
+        if (btn) {
+          btn.textContent = '✓';
+          btn.classList.add('text-emerald-400');
+          setTimeout(() => {
+            btn.textContent = '⧉';
+            btn.classList.remove('text-emerald-400');
+          }, 1500);
+        }
+      });
+    }
+
+    function toggleChartMode(step, mode) {
+      chartViewMode[step] = mode;
+      const chartView = document.getElementById('step-' + step + '-chart-view');
+      const codeView = document.getElementById('step-' + step + '-code-view');
+      const aiView = document.getElementById('step-' + step + '-ai-view');
+      const toggleContainer = document.getElementById('step-' + step + '-chart-toggle');
+
+      if (toggleContainer) {
+        const btnChart = toggleContainer.querySelector('[data-view="chart"]');
+        const btnCode = toggleContainer.querySelector('[data-view="code"]');
+        const btnAi = toggleContainer.querySelector('[data-view="ai"]');
+        if (btnChart && btnCode) {
+          btnChart.className = mode === 'chart'
+            ? 'px-2 py-0.5 text-[9.5px] font-bold bg-blue-600 text-white transition'
+            : 'px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition';
+          btnCode.className = mode === 'code'
+            ? 'px-2 py-0.5 text-[9.5px] font-bold bg-blue-600 text-white transition'
+            : 'px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition';
+        }
+        if (btnAi) {
+          btnAi.className = mode === 'ai'
+            ? 'px-2 py-0.5 text-[9.5px] font-bold bg-blue-600 text-white transition'
+            : 'px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition';
+        }
+      }
+
+      if (chartView) chartView.classList.toggle('hidden', mode !== 'chart');
+      if (codeView) codeView.classList.toggle('hidden', mode !== 'code');
+      if (aiView) aiView.classList.toggle('hidden', mode !== 'ai');
+
+      if (mode === 'code') {
+        renderGuiEditor(step);
+      } else if (mode === 'ai' || mode === 'md') {
+        renderChartAiView(step);
+      } else {
+        renderStepChart(step);
+      }
+    }
+
+    function getActiveChartConfig(step) {
+      const opt = selections[step];
+      const key = getChartStorageKey(step, opt);
+      const saved = localStorage.getItem(key);
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch (e) {
+          console.warn('Erreur lecture localStorage chart:', e);
+        }
+      }
+      const spec = buildStepChartSpec(step, opt, 1);
+      if (spec && spec.config) {
+        // Copie propre et sérialisable
+        return JSON.parse(JSON.stringify(spec.config, (k, v) => typeof v === 'function' ? undefined : v));
+      }
+      return null;
+    }
+
+    function renderGuiEditor(step) {
+      const container = document.getElementById('step-' + step + '-gui-editor');
+      if (!container) return;
+
+      const cfg = getActiveChartConfig(step);
+      editingChartConfig[step] = cfg;
+      if (!cfg) {
+        container.innerHTML = '<p class="text-slate-400 italic p-3">Configuration non disponible pour ce type de graphique.</p>';
+        return;
+      }
+
+      const data = cfg.data || {};
+      const labels = Array.isArray(data.labels) ? data.labels : [];
+      const datasets = Array.isArray(data.datasets) ? data.datasets : [];
+      const scales = (cfg.options && cfg.options.scales) || {};
+      const plugins = (cfg.options && cfg.options.plugins) || {};
+      const legend = plugins.legend || {};
+
+      const xAxisTitle = (scales.x && scales.x.title && scales.x.title.text) || '';
+      const yAxisTitle = (scales.y && scales.y.title && scales.y.title.text) || '';
+      const isLegendDisplay = legend.display !== false;
+
+      let html = '';
+
+      // Section 1 : Titres des Axes & Légende
+      html += `
+        <div class="bg-slate-50 border border-slate-200 rounded-lg p-2.5">
+          <div class="font-bold text-slate-800 text-[11.5px] mb-2 flex items-center gap-1.5">
+            <span>🏷️</span> Axes & Légende
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div>
+              <label class="block text-[10px] font-bold text-slate-600 mb-0.5">Titre Axe X</label>
+              <input type="text" id="gui-${step}-axis-x" value="${escapeHtml(xAxisTitle)}" oninput="saveGuiEditor(${step})" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-[11px] focus:border-blue-500 focus:outline-none" />
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-600 mb-0.5">Titre Axe Y</label>
+              <input type="text" id="gui-${step}-axis-y" value="${escapeHtml(yAxisTitle)}" oninput="saveGuiEditor(${step})" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-[11px] focus:border-blue-500 focus:outline-none" />
+            </div>
+          </div>
+          <div class="mt-2 flex items-center gap-2">
+            <label class="inline-flex items-center gap-1.5 text-[10.5px] font-semibold text-slate-700 cursor-pointer">
+              <input type="checkbox" id="gui-${step}-legend-display" ${isLegendDisplay ? 'checked' : ''} onchange="saveGuiEditor(${step})" class="rounded border-slate-300 text-blue-600 focus:ring-blue-500" />
+              <span>Afficher la légende</span>
+            </label>
+          </div>
+        </div>
+      `;
+
+      // Section 2 : Séries & Palette de couleurs
+      html += `
+        <div class="bg-slate-50 border border-slate-200 rounded-lg p-2.5">
+          <div class="font-bold text-slate-800 text-[11.5px] mb-2 flex items-center gap-1.5">
+            <span>🎨</span> Séries de Données & Couleurs
+          </div>
+          <div class="space-y-2">
+      `;
+
+      datasets.forEach((ds, dsIdx) => {
+        const dsLabel = ds.label || `Série ${dsIdx + 1}`;
+        const currentColor = (typeof ds.backgroundColor === 'string' && ds.backgroundColor.startsWith('#')) ? ds.backgroundColor : '#3b82f6';
+
+        html += `
+          <div class="bg-white border border-slate-200 rounded-md p-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div class="flex-1 min-w-0">
+              <label class="block text-[9.5px] font-bold text-slate-500 uppercase">Nom de la série ${dsIdx + 1}</label>
+              <input type="text" id="gui-${step}-ds-label-${dsIdx}" value="${escapeHtml(dsLabel)}" oninput="saveGuiEditor(${step})" class="w-full mt-0.5 bg-slate-50 border border-slate-300 rounded px-1.5 py-0.5 text-[11px] font-semibold text-slate-800 focus:border-blue-500 focus:outline-none" />
+            </div>
+            <div class="shrink-0 flex items-center gap-1.5">
+              <label class="text-[10px] font-semibold text-slate-600">Couleur :</label>
+              <input type="color" id="gui-${step}-ds-color-${dsIdx}" value="${currentColor}" oninput="saveGuiEditor(${step})" onchange="saveGuiEditor(${step})" class="w-7 h-7 p-0.5 border border-slate-300 rounded cursor-pointer" />
+              <div class="flex items-center gap-1 ml-1">
+                ${COLOR_PALETTES.slice(0, 5).map(p => `
+                  <button type="button" title="${p.name}" onclick="document.getElementById('gui-${step}-ds-color-${dsIdx}').value='${p.color}'; saveGuiEditor(${step});" class="w-4 h-4 rounded-full border border-white shadow-xs hover:scale-110 transition" style="background-color: ${p.color};"></button>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      html += `
+          </div>
+        </div>
+      `;
+
+      // Section 3 : Données et Labels
+      if (labels.length > 0) {
+        html += `
+          <div class="bg-slate-50 border border-slate-200 rounded-lg p-2.5">
+            <div class="flex items-center justify-between mb-2">
+              <div class="font-bold text-slate-800 text-[11.5px] flex items-center gap-1.5">
+                <span>📊</span> Points de Données (${labels.length} éléments)
+              </div>
+              <button type="button" onclick="guiAddRow(${step})" class="text-[10px] font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 px-2 py-0.5 rounded cursor-pointer transition shadow-2xs">
+                + Ajouter une ligne
+              </button>
+            </div>
+            <div class="space-y-1.5 max-h-[220px] overflow-y-auto pr-1">
+        `;
+
+        labels.forEach((lbl, rIdx) => {
+          html += `
+            <div class="bg-white border border-slate-200 rounded-md p-1.5 flex items-center gap-2" id="gui-${step}-row-${rIdx}">
+              <span class="text-[10px] font-mono text-slate-400 w-5 shrink-0 text-center">${rIdx + 1}</span>
+              <input type="text" id="gui-${step}-lbl-${rIdx}" value="${escapeHtml(lbl)}" placeholder="Label" oninput="saveGuiEditor(${step})" class="flex-1 min-w-[120px] bg-slate-50 border border-slate-300 rounded px-1.5 py-0.5 text-[11px] focus:border-blue-500 focus:outline-none" />
+          `;
+
+          datasets.forEach((ds, dsIdx) => {
+            const rawVal = Array.isArray(ds.data) ? ds.data[rIdx] : '';
+            const val = (rawVal !== undefined && rawVal !== null && typeof rawVal === 'number') ? rawVal : (typeof rawVal === 'object' && rawVal && rawVal.y !== undefined ? rawVal.y : rawVal || 0);
+            html += `
+              <div class="flex items-center gap-1 shrink-0 w-24">
+                <input type="number" step="any" id="gui-${step}-val-${dsIdx}-${rIdx}" value="${val}" placeholder="Val" oninput="saveGuiEditor(${step})" class="w-full bg-slate-50 border border-slate-300 rounded px-1.5 py-0.5 text-[11px] text-right font-mono focus:border-blue-500 focus:outline-none" />
+              </div>
+            `;
+          });
+
+          html += `
+              <button type="button" onclick="guiRemoveRow(${step}, ${rIdx})" title="Supprimer cette ligne" class="text-slate-400 hover:text-red-600 font-bold px-1.5 py-0.5 text-[12px] cursor-pointer transition">
+                ✕
+              </button>
+            </div>
+          `;
+        });
+
+        html += `
+            </div>
+          </div>
+        `;
+      }
+
+      container.innerHTML = html;
+    }
+
+    function escapeHtml(str) {
+      if (str === undefined || str === null) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function guiAddRow(step) {
+      const cfg = editingChartConfig[step];
+      if (!cfg || !cfg.data) return;
+      if (!Array.isArray(cfg.data.labels)) cfg.data.labels = [];
+      cfg.data.labels.push(`Élément ${cfg.data.labels.length + 1}`);
+      if (Array.isArray(cfg.data.datasets)) {
+        cfg.data.datasets.forEach(ds => {
+          if (Array.isArray(ds.data)) {
+            const lastVal = ds.data.length > 0 ? ds.data[ds.data.length - 1] : 10;
+            ds.data.push(typeof lastVal === 'number' ? Math.round(lastVal * 0.95) : 10);
+          }
+        });
+      }
+      saveGuiEditor(step);
+      renderGuiEditor(step);
+    }
+
+    function guiRemoveRow(step, rIdx) {
+      const cfg = editingChartConfig[step];
+      if (!cfg || !cfg.data) return;
+      if (Array.isArray(cfg.data.labels)) {
+        cfg.data.labels.splice(rIdx, 1);
+      }
+      if (Array.isArray(cfg.data.datasets)) {
+        cfg.data.datasets.forEach(ds => {
+          if (Array.isArray(ds.data)) ds.data.splice(rIdx, 1);
+        });
+      }
+      saveGuiEditor(step);
+      renderGuiEditor(step);
+    }
+
+    function saveGuiEditor(step) {
+      const opt = selections[step];
+      const cfg = editingChartConfig[step];
+      if (!cfg || !cfg.data) return;
+
+      // 1. Lire les titres d'axes et légende
+      const axisXInput = document.getElementById(`gui-${step}-axis-x`);
+      const axisYInput = document.getElementById(`gui-${step}-axis-y`);
+      const legendCheck = document.getElementById(`gui-${step}-legend-display`);
+
+      if (!cfg.options) cfg.options = {};
+      if (!cfg.options.scales) cfg.options.scales = {};
+      if (axisXInput) {
+        if (!cfg.options.scales.x) cfg.options.scales.x = {};
+        if (!cfg.options.scales.x.title) cfg.options.scales.x.title = { display: true };
+        cfg.options.scales.x.title.text = axisXInput.value;
+        cfg.options.scales.x.title.display = !!axisXInput.value;
+      }
+      if (axisYInput) {
+        if (!cfg.options.scales.y) cfg.options.scales.y = {};
+        if (!cfg.options.scales.y.title) cfg.options.scales.y.title = { display: true };
+        cfg.options.scales.y.title.text = axisYInput.value;
+        cfg.options.scales.y.title.display = !!axisYInput.value;
+      }
+      if (legendCheck) {
+        if (!cfg.options.plugins) cfg.options.plugins = {};
+        if (!cfg.options.plugins.legend) cfg.options.plugins.legend = {};
+        cfg.options.plugins.legend.display = legendCheck.checked;
+      }
+
+      // 2. Séries et Couleurs
+      const datasets = Array.isArray(cfg.data.datasets) ? cfg.data.datasets : [];
+      datasets.forEach((ds, dsIdx) => {
+        const lblInput = document.getElementById(`gui-${step}-ds-label-${dsIdx}`);
+        const colorInput = document.getElementById(`gui-${step}-ds-color-${dsIdx}`);
+        if (lblInput) ds.label = lblInput.value;
+        if (colorInput) {
+          ds.backgroundColor = colorInput.value;
+          if (ds.borderColor && typeof ds.borderColor === 'string') {
+            ds.borderColor = colorInput.value;
+          }
+        }
+      });
+
+      // 3. Données et Labels
+      const labels = Array.isArray(cfg.data.labels) ? cfg.data.labels : [];
+      labels.forEach((_, rIdx) => {
+        const lblInput = document.getElementById(`gui-${step}-lbl-${rIdx}`);
+        if (lblInput) labels[rIdx] = lblInput.value;
+        datasets.forEach((ds, dsIdx) => {
+          const valInput = document.getElementById(`gui-${step}-val-${dsIdx}-${rIdx}`);
+          if (valInput && Array.isArray(ds.data)) {
+            const num = parseFloat(valInput.value);
+            ds.data[rIdx] = isNaN(num) ? 0 : num;
+          }
+        });
+      });
+
+      // Sauvegarde dans localStorage
+      const key = getChartStorageKey(step, opt);
+      localStorage.setItem(key, JSON.stringify(cfg));
+
+      // Rendre dans le canvas
+      const canvas = document.getElementById('step-' + step + '-canvas');
+      renderChartInto(canvas, cfg);
+    }
+
+    function resetChartCode(step) {
+      const opt = selections[step];
+      const key = getChartStorageKey(step, opt);
+      localStorage.removeItem(key);
+      if (chartViewMode[step] === 'code') {
+        renderGuiEditor(step);
+      }
+      renderStepChart(step);
+    }
+
     function renderStepChart(step) {
       const opt = selections[step];
       if (!opt) return;
@@ -4162,10 +4665,8 @@ const STEP_BUILDERS = {
       if (!spec) return;
       const canvas = document.getElementById('step-' + step + '-canvas');
       const titleEl = document.getElementById('step-' + step + '-chart-title');
-      const subEl = document.getElementById('step-' + step + '-chart-sub');
       const noteEl = document.getElementById('step-' + step + '-chart-note');
       if (titleEl) titleEl.innerHTML = spec.title;
-      if (subEl) subEl.textContent = spec.sub;
       if (noteEl) noteEl.textContent = spec.note;
 
       if (step === 6) {
@@ -4180,7 +4681,27 @@ const STEP_BUILDERS = {
         }
       }
 
-      renderChartInto(canvas, spec.config);
+      // Vérifier si un code personnalisé existe dans localStorage pour cette option
+      let activeConfig = spec.config;
+      const key = getChartStorageKey(step, opt);
+      const savedCode = localStorage.getItem(key);
+      if (savedCode) {
+        try {
+          activeConfig = JSON.parse(savedCode);
+        } catch (e) {
+          console.warn('Erreur chargement code customisé:', e);
+          activeConfig = spec.config;
+        }
+      }
+
+      // Synchroniser l'éditeur visuel ou la vue Markdown si ouverts
+      if (chartViewMode[step] === 'code') {
+        renderGuiEditor(step);
+      } else if (chartViewMode[step] === 'ai' || chartViewMode[step] === 'md') {
+        renderChartAiView(step);
+      }
+
+      renderChartInto(canvas, activeConfig);
     }
 
     function renderDashboardChart(step) {
@@ -4717,15 +5238,13 @@ xychart-beta
     C -->|-1 j Fast-Track| D[22 j]
     D -->|Réel constaté| E(22 j Réel)
     style E fill:#1e40af,color:#fff,stroke:#1e40af,stroke-width:2px`,
-      '4H': `gantt
-    title Jalons de Traversée (Gates de la Demande) — Chemin Critique
-    dateFormat X
-    axisFormat %s
-    section Chemin critique
-    Gate 1 - Démontage         :crit, g1, 0, 10
-    Gate 2 - Contrôle CND      :crit, g2, 10, 10
-    Gate 3 - Recette Banc      :crit, g3, 20, 10
-    Retard constaté +2 j       :milestone, m1, 22, 0d`,
+      '4H': `%%{init: {'theme': 'base'}}%%
+xychart-beta
+    title "Heatmap d'Occupation Réseau par Site (10 centres SAE MRO) : Charge Moyenne S34..S42 (%)"
+    x-axis ["S-MON", "S-VIL", "S-CHL", "S-BRU", "S-TLS", "S-SQY", "S-GEN", "S-BDX", "S-LGG", "S-CRE"]
+    y-axis "% Taux d'Occupation Réseau" 0 --> 110
+    bar [98, 96, 88, 86, 82, 79, 76, 74, 71, 68]
+    line [80, 80, 80, 80, 80, 80, 80, 80, 80, 80]`,
       '4I': `%%{init: {'theme': 'base'}}%%
 xychart-beta
     title "Benchmark TAT Demande : 4 Méthodes vs Effectif Référence (18.2 j)"
@@ -4770,10 +5289,10 @@ xychart-beta
     line [85, 85, 85, 85, 85, 85, 85, 85]`,
       '6F': `%%{init: {'theme': 'base'}}%%
 xychart-beta
-    title "Heatmap d'Occupation des Stations (Shop S-MON) : Charge Hebdo (%)"
+    title "Heatmap d'Occupation des Stations (Shop S-MON) : Charge Moyenne S34..S42 (%)"
     x-axis ["S-MON-01 (Aubes)", "S-MON-02 (Comb.)", "S-MON-03 (CND)", "S-MON-04 (Usin.)", "S-MON-05 (Équil.)", "S-MON-06 (FOD)"]
-    y-axis "% Charge Journalière Moyenne" 0 --> 100
-    bar [94, 88, 86, 82, 79, 72]
+    y-axis "% Charge Hebdomadaire Moyenne" 0 --> 100
+    bar [92, 86, 84, 81, 77, 69]
     line [85, 85, 85, 85, 85, 85]`,
       '6G': `xychart-beta
     title "CFD Interventions — Entrées (Inductions) vs Sorties (Clôtures)"
@@ -4783,11 +5302,11 @@ xychart-beta
     line [1, 4, 7, 11, 16, 22, 29]`,
       '6H': `%%{init: {'theme': 'base'}}%%
 xychart-beta
-    title "Treemap Shop S-MON : Temps Passé par Moteur (h) et Taux de Retard (%)"
+    title "Treemap Shop S-MON : Temps Passé (h) & Taux de Retard Trichromatique (<8% Vert, 8-15% Jaune, >15% Rouge)"
     x-axis ["CFM56-7B", "LEAP-1A", "CFM56-5B", "LEAP-1B", "GE90-115B"]
     y-axis "Temps Passé (Heures)" 0 --> 500
     bar [480, 390, 290, 240, 160]
-    line [16.2, 18.5, 11.4, 8.6, 6.2]`,
+    line [16.5, 18.2, 11.4, 7.2, 5.8]`,
       '6I': `%%{init: {'theme': 'base'}}%%
 xychart-beta
     title "Benchmark Capacité Interventions Shop : 4 Méthodes vs Débit Réel (124 interventions)"
@@ -4902,22 +5421,94 @@ xychart-beta
       });
     }
 
+    const SCHEMA_AI_MARKDOWN = {
+      all: `# Safran MRO Maestro — Modèle Sémantique & Relations
+
+## 1. MDT_MAINTENANCE_REQUEST (Demande Macro — 2.A)
+- Grain: 1 ligne = 1 dossier de visite moteur
+- Clé Primaire (PK): ID_DEMANDE (Format: D-YYYY-XXXXXX, ex: D-2026-000123)
+- Dimensions Client & Moteur:
+  * DEMANDEUR: AFR (Air France), CCA (Air China), EZY (easyJet), DLH (Lufthansa), DAL (Delta), UAE (Emirates), SIA (Singapore)
+  * PROGRAMME_MOTEUR: CFM56, LEAP, GE90, M88
+  * ENGINE_TYPE: CFM56-7B, CFM56-5B, LEAP-1A, LEAP-1B, GE90-115B, M88-2
+  * NIVEAU_URGENCE_GLOBAL: Haute / AOG (poids 3.0), Moyenne (2.0), Basse (1.0)
+  * DATE_DEMANDE: Date officielle d'émission (ISO 8601)
+  * COMMENTAIRE_GLOBAL: Motif de dépose (FOD, usure normale, consigne CN)
+- Key Figures (Mesures Dossier):
+  * INTERVENTION_COUNT: COUNT(ID_INTERVENTION) actives rattachées
+  * URGENCY_WEIGHT: Poids algorithmique d'ordonnancement (1.0 à 3.0)
+  * TOTAL_ENGINE_TAT: Délai total consolidé de la visite (jours)
+
+---
+
+## 2. MDT_INTERVENTION (Interventions & Ateliers — 2.B)
+- Grain: 1 ligne = 1 opération unitaire sur station & atelier
+- Clé Primaire (PK): ID_DEMANDE + ID_INTERVENTION (Format: I-YYYY-XXXXXX-ZZ)
+- Clés Étrangères (FK):
+  * SHOP_ASSIGNE -> SHOP (10 ateliers SAE)
+  * STATION_ASSIGNEE -> STATION (48 stations, 3 à 10 par atelier)
+- Dimensions Réseau & Gammes:
+  * 10 Ateliers Industriels: S-MON, S-VIL, S-COR, S-CHL, S-STQ, S-BRU, S-MEX, S-CAS, S-SUZ, S-SIN
+  * 8 Types de Réparation: T-INSCND, T-AUBTUR, T-MAJLOU, T-BANESS, T-EQUROT, T-COMHOT, T-REVCAR, T-FODREP
+  * Seuil Saturation Station: 85.0% (alerte goulot d'étranglement)
+- Key Figures (Mesures Atelier):
+  * ESTIMATED_REPAIR_DURATION: Durée standard de gamme constructeur (heures)
+  * SHOP_QUEUE_TIME: Temps d'attente file dynamique selon charge (heures)
+  * INTERVENTION_TAT: Délai net unitaire cumulé (attente + gamme + recette) (heures)`
+    };
+
     function updateSchemaRulesView(granularity) {
       const g = granularity || selections[2] || 'A';
-      const view2A = document.getElementById('schema-rules-2a');
-      const view2B = document.getElementById('schema-rules-2b');
-      const badge = document.getElementById('schema-rules-badge');
-      if (view2A) view2A.classList.toggle('hidden', g !== 'A');
-      if (view2B) view2B.classList.toggle('hidden', g !== 'B');
-      if (badge) {
-        if (g === 'A') {
-          badge.textContent = '2.A : Demandes (Macro)';
-          badge.className = 'text-[10.5px] font-semibold bg-blue-50 text-blue-700 px-2.5 py-0.5 rounded-md border border-blue-200';
+      const codeEl = document.getElementById('schema-ai-code');
+      const badgeEl = document.getElementById('schema-ai-badge');
+      if (codeEl && !codeEl.textContent) {
+        codeEl.textContent = SCHEMA_AI_MARKDOWN.all;
+      }
+      if (badgeEl) {
+        badgeEl.textContent = g === 'B' ? '2.B Atelier' : '2.A Demande';
+        badgeEl.className = g === 'B'
+          ? 'text-[9px] font-semibold bg-emerald-50 text-emerald-700 px-1.5 py-0.2 rounded border border-emerald-200'
+          : 'text-[9px] font-semibold bg-blue-50 text-blue-700 px-1.5 py-0.2 rounded border border-blue-200';
+      }
+      scrollSchemaMarkdown(g === 'B' ? '2b' : '2a');
+    }
+
+    function scrollSchemaMarkdown(section) {
+      const scrollEl = document.getElementById('schema-ai-scroll');
+      const badge2A = document.getElementById('schema-ai-badge-2a');
+      const badge2B = document.getElementById('schema-ai-badge-2b');
+      if (scrollEl) {
+        if (section === '2b') {
+          scrollEl.scrollTo({ top: scrollEl.scrollHeight * 0.45, behavior: 'smooth' });
         } else {
-          badge.textContent = '2.B : Interventions (Ateliers)';
-          badge.className = 'text-[10.5px] font-semibold bg-emerald-50 text-emerald-700 px-2.5 py-0.5 rounded-md border border-emerald-200';
+          scrollEl.scrollTo({ top: 0, behavior: 'smooth' });
         }
       }
+      if (badge2A && badge2B) {
+        if (section === '2a') {
+          badge2A.className = 'text-[9.5px] font-semibold bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded border border-blue-200 hover:bg-blue-100 transition cursor-pointer';
+          badge2B.className = 'text-[9.5px] font-semibold bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded border border-slate-200 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 transition cursor-pointer';
+        } else {
+          badge2B.className = 'text-[9.5px] font-semibold bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded border border-emerald-200 hover:bg-emerald-100 transition cursor-pointer';
+          badge2A.className = 'text-[9.5px] font-semibold bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded border border-slate-200 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200 transition cursor-pointer';
+        }
+      }
+    }
+
+    function copySchemaMarkdown() {
+      const codeEl = document.getElementById('schema-ai-code');
+      const btn = document.getElementById('schema-ai-copy-btn');
+      const text = (codeEl && codeEl.textContent) ? codeEl.textContent : SCHEMA_AI_MARKDOWN.all;
+      copyTextToClipboard(text).then(() => {
+        if (btn) {
+          btn.textContent = '✓';
+          btn.classList.add('text-emerald-400');
+          setTimeout(() => {
+            btn.textContent = '⧉';
+            btn.classList.remove('text-emerald-400');
+          }, 1500);
+        }
+      });
     }
 
     function toggleSchemaView(view) {
@@ -4927,11 +5518,11 @@ xychart-beta
       schemaViewMode = view;
       if (svgView) svgView.classList.toggle('hidden', schemaViewMode !== 'svg');
       if (mermaidView) mermaidView.classList.toggle('hidden', schemaViewMode !== 'mermaid');
-      if (rulesView) rulesView.classList.toggle('hidden', schemaViewMode !== 'txt' && schemaViewMode !== 'rules');
+      if (rulesView) rulesView.classList.toggle('hidden', schemaViewMode !== 'ai' && schemaViewMode !== 'md' && schemaViewMode !== 'txt' && schemaViewMode !== 'rules');
       updateToggleButtons('schema-toggle', view);
       if (view === 'mermaid') {
         updateMermaidCode(selections[2] || 'A');
-      } else if (view === 'txt' || view === 'rules') {
+      } else if (view === 'ai' || view === 'md' || view === 'txt' || view === 'rules') {
         updateSchemaRulesView(selections[2] || 'A');
       }
     }
