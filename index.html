@@ -12,6 +12,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix@2.0.1/dist/chartjs-chart-matrix.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-treemap@2.3.1/dist/chartjs-chart-treemap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     .glass-card {
@@ -708,17 +709,14 @@
             class="lg:col-span-8 bg-slate-50/80 rounded-xl p-2 border border-slate-200 shadow-sm flex flex-col items-stretch justify-between h-full max-h-full min-h-0 overflow-hidden w-full min-w-0 relative">
             <div id="schema-toggle"
               class="absolute top-1.5 left-1.5 z-10 flex items-start rounded-lg border border-slate-200 bg-white shadow-sm overflow-hidden">
-              <button type="button" data-view="ai" onclick="toggleSchemaView('ai')"
-                class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">&lt;&gt;</button>
               <button type="button" data-view="svg" onclick="toggleSchemaView('svg')"
                 class="px-2 py-0.5 text-[9.5px] font-bold bg-blue-600 text-white transition">svg</button>
               <button type="button" data-view="mermaid" onclick="toggleSchemaView('mermaid')"
-                class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">uml</button>
+                class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">&lt;&gt;</button>
             </div>
             <div id="schema-svg-view" class="w-full flex-1 flex flex-col items-center justify-between overflow-hidden pt-6">
-              <div class="w-full flex-1 flex items-center justify-center overflow-hidden">
-                <canvas id="schemaCanvas" width="640" height="360"
-                  class="w-full max-w-[720px] max-h-[360px] h-auto shrink-0"></canvas>
+              <div id="schema-mermaid-diagram" class="w-full flex-1 flex items-center justify-center overflow-auto p-1 text-slate-800">
+                <!-- Mermaid ERD Diagram rendered dynamically here -->
               </div>
               <div class="w-full text-center mt-1 text-[10.5px] text-slate-500 flex flex-wrap justify-center gap-3 sm:gap-4 border-t border-slate-200 pt-1 shrink-0">
                 <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-blue-600"></span> Table de Faits (Centrale)</span>
@@ -728,31 +726,21 @@
                 <span class="flex items-center gap-1.5"><span class="text-purple-600 font-bold text-xs">📐</span> Mesures / Métriques</span>
               </div>
             </div>
-            <div id="schema-mermaid-view" class="hidden w-full flex-1 flex flex-col min-h-0 relative overflow-hidden">
+            <div id="schema-mermaid-view" class="hidden w-full flex-1 flex flex-col min-h-0 relative overflow-hidden pt-6">
               <div class="flex items-center justify-between pb-1 shrink-0">
-                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Modèle Mermaid ERD</span>
-                <button type="button" id="schema-copy-btn" onclick="copyMermaidSchema()" title="Copier le code Mermaid" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
-                  ⧉
-                </button>
-              </div>
-              <pre class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-3 overflow-x-auto overflow-y-auto text-[11px] leading-relaxed whitespace-pre-wrap select-all"><code id="schema-mermaid-code" class="language-mermaid"></code></pre>
-            </div>
-            <!-- Vue Sémantique Texte Markdown (ai) -->
-            <div id="schema-rules-view" class="hidden w-full flex-1 flex flex-col min-h-0 relative overflow-hidden pt-6">
-              <div class="flex items-center justify-between pb-1 shrink-0">
+                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Modèle Mermaid ERD (&lt;&gt;)</span>
                 <div class="flex items-center gap-1.5">
-                  <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Modèle Sémantique (Markdown)</span>
-                  <span id="schema-ai-badge" class="text-[9px] font-semibold bg-blue-50 text-blue-700 px-1.5 py-0.2 rounded border border-blue-200">2.A Demande</span>
-                </div>
-                <div class="flex items-center gap-1">
-                  <button type="button" onclick="scrollSchemaMarkdown('2a')" id="schema-ai-badge-2a" class="text-[9.5px] font-semibold bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded border border-blue-200 hover:bg-blue-100 transition cursor-pointer"># 2.A</button>
-                  <button type="button" onclick="scrollSchemaMarkdown('2b')" id="schema-ai-badge-2b" class="text-[9.5px] font-semibold bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded border border-slate-200 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 transition cursor-pointer"># 2.B</button>
-                  <button type="button" id="schema-ai-copy-btn" onclick="copySchemaMarkdown()" title="Copier le modèle Markdown" class="p-1 ml-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
+                  <span id="schema-mermaid-saved-msg" class="text-[9.5px] text-emerald-600 font-semibold hidden">✓ Enregistré</span>
+                  <button type="button" id="schema-copy-btn" onclick="copyMermaidSchema()" title="Copier le code Mermaid" class="p-1 text-slate-500 hover:text-slate-800 hover:bg-slate-200 rounded transition cursor-pointer text-xs leading-none">
                     ⧉
+                  </button>
+                  <button type="button" id="schema-reset-btn" onclick="resetMermaidSchema()" title="Réinitialiser le modèle par défaut" class="p-1 text-slate-500 hover:text-slate-800 hover:bg-slate-200 rounded transition cursor-pointer text-xs leading-none">
+                    ↻
                   </button>
                 </div>
               </div>
-              <pre id="schema-ai-scroll" class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-3 overflow-x-auto overflow-y-auto text-[11px] leading-relaxed whitespace-pre-wrap select-all font-mono"><code id="schema-ai-code"></code></pre>
+              <textarea id="schema-mermaid-code" oninput="onMermaidCodeChange(this.value)" spellcheck="false" class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-3 font-mono text-[11px] leading-relaxed whitespace-pre resize-none focus:outline-hidden focus:ring-1 focus:ring-blue-500 border border-slate-700"></textarea>
+            </div>
             </div>
           </div>
         </div>
@@ -1107,6 +1095,9 @@
                   <button id="step-4-chart-reset" type="button" onclick="resetChartCode(4)" title="Réinitialiser le graphique (configuration standard)" class="px-1.5 py-0.5 text-[10px] font-bold text-slate-600 hover:text-blue-700 bg-slate-50 hover:bg-blue-50 border border-slate-200 rounded cursor-pointer transition shadow-2xs">
                     ↻
                   </button>
+                  <button id="step-4-prompt-template-btn" type="button" onclick="openPromptTemplateModal()" title="Éditer le template de prompt (<>)" class="px-1.5 py-0.5 text-[10px] font-bold text-slate-600 hover:text-blue-700 bg-slate-50 hover:bg-blue-50 border border-slate-200 rounded cursor-pointer transition shadow-2xs">
+                    ⚙
+                  </button>
                 </div>
               </div>
               <!-- Vue Graphique (par défaut) -->
@@ -1123,7 +1114,7 @@
               <!-- Vue Spécification Chart.js Prompt IA (ai) -->
               <div id="step-4-ai-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
                 <div class="flex items-center justify-between pb-1 shrink-0">
-                  <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Spécification Chart.js (IA Prompt)</span>
+                  <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Spécification Visuel (Prompt IA)</span>
                   <button type="button" id="step-4-ai-copy-btn" onclick="copyChartAi(4)" title="Copier la spécification pour l'IA" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
                     ⧉
                   </button>
@@ -1492,6 +1483,9 @@
                   <button id="step-6-chart-reset" type="button" onclick="resetChartCode(6)" title="Réinitialiser le graphique (configuration standard)" class="px-1.5 py-0.5 text-[10px] font-bold text-slate-600 hover:text-blue-700 bg-slate-50 hover:bg-blue-50 border border-slate-200 rounded cursor-pointer transition shadow-2xs">
                     ↻
                   </button>
+                  <button id="step-6-prompt-template-btn" type="button" onclick="openPromptTemplateModal()" title="Éditer le template de prompt (<>)" class="px-1.5 py-0.5 text-[10px] font-bold text-slate-600 hover:text-blue-700 bg-slate-50 hover:bg-blue-50 border border-slate-200 rounded cursor-pointer transition shadow-2xs">
+                    ⚙
+                  </button>
                 </div>
               </div>
               <!-- Vue Graphique (par défaut) -->
@@ -1507,7 +1501,7 @@
               <!-- Vue Spécification Chart.js Prompt IA (ai) -->
               <div id="step-6-ai-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
                 <div class="flex items-center justify-between pb-1 shrink-0">
-                  <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Spécification Chart.js (IA Prompt)</span>
+                  <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Spécification Visuel (Prompt IA)</span>
                   <button type="button" id="step-6-ai-copy-btn" onclick="copyChartAi(6)" title="Copier la spécification pour l'IA" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
                     ⧉
                   </button>
@@ -1687,6 +1681,63 @@
     </div>
   </div>
 
+  <!-- ================= MODALE ÉDITEUR DE TEMPLATE DE PROMPT ================= -->
+  <div id="prompt-template-modal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-2 sm:p-4">
+    <div class="bg-white w-full max-w-4xl h-[92vh] max-h-[92vh] rounded-2xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- En-tête de la modale -->
+      <div class="px-4 py-3 bg-gradient-to-r from-slate-800 via-slate-900 to-blue-950 text-white flex items-center justify-between shrink-0 shadow-sm">
+        <div class="flex items-center gap-2">
+          <span class="text-lg">⚙️</span>
+          <div>
+            <h3 class="text-xs md:text-sm font-black tracking-tight">Configuration du Template de Prompt Visuel (&lt;&gt;)</h3>
+            <p class="text-[10.5px] text-slate-300 font-normal">Personnalisation du prompt Markdown généré pour tous les graphiques (stocké en LocalStorage)</p>
+          </div>
+        </div>
+        <button type="button" onclick="closePromptTemplateModal()" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition text-sm font-bold" title="Fermer (Échap)">
+          ✕
+        </button>
+      </div>
+
+      <!-- Variables disponibles -->
+      <div class="px-4 py-2 bg-slate-100 border-b border-slate-200 flex items-center flex-wrap gap-1.5 shrink-0 text-[11px] text-slate-600">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mr-1">Variables :</span>
+        <code class="px-1.5 py-0.5 bg-white border border-slate-300 rounded text-blue-700 font-mono text-[10.5px]">{title}</code>
+        <code class="px-1.5 py-0.5 bg-white border border-slate-300 rounded text-blue-700 font-mono text-[10.5px]">{desc}</code>
+        <code class="px-1.5 py-0.5 bg-white border border-slate-300 rounded text-blue-700 font-mono text-[10.5px]">{chartType}</code>
+        <code class="px-1.5 py-0.5 bg-white border border-slate-300 rounded text-blue-700 font-mono text-[10.5px]">{model}</code>
+        <code class="px-1.5 py-0.5 bg-white border border-slate-300 rounded text-blue-700 font-mono text-[10.5px]">{grain}</code>
+        <code class="px-1.5 py-0.5 bg-white border border-slate-300 rounded text-blue-700 font-mono text-[10.5px]">{axisX}</code>
+        <code class="px-1.5 py-0.5 bg-white border border-slate-300 rounded text-blue-700 font-mono text-[10.5px]">{axisY}</code>
+        <code class="px-1.5 py-0.5 bg-white border border-slate-300 rounded text-blue-700 font-mono text-[10.5px]">{dimensions}</code>
+        <code class="px-1.5 py-0.5 bg-white border border-slate-300 rounded text-blue-700 font-mono text-[10.5px]">{measures}</code>
+        <code class="px-1.5 py-0.5 bg-white border border-slate-300 rounded text-blue-700 font-mono text-[10.5px]">{filters}</code>
+        <code class="px-1.5 py-0.5 bg-white border border-slate-300 rounded text-blue-700 font-mono text-[10.5px]">{businessRules}</code>
+      </div>
+
+      <!-- Zone d'édition plein écran -->
+      <div class="flex-1 min-h-0 p-3 flex flex-col bg-slate-900 overflow-hidden">
+        <textarea id="prompt-template-textarea" spellcheck="false" class="w-full h-full flex-1 p-3 bg-slate-950 text-slate-100 font-mono text-xs leading-relaxed rounded-lg border border-slate-700 focus:border-blue-500 focus:outline-hidden resize-none"></textarea>
+      </div>
+
+      <!-- Pied de la modale -->
+      <div class="px-4 py-2.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between shrink-0 text-xs">
+        <button type="button" onclick="resetPromptTemplateModal()" class="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-semibold transition shadow-xs flex items-center gap-1.5">
+          <span>↻</span> Rétablir défaut
+        </button>
+        <div class="flex items-center gap-2">
+          <span id="prompt-template-saved-msg" class="text-emerald-600 font-semibold text-[11px] hidden">✓ Enregistré</span>
+          <button type="button" onclick="closePromptTemplateModal()" class="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-semibold transition shadow-xs">
+            Annuler
+          </button>
+          <button type="button" onclick="savePromptTemplateModal()" class="px-4 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold transition shadow-sm">
+            Enregistrer le template
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   </main>
 
   <script>
@@ -1797,8 +1848,59 @@
       }
     }
 
+    function openPromptTemplateModal() {
+      const modal = document.getElementById("prompt-template-modal");
+      const textarea = document.getElementById("prompt-template-textarea");
+      if (!modal || !textarea) return;
+      textarea.value = getPromptTemplate();
+      const msg = document.getElementById("prompt-template-saved-msg");
+      if (msg) msg.classList.add("hidden");
+      modal.classList.remove("hidden");
+      textarea.focus();
+    }
+
+    function closePromptTemplateModal() {
+      const modal = document.getElementById("prompt-template-modal");
+      if (modal) modal.classList.add("hidden");
+    }
+
+    function savePromptTemplateModal() {
+      const textarea = document.getElementById("prompt-template-textarea");
+      if (!textarea) return;
+      savePromptTemplate(textarea.value);
+      const msg = document.getElementById("prompt-template-saved-msg");
+      if (msg) {
+        msg.classList.remove("hidden");
+        setTimeout(() => msg.classList.add("hidden"), 1800);
+      }
+      renderChartAiView(4);
+      renderChartAiView(6);
+      setTimeout(() => closePromptTemplateModal(), 400);
+    }
+
+    function resetPromptTemplateModal() {
+      const textarea = document.getElementById("prompt-template-textarea");
+      if (!textarea) return;
+      textarea.value = DEFAULT_PROMPT_TEMPLATE;
+      localStorage.removeItem(PROMPT_TEMPLATE_STORAGE_KEY);
+      const msg = document.getElementById("prompt-template-saved-msg");
+      if (msg) {
+        msg.textContent = "✓ Réinitialisé";
+        msg.classList.remove("hidden");
+        setTimeout(() => {
+          msg.textContent = "✓ Enregistré";
+          msg.classList.add("hidden");
+        }, 1800);
+      }
+      renderChartAiView(4);
+      renderChartAiView(6);
+    }
+
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") closeMethodologyModal();
+      if (e.key === "Escape") {
+        closeMethodologyModal();
+        closePromptTemplateModal();
+      }
     });
 
     function switchStep(step) {
@@ -2210,7 +2312,6 @@
 
       drawSchema(opt);
       if (schemaViewMode === 'mermaid') updateMermaidCode(opt);
-      if (schemaViewMode === 'ai' || schemaViewMode === 'md' || schemaViewMode === 'txt') updateSchemaRulesView(opt);
       renderStep3TablePreview();
       renderStep5TablePreview();
       updateRecap();
@@ -4297,29 +4398,81 @@ const STEP_BUILDERS = {
       }
     };
 
-    function generateChartMarkdownPrompt(step, opt) {
-      const s = CHART_MD_SPECS[step] && CHART_MD_SPECS[step][opt];
-      if (!s) return `# Spécification Visualisation Chart.js\n\nDonnées en cours d'initialisation...\n`;
-      return `# Spécification Chart.js — ${s.title}
+    const PROMPT_TEMPLATE_STORAGE_KEY = 'maestro_prompt_template';
+    const DEFAULT_PROMPT_TEMPLATE = `# Spécification Visuel — {title}
 
-> Visualisation décisionnelle MRO Safran Maestro développée avec Chart.js (v4+).
+> {desc}
 
-### Spécification Technique
-- **Type de Graphique :** ${s.chartType}
-- **Source & Grain de Données :** ${s.model} — ${s.grain}
-- **Axe X :** ${s.axisX}
-- **Axe Y :** ${s.axisY}
+### Cadrage & Données
+- Type de graphique : {chartType}
+- Modèle & Grain : {model} — {grain}
+- Axe X : {axisX}
+- Axe Y : {axisY}
 
 ### Dimensions & Mesures
-- **Dimensions d'Analyse :**
-${s.dimensions.map(d => `  * ${d}`).join('\n')}
-- **Mesures & Indicateurs Clés :**
-${s.measures.map(m => `  * ${m}`).join('\n')}
+- Dimensions :
+{dimensions}
+- Mesures :
+{measures}
 
-### Règles Visuelles & Périmètre
-- **Filtres :** ${s.filters}
-- **Règles Métier & Palette :** ${s.businessRules}
-`;
+### Règles & Filtres
+- Filtres : {filters}
+- Règles de gestion : {businessRules}`;
+
+    function getPromptTemplate() {
+      try {
+        const custom = localStorage.getItem(PROMPT_TEMPLATE_STORAGE_KEY);
+        if (custom && custom.trim().length > 0) return custom;
+      } catch (e) {}
+      return DEFAULT_PROMPT_TEMPLATE;
+    }
+
+    function savePromptTemplate(templateStr) {
+      try {
+        localStorage.setItem(PROMPT_TEMPLATE_STORAGE_KEY, templateStr);
+      } catch (e) {}
+    }
+
+    function getOptionDescription(step, opt) {
+      const cardEl = document.getElementById(`opt-${step}-${opt}`);
+      if (cardEl) {
+        const descEl = cardEl.querySelector('.ans-desc');
+        if (descEl && descEl.textContent.trim()) {
+          return descEl.textContent.trim();
+        }
+      }
+      if (metaInfo[step] && metaInfo[step][opt] && metaInfo[step][opt].desc) {
+        return metaInfo[step][opt].desc;
+      }
+      return "";
+    }
+
+    function generateChartMarkdownPrompt(step, opt) {
+      const s = CHART_MD_SPECS[step] && CHART_MD_SPECS[step][opt];
+      if (!s) return `# Spécification Visuel\n\nDonnées en cours d'initialisation...\n`;
+      const desc = getOptionDescription(step, opt);
+      const dimsStr = Array.isArray(s.dimensions) ? s.dimensions.map(d => `  * ${d}`).join('\n') : (s.dimensions || '');
+      const measuresStr = Array.isArray(s.measures) ? s.measures.map(m => `  * ${m}`).join('\n') : (s.measures || '');
+
+      let tpl = getPromptTemplate();
+      const replacements = {
+        '{title}': s.title || '',
+        '{desc}': desc,
+        '{chartType}': s.chartType || '',
+        '{model}': s.model || '',
+        '{grain}': s.grain || '',
+        '{axisX}': s.axisX || '',
+        '{axisY}': s.axisY || '',
+        '{dimensions}': dimsStr,
+        '{measures}': measuresStr,
+        '{filters}': s.filters || '',
+        '{businessRules}': s.businessRules || ''
+      };
+
+      for (const [k, v] of Object.entries(replacements)) {
+        tpl = tpl.split(k).join(v);
+      }
+      return tpl;
     }
 
     function renderChartAiView(step) {
@@ -4343,6 +4496,52 @@ ${s.measures.map(m => `  * ${m}`).join('\n')}
             btn.classList.remove('text-emerald-400');
           }, 1500);
         }
+      });
+    }
+
+    function copyOptionCard(step, opt, ev) {
+      if (ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+      }
+      const bodyEl = document.getElementById(`opt-${step}-${opt}-body`);
+      if (!bodyEl) return;
+      const clone = bodyEl.cloneNode(true);
+      clone.querySelectorAll('.opt-copy-btn').forEach(b => b.remove());
+      const text = clone.innerText.trim();
+      
+      const btn = ev ? ev.currentTarget : document.querySelector(`#opt-${step}-${opt}-body .opt-copy-btn`);
+      copyTextToClipboard(text).then(() => {
+        if (btn) {
+          const orig = btn.textContent;
+          btn.textContent = '✓';
+          btn.classList.add('text-emerald-600');
+          setTimeout(() => {
+            btn.textContent = orig;
+            btn.classList.remove('text-emerald-600');
+          }, 1500);
+        }
+      });
+    }
+
+    function initOptionCopyButtons() {
+      [4, 6].forEach(step => {
+        ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'].forEach(opt => {
+          const bodyEl = document.getElementById(`opt-${step}-${opt}-body`);
+          if (!bodyEl || bodyEl.querySelector('.opt-copy-btn')) return;
+          
+          const titleEl = bodyEl.querySelector('.ans-title') || bodyEl.firstElementChild;
+          if (titleEl) {
+            titleEl.classList.add('flex', 'items-center', 'justify-between', 'gap-1.5', 'w-full');
+            const copyBtn = document.createElement('button');
+            copyBtn.type = 'button';
+            copyBtn.className = 'opt-copy-btn p-1 text-slate-400 hover:text-blue-700 hover:bg-slate-100 rounded transition cursor-pointer text-xs leading-none shrink-0 ml-auto';
+            copyBtn.title = 'Copier le contenu de cette option';
+            copyBtn.textContent = '⧉';
+            copyBtn.onclick = (e) => copyOptionCard(step, opt, e);
+            titleEl.appendChild(copyBtn);
+          }
+        });
       });
     }
 
@@ -5102,28 +5301,37 @@ const canvas = document.getElementById('mock-chart-q' + step + '-canvas');
     MDT_MAINTENANCE_REQUEST }o--|| CONTRACT_SLA : "engagements SLA client"
 
     MDT_MAINTENANCE_REQUEST {
-        string ID_DEMANDE PK "Clé unique demande"
-        string DEMANDEUR "Compagnie cliente"
-        date DATE_DEMANDE "Date d'émission"
-        string PROGRAMME_MOTEUR "CFM56 / LEAP"
-        string ENGINE_TYPE "Modèle exact"
-        string NIVEAU_URGENCE_GLOBAL "Haute / Moyenne / Basse"
-        string COMMENTAIRE_GLOBAL "Remarques"
-        number INTERVENTION_COUNT "COUNT(ID_INTERVENTION)"
-        number URGENCY_WEIGHT "Poids algorithmique"
-        number TOTAL_ENGINE_TAT "TAT global consolidé (j)"
+        string ID_DEMANDE PK "D-2026-000123"
+        string DEMANDEUR "Air France (AFR)"
+        date DATE_DEMANDE "2026-03-01"
+        string PROGRAMME_MOTEUR "LEAP / CFM56"
+        string ENGINE_TYPE "LEAP-1A26"
+        string NIVEAU_URGENCE_GLOBAL "Haute (AOG)"
+        string COMMENTAIRE_GLOBAL "Dépose suite FOD"
+        int INTERVENTION_COUNT KF "3"
+        float URGENCY_WEIGHT KF "3.0"
+        float TOTAL_ENGINE_TAT KF "21.5 j"
     }
     TIMEPROFILE {
-        string ID_PERIOD PK "Semaine / Mois"
-        date START_DATE
-        date END_DATE
-        boolean IS_WORKING_DAY
+        string ID_PERIOD PK "2026-W10"
+        date START_DATE "2026-03-02"
+        date END_DATE "2026-03-08"
+        boolean IS_WORKING_DAY "true"
     }
     CONTRACT_SLA {
-        string ID_CONTRAT PK
-        string DEMANDEUR
-        number SLA_CIBLE_JOURS
-        number PENALITE_JOUR_EUR
+        string ID_CONTRAT PK "CTR-AFR-01"
+        string DEMANDEUR "Air France (AFR)"
+        float SLA_CIBLE_JOURS "18.0 j"
+        float PENALITE_JOUR_EUR "2500 EUR"
+    }
+    MDT_INTERVENTION {
+        string ID_INTERVENTION PK "I-2026-000123-01"
+        string ID_DEMANDE FK "D-2026-000123"
+        string TYPE_REPARATION "T-AUBTUR"
+        string PRECISION_AUTRE "Usinage aubes HP"
+        string SHOP_ASSIGNE "S-MON"
+        string DONNEES_TECHNIQUES "DOC-NDT-2026-442"
+        float INTERVENTION_TAT KF "32.5 h"
     }`,
       B: `erDiagram
     MDT_MAINTENANCE_REQUEST ||--o{ MDT_INTERVENTION : "contient (ID_DEMANDE)"
@@ -5134,46 +5342,45 @@ const canvas = document.getElementById('mock-chart-q' + step + '-canvas');
     DUREE_STANDARDS ||--o{ MDT_INTERVENTION : "duree estimee (type)"
 
     MDT_INTERVENTION {
-        string ID_DEMANDE PK "Cle composite 1/2"
-        string ID_INTERVENTION PK "Cle composite 2/2"
-        string TYPE_REPARATION "8 types (T-XXXXXX)"
-        string PRECISION_AUTRE "Detail si type Autre"
-        string SHOP_ASSIGNE FK "Shop (S-XXX)"
-        string STATION_ASSIGNEE FK "Station (S-XXX-YY)"
-        string DONNEES_TECHNIQUES "Ref / URL rapport"
-        number ESTIMATED_REPAIR_DURATION "Duree standard estimee (h)"
-        number SHOP_QUEUE_TIME "Temps attente file (h)"
-        number INTERVENTION_TAT "TAT unitaire cumule (h)"
-    }
-    MDT_MAINTENANCE_REQUEST {
-        string ID_DEMANDE PK "Dossier parent"
-        string DEMANDEUR "Compagnie donneuse ordre"
-        string ENGINE_TYPE "Modele exact reacteur"
-        string NIVEAU_URGENCE_GLOBAL "Criticite (AOG)"
-    }
-    SHOP {
-        string SHOP_ASSIGNE PK "Site SAE (S-XXX, 10 sites)"
-        string NOM_ATELIER "Montereau, Villaroche, etc."
-        string ZONE_GEO "Zone Europe / France"
-        number NB_STATIONS "3 a 10 stations par shop"
-        number CAPACITE_HEBDO "Capacite globale shop"
+        string ID_DEMANDE PK "D-2026-000123"
+        string ID_INTERVENTION PK "I-2026-000123-01"
+        string TYPE_REPARATION "T-AUBTUR"
+        string PRECISION_AUTRE "Re-frettage specifique"
+        string STATION_ASSIGNEE FK "S-MON-01"
+        string SHOP_ASSIGNE FK "S-MON"
+        string DONNEES_TECHNIQUES "DOC-NDT-2026-442"
+        float ESTIMATED_REPAIR_DURATION KF "18.5 h"
+        float SHOP_QUEUE_TIME KF "12.0 h"
+        float INTERVENTION_TAT KF "32.5 h"
     }
     STATION {
-        string ID_STATION PK "Format S-XXX-YY (3 a 10 / shop)"
-        string SHOP_ASSIGNE FK "Shop parent (S-XXX)"
-        string NOM_STATION "Nom machine / baie"
-        string TYPE_REPARATION "Specialite (1 des 8 types)"
-        number SEUIL_SATURATION "Seuil alerte 85%"
+        string ID_STATION PK "S-MON-01"
+        string SHOP_ASSIGNE FK "S-MON"
+        string NOM_STATION "Usinage Aubes HP Tour CN"
+        string TYPE_REPARATION "T-AUBTUR"
+        float SEUIL_SATURATION "85.0 %"
+    }
+    SHOP {
+        string SHOP_ASSIGNE PK "S-MON"
+        string NOM_ATELIER "Montereau"
+        int NB_STATIONS "6"
+        float CAPACITE_HEBDO "1450.0 h"
+    }
+    MDT_MAINTENANCE_REQUEST {
+        string ID_DEMANDE PK "D-2026-000123"
+        string DEMANDEUR "Air France (AFR)"
+        string ENGINE_TYPE "LEAP-1A26"
+        string NIVEAU_URGENCE_GLOBAL "Haute (AOG)"
     }
     DUREE_STANDARDS {
-        string ENGINE_TYPE PK "CFM56, LEAP, GE90"
-        string TYPE_REPARATION PK "8 types de reparation"
-        number DUREE_STANDARD_H "Temps gamme constructeur"
+        string ENGINE_TYPE PK "LEAP-1A26"
+        string TYPE_REPARATION PK "T-AUBTUR"
+        float DUREE_STANDARD_H "18.5 h"
     }
     TIMEPROFILE {
-        string ID_PERIOD PK "Jour / Semaine"
-        date DATE_DEBUT "Debut planification"
-        date DATE_FIN "Fin planification"
+        string ID_PERIOD PK "2026-W10"
+        date DATE_DEBUT "2026-03-02"
+        date DATE_FIN "2026-03-08"
     }`
     };
 
@@ -5398,136 +5605,148 @@ xychart-beta
       });
     }
 
-    let schemaViewMode = 'svg';
+    const MERMAID_SCHEMA_STORAGE_KEY_PREFIX = 'maestro_schema_mermaid_';
+
+    function getMermaidSchema(granularity) {
+      const g = granularity || selections[2] || 'A';
+      try {
+        const saved = localStorage.getItem(MERMAID_SCHEMA_STORAGE_KEY_PREFIX + g);
+        if (saved && saved.trim()) return saved;
+      } catch (e) {}
+      return SCHEMA_MERMAID[g] || SCHEMA_MERMAID.A;
+    }
+
+    function saveMermaidSchema(granularity, code) {
+      const g = granularity || selections[2] || 'A';
+      try {
+        localStorage.setItem(MERMAID_SCHEMA_STORAGE_KEY_PREFIX + g, code);
+      } catch (e) {}
+    }
+
+    function onMermaidCodeChange(val) {
+      const g = selections[2] || 'A';
+      saveMermaidSchema(g, val);
+      const msg = document.getElementById('schema-mermaid-saved-msg');
+      if (msg) {
+        msg.classList.remove('hidden');
+        clearTimeout(window._schemaSavedTimer);
+        window._schemaSavedTimer = setTimeout(() => msg.classList.add('hidden'), 1500);
+      }
+      clearTimeout(window._schemaRenderTimer);
+      window._schemaRenderTimer = setTimeout(() => {
+        renderMermaidVisual(g);
+      }, 300);
+    }
+
+    function resetMermaidSchema() {
+      const g = selections[2] || 'A';
+      try {
+        localStorage.removeItem(MERMAID_SCHEMA_STORAGE_KEY_PREFIX + g);
+      } catch (e) {}
+      const defaultCode = SCHEMA_MERMAID[g] || SCHEMA_MERMAID.A;
+      updateMermaidCode(g);
+      renderMermaidVisual(g);
+      const msg = document.getElementById('schema-mermaid-saved-msg');
+      if (msg) {
+        msg.textContent = '✓ Réinitialisé';
+        msg.classList.remove('hidden');
+        clearTimeout(window._schemaSavedTimer);
+        window._schemaSavedTimer = setTimeout(() => {
+          msg.textContent = '✓ Enregistré';
+          msg.classList.add('hidden');
+        }, 1500);
+      }
+      showToast('↻ Modèle Mermaid <b>' + (g === 'B' ? '2.B' : '2.A') + '</b> réinitialisé');
+    }
 
     function updateMermaidCode(granularity) {
+      const g = granularity || selections[2] || 'A';
       const codeEl = document.getElementById('schema-mermaid-code');
-      if (codeEl) codeEl.textContent = SCHEMA_MERMAID[granularity] || SCHEMA_MERMAID.A;
+      if (codeEl) {
+        codeEl.value = getMermaidSchema(g);
+      }
     }
 
     function copyMermaidSchema() {
       const codeEl = document.getElementById('schema-mermaid-code');
       const btn = document.getElementById('schema-copy-btn');
       if (!codeEl) return;
-      copyTextToClipboard(codeEl.textContent || '').then(() => {
+      const text = codeEl.value !== undefined ? codeEl.value : codeEl.textContent || '';
+      copyTextToClipboard(text).then(() => {
         if (btn) {
-          btn.innerHTML = '<span>✅</span> Copié !';
-          btn.classList.add('bg-emerald-600');
+          btn.innerHTML = '<span>✅</span>';
+          btn.classList.add('text-emerald-600');
           setTimeout(() => {
-            btn.innerHTML = '<span>📋</span> Copier le code';
-            btn.classList.remove('bg-emerald-600');
+            btn.innerHTML = '⧉';
+            btn.classList.remove('text-emerald-600');
           }, 1800);
         }
       });
     }
 
-    const SCHEMA_AI_MARKDOWN = {
-      all: `# Safran MRO Maestro — Modèle Sémantique & Relations
-
-## 1. MDT_MAINTENANCE_REQUEST (Demande Macro — 2.A)
-- Grain: 1 ligne = 1 dossier de visite moteur
-- Clé Primaire (PK): ID_DEMANDE (Format: D-YYYY-XXXXXX, ex: D-2026-000123)
-- Dimensions Client & Moteur:
-  * DEMANDEUR: AFR (Air France), CCA (Air China), EZY (easyJet), DLH (Lufthansa), DAL (Delta), UAE (Emirates), SIA (Singapore)
-  * PROGRAMME_MOTEUR: CFM56, LEAP, GE90, M88
-  * ENGINE_TYPE: CFM56-7B, CFM56-5B, LEAP-1A, LEAP-1B, GE90-115B, M88-2
-  * NIVEAU_URGENCE_GLOBAL: Haute / AOG (poids 3.0), Moyenne (2.0), Basse (1.0)
-  * DATE_DEMANDE: Date officielle d'émission (ISO 8601)
-  * COMMENTAIRE_GLOBAL: Motif de dépose (FOD, usure normale, consigne CN)
-- Key Figures (Mesures Dossier):
-  * INTERVENTION_COUNT: COUNT(ID_INTERVENTION) actives rattachées
-  * URGENCY_WEIGHT: Poids algorithmique d'ordonnancement (1.0 à 3.0)
-  * TOTAL_ENGINE_TAT: Délai total consolidé de la visite (jours)
-
----
-
-## 2. MDT_INTERVENTION (Interventions & Ateliers — 2.B)
-- Grain: 1 ligne = 1 opération unitaire sur station & atelier
-- Clé Primaire (PK): ID_DEMANDE + ID_INTERVENTION (Format: I-YYYY-XXXXXX-ZZ)
-- Clés Étrangères (FK):
-  * SHOP_ASSIGNE -> SHOP (10 ateliers SAE)
-  * STATION_ASSIGNEE -> STATION (48 stations, 3 à 10 par atelier)
-- Dimensions Réseau & Gammes:
-  * 10 Ateliers Industriels: S-MON, S-VIL, S-COR, S-CHL, S-STQ, S-BRU, S-MEX, S-CAS, S-SUZ, S-SIN
-  * 8 Types de Réparation: T-INSCND, T-AUBTUR, T-MAJLOU, T-BANESS, T-EQUROT, T-COMHOT, T-REVCAR, T-FODREP
-  * Seuil Saturation Station: 85.0% (alerte goulot d'étranglement)
-- Key Figures (Mesures Atelier):
-  * ESTIMATED_REPAIR_DURATION: Durée standard de gamme constructeur (heures)
-  * SHOP_QUEUE_TIME: Temps d'attente file dynamique selon charge (heures)
-  * INTERVENTION_TAT: Délai net unitaire cumulé (attente + gamme + recette) (heures)`
-    };
-
-    function updateSchemaRulesView(granularity) {
+    function renderMermaidVisual(granularity) {
       const g = granularity || selections[2] || 'A';
-      const codeEl = document.getElementById('schema-ai-code');
-      const badgeEl = document.getElementById('schema-ai-badge');
-      if (codeEl && !codeEl.textContent) {
-        codeEl.textContent = SCHEMA_AI_MARKDOWN.all;
-      }
-      if (badgeEl) {
-        badgeEl.textContent = g === 'B' ? '2.B Atelier' : '2.A Demande';
-        badgeEl.className = g === 'B'
-          ? 'text-[9px] font-semibold bg-emerald-50 text-emerald-700 px-1.5 py-0.2 rounded border border-emerald-200'
-          : 'text-[9px] font-semibold bg-blue-50 text-blue-700 px-1.5 py-0.2 rounded border border-blue-200';
-      }
-      scrollSchemaMarkdown(g === 'B' ? '2b' : '2a');
-    }
+      const container = document.getElementById('schema-mermaid-diagram');
+      if (!container) return;
+      const code = (getMermaidSchema(g) || SCHEMA_MERMAID.A).trim();
 
-    function scrollSchemaMarkdown(section) {
-      const scrollEl = document.getElementById('schema-ai-scroll');
-      const badge2A = document.getElementById('schema-ai-badge-2a');
-      const badge2B = document.getElementById('schema-ai-badge-2b');
-      if (scrollEl) {
-        if (section === '2b') {
-          scrollEl.scrollTo({ top: scrollEl.scrollHeight * 0.45, behavior: 'smooth' });
-        } else {
-          scrollEl.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+      if (typeof mermaid === 'undefined') {
+        container.innerHTML = '<div class="text-xs text-slate-400 p-4">⏳ Chargement de Mermaid...</div>';
+        return;
       }
-      if (badge2A && badge2B) {
-        if (section === '2a') {
-          badge2A.className = 'text-[9.5px] font-semibold bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded border border-blue-200 hover:bg-blue-100 transition cursor-pointer';
-          badge2B.className = 'text-[9.5px] font-semibold bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded border border-slate-200 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 transition cursor-pointer';
-        } else {
-          badge2B.className = 'text-[9.5px] font-semibold bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded border border-emerald-200 hover:bg-emerald-100 transition cursor-pointer';
-          badge2A.className = 'text-[9.5px] font-semibold bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded border border-slate-200 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200 transition cursor-pointer';
-        }
-      }
-    }
 
-    function copySchemaMarkdown() {
-      const codeEl = document.getElementById('schema-ai-code');
-      const btn = document.getElementById('schema-ai-copy-btn');
-      const text = (codeEl && codeEl.textContent) ? codeEl.textContent : SCHEMA_AI_MARKDOWN.all;
-      copyTextToClipboard(text).then(() => {
-        if (btn) {
-          btn.textContent = '✓';
-          btn.classList.add('text-emerald-400');
-          setTimeout(() => {
-            btn.textContent = '⧉';
-            btn.classList.remove('text-emerald-400');
-          }, 1500);
+      try {
+        if (!window._mermaidInitialized) {
+          mermaid.initialize({
+            startOnLoad: false,
+            theme: 'default',
+            securityLevel: 'loose',
+            er: {
+              useMaxWidth: true,
+              entityPadding: 15,
+              fontSize: 11
+            }
+          });
+          window._mermaidInitialized = true;
         }
-      });
+
+        const renderId = 'mermaid-render-' + g + '-' + Date.now();
+        mermaid.render(renderId, code).then(({ svg }) => {
+          container.innerHTML = svg;
+          const svgEl = container.querySelector('svg');
+          if (svgEl) {
+            svgEl.style.maxWidth = '100%';
+            svgEl.style.maxHeight = '100%';
+            svgEl.style.height = 'auto';
+            svgEl.style.display = 'block';
+            svgEl.style.margin = 'auto';
+          }
+        }).catch((err) => {
+          console.error('Mermaid ERD render error:', err);
+          container.innerHTML = '<div class="p-3 text-red-600 text-xs font-mono bg-red-50 rounded border border-red-200">⚠️ Erreur de syntaxe Mermaid ERD :<br><pre class="mt-1 whitespace-pre-wrap">' + (err.message || err) + '</pre></div>';
+        });
+      } catch (e) {
+        console.error('Mermaid render exception:', e);
+      }
     }
 
     function toggleSchemaView(view) {
       const svgView = document.getElementById('schema-svg-view');
       const mermaidView = document.getElementById('schema-mermaid-view');
-      const rulesView = document.getElementById('schema-rules-view');
-      schemaViewMode = view;
+      schemaViewMode = (view === 'ai' || view === 'md' || view === 'txt' || view === 'rules') ? 'mermaid' : view;
       if (svgView) svgView.classList.toggle('hidden', schemaViewMode !== 'svg');
       if (mermaidView) mermaidView.classList.toggle('hidden', schemaViewMode !== 'mermaid');
-      if (rulesView) rulesView.classList.toggle('hidden', schemaViewMode !== 'ai' && schemaViewMode !== 'md' && schemaViewMode !== 'txt' && schemaViewMode !== 'rules');
-      updateToggleButtons('schema-toggle', view);
-      if (view === 'mermaid') {
+      updateToggleButtons('schema-toggle', schemaViewMode);
+      if (schemaViewMode === 'svg') {
+        renderMermaidVisual(selections[2] || 'A');
+      } else if (schemaViewMode === 'mermaid') {
         updateMermaidCode(selections[2] || 'A');
-      } else if (view === 'ai' || view === 'md' || view === 'txt' || view === 'rules') {
-        updateSchemaRulesView(selections[2] || 'A');
       }
     }
 
     function drawSchema(granularity) {
+      renderMermaidVisual(granularity);
+      updateMermaidCode(granularity);
       const canvas = document.getElementById('schemaCanvas');
       if (!canvas || !canvas.getContext) return;
       const ctx = canvas.getContext('2d');
@@ -5879,7 +6098,6 @@ xychart-beta
       });
 
       updateMermaidCode(granularity);
-      updateSchemaRulesView(granularity);
     }
 
     function renderStep3TablePreview() {
@@ -6286,6 +6504,7 @@ xychart-beta
     window.addEventListener('load', () => {
       if (window.lucide && window.lucide.createIcons) window.lucide.createIcons();
       initMarkdownViewer();
+      initOptionCopyButtons();
 
       let startStep = 0;
       try {

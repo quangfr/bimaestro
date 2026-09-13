@@ -87,30 +87,6 @@ Le projet MAESTRO s'articule autour des acteurs décisionnels de la maintenance 
 
 ---
 
-### Matrice des Besoins par Rôles (Needs Matrix SAE MAESTRO) :
-
-| Rôle SAE | Demande Long Terme | Suivi Moteurs (Dates/Priorités) | Simulation / What-If | Charge / Capacité | Planif Court Terme | Arbitrage Priorités | Comités MPS/S&OP | Analyse Écarts | Alertes Jalons/Dérives | Export Finance | Impacts Contrat | Engagements SLA/AOG |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **CSPM** | ✓ | ✓ | ✓ | | | ✓ | | ✓ | ✓ | | ✓ | ✓ |
-| **NTPL** | ✓ | ✓ | ✓ | ✓ | | ✓ | ✓ | ✓ | ✓ | | | |
-| **SHPL** | | ✓ | ✓ | ✓ | ✓ | ✓ | | ✓ | ✓ | | | |
-| **EOWN** | | ✓ | ✓ | | | ✓ | | ✓ | ✓ | | ✓ | |
-| **FTM** | ✓ | ✓ | ✓ | | | ✓ | | ✓ | ✓ | | ✓ | ✓ |
-| **DMMG** | ✓ | ✓ | ✓ | ✓ | | | ✓ | ✓ | | | | ✓ |
-| **FINC** | ✓ | ✓ | ✓ | ✓ | | | ✓ | ✓ | ✓ | ✓ | | |
-
-```mermaid
-%%{init: {'theme': 'base'}}%%
-xychart-beta
-    title "Écart Prévisionnel vs Effectif Réel (Surveillance Dérive Modèle)"
-    x-axis ["Semaine 1", "Semaine 2", "Semaine 3", "Semaine 4", "Semaine 5"]
-    y-axis "TAT Moyen (Jours)" 10 --> 26
-    line [18, 19, 21, 23, 24]
-    line [17, 18, 18, 19, 20]
-```
-
----
-
 ## Étape 2 : Modèle
 
 > **Question de cadrage :** Quelles tables et niveaux de granularité permettent le calcul du Turn Around Time (TAT) et la planification d'atelier ?  
@@ -147,10 +123,9 @@ Les fondations du modèle de données reposent sur deux structures maîtres : l'
 
 ### 2. 🎛️ Planning Levels (Niveaux de Granularité des Calculs)
 
-Le panneau latéral droit de l'Étape 2 propose un sélecteur à 3 vues :
-- **Vue Spécification Modèle (`<>`) :** Référentiel unifié des métadonnées, formats d'identifiants, dimensions et key figures (avec ancres de défilement fluide vers `# 2.A` ou `# 2.B` selon la sélection active).
-- **Vue SVG interactive (`svg`) :** Schéma relationnel entité-association dessiné sur Canvas HTML5 / SVG avec clés PK/FK.
-- **Vue Modèle Mermaid ERD (`uml`) :** Code source Mermaid ERD copiable pour rendu de diagramme UML entité-association.
+Le panneau latéral droit de l'Étape 2 propose un sélecteur à 2 vues :
+- **Vue Visuelle Schéma Relationnel (`svg`) :** Visualisateur dynamique Mermaid ERD directement branché sur le modèle de données avec clés PK/FK et types normalisés.
+- **Vue Modèle Mermaid ERD Éditable (`<>`) :** Code source Mermaid ERD éditable en direct avec persistance en local storage, impactant instantanément le rendu visuel, accompagné de boutons de copie et de réinitialisation (`↻`).
 
 Le modèle propose deux perspectives décisionnelles complémentaires selon le niveau de détail souhaité :
 
@@ -190,28 +165,37 @@ erDiagram
     MDT_MAINTENANCE_REQUEST }o--|| CONTRACT_SLA : "engagements SLA client"
 
     MDT_MAINTENANCE_REQUEST {
-        string ID_DEMANDE PK "Clé unique demande"
-        string DEMANDEUR "Compagnie cliente"
-        date DATE_DEMANDE "Date d'émission"
-        string PROGRAMME_MOTEUR "CFM56 / LEAP"
-        string ENGINE_TYPE "Modèle exact"
-        string NIVEAU_URGENCE_GLOBAL "Haute / Moyenne / Basse"
-        string COMMENTAIRE_GLOBAL "Remarques"
-        number INTERVENTION_COUNT "COUNT(ID_INTERVENTION)"
-        number URGENCY_WEIGHT "Poids algorithmique"
-        number TOTAL_ENGINE_TAT "TAT global consolidé (j)"
+        string ID_DEMANDE PK "D-2026-000123"
+        string DEMANDEUR "Air France (AFR)"
+        date DATE_DEMANDE "2026-03-01"
+        string PROGRAMME_MOTEUR "LEAP / CFM56"
+        string ENGINE_TYPE "LEAP-1A26"
+        string NIVEAU_URGENCE_GLOBAL "Haute (AOG)"
+        string COMMENTAIRE_GLOBAL "Dépose suite FOD"
+        int INTERVENTION_COUNT KF "3"
+        float URGENCY_WEIGHT KF "3.0"
+        float TOTAL_ENGINE_TAT KF "21.5 j"
     }
     TIMEPROFILE {
-        string ID_PERIOD PK "Semaine / Mois"
-        date START_DATE
-        date END_DATE
-        boolean IS_WORKING_DAY
+        string ID_PERIOD PK "2026-W10"
+        date START_DATE "2026-03-02"
+        date END_DATE "2026-03-08"
+        boolean IS_WORKING_DAY "true"
     }
     CONTRACT_SLA {
-        string ID_CONTRAT PK
-        string DEMANDEUR
-        number SLA_CIBLE_JOURS
-        number PENALITE_JOUR_EUR
+        string ID_CONTRAT PK "CTR-AFR-01"
+        string DEMANDEUR "Air France (AFR)"
+        float SLA_CIBLE_JOURS "18.0 j"
+        float PENALITE_JOUR_EUR "2500 EUR"
+    }
+    MDT_INTERVENTION {
+        string ID_INTERVENTION PK "I-2026-000123-01"
+        string ID_DEMANDE FK "D-2026-000123"
+        string TYPE_REPARATION "T-AUBTUR"
+        string PRECISION_AUTRE "Usinage aubes HP"
+        string SHOP_ASSIGNE "S-MON"
+        string DONNEES_TECHNIQUES "DOC-NDT-2026-442"
+        float INTERVENTION_TAT KF "32.5 h"
     }
 ```
 
@@ -282,46 +266,45 @@ erDiagram
     DUREE_STANDARDS ||--o{ MDT_INTERVENTION : "duree estimee (type)"
 
     MDT_INTERVENTION {
-        string ID_DEMANDE PK "Cle composite 1/2"
-        string ID_INTERVENTION PK "Cle composite 2/2"
-        string TYPE_REPARATION "8 types (T-XXXXXX)"
-        string PRECISION_AUTRE "Detail si type Autre"
-        string SHOP_ASSIGNE FK "Shop (S-XXX)"
-        string STATION_ASSIGNEE FK "Station (S-XXX-YY)"
-        string DONNEES_TECHNIQUES "Ref / URL rapport"
-        number ESTIMATED_REPAIR_DURATION "Duree standard estimee (h)"
-        number SHOP_QUEUE_TIME "Temps attente file (h)"
-        number INTERVENTION_TAT "TAT unitaire cumule (h)"
-    }
-    MDT_MAINTENANCE_REQUEST {
-        string ID_DEMANDE PK "Dossier parent"
-        string DEMANDEUR "Compagnie donneuse ordre"
-        string ENGINE_TYPE "Modele exact reacteur"
-        string NIVEAU_URGENCE_GLOBAL "Criticite (AOG)"
-    }
-    SHOP {
-        string SHOP_ASSIGNE PK "Site SAE (S-XXX, 10 sites)"
-        string NOM_ATELIER "Montereau, Villaroche, etc."
-        string ZONE_GEO "Zone Europe / France"
-        number NB_STATIONS "3 a 10 stations par shop"
-        number CAPACITE_HEBDO "Capacite globale shop"
+        string ID_DEMANDE PK "D-2026-000123"
+        string ID_INTERVENTION PK "I-2026-000123-01"
+        string TYPE_REPARATION "T-AUBTUR"
+        string PRECISION_AUTRE "Re-frettage specifique"
+        string STATION_ASSIGNEE FK "S-MON-01"
+        string SHOP_ASSIGNE FK "S-MON"
+        string DONNEES_TECHNIQUES "DOC-NDT-2026-442"
+        float ESTIMATED_REPAIR_DURATION KF "18.5 h"
+        float SHOP_QUEUE_TIME KF "12.0 h"
+        float INTERVENTION_TAT KF "32.5 h"
     }
     STATION {
-        string ID_STATION PK "Format S-XXX-YY (3 a 10 / shop)"
-        string SHOP_ASSIGNE FK "Shop parent (S-XXX)"
-        string NOM_STATION "Nom machine / baie"
-        string TYPE_REPARATION "Specialite (1 des 8 types)"
-        number SEUIL_SATURATION "Seuil alerte 85%"
+        string ID_STATION PK "S-MON-01"
+        string SHOP_ASSIGNE FK "S-MON"
+        string NOM_STATION "Usinage Aubes HP Tour CN"
+        string TYPE_REPARATION "T-AUBTUR"
+        float SEUIL_SATURATION "85.0 %"
+    }
+    SHOP {
+        string SHOP_ASSIGNE PK "S-MON"
+        string NOM_ATELIER "Montereau"
+        int NB_STATIONS "6"
+        float CAPACITE_HEBDO "1450.0 h"
+    }
+    MDT_MAINTENANCE_REQUEST {
+        string ID_DEMANDE PK "D-2026-000123"
+        string DEMANDEUR "Air France (AFR)"
+        string ENGINE_TYPE "LEAP-1A26"
+        string NIVEAU_URGENCE_GLOBAL "Haute (AOG)"
     }
     DUREE_STANDARDS {
-        string ENGINE_TYPE PK "CFM56, LEAP, GE90"
-        string TYPE_REPARATION PK "8 types de reparation"
-        number DUREE_STANDARD_H "Temps gamme constructeur"
+        string ENGINE_TYPE PK "LEAP-1A26"
+        string TYPE_REPARATION PK "T-AUBTUR"
+        float DUREE_STANDARD_H "18.5 h"
     }
     TIMEPROFILE {
-        string ID_PERIOD PK "Jour / Semaine"
-        date DATE_DEBUT "Debut planification"
-        date DATE_FIN "Fin planification"
+        string ID_PERIOD PK "2026-W10"
+        date DATE_DEBUT "2026-03-02"
+        date DATE_FIN "2026-03-08"
     }
 ```
 
@@ -409,7 +392,7 @@ Le modèle relie les MDTs et les Planning Levels aux Key Figures de calcul suiva
 > **Rendu Chart.js & Modes de Vue (Étape 4) :** Les cartes d'options disposent d'un panneau à droite piloté par un sélecteur à 3 modes :
 > - **`js` :** Vue graphique Chart.js interactive avec infobulles et étiquettes de données (`chartjs-plugin-datalabels`).
 > - **`ui` :** Éditeur visuel de configuration avec application à la volée (modification des libellés, valeurs numériques par série, axes X/Y, titre de légende et palette de couleurs) avec persistance locale `localStorage`.
-> - **`<>` :** Descriptif structuré technique et autoporteur en Markdown (titre, type de visuel, modèle de fait, axes X/Y, dimensions, mesures, règles de rendu) avec bouton de copie rapide pour injection directe dans un prompt IA de génération de code.
+> - **`<>` :** Descriptif structuré technique et autoporteur en Markdown aligné sur l'interface et les possibilités natives de SAP-IBP et SAC (titre, composant SAC, modèle MDT IBP, axes X/Y, dimensions, mesures et Key Figures, règles et seuils d'alerte) avec bouton de copie rapide pour injection directe dans un prompt IA.
 
 ### Les 9 Graphiques Disponibles pour le Délai :
 - **4.A : TAT Médian & Bornes 5%-95% par Moteur**  
@@ -598,7 +581,7 @@ xychart-beta
 > **Rendu Chart.js & Modes de Vue (Étape 6) :** Les cartes d'options disposent d'un panneau à droite piloté par un sélecteur à 3 modes :
 > - **`js` :** Vue graphique Chart.js interactive (dont Treemap 6.H avec drill-down au clic Moteurs ➔ Réparations et Heatmap 6.F par semaine).
 > - **`ui` :** Éditeur visuel de configuration avec application à la volée (libellés, valeurs par série, axes X/Y, légende, couleurs) avec persistance `localStorage`.
-> - **`<>` :** Descriptif technique structuré et autoporteur en Markdown pour génération IA (titre, type, modèle de fait, dimensions, mesures, filtres et règles de rendu) avec bouton copier.
+> - **`<>` :** Descriptif technique structuré et autoporteur en Markdown aligné sur l'interface et les possibilités natives de SAP-IBP et SAC (titre, composant SAC, modèle MDT IBP, dimensions, mesures et Key Figures, filtres, règles et seuils d'alerte) avec bouton copier.
 
 ### Les 9 Graphiques de Saturation :
 - **6.A : Taux de Retard des Interventions par Shop**  
@@ -842,8 +825,8 @@ Afin d'offrir une flexibilité maximale aux utilisateurs, experts métiers, arch
 
 1. **Bascule Graphique / Éditeur / Spécification IA (`chart-toggle`) :**
    - Bouton `js` : affiche la vue graphique standard Chart.js (rendu canvas responsive haute performance).
-   - Bouton `<>` : bascule instantanément vers l'éditeur visuel de configuration ergonomique.
-   - Bouton `ai` : affiche la spécification technique en pur texte Markdown, compacte, auto-porteuse et immédiatement exploitable par une IA pour générer le composant Chart.js (v4+) : métadonnées du graphique, source, grain, cartographie des axes, dimensions, mesures DAX clés, règles métier et palette couleur, sans dépendance vis-à-vis des autres étapes du questionnaire.
+   - Bouton `ui` : bascule instantanément vers l'éditeur visuel de configuration ergonomique (saisie des points, axes et couleurs).
+   - Bouton `<>` : affiche la spécification technique en pur texte Markdown, compacte, auto-porteuse et calquée sur les interfaces et possibilités natives de SAP-IBP et SAP Analytics Cloud (SAC) (métadonnées du composant SAC, modèle MDT IBP, dimensions, mesures et Key Figures, règles de filtrage et seuils d'alerte).
 2. **Saisie Graphique & Personnalisation Complète :**
    - **Labels et Données :** modification à la volée du libellé de chaque point, saisie des valeurs numériques, ajout de nouvelles lignes (`+ Ajouter une ligne`) ou suppression de points (`✕`).
    - **Titres des Axes & Légende :** édition dynamique des titres de l'Axe X et de l'Axe Y, case à cocher d'activation/désactivation de la légende.
@@ -853,6 +836,6 @@ Afin d'offrir une flexibilité maximale aux utilisateurs, experts métiers, arch
    - Les personnalisations sont conservées entre les rechargements de page et les changements d'étape.
 4. **Réinitialisation Usine (`↻`) & Boutons de Copie Unicodes :**
    - Le bouton `↻` purge la personnalisation dans le `localStorage` et restitue la configuration standard d'origine du modèle.
-   - Les vues `ai` et `<>` disposent en haut à droite d'un bouton de copie unicode discret (`⧉`) avec accusé de confirmation instantané (`✓`).
+   - La vue `<>` dispose en haut à droite d'un bouton de copie unicode discret (`⧉`) avec accusé de confirmation instantané (`✓`).
 
 

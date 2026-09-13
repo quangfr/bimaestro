@@ -48,8 +48,8 @@ Structure :
      - **Panels de réponses / options :** `step-1-answers` à `step-6-answers`, et cartes d'options individuelles `opt-X-Y` (`opt-X-Y-body`, `opt-X-Y-illust`).
      - **Panels latéraux droits (Étapes 2 à 6) :** `step-2-schema-panel`, `step-3-table-panel`, `step-4-chart-panel`, `step-5-table-panel`, `step-6-chart-panel`.
      - **Composants Étape 7 :** `card-step-7-dashboard`, `card-step-7-chart-q4`, `card-step-7-chart-q6`, `mock-kpis`.
-     - **Éléments techniques :** `schemaCanvas`, `schema-svg-view`, `schema-mermaid-view`, `schema-rules-view`, `schema-toggle`, `md-file-select`, `md-render`, `step3-table-container`, `step5-table-container`, `select-q1` à `select-q6`, `tab-X`.
-   - La fonction `drawSchema(granularity)` (`A`/`B`/`C`) dessine le schéma relationnel de l'Étape 2 sur `schemaCanvas` (vue SVG). Le bouton `schema-toggle` en haut à gauche du panel bascule entre la vue spécification (`<>` / `schema-rules-view`), la vue SVG (`svg` / `schema-svg-view`) et la vue code Mermaid (`uml` / `schema-mermaid-code`), alimentée par `SCHEMA_MERMAID`.
+     - **Éléments techniques :** `schema-mermaid-diagram`, `schema-svg-view`, `schema-mermaid-view`, `schema-toggle`, `md-file-select`, `md-render`, `step3-table-container`, `step5-table-container`, `select-q1` à `select-q6`, `tab-X`.
+   - La fonction `drawSchema(granularity)` / `renderMermaidVisual(granularity)` (`A`/`B`) dessine dynamiquement le schéma relationnel Mermaid ERD dans `schema-mermaid-diagram` (vue `svg`). Le bouton `schema-toggle` en haut à gauche du panel bascule entre la vue visuelle Mermaid SVG (`svg` / `schema-svg-view`) et la vue code source Mermaid éditable (`<>` / `schema-mermaid-view`), persistée en `localStorage` et réinitialisable via `schema-reset-btn`.
 
 4. **Étape 0 — Lecteur Markdown :** la page Étape 0 charge à la volée (via `fetch`) les fichiers `*.md` du dossier racine (`ROOT_MD_FILES` dans le script) et les rend avec marked.js (CDN). Ne jamais copier le contenu des `.md` dans le HTML. Nécessite un serveur HTTP (file:// bloque le fetch).
 
