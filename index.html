@@ -27,15 +27,15 @@
     }
 
     .option-card:hover {
-      border-color: #2563eb;
+      border-color: #1e40af;
       transform: translateY(-2px);
       box-shadow: 0 6px 12px -2px rgba(37, 99, 235, 0.08);
     }
 
     .option-card.active {
-      border-color: #2563eb;
+      border-color: #1e40af;
       background: rgba(239, 246, 255, 0.95);
-      box-shadow: 0 0 0 1.5px #2563eb, 0 4px 12px -2px rgba(37, 99, 235, 0.15);
+      box-shadow: 0 0 0 1.5px #1e40af, 0 4px 12px -2px rgba(37, 99, 235, 0.15);
     }
 
     /* Cartes réponses grand format avec scroll Y (Étapes 4 et 6) */
@@ -116,24 +116,24 @@
 
     .markdown-body h1 {
       font-size: 1.2rem;
-      color: #1e3a8a;
+      color: #1e40af;
       border-bottom: 1px solid #e2e8f0;
       padding-bottom: 0.25rem;
     }
 
     .markdown-body h2 {
       font-size: 1.1rem;
-      color: #1e3a8a;
+      color: #1e40af;
     }
 
     .markdown-body h3 {
       font-size: 0.98rem;
-      color: #2563eb;
+      color: #1e40af;
     }
 
     .markdown-body h4 {
       font-size: 0.9rem;
-      color: #2563eb;
+      color: #1e40af;
     }
 
     .markdown-body p {
@@ -190,7 +190,7 @@
     }
 
     .markdown-body blockquote {
-      border-left: 3px solid #2563eb;
+      border-left: 3px solid #1e40af;
       background: #eff6ff;
       padding: 0.4rem 0.6rem;
       margin: 0.45rem 0;
@@ -229,12 +229,55 @@
     }
 
     .markdown-body a {
-      color: #2563eb;
+      color: #1e40af;
       text-decoration: underline;
     }
 
     .markdown-body strong {
       color: #0f172a;
+    }
+
+    #methodology-modal-content h1,
+    #methodology-modal-content h2,
+    #methodology-modal-content h3,
+    #methodology-modal-content h4,
+    #methodology-modal-content h5,
+    #methodology-modal-content h6 {
+      font-weight: 700;
+      line-height: 1.25;
+      margin: 0.55rem 0 0.3rem;
+    }
+
+    #methodology-modal-content h1 {
+      font-size: 1.2rem;
+      color: #1e40af;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 0.25rem;
+    }
+
+    #methodology-modal-content h2 {
+      font-size: 1.1rem;
+      color: #1e40af;
+    }
+
+    #methodology-modal-content h3 {
+      font-size: 0.98rem;
+      color: #1e40af;
+    }
+
+    #methodology-modal-content h4 {
+      font-size: 0.9rem;
+      color: #1e40af;
+    }
+
+    #methodology-modal-content h5 {
+      font-size: 0.85rem;
+      color: #1e40af;
+    }
+
+    #methodology-modal-content h6 {
+      font-size: 0.8rem;
+      color: #1e40af;
     }
   </style>
 </head>
@@ -246,7 +289,7 @@
   <header class="relative z-40 w-full shrink-0 mb-1 flex flex-wrap lg:flex-nowrap items-center justify-between gap-2 bg-white/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-200/80 shadow-sm">
     <div class="flex items-center gap-2 shrink-0">
       <span
-        class="inline-flex items-center gap-1 px-2 py-0.5 bg-blue-50 border border-blue-200 rounded-full text-blue-700 text-[10px] font-bold uppercase tracking-wider">
+        class="inline-flex items-center gap-1 px-2 py-0.5 bg-blue-50 border border-blue-200 rounded-full text-blue-800 text-[10px] font-bold uppercase tracking-wider">
         🚀 BIMAESTRO
       </span>
       <h1 class="text-xs sm:text-sm font-black text-slate-900 tracking-tight whitespace-nowrap">Prototype Décisionnel MRO <span class="hidden sm:inline font-normal text-slate-500 text-[11px]">(vs Maestro SAP-IBP)</span></h1>
@@ -255,7 +298,7 @@
     <!-- Navigation par Onglets (1 Page par Question) - Sur une seule ligne dans le header -->
     <nav class="flex items-center gap-1 shrink-0 whitespace-nowrap scrollbar-none" id="nav-tabs">
       <button onclick="switchStep(0)" id="tab-0"
-        class="px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 bg-blue-600 text-white shadow-sm shadow-blue-500/20">
+        class="px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 bg-blue-800 text-white shadow-sm shadow-blue-700/20">
         <span>0</span> Contexte
       </button>
       <div id="nav-step-1" class="relative group">
@@ -321,9 +364,9 @@
       <div id="card-step-0" class="glass-card p-3 rounded-xl flex flex-col flex-1 min-h-0 overflow-hidden">
         <div class="mb-1.5 shrink-0">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-            <h2 class="text-sm md:text-base font-bold text-blue-700">Étape 0 : Contexte &amp; Documentation</h2>
+            <h2 class="text-sm md:text-base font-bold text-blue-800">Étape 0 : Contexte &amp; Documentation</h2>
             <div class="flex items-center gap-1.5 self-start sm:self-auto">
-              <button type="button" onclick="nextStep()" class="w-6 h-6 sm:w-7 sm:h-7 rounded-md p-0 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold transition shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 cursor-pointer" title="Suivant">▶</button>
+              <button type="button" onclick="nextStep()" class="px-2 h-6 sm:h-7 rounded-md bg-blue-800 hover:bg-blue-800 text-white text-sm font-bold transition shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 cursor-pointer" title="Suivant">Suiv.</button>
             </div>
           </div>
           <p class="text-[11px] text-slate-500">Lecture des fichiers Markdown du dossier racine — contexte métier &amp; documentation projet.</p>
@@ -331,9 +374,9 @@
 
         <!-- Sélecteur de fichier Markdown + Aire de rendu (chargement à la volée, pas de copie) -->
         <div class="flex items-center gap-2 mb-2 shrink-0">
-          <label for="md-file-select" class="text-[10px] font-bold text-blue-700 uppercase tracking-wider shrink-0">📄 Fichier :</label>
+          <label for="md-file-select" class="text-[10px] font-bold text-blue-800 uppercase tracking-wider shrink-0">📄 Fichier :</label>
           <select id="md-file-select" onchange="loadMarkdownFile(this.value)"
-            class="bg-white text-slate-800 font-medium text-[11px] rounded border border-slate-300 px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm"></select>
+            class="bg-white text-slate-800 font-medium text-[11px] rounded border border-slate-300 px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-700 cursor-pointer shadow-sm"></select>
           <span class="text-[10px] text-slate-400 italic truncate">Fichiers *.md + data.json de la racine</span>
         </div>
 
@@ -348,14 +391,14 @@
         <div class="mb-2 shrink-0">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 mb-1.5">
             <div class="flex items-center gap-1.5">
-              <h2 class="text-sm md:text-base font-bold text-blue-700">Étape 1 : Cadrer la question métier prioritaire</h2>
-              <button type="button" onclick="openMethodologyModal(1)" title="Méthodologie Data &amp; Gouvernance" class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-700 transition hover:scale-110 shadow-2xs">
+              <h2 class="text-sm md:text-base font-bold text-blue-800">Étape 1 : Cadrer la question métier prioritaire</h2>
+              <button type="button" onclick="openMethodologyModal(1)" title="Méthodologie Data &amp; Gouvernance" class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-800 transition hover:scale-110 shadow-2xs">
                 <i data-lucide="info" class="w-3.5 h-3.5"></i>
               </button>
             </div>
             <div class="flex items-center gap-1 shrink-0 self-start sm:self-auto">
-              <button type="button" onclick="prevStep()" class="w-6 h-6 sm:w-7 sm:h-7 rounded-md p-0 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-sm font-bold transition shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 cursor-pointer" title="Précédent">◀</button>
-              <button type="button" onclick="nextStep()" class="w-6 h-6 sm:w-7 sm:h-7 rounded-md p-0 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold transition shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 cursor-pointer" title="Suivant">▶</button>
+              <button type="button" onclick="prevStep()" class="px-2 h-6 sm:h-7 rounded-md bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-sm font-bold transition shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 cursor-pointer" title="Précédent">Préc.</button>
+              <button type="button" onclick="nextStep()" class="px-2 h-6 sm:h-7 rounded-md bg-blue-800 hover:bg-blue-800 text-white text-sm font-bold transition shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 cursor-pointer" title="Suivant">Suiv.</button>
             </div>
           </div>
         </div>
@@ -436,7 +479,7 @@
                 <text x="73" y="58" font-size="8.5" font-weight="bold" text-anchor="middle" fill="#1e40af">BRU</text>
                 <text x="73" y="68" font-size="6.5" text-anchor="middle" fill="#64748b">Charge 81%</text>
               </svg>
-              <span class="text-[9px] text-blue-700 font-mono font-bold mt-0.5">Charge & Slotting Réseau</span>
+              <span class="text-[9px] text-blue-800 font-mono font-bold mt-0.5">Charge & Slotting Réseau</span>
             </div>
           </div>
 
@@ -610,14 +653,14 @@
         <div class="mb-2 shrink-0">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
             <div class="flex items-center gap-1.5">
-              <h2 class="text-sm md:text-base font-bold text-blue-700">Étape 2 : Données (Granularité & Tables pour le calcul)</h2>
-              <button type="button" onclick="openMethodologyModal(2)" title="Méthodologie Data & Gouvernance" class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-700 transition hover:scale-110 shadow-2xs">
+              <h2 class="text-sm md:text-base font-bold text-blue-800">Étape 2 : Données (Granularité & Tables pour le calcul)</h2>
+              <button type="button" onclick="openMethodologyModal(2)" title="Méthodologie Data & Gouvernance" class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-800 transition hover:scale-110 shadow-2xs">
                 <i data-lucide="info" class="w-3.5 h-3.5"></i>
               </button>
             </div>
             <div class="flex items-center gap-1 shrink-0 self-start sm:self-auto">
-              <button type="button" onclick="prevStep()" class="w-6 h-6 sm:w-7 sm:h-7 rounded-md p-0 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-sm font-bold transition shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 cursor-pointer" title="Précédent">◀</button>
-              <button type="button" onclick="nextStep()" class="w-6 h-6 sm:w-7 sm:h-7 rounded-md p-0 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold transition shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 cursor-pointer" title="Suivant">▶</button>
+              <button type="button" onclick="prevStep()" class="px-2 h-6 sm:h-7 rounded-md bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-sm font-bold transition shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 cursor-pointer" title="Précédent">Préc.</button>
+              <button type="button" onclick="nextStep()" class="px-2 h-6 sm:h-7 rounded-md bg-blue-800 hover:bg-blue-800 text-white text-sm font-bold transition shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 cursor-pointer" title="Suivant">Suiv.</button>
             </div>
           </div>
         </div>
@@ -638,7 +681,7 @@
                   <strong>1 ligne = 1 demande globale de maintenance moteur.</strong> Simple MDT en-tête de dossier consolidant le délai total du moteur (TAT global) et le statut d'avancement.
                 </p>
                 <div class="text-[10px] text-slate-500 mt-1 space-y-0.5">
-                  <div><span class="text-blue-700 font-semibold">Granularité :</span> <code>ID_DEMANDE + ENGINE_TYPE + DEMANDEUR + TIMEPROFILE</code>.</div>
+                  <div><span class="text-blue-800 font-semibold">Granularité :</span> <code>ID_DEMANDE + ENGINE_TYPE + DEMANDEUR + TIMEPROFILE</code>.</div>
                   <div><span class="text-emerald-700 font-semibold">Attributs clés :</span> <code>DATE_DEMANDE, PROGRAMME_MOTEUR, NIVEAU_URGENCE_GLOBAL, COMMENTAIRE_GLOBAL</code>.</div>
                   <div><span class="text-purple-700 font-semibold">Key Figures :</span> <code>Intervention Count, Urgency Weight, Total Engine TAT</code>.</div>
                 </div>
@@ -678,7 +721,7 @@
                 </p>
                 <div class="text-[10px] text-slate-500 mt-1 space-y-0.5">
                   <div><span class="text-emerald-700 font-semibold">Granularité :</span> <code>ID_DEMANDE + ID_INTERVENTION + SHOP_ASSIGNE + TIMEPROFILE</code>.</div>
-                  <div><span class="text-blue-700 font-semibold">Règle Ateliers :</span> 8 types de réparation (2-3 modèles moteurs chacun), chaque shop gère 2-4 types.</div>
+                  <div><span class="text-blue-800 font-semibold">Règle Ateliers :</span> 8 types de réparation (2-3 modèles moteurs chacun), chaque shop gère 2-4 types.</div>
                   <div><span class="text-indigo-700 font-semibold">Attributs clés :</span> <code>TYPE_REPARATION (T-XXXXXX), SHOP_ASSIGNE (S-XXX), DONNEES_TECHNIQUES</code>.</div>
                   <div><span class="text-amber-700 font-semibold">Key Figures :</span> <code>Estimated Repair Duration, Shop Queue Time, Intervention TAT</code>.</div>
                 </div>
@@ -710,7 +753,7 @@
             <div id="schema-toggle"
               class="absolute top-1.5 left-1.5 z-10 flex items-start rounded-lg border border-slate-200 bg-white shadow-sm overflow-hidden">
               <button type="button" data-view="svg" onclick="toggleSchemaView('svg')"
-                class="px-2 py-0.5 text-[9.5px] font-bold bg-blue-600 text-white transition">uml</button>
+                class="px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition">uml</button>
               <button type="button" data-view="mermaid" onclick="toggleSchemaView('mermaid')"
                 class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">&lt;&gt;</button>
             </div>
@@ -732,7 +775,7 @@
                   </button>
                 </div>
               </div>
-              <textarea id="schema-mermaid-code" oninput="onMermaidCodeChange(this.value)" spellcheck="false" class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-3 font-mono text-[11px] leading-relaxed whitespace-pre resize-none focus:outline-hidden focus:ring-1 focus:ring-blue-500 border border-slate-700"></textarea>
+              <textarea id="schema-mermaid-code" oninput="onMermaidCodeChange(this.value)" spellcheck="false" class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-3 font-mono text-[11px] leading-relaxed whitespace-pre resize-none focus:outline-hidden focus:ring-1 focus:ring-blue-700 border border-slate-700"></textarea>
             </div>
             </div>
           </div>
@@ -746,14 +789,14 @@
         <div class="mb-2 shrink-0">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
             <div class="flex items-center gap-1.5">
-              <h2 class="text-sm md:text-base font-bold text-blue-700">Étape 3 : Choisir la méthode de calcul du délai (TAT)</h2>
-              <button type="button" onclick="openMethodologyModal(3)" title="Méthodologie Data & Gouvernance" class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-700 transition hover:scale-110 shadow-2xs">
+              <h2 class="text-sm md:text-base font-bold text-blue-800">Étape 3 : Choisir la méthode de calcul du délai (TAT)</h2>
+              <button type="button" onclick="openMethodologyModal(3)" title="Méthodologie Data & Gouvernance" class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-800 transition hover:scale-110 shadow-2xs">
                 <i data-lucide="info" class="w-3.5 h-3.5"></i>
               </button>
             </div>
             <div class="flex items-center gap-1 shrink-0 self-start sm:self-auto">
-              <button type="button" onclick="prevStep()" class="w-6 h-6 sm:w-7 sm:h-7 rounded-md p-0 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-sm font-bold transition shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 cursor-pointer" title="Précédent">◀</button>
-              <button type="button" onclick="nextStep()" class="w-6 h-6 sm:w-7 sm:h-7 rounded-md p-0 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold transition shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 cursor-pointer" title="Suivant">▶</button>
+              <button type="button" onclick="prevStep()" class="px-2 h-6 sm:h-7 rounded-md bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-sm font-bold transition shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 cursor-pointer" title="Précédent">Préc.</button>
+              <button type="button" onclick="nextStep()" class="px-2 h-6 sm:h-7 rounded-md bg-blue-800 hover:bg-blue-800 text-white text-sm font-bold transition shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 cursor-pointer" title="Suivant">Suiv.</button>
             </div>
           </div>
         </div>
@@ -772,15 +815,15 @@
                   Délais théoriques par Demande (MDT_MAINTENANCE_REQUEST) ou par Ligne d'Intervention (MDT_INTERVENTION) selon la granularité retenue en Étape 2.
                 </p>
                 <div class="text-[10px] text-slate-500 mt-1 space-y-0.5">
-                  <div><span class="text-blue-700 font-semibold">Principe :</span> Somme des durées de gammes standards (<code>ESTIMATED_REPAIR_DURATION</code>) et forfaits de transit.</div>
+                  <div><span class="text-blue-800 font-semibold">Principe :</span> Somme des durées de gammes standards (<code>ESTIMATED_REPAIR_DURATION</code>) et forfaits de transit.</div>
                   <div><span class="text-slate-500">Usage MRO :</span> Devis d'admission Part-145 & barème contractuel de référence constructeur.</div>
                 </div>
-                <div class="text-[9px] text-blue-700 font-mono mt-1 font-semibold"><code>SUMX(MDT_INTERVENTION, [ESTIMATED_REPAIR_DURATION] + [TRANSIT_BUFFER])</code></div>
+                <div class="text-[9px] text-blue-800 font-mono mt-1 font-semibold"><code>SUMX(MDT_INTERVENTION, [ESTIMATED_REPAIR_DURATION] + [TRANSIT_BUFFER])</code></div>
               </div>
               <div id="opt-3-A-illust"
                 class="w-14 h-14 bg-white rounded-lg p-1 border border-slate-200 shadow-sm flex items-center justify-center shrink-0">
                 <svg class="w-full h-full" viewBox="0 0 50 50">
-                  <rect x="4" y="5" width="42" height="13" rx="2.5" fill="#eff6ff" stroke="#2563eb" stroke-width="1.2" />
+                  <rect x="4" y="5" width="42" height="13" rx="2.5" fill="#eff6ff" stroke="#1e40af" stroke-width="1.2" />
                   <text x="25" y="14" font-size="6" font-family="monospace" font-weight="bold" text-anchor="middle" fill="#1e40af">Gamme 18.5h</text>
                   <text x="25" y="26.5" font-size="9" font-weight="black" text-anchor="middle" fill="#64748b">+</text>
                   <rect x="4" y="31" width="42" height="13" rx="2.5" fill="#ecfdf5" stroke="#059669" stroke-width="1.2" />
@@ -810,7 +853,7 @@
                 <svg class="w-full h-full" viewBox="0 0 50 50">
                   <rect x="6" y="28" width="6" height="14" fill="#93c5fd" />
                   <rect x="15" y="18" width="6" height="24" fill="#93c5fd" />
-                  <rect x="24" y="10" width="6" height="32" fill="#2563eb" />
+                  <rect x="24" y="10" width="6" height="32" fill="#1e40af" />
                   <rect x="33" y="14" width="6" height="28" fill="#93c5fd" />
                   <line x1="27" y1="6" x2="27" y2="42" stroke="#059669" stroke-width="1.5" />
                   <text x="27" y="48" font-size="6" font-weight="bold" text-anchor="middle" fill="#059669">P50</text>
@@ -865,7 +908,7 @@
               <div id="opt-3-D-illust"
                 class="w-14 h-14 bg-white rounded-lg p-1 border border-slate-200 shadow-sm flex items-center justify-center shrink-0">
                 <svg class="w-full h-full" viewBox="0 0 50 50">
-                  <path d="M 5 40 Q 18 40, 25 12 Q 32 40, 45 40" fill="none" stroke="#2563eb" stroke-width="2" />
+                  <path d="M 5 40 Q 18 40, 25 12 Q 32 40, 45 40" fill="none" stroke="#1e40af" stroke-width="2" />
                   <line x1="25" y1="12" x2="25" y2="40" stroke="#d97706" stroke-dasharray="2,2" />
                   <circle cx="25" cy="12" r="2.5" fill="#d97706" />
                   <text x="25" y="47" font-size="6.5" font-weight="bold" text-anchor="middle" fill="#d97706">m</text>
@@ -901,8 +944,8 @@
         <div class="mb-2 shrink-0">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
             <div class="flex items-center gap-1.5">
-              <h2 class="text-sm md:text-base font-bold text-blue-700">Étape 4 : Sélectionner les visuels pour le Délai (TAT)</h2>
-              <button type="button" onclick="openMethodologyModal(4)" title="Méthodologie Data & Gouvernance" class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-700 transition hover:scale-110 shadow-2xs">
+              <h2 class="text-sm md:text-base font-bold text-blue-800">Étape 4 : Sélectionner les visuels pour le Délai (TAT)</h2>
+              <button type="button" onclick="openMethodologyModal(4)" title="Méthodologie Data & Gouvernance" class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-800 transition hover:scale-110 shadow-2xs">
                 <i data-lucide="info" class="w-3.5 h-3.5"></i>
               </button>
             </div>
@@ -910,7 +953,7 @@
               <!-- Sélecteur d'usage synchronisé avec l'Étape 1 -->
               <div class="flex items-center gap-1.5 bg-white border border-slate-300 rounded-lg px-2 py-0.5 shadow-xs">
                 <select id="select-usage-step4" onchange="onUsageChange(this.value)"
-                  class="bg-transparent text-[10.5px] font-bold text-blue-700 outline-none cursor-pointer">
+                  class="bg-transparent text-[10.5px] font-bold text-blue-800 outline-none cursor-pointer">
                   <option value="A">EOWN · Processus RTI & Moteurs/Modules</option>
                   <option value="B">CSPM · Engagements SLA & Removal Plan (PERF)</option>
                   <option value="C">NTPL · Équilibrage Réseau 12-36 mois & Slots</option>
@@ -921,8 +964,8 @@
                 </select>
               </div>
               <div class="flex items-center gap-1 shrink-0">
-                <button type="button" onclick="prevStep()" class="w-6 h-6 sm:w-7 sm:h-7 rounded-md p-0 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-sm font-bold transition shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 cursor-pointer" title="Précédent">◀</button>
-                <button type="button" onclick="nextStep()" class="w-6 h-6 sm:w-7 sm:h-7 rounded-md p-0 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold transition shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 cursor-pointer" title="Suivant">▶</button>
+                <button type="button" onclick="prevStep()" class="px-2 h-6 sm:h-7 rounded-md bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-sm font-bold transition shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 cursor-pointer" title="Précédent">Préc.</button>
+                <button type="button" onclick="nextStep()" class="px-2 h-6 sm:h-7 rounded-md bg-blue-800 hover:bg-blue-800 text-white text-sm font-bold transition shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 cursor-pointer" title="Suivant">Suiv.</button>
               </div>
             </div>
           </div>
@@ -940,7 +983,7 @@
                     Distribution du TAT par type de moteur avec valeur médiane P50 et barres de dispersion P5 - P95.
                   </p>
                   <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 space-y-0.5">
-                    <div><span class="font-bold text-blue-700">Type :</span> Boxplot / Barres de Dispersion (Percentiles P5-P50-P95)</div>
+                    <div><span class="font-bold text-blue-800">Type :</span> Boxplot / Barres de Dispersion (Percentiles P5-P50-P95)</div>
                     <div><span class="font-bold text-slate-700">Axes :</span> X = ENGINE_TYPE • Y = TOTAL_ENGINE_TAT</div>
                     <div><span class="font-bold text-slate-700">Dimensions :</span> ENGINE_TYPE (CFM56-7B, LEAP-1A, LEAP-1B)</div>
                     <div><span class="font-bold text-emerald-700">Mesures :</span> P50_MEDIAN_TAT, P5_LOWER_TAT, P95_UPPER_TAT</div>
@@ -956,7 +999,7 @@
                     Barres empilées décomposant le TAT global de la visite (Atelier, Attente appro/client, Transit) par type de moteur.
                   </p>
                   <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 space-y-0.5">
-                    <div><span class="font-bold text-blue-700">Type :</span> Stacked Bar Chart / Barres Empilées Horizontales</div>
+                    <div><span class="font-bold text-blue-800">Type :</span> Stacked Bar Chart / Barres Empilées Horizontales</div>
                     <div><span class="font-bold text-slate-700">Axes :</span> X = ENGINE_TYPE • Y = Key Figures Cumulées (Jours)</div>
                     <div><span class="font-bold text-slate-700">Dimensions :</span> ENGINE_TYPE (CFM56-7B, CFM56-5B, LEAP-1A, LEAP-1B, GE90-115B)</div>
                     <div><span class="font-bold text-emerald-700">Mesures :</span> TEMPS_REVISION_ATELIER, ATTENTE_VALIDATION_APPRO, TRANSIT_LOGISTIQUE</div>
@@ -972,7 +1015,7 @@
                     Écart moyen TAT contractuel vs effectif couplé au taux de non-respect SLA par client et moteur.
                   </p>
                   <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 space-y-0.5">
-                    <div><span class="font-bold text-blue-700">Type :</span> Dual-Axis Combination Chart / Barres Groupées &amp; Ligne %</div>
+                    <div><span class="font-bold text-blue-800">Type :</span> Dual-Axis Combination Chart / Barres Groupées &amp; Ligne %</div>
                     <div><span class="font-bold text-slate-700">Axes :</span> X = DEMANDEUR • Y1 = TOTAL_ENGINE_TAT (Jours) • Y2 = SLA_NON_RESPECT_PCT (%)</div>
                     <div><span class="font-bold text-slate-700">Dimensions :</span> DEMANDEUR (Air France, Lufthansa, Delta Air Lines, Ryanair), ENGINE_TYPE</div>
                     <div><span class="font-bold text-emerald-700">Mesures :</span> SLA_CIBLE_JOURS, TOTAL_ENGINE_TAT, SLA_NON_RESPECT_PCT</div>
@@ -988,7 +1031,7 @@
                     Listing opérationnel détaillé des demandes avec statut couleur (vert/orange/rouge), ID_DEMANDE, client et écart.
                   </p>
                   <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 space-y-0.5">
-                    <div><span class="font-bold text-blue-700">Type :</span> Table Matrice SAC avec Seuils Conditionnels</div>
+                    <div><span class="font-bold text-blue-800">Type :</span> Table Matrice SAC avec Seuils Conditionnels</div>
                     <div><span class="font-bold text-slate-700">Axes :</span> Lignes = MDT_MAINTENANCE_REQUEST (ID_DEMANDE) • Colonnes = Attributs &amp; Mesures</div>
                     <div><span class="font-bold text-slate-700">Dimensions :</span> ID_DEMANDE (D-2026-XXXXXX), DEMANDEUR, ENGINE_TYPE, NIVEAU_URGENCE_GLOBAL</div>
                     <div><span class="font-bold text-emerald-700">Mesures :</span> TOTAL_ENGINE_TAT, TAT_DELAY_DAYS, PENALITE_JOUR_EUR, TOTAL_PENALTIES</div>
@@ -1004,7 +1047,7 @@
                     Indicateurs phares en gros chiffres : TAT moyen glissant, respect SLA global et dérive d'en-cours.
                   </p>
                   <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 space-y-0.5">
-                    <div><span class="font-bold text-blue-700">Type :</span> Numeric Multi-KPI Tile (Cartes Métriques SAC)</div>
+                    <div><span class="font-bold text-blue-800">Type :</span> Numeric Multi-KPI Tile (Cartes Métriques SAC)</div>
                     <div><span class="font-bold text-slate-700">Axes :</span> N/A (Indicateurs scalaires agrégés)</div>
                     <div><span class="font-bold text-slate-700">Dimensions :</span> PROGRAMME_MOTEUR (Tous), TIMEPROFILE (Mois/Année)</div>
                     <div><span class="font-bold text-emerald-700">Mesures :</span> AVG_TOTAL_ENGINE_TAT, SLA_COMPLIANCE_RATE, CRITICAL_WIP_DEVIATION</div>
@@ -1020,7 +1063,7 @@
                     Durée globale réelle par type de moteur face aux barres de tolérance contractuelles (lignes seuil P85).
                   </p>
                   <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 space-y-0.5">
-                    <div><span class="font-bold text-blue-700">Type :</span> Horizontal Bar Chart avec Reference Line (Seuil Cible P85)</div>
+                    <div><span class="font-bold text-blue-800">Type :</span> Horizontal Bar Chart avec Reference Line (Seuil Cible P85)</div>
                     <div><span class="font-bold text-slate-700">Axes :</span> X = TOTAL_ENGINE_TAT (Jours) • Y = ENGINE_TYPE</div>
                     <div><span class="font-bold text-slate-700">Dimensions :</span> ENGINE_TYPE (CFM56-7B, CFM56-5B, LEAP-1A, LEAP-1B, GE90-115B)</div>
                     <div><span class="font-bold text-emerald-700">Mesures :</span> ACTUAL_TOTAL_TAT, P85_CONTRACTUAL_THRESHOLD</div>
@@ -1036,7 +1079,7 @@
                     Cascade cumulative expliquant l'écart entre TAT contractuel convenu et TAT réel (+pièces, +aléa).
                   </p>
                   <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 space-y-0.5">
-                    <div><span class="font-bold text-blue-700">Type :</span> Waterfall / Cascade Chart (Bridge Analysis SAC)</div>
+                    <div><span class="font-bold text-blue-800">Type :</span> Waterfall / Cascade Chart (Bridge Analysis SAC)</div>
                     <div><span class="font-bold text-slate-700">Axes :</span> X = CAUSE_DERIVE • Y = CUMULATIVE_ENGINE_TAT (Jours)</div>
                     <div><span class="font-bold text-slate-700">Dimensions :</span> CAUSE_DERIVE (SLA_CIBLE, WAITING_PARTS, UNPLANNED_CND, FAST_TRACK, TAT_REEL)</div>
                     <div><span class="font-bold text-emerald-700">Mesures :</span> TAT_VARIANCE_DAYS, CUMULATIVE_ENGINE_TAT</div>
@@ -1052,7 +1095,7 @@
                     Matrice thermique croisant les 10 centres MRO SAE en Y et les 9 semaines S34 à S42 en X avec échelle trichromatique de charge (Vert &lt; 80%, Jaune 80-95%, Rouge &gt; 95%).
                   </p>
                   <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 space-y-0.5">
-                    <div><span class="font-bold text-blue-700">Type :</span> Heatmap Matrix SAC (Tension Capacitaire Multi-Sites)</div>
+                    <div><span class="font-bold text-blue-800">Type :</span> Heatmap Matrix SAC (Tension Capacitaire Multi-Sites)</div>
                     <div><span class="font-bold text-slate-700">Axes :</span> X = Semaines (S34 à S42) • Y = Centres SAE MRO (S-VIL, S-MON, S-CHL...)</div>
                     <div><span class="font-bold text-slate-700">Dimensions :</span> SITE_MRO (10 centres SAE), SEMAINE_CALENDAIRE (S34 à S42)</div>
                     <div><span class="font-bold text-emerald-700">Mesures :</span> TAUX_OCCUPATION_PCT (%), SEUIL_VIGILANCE (80%), SEUIL_CRITIQUE (95%)</div>
@@ -1068,7 +1111,7 @@
                     Histogramme comparant le TAT des 4 méthodes de calcul (D-SOP, D-STA, D-CAP, D-ML) face au TAT effectif de référence (18.2 j), avec ligne de % d'écart.
                   </p>
                   <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 space-y-0.5">
-                    <div><span class="font-bold text-blue-700">Type :</span> Clustered Bar &amp; Deviation Line Chart (Benchmark Fiabilité)</div>
+                    <div><span class="font-bold text-blue-800">Type :</span> Clustered Bar &amp; Deviation Line Chart (Benchmark Fiabilité)</div>
                     <div><span class="font-bold text-slate-700">Axes :</span> X = METHODE_CALCUL (D-SOP, D-STA, D-CAP, D-ML) • Y1 = TAT_ESTIME_JOURS • Y2 = %_VARIANCE_VS_EFFECTIF</div>
                     <div><span class="font-bold text-slate-700">Dimensions :</span> METHODE_CALCUL_TAT (D-SOP, D-STA, D-CAP, D-ML), STATUT_CERTITUDE</div>
                     <div><span class="font-bold text-emerald-700">Mesures :</span> TAT_CALCULE_JOURS, TAT_EFFECTIF_REF (18.2 j), ECART_RELATIF_PCT, DATA_COMPLETENESS_RATE (93.4%)</div>
@@ -1079,16 +1122,16 @@
               <div class="flex items-center justify-between gap-2 shrink-0 pb-1.5 border-b border-slate-200">
                 <div class="flex items-center gap-2 min-w-0">
                   <div id="step-4-chart-toggle" class="flex items-center rounded-lg border border-slate-200 bg-white shadow-xs overflow-hidden">
-                    <button type="button" data-view="chart" onclick="toggleChartMode(4, 'chart')" title="Vue Graphique (js)" class="px-2 py-0.5 text-[9.5px] font-bold bg-blue-600 text-white transition">js</button>
+                    <button type="button" data-view="chart" onclick="toggleChartMode(4, 'chart')" title="Vue Graphique (js)" class="px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition">js</button>
                     <button type="button" data-view="code" onclick="toggleChartMode(4, 'code')" title="Éditeur Visuel de Configuration" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">ui</button>
                     <button type="button" data-view="ai" onclick="toggleChartMode(4, 'ai')" title="Spécification Chart.js pour IA" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">&lt;&gt;</button>
                   </div>
                 </div>
                 <div class="flex items-center gap-1.5 shrink-0">
-                  <button id="step-4-chart-reset" type="button" onclick="resetChartCode(4)" title="Réinitialiser le graphique (configuration standard)" class="px-1.5 py-0.5 text-[10px] font-bold text-slate-600 hover:text-blue-700 bg-slate-50 hover:bg-blue-50 border border-slate-200 rounded cursor-pointer transition shadow-2xs">
+                  <button id="step-4-chart-reset" type="button" onclick="resetChartCode(4)" title="Réinitialiser le graphique (configuration standard)" class="px-1.5 py-0.5 text-[10px] font-bold text-slate-600 hover:text-blue-800 bg-slate-50 hover:bg-blue-50 border border-slate-200 rounded cursor-pointer transition shadow-2xs">
                     ↻
                   </button>
-                  <button id="step-4-prompt-template-btn" type="button" onclick="openPromptTemplateModal()" title="Éditer le template de prompt (<>)" class="px-1.5 py-0.5 text-[10px] font-bold text-slate-600 hover:text-blue-700 bg-slate-50 hover:bg-blue-50 border border-slate-200 rounded cursor-pointer transition shadow-2xs">
+                  <button id="step-4-prompt-template-btn" type="button" onclick="openPromptTemplateModal()" title="Éditer le template de prompt (<>)" class="px-1.5 py-0.5 text-[10px] font-bold text-slate-600 hover:text-blue-800 bg-slate-50 hover:bg-blue-50 border border-slate-200 rounded cursor-pointer transition shadow-2xs">
                     ⚙
                   </button>
                 </div>
@@ -1125,14 +1168,14 @@
         <div class="mb-2 shrink-0">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
             <div class="flex items-center gap-1.5">
-              <h2 class="text-sm md:text-base font-bold text-blue-700">Étape 5 : Choisir la méthode d'évaluation de la Capacité d'Intervention en Atelier</h2>
-              <button type="button" onclick="openMethodologyModal(5)" title="Méthodologie Data & Gouvernance" class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-700 transition hover:scale-110 shadow-2xs">
+              <h2 class="text-sm md:text-base font-bold text-blue-800">Étape 5 : Choisir la méthode d'évaluation de la Capacité d'Intervention en Atelier</h2>
+              <button type="button" onclick="openMethodologyModal(5)" title="Méthodologie Data & Gouvernance" class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-800 transition hover:scale-110 shadow-2xs">
                 <i data-lucide="info" class="w-3.5 h-3.5"></i>
               </button>
             </div>
             <div class="flex items-center gap-1 shrink-0 self-start sm:self-auto">
-              <button type="button" onclick="prevStep()" class="w-6 h-6 sm:w-7 sm:h-7 rounded-md p-0 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-sm font-bold transition shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 cursor-pointer" title="Précédent">◀</button>
-              <button type="button" onclick="nextStep()" class="w-6 h-6 sm:w-7 sm:h-7 rounded-md p-0 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold transition shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 cursor-pointer" title="Suivant">▶</button>
+              <button type="button" onclick="prevStep()" class="px-2 h-6 sm:h-7 rounded-md bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-sm font-bold transition shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 cursor-pointer" title="Précédent">Préc.</button>
+              <button type="button" onclick="nextStep()" class="px-2 h-6 sm:h-7 rounded-md bg-blue-800 hover:bg-blue-800 text-white text-sm font-bold transition shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 cursor-pointer" title="Suivant">Suiv.</button>
             </div>
           </div>
         </div>
@@ -1211,21 +1254,21 @@
                   Capacité bridée par la disponibilité effective des pièces et kits de réparation (OTIF).
                 </p>
                 <div class="text-[10px] text-slate-500 mt-1 space-y-0.5">
-                  <div><span class="text-blue-700 font-semibold">Principe :</span> Le débit des stations est limité par la pièce critique la plus lente (kits, aubes, LLP).</div>
+                  <div><span class="text-blue-800 font-semibold">Principe :</span> Le débit des stations est limité par la pièce critique la plus lente (kits, aubes, LLP).</div>
                   <div><span class="text-slate-500">Usage MRO :</span> Synchronisation des lancements d'interventions sur les dates de livraison confirmées.</div>
                 </div>
-                <div class="text-[9px] text-blue-700 font-mono mt-1 font-semibold"><code>Capacite_Logistique = MIN([CAPACITE_POSTES], [KITS_DISPO] * [CADENCE_STANDARD])</code></div>
+                <div class="text-[9px] text-blue-800 font-mono mt-1 font-semibold"><code>Capacite_Logistique = MIN([CAPACITE_POSTES], [KITS_DISPO] * [CADENCE_STANDARD])</code></div>
               </div>
               <div id="opt-5-C-illust"
                 class="w-14 h-14 bg-white rounded-lg p-1 border border-slate-200 shadow-sm flex items-center justify-center shrink-0">
                 <svg class="w-full h-full" viewBox="0 0 50 50">
-                  <rect x="7" y="11" width="36" height="28" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.2" />
+                  <rect x="7" y="11" width="36" height="28" rx="3" fill="#eff6ff" stroke="#1e40af" stroke-width="1.2" />
                   <path d="M 7 19 L 43 19" stroke="#93c5fd" stroke-width="1" />
-                  <rect x="11" y="23" width="12" height="6" rx="1.5" fill="#2563eb" />
+                  <rect x="11" y="23" width="12" height="6" rx="1.5" fill="#1e40af" />
                   <rect x="27" y="23" width="12" height="6" rx="1.5" fill="#f59e0b" />
                   <circle cx="17" cy="34" r="2" fill="#10b981" />
                   <text x="21" y="36" font-size="5" font-weight="bold" fill="#059669">OTIF</text>
-                  <circle cx="34" cy="15" r="2" fill="#2563eb" />
+                  <circle cx="34" cy="15" r="2" fill="#1e40af" />
                 </svg>
               </div>
             </div>
@@ -1286,8 +1329,8 @@
         <div class="mb-2 shrink-0">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
             <div class="flex items-center gap-1.5">
-              <h2 class="text-sm md:text-base font-bold text-blue-700">Étape 6 : Sélectionner les visuels pour la Saturation des Interventions en Atelier</h2>
-              <button type="button" onclick="openMethodologyModal(6)" title="Méthodologie Data & Gouvernance" class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-700 transition hover:scale-110 shadow-2xs">
+              <h2 class="text-sm md:text-base font-bold text-blue-800">Étape 6 : Sélectionner les visuels pour la Saturation des Interventions en Atelier</h2>
+              <button type="button" onclick="openMethodologyModal(6)" title="Méthodologie Data & Gouvernance" class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-800 transition hover:scale-110 shadow-2xs">
                 <i data-lucide="info" class="w-3.5 h-3.5"></i>
               </button>
             </div>
@@ -1295,7 +1338,7 @@
               <!-- Sélecteur d'usage synchronisé avec l'Étape 1 -->
               <div class="flex items-center gap-1.5 bg-white border border-slate-300 rounded-lg px-2 py-0.5 shadow-xs">
                 <select id="select-usage-step6" onchange="onUsageChange(this.value)"
-                  class="bg-transparent text-[10.5px] font-bold text-blue-700 outline-none cursor-pointer">
+                  class="bg-transparent text-[10.5px] font-bold text-blue-800 outline-none cursor-pointer">
                   <option value="A">EOWN · Processus RTI & Moteurs/Modules</option>
                   <option value="B">CSPM · Engagements SLA & Removal Plan (PERF)</option>
                   <option value="C">NTPL · Équilibrage Réseau 12-36 mois & Slots</option>
@@ -1306,8 +1349,8 @@
                 </select>
               </div>
               <div class="flex items-center gap-1 shrink-0">
-                <button type="button" onclick="prevStep()" class="w-6 h-6 sm:w-7 sm:h-7 rounded-md p-0 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-sm font-bold transition shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 cursor-pointer" title="Précédent">◀</button>
-                <button type="button" onclick="nextStep()" class="w-6 h-6 sm:w-7 sm:h-7 rounded-md p-0 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold transition shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 cursor-pointer" title="Suivant">▶</button>
+                <button type="button" onclick="prevStep()" class="px-2 h-6 sm:h-7 rounded-md bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-sm font-bold transition shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 cursor-pointer" title="Précédent">Préc.</button>
+                <button type="button" onclick="nextStep()" class="px-2 h-6 sm:h-7 rounded-md bg-blue-800 hover:bg-blue-800 text-white text-sm font-bold transition shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 cursor-pointer" title="Suivant">Suiv.</button>
               </div>
             </div>
           </div>
@@ -1325,7 +1368,7 @@
                     Pourcentage d'interventions subissant un retard de traitement par shop (S-XXX) face au seuil contractuel de tolérance (10%).
                   </p>
                   <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
-                    <div><span class="font-bold text-blue-700">Type :</span> Bar Chart / Column Chart avec Seuil de Tolérance (10%)</div>
+                    <div><span class="font-bold text-blue-800">Type :</span> Bar Chart / Column Chart avec Seuil de Tolérance (10%)</div>
                     <div><span class="font-bold text-slate-700">Axes :</span> X = SHOP_ASSIGNE (S-XXX) • Y = % INTERVENTION_DELAY_RATE</div>
                     <div><span class="font-bold text-slate-700">Dimensions :</span> SHOP_ASSIGNE (S-MON, S-VIL, S-CHL, S-BRU, S-TLS, S-SQY, S-GEN, S-BDX, S-LGG, S-CRE)</div>
                     <div><span class="font-bold text-emerald-700">Mesures :</span> INTERVENTION_DELAY_RATE (%), SEUIL_RETARD_TOLERANCE (10%), TOTAL_INTERVENTIONS_COUNT</div>
@@ -1341,7 +1384,7 @@
                     Types d'interventions (T-XXXXXX) subissant le plus de retard imprévu en % des dossiers, décliné par shop.
                   </p>
                   <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
-                    <div><span class="font-bold text-blue-700">Type :</span> Clustered Column Chart (Comparatif Types d'Intervention)</div>
+                    <div><span class="font-bold text-blue-800">Type :</span> Clustered Column Chart (Comparatif Types d'Intervention)</div>
                     <div><span class="font-bold text-slate-700">Axes :</span> X = TYPE_REPARATION (T-XXXXXX) • Y = % UNPLANNED_DELAY_RATE</div>
                     <div><span class="font-bold text-slate-700">Dimensions :</span> TYPE_REPARATION (T-INSCND, T-AUBTUR, T-BANESS, T-EQUROT), SHOP_ASSIGNE (S-MON, S-VIL, S-BRU)</div>
                     <div><span class="font-bold text-emerald-700">Mesures :</span> DELAYED_INTERVENTIONS_PCT, AVG_SLIPPAGE_HOURS</div>
@@ -1357,7 +1400,7 @@
                     Top des flux d'interventions transférées inter-shops en % et délai moyen de transport en jours.
                   </p>
                   <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
-                    <div><span class="font-bold text-blue-700">Type :</span> Dual-Axis Combination Bar &amp; Line Chart (Flux &amp; Délais)</div>
+                    <div><span class="font-bold text-blue-800">Type :</span> Dual-Axis Combination Bar &amp; Line Chart (Flux &amp; Délais)</div>
                     <div><span class="font-bold text-slate-700">Axes :</span> X1 = Part Volume (%) • X2 = TRANSIT_DAYS • Y = ROUTE_TRANSFERT</div>
                     <div><span class="font-bold text-slate-700">Dimensions :</span> SHOP_SOURCE ➔ SHOP_DEST (S-MON ➔ S-VIL, S-CHL ➔ S-BRU, S-VIL ➔ S-SQY)</div>
                     <div><span class="font-bold text-emerald-700">Mesures :</span> INTER_SHOP_TRANSFER_VOLUME_PCT, AVG_TRANSIT_DURATION_DAYS</div>
@@ -1373,7 +1416,7 @@
                     Graphique en barres horizontales par shop détaillant le délai moyen de traitement d'une intervention découpé en attente, réparation et transfert.
                   </p>
                   <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
-                    <div><span class="font-bold text-blue-700">Type :</span> Horizontal Stacked Bar Chart (Délai Moyen Décomposé)</div>
+                    <div><span class="font-bold text-blue-800">Type :</span> Horizontal Stacked Bar Chart (Délai Moyen Décomposé)</div>
                     <div><span class="font-bold text-slate-700">Axes :</span> X = Heures Moyennes de Traitement (h) • Y = SHOP_ASSIGNE (S-XXX)</div>
                     <div><span class="font-bold text-slate-700">Dimensions :</span> SHOP_ASSIGNE (10 shops SAE), STATUT_TEMPS (Attente File/Pièces, Réparation Effective, Transfert Logistique)</div>
                     <div><span class="font-bold text-emerald-700">Mesures :</span> AVG_QUEUE_HOURS, AVG_REPAIR_HOURS, AVG_TRANSIT_HOURS, TOTAL_INTERVENTION_HOURS</div>
@@ -1389,7 +1432,7 @@
                     Taux d'occupation de chaque station de réparation (S-XXX-YY) face au seuil critique de 85% pour cibler les postes et machines saturés.
                   </p>
                   <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
-                    <div><span class="font-bold text-blue-700">Type :</span> Horizontal Bar Chart avec Threshold Line (Seuil de Saturation 85%)</div>
+                    <div><span class="font-bold text-blue-800">Type :</span> Horizontal Bar Chart avec Threshold Line (Seuil de Saturation 85%)</div>
                     <div><span class="font-bold text-slate-700">Axes :</span> X = TAUX_OCCUPATION_STATION (%) • Y = ID_STATION (S-XXX-YY)</div>
                     <div><span class="font-bold text-slate-700">Dimensions :</span> ID_STATION (S-MON-01 à S-CRE-03, 3 à 10 par shop), SHOP_ASSIGNE (S-XXX)</div>
                     <div><span class="font-bold text-emerald-700">Mesures :</span> TAUX_OCCUPATION_STATION (%), SEUIL_SATURATION_CRITIQUE (85%)</div>
@@ -1405,7 +1448,7 @@
                     Matrice thermique mesurant l'intensité de charge hebdomadaire de chaque station de réparation (S-MON-01 à S-MON-06) au sein du shop (S-MON) sur les semaines S34 à S42.
                   </p>
                   <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
-                    <div><span class="font-bold text-blue-700">Type :</span> Heatmap Matrix SAC (Saturation Stations Shop)</div>
+                    <div><span class="font-bold text-blue-800">Type :</span> Heatmap Matrix SAC (Saturation Stations Shop)</div>
                     <div><span class="font-bold text-slate-700">Axes :</span> X = Semaines Calendaires (S34 à S42) • Y = Stations de Réparation du Shop (S-XXX-YY)</div>
                     <div><span class="font-bold text-slate-700">Dimensions :</span> SHOP_ASSIGNE (S-MON), ID_STATION (S-MON-01 à S-MON-06), SEMAINE_CALENDAIRE (S34..S42)</div>
                     <div><span class="font-bold text-emerald-700">Mesures :</span> WORKLOAD_TENSION_RATE (%), SEUIL_SATURATION_CRITIQUE (85%)</div>
@@ -1421,7 +1464,7 @@
                     Diagramme de flux cumulé mesurant l'induction et la clôture des interventions et le niveau d'en-cours atelier.
                   </p>
                   <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
-                    <div><span class="font-bold text-blue-700">Type :</span> Cumulative Flow Diagram (Area / Multi-Line Chart SAC)</div>
+                    <div><span class="font-bold text-blue-800">Type :</span> Cumulative Flow Diagram (Area / Multi-Line Chart SAC)</div>
                     <div><span class="font-bold text-slate-700">Axes :</span> X = TIMEPROFILE (Jours Ouvrés J1-J10) • Y = Cumul Lignes d'Intervention</div>
                     <div><span class="font-bold text-slate-700">Dimensions :</span> FLUX_DIRECTION (Cumul Lignes Interventions Lancées vs Clôturées)</div>
                     <div><span class="font-bold text-emerald-700">Mesures :</span> CUMULATIVE_INTERVENTION_INDUCTION, CUMULATIVE_INTERVENTION_RELEASE, SHOP_WIP_INTERVENTIONS</div>
@@ -1437,7 +1480,7 @@
                     Répartition du temps passé d'intervention en atelier par type de moteur avec drill-down interactif au clic par type de réparation. Coloration trichromatique selon le taux de retard (Vert &lt; 8%, Jaune 8-15%, Rouge &gt; 15%).
                   </p>
                   <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
-                    <div><span class="font-bold text-blue-700">Type :</span> Interactive Hierarchical Treemap (Drill-down Moteur ➔ Réparation)</div>
+                    <div><span class="font-bold text-blue-800">Type :</span> Interactive Hierarchical Treemap (Drill-down Moteur ➔ Réparation)</div>
                     <div><span class="font-bold text-slate-700">Axes :</span> N/A (Taille du Bloc = Temps Passé en Heures • Couleur = Taux de Retard %)</div>
                     <div><span class="font-bold text-slate-700">Dimensions :</span> Niveau 1 = ENGINE_TYPE (CFM56-7B, LEAP-1A...) ➔ Niveau 2 = TYPE_REPARATION (T-AUBTUR, T-COMHOT...)</div>
                     <div><span class="font-bold text-emerald-700">Mesures :</span> TEMPS_PASSE_HEURES, TAUX_RETARD_INTERVENTIONS (%), SEUILS_RETARD (8% / 15%)</div>
@@ -1453,7 +1496,7 @@
                     Histogramme comparant la capacité d'interventions simulée selon les 4 méthodes (C-SOP, C-STA, C-LOG, C-ML) face au débit effectif mesuré (124 interventions/mois), avec % d'écart.
                   </p>
                   <div class="ans-meta text-slate-600 bg-slate-50 rounded p-1.5 border border-slate-200 mb-1.5 space-y-0.5">
-                    <div><span class="font-bold text-blue-700">Type :</span> Clustered Bar &amp; Deviation Line Chart (Benchmark Capacité)</div>
+                    <div><span class="font-bold text-blue-800">Type :</span> Clustered Bar &amp; Deviation Line Chart (Benchmark Capacité)</div>
                     <div><span class="font-bold text-slate-700">Axes :</span> X = METHODE_PREVISION (C-SOP, C-STA, C-LOG, C-ML) • Y1 = CAPACITE_SIMULEE_INTERVENTIONS • Y2 = %_DEVIATION_VS_EFFECTIF</div>
                     <div><span class="font-bold text-slate-700">Dimensions :</span> METHODE_CHARGE_CAPA (C-SOP, C-STA, C-LOG, C-ML), INTERVALLE_CERTITUDE</div>
                     <div><span class="font-bold text-emerald-700">Mesures :</span> CAPACITE_PREVUE_INTERVENTIONS, CAPACITE_EFFECTIVE_REF (124 interventions), ECART_CHARGE_PCT, TAUX_COMPLETUDE_MES (96.1%)</div>
@@ -1464,19 +1507,19 @@
               <div class="flex items-center justify-between gap-2 shrink-0 pb-1.5 border-b border-slate-200">
                 <div class="flex items-center gap-2 min-w-0">
                   <div id="step-6-chart-toggle" class="flex items-center rounded-lg border border-slate-200 bg-white shadow-xs overflow-hidden">
-                    <button type="button" data-view="chart" onclick="toggleChartMode(6, 'chart')" title="Vue Graphique (js)" class="px-2 py-0.5 text-[9.5px] font-bold bg-blue-600 text-white transition">js</button>
+                    <button type="button" data-view="chart" onclick="toggleChartMode(6, 'chart')" title="Vue Graphique (js)" class="px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition">js</button>
                     <button type="button" data-view="code" onclick="toggleChartMode(6, 'code')" title="Éditeur Visuel de Configuration" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">ui</button>
                     <button type="button" data-view="ai" onclick="toggleChartMode(6, 'ai')" title="Spécification Chart.js pour IA" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">&lt;&gt;</button>
                   </div>
-                  <button id="step-6-treemap-reset" type="button" onclick="resetTreemapDrill()" class="hidden text-[9.5px] font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 px-2 py-0.5 rounded cursor-pointer transition shadow-2xs shrink-0">
+                  <button id="step-6-treemap-reset" type="button" onclick="resetTreemapDrill()" class="hidden text-[9.5px] font-bold text-blue-800 bg-blue-50 hover:bg-blue-100 border border-blue-200 px-2 py-0.5 rounded cursor-pointer transition shadow-2xs shrink-0">
                     ◀ Revenir aux Moteurs
                   </button>
                 </div>
                 <div class="flex items-center gap-1.5 shrink-0">
-                  <button id="step-6-chart-reset" type="button" onclick="resetChartCode(6)" title="Réinitialiser le graphique (configuration standard)" class="px-1.5 py-0.5 text-[10px] font-bold text-slate-600 hover:text-blue-700 bg-slate-50 hover:bg-blue-50 border border-slate-200 rounded cursor-pointer transition shadow-2xs">
+                  <button id="step-6-chart-reset" type="button" onclick="resetChartCode(6)" title="Réinitialiser le graphique (configuration standard)" class="px-1.5 py-0.5 text-[10px] font-bold text-slate-600 hover:text-blue-800 bg-slate-50 hover:bg-blue-50 border border-slate-200 rounded cursor-pointer transition shadow-2xs">
                     ↻
                   </button>
-                  <button id="step-6-prompt-template-btn" type="button" onclick="openPromptTemplateModal()" title="Éditer le template de prompt (<>)" class="px-1.5 py-0.5 text-[10px] font-bold text-slate-600 hover:text-blue-700 bg-slate-50 hover:bg-blue-50 border border-slate-200 rounded cursor-pointer transition shadow-2xs">
+                  <button id="step-6-prompt-template-btn" type="button" onclick="openPromptTemplateModal()" title="Éditer le template de prompt (<>)" class="px-1.5 py-0.5 text-[10px] font-bold text-slate-600 hover:text-blue-800 bg-slate-50 hover:bg-blue-50 border border-slate-200 rounded cursor-pointer transition shadow-2xs">
                     ⚙
                   </button>
                 </div>
@@ -1573,7 +1616,7 @@
                   <input type="date" id="filter-date" onchange="onFilterChange()" min="2026-09-12" value="2026-10-15"
                     class="bg-white border border-slate-300 rounded px-1.5 py-0.5 text-slate-800 font-medium text-[10px] outline-none cursor-pointer focus:border-blue-500">
                   <div class="flex items-center gap-1 pl-1 border-l border-slate-200">
-                    <span class="text-blue-700 text-[9px] font-bold uppercase tracking-wider">🎯 Prévisionnel :</span>
+                    <span class="text-blue-800 text-[9px] font-bold uppercase tracking-wider">🎯 Prévisionnel :</span>
                     <span id="filter-previsionnel-date" class="text-blue-800 font-black text-[10px] font-mono bg-blue-50 border border-blue-200 rounded px-1 py-0.2">--</span>
                   </div>
                 </div>
@@ -1581,7 +1624,7 @@
 
               <!-- Navigation -->
               <div class="flex items-center gap-1.5 shrink-0">
-                <button type="button" onclick="prevStep()" class="w-6 h-6 sm:w-7 sm:h-7 rounded-md p-0 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-sm font-bold transition shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 cursor-pointer" title="Précédent">◀</button>
+                <button type="button" onclick="prevStep()" class="px-2 h-6 sm:h-7 rounded-md bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-sm font-bold transition shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 cursor-pointer" title="Précédent">Préc.</button>
               </div>
             </div>
 
@@ -1633,15 +1676,15 @@
     <div class="bg-white w-full max-w-4xl max-h-[92vh] rounded-2xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
       
       <!-- En-tête de la modale -->
-      <div class="px-4 py-3 bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-900 text-white flex items-center justify-between shrink-0 shadow-sm">
-        <div class="flex items-center gap-2">
-          <span class="text-lg">🏛️</span>
+      <div class="px-4 py-3 bg-white border-b border-slate-200 flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-2.5">
+          <span class="w-1 h-6 rounded-full bg-blue-800 shrink-0"></span>
           <div>
-            <h3 class="text-xs md:text-sm font-black tracking-tight">Référentiel Méthodologique Data & Gouvernance SAE MRO</h3>
-            <p class="text-[10.5px] text-blue-100 font-normal">Cadre normatif, rôles Part-145, auditabilité et protocoles décisionnels</p>
+            <h3 class="text-xs md:text-sm font-bold tracking-tight text-slate-900">Référentiel Méthodologique Data & Gouvernance SAE MRO</h3>
+            <p class="text-[10.5px] text-slate-500 font-normal">Cadre normatif, rôles Part-145, auditabilité et protocoles décisionnels</p>
           </div>
         </div>
-        <button type="button" onclick="closeMethodologyModal()" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition text-sm font-bold" title="Fermer (Échap)">
+        <button type="button" onclick="closeMethodologyModal()" class="w-7 h-7 rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center transition text-sm font-bold" title="Fermer (Échap)">
           ✕
         </button>
       </div>
@@ -1649,12 +1692,12 @@
       <!-- Barre de navigation rapide / Ancres entre étapes -->
       <div class="px-3 py-1.5 bg-slate-100 border-b border-slate-200 flex items-center gap-1.5 overflow-x-auto shrink-0 scrollbar-none text-[11px]">
         <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider shrink-0 mr-1">Aller à :</span>
-        <button type="button" onclick="scrollToMethodology(1)" class="px-2 py-0.5 rounded-md font-semibold bg-white text-slate-700 hover:text-blue-700 border border-slate-200 shadow-2xs shrink-0 transition">1 Métier</button>
-        <button type="button" onclick="scrollToMethodology(2)" class="px-2 py-0.5 rounded-md font-semibold bg-white text-slate-700 hover:text-blue-700 border border-slate-200 shadow-2xs shrink-0 transition">2 Données</button>
-        <button type="button" onclick="scrollToMethodology(3)" class="px-2 py-0.5 rounded-md font-semibold bg-white text-slate-700 hover:text-blue-700 border border-slate-200 shadow-2xs shrink-0 transition">3 TAT</button>
-        <button type="button" onclick="scrollToMethodology(4)" class="px-2 py-0.5 rounded-md font-semibold bg-white text-slate-700 hover:text-blue-700 border border-slate-200 shadow-2xs shrink-0 transition">4 Visuels Délai</button>
-        <button type="button" onclick="scrollToMethodology(5)" class="px-2 py-0.5 rounded-md font-semibold bg-white text-slate-700 hover:text-blue-700 border border-slate-200 shadow-2xs shrink-0 transition">5 Capacité</button>
-        <button type="button" onclick="scrollToMethodology(6)" class="px-2 py-0.5 rounded-md font-semibold bg-white text-slate-700 hover:text-blue-700 border border-slate-200 shadow-2xs shrink-0 transition">6 Saturation</button>
+        <button type="button" onclick="scrollToMethodology(1)" class="px-2 py-0.5 rounded-md font-semibold bg-white text-slate-700 hover:text-blue-800 border border-slate-200 shadow-2xs shrink-0 transition">1 Métier</button>
+        <button type="button" onclick="scrollToMethodology(2)" class="px-2 py-0.5 rounded-md font-semibold bg-white text-slate-700 hover:text-blue-800 border border-slate-200 shadow-2xs shrink-0 transition">2 Données</button>
+        <button type="button" onclick="scrollToMethodology(3)" class="px-2 py-0.5 rounded-md font-semibold bg-white text-slate-700 hover:text-blue-800 border border-slate-200 shadow-2xs shrink-0 transition">3 TAT</button>
+        <button type="button" onclick="scrollToMethodology(4)" class="px-2 py-0.5 rounded-md font-semibold bg-white text-slate-700 hover:text-blue-800 border border-slate-200 shadow-2xs shrink-0 transition">4 Visuels Délai</button>
+        <button type="button" onclick="scrollToMethodology(5)" class="px-2 py-0.5 rounded-md font-semibold bg-white text-slate-700 hover:text-blue-800 border border-slate-200 shadow-2xs shrink-0 transition">5 Capacité</button>
+        <button type="button" onclick="scrollToMethodology(6)" class="px-2 py-0.5 rounded-md font-semibold bg-white text-slate-700 hover:text-blue-800 border border-slate-200 shadow-2xs shrink-0 transition">6 Saturation</button>
       </div>
 
       <!-- Corps déroulant avec le rendu Markdown de gouvernance.md -->
@@ -1667,7 +1710,7 @@
       <!-- Pied de la modale -->
       <div class="px-4 py-2 bg-slate-50 border-t border-slate-200 flex items-center justify-between shrink-0 text-[11px] text-slate-500">
         <span>💡 Défilement libre autorisé sur l'ensemble des étapes du cycle décisionnel</span>
-        <button type="button" onclick="closeMethodologyModal()" class="px-3 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs transition shadow-sm">
+        <button type="button" onclick="closeMethodologyModal()" class="px-3 py-1 rounded-lg bg-blue-800 hover:bg-blue-800 text-white font-bold text-xs transition shadow-sm">
           Fermer
         </button>
       </div>
@@ -1681,7 +1724,7 @@
       <!-- En-tête de la modale -->
       <div class="px-4 py-3 bg-white border-b border-slate-200 flex items-center justify-between shrink-0">
         <div class="flex items-center gap-2.5">
-          <span class="w-1 h-6 rounded-full bg-blue-600 shrink-0"></span>
+          <span class="w-1 h-6 rounded-full bg-blue-800 shrink-0"></span>
           <div>
             <h3 class="text-xs md:text-sm font-bold tracking-tight text-slate-900">Configuration du Template de Prompt Visuel (&lt;&gt;)</h3>
             <p class="text-[10.5px] text-slate-500 font-normal">Personnalisation du prompt Markdown généré pour tous les graphiques (stocké en LocalStorage)</p>
@@ -1695,22 +1738,22 @@
       <!-- Variables disponibles -->
       <div class="px-4 py-2 bg-slate-50 border-b border-slate-200 flex items-center flex-wrap gap-1.5 shrink-0 text-[11px] text-slate-600">
         <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mr-1">Variables :</span>
-        <code class="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-blue-600 font-mono text-[10.5px]">{title}</code>
-        <code class="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-blue-600 font-mono text-[10.5px]">{desc}</code>
-        <code class="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-blue-600 font-mono text-[10.5px]">{chartType}</code>
-        <code class="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-blue-600 font-mono text-[10.5px]">{model}</code>
-        <code class="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-blue-600 font-mono text-[10.5px]">{grain}</code>
-        <code class="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-blue-600 font-mono text-[10.5px]">{axisX}</code>
-        <code class="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-blue-600 font-mono text-[10.5px]">{axisY}</code>
-        <code class="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-blue-600 font-mono text-[10.5px]">{dimensions}</code>
-        <code class="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-blue-600 font-mono text-[10.5px]">{measures}</code>
-        <code class="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-blue-600 font-mono text-[10.5px]">{filters}</code>
-        <code class="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-blue-600 font-mono text-[10.5px]">{businessRules}</code>
+        <code class="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-blue-800 font-mono text-[10.5px]">{title}</code>
+        <code class="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-blue-800 font-mono text-[10.5px]">{desc}</code>
+        <code class="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-blue-800 font-mono text-[10.5px]">{chartType}</code>
+        <code class="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-blue-800 font-mono text-[10.5px]">{model}</code>
+        <code class="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-blue-800 font-mono text-[10.5px]">{grain}</code>
+        <code class="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-blue-800 font-mono text-[10.5px]">{axisX}</code>
+        <code class="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-blue-800 font-mono text-[10.5px]">{axisY}</code>
+        <code class="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-blue-800 font-mono text-[10.5px]">{dimensions}</code>
+        <code class="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-blue-800 font-mono text-[10.5px]">{measures}</code>
+        <code class="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-blue-800 font-mono text-[10.5px]">{filters}</code>
+        <code class="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-blue-800 font-mono text-[10.5px]">{businessRules}</code>
       </div>
 
       <!-- Zone d'édition -->
       <div class="flex-1 min-h-0 p-3 flex flex-col bg-slate-50">
-        <textarea id="prompt-template-textarea" spellcheck="false" class="w-full h-full flex-1 p-3 bg-white text-slate-800 font-mono text-xs leading-relaxed rounded-lg border border-slate-300 focus:border-blue-500 focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 resize-none"></textarea>
+        <textarea id="prompt-template-textarea" spellcheck="false" class="w-full h-full flex-1 p-3 bg-white text-slate-800 font-mono text-xs leading-relaxed rounded-lg border border-slate-300 focus:border-blue-500 focus:outline-hidden focus:ring-2 focus:ring-blue-700/20 resize-none"></textarea>
       </div>
 
       <!-- Pied de la modale -->
@@ -1723,7 +1766,7 @@
           <button type="button" onclick="closePromptTemplateModal()" class="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-semibold transition shadow-xs">
             Annuler
           </button>
-          <button type="button" onclick="savePromptTemplateModal()" class="px-4 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold transition shadow-sm">
+          <button type="button" onclick="savePromptTemplateModal()" class="px-4 py-1.5 rounded-lg bg-blue-800 hover:bg-blue-800 text-white font-bold transition shadow-sm">
             Enregistrer le template
           </button>
         </div>
@@ -1906,7 +1949,7 @@
         const tab = document.getElementById(`tab-${i}`);
         if (!tab) continue;
         if (i === step) {
-          tab.className = "px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 bg-blue-600 text-white shadow-sm shadow-blue-500/20";
+          tab.className = "px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 bg-blue-800 text-white shadow-sm shadow-blue-700/20";
         } else {
           tab.className = "px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 bg-white text-slate-600 border border-slate-200 hover:text-blue-600 hover:bg-slate-50 shadow-sm";
         }
@@ -1919,7 +1962,7 @@
           btnNext.textContent = "Terminé (Haut)";
           btnNext.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
         } else {
-          btnNext.textContent = "Suivant ▶";
+          btnNext.textContent = "Suivant";
           btnNext.onclick = nextStep;
         }
       }
@@ -2004,7 +2047,7 @@
       usageMeta: {
         'eo':         { label: 'EOWN',  icon: '🔧', classes: 'bg-red-50 text-red-700 border-red-200' },
         'cspm':       { label: 'CSPM',    icon: '✈️', classes: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
-        'network':    { label: 'NTPL',    icon: '🌐', classes: 'bg-blue-50 text-blue-700 border-blue-200' },
+        'network':    { label: 'NTPL',    icon: '🌐', classes: 'bg-blue-50 text-blue-800 border-blue-200' },
         'shop':       { label: 'SHPL',       icon: '🏭', classes: 'bg-cyan-50 text-cyan-700 border-cyan-200' },
         'ftm':        { label: 'FTM', icon: '📐', classes: 'bg-teal-50 text-teal-700 border-teal-200' },
         'finance':    { label: 'FINC', icon: '💰', classes: 'bg-amber-50 text-amber-700 border-amber-200' },
@@ -2095,9 +2138,9 @@
     function filterPersona(roleKey) {
       document.querySelectorAll('.persona-chip').forEach(btn => {
         if (btn.dataset.role === roleKey) {
-          btn.className = 'persona-chip px-2 py-0.5 rounded-full text-[10px] font-bold border transition bg-blue-600 text-white border-blue-600 shadow-xs';
+          btn.className = 'persona-chip px-2 py-0.5 rounded-full text-[10px] font-bold border transition bg-blue-800 text-white border-blue-800 shadow-xs';
         } else {
-          btn.className = 'persona-chip px-2 py-0.5 rounded-full text-[10px] font-medium border border-slate-200 bg-white text-slate-600 hover:border-blue-300 hover:text-blue-700 transition shadow-2xs';
+          btn.className = 'persona-chip px-2 py-0.5 rounded-full text-[10px] font-medium border border-slate-200 bg-white text-slate-600 hover:border-blue-300 hover:text-blue-800 transition shadow-2xs';
         }
       });
 
@@ -2262,9 +2305,9 @@
         if (activeChip) {
           document.querySelectorAll('.persona-chip').forEach(btn => {
             if (btn.dataset.role === activeChip) {
-              btn.className = 'persona-chip px-2 py-0.5 rounded-full text-[10px] font-bold border transition bg-blue-600 text-white border-blue-600 shadow-xs';
+              btn.className = 'persona-chip px-2 py-0.5 rounded-full text-[10px] font-bold border transition bg-blue-800 text-white border-blue-800 shadow-xs';
             } else {
-              btn.className = 'persona-chip px-2 py-0.5 rounded-full text-[10px] font-medium border border-slate-200 bg-white text-slate-600 hover:border-blue-300 hover:text-blue-700 transition shadow-2xs';
+              btn.className = 'persona-chip px-2 py-0.5 rounded-full text-[10px] font-medium border border-slate-200 bg-white text-slate-600 hover:border-blue-300 hover:text-blue-800 transition shadow-2xs';
             }
           });
         }
@@ -2337,12 +2380,12 @@
           btn.className =
             'w-full text-left flex items-start gap-2 px-2 py-1.5 rounded-lg text-[12px] transition border ' +
             (isSel
-              ? 'bg-blue-50 border-blue-200 text-blue-700'
+              ? 'bg-blue-50 border-blue-200 text-blue-800'
               : 'text-slate-700 hover:bg-slate-50 border-transparent');
           btn.innerHTML =
             `<span class="flex-1 min-w-0"><span class="block font-bold text-[13px] leading-tight text-slate-900">${o} · ${m.title}</span>` +
             `<span class="block font-normal text-slate-500 text-[12px] leading-snug whitespace-normal">${m.desc}</span></span>` +
-            (isSel ? '<span class="ml-2 shrink-0 text-[13px] font-bold text-blue-600">✓</span>' : '');
+            (isSel ? '<span class="ml-2 shrink-0 text-[13px] font-bold text-blue-800">✓</span>' : '');
           btn.onclick = () => onSummarySelectChange(q, o);
           dd.appendChild(btn);
         });
@@ -4528,7 +4571,7 @@ const STEP_BUILDERS = {
             titleEl.classList.add('flex', 'items-center', 'justify-between', 'gap-1.5', 'w-full');
             const copyBtn = document.createElement('button');
             copyBtn.type = 'button';
-            copyBtn.className = 'opt-copy-btn p-1 text-slate-400 hover:text-blue-700 hover:bg-slate-100 rounded transition cursor-pointer text-xs leading-none shrink-0 ml-auto';
+            copyBtn.className = 'opt-copy-btn p-1 text-slate-400 hover:text-blue-800 hover:bg-slate-100 rounded transition cursor-pointer text-xs leading-none shrink-0 ml-auto';
             copyBtn.title = 'Copier le contenu de cette option';
             copyBtn.textContent = '⧉';
             copyBtn.onclick = (e) => copyOptionCard(step, opt, e);
@@ -4551,15 +4594,15 @@ const STEP_BUILDERS = {
         const btnAi = toggleContainer.querySelector('[data-view="ai"]');
         if (btnChart && btnCode) {
           btnChart.className = mode === 'chart'
-            ? 'px-2 py-0.5 text-[9.5px] font-bold bg-blue-600 text-white transition'
+            ? 'px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition'
             : 'px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition';
           btnCode.className = mode === 'code'
-            ? 'px-2 py-0.5 text-[9.5px] font-bold bg-blue-600 text-white transition'
+            ? 'px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition'
             : 'px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition';
         }
         if (btnAi) {
           btnAi.className = mode === 'ai'
-            ? 'px-2 py-0.5 text-[9.5px] font-bold bg-blue-600 text-white transition'
+            ? 'px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition'
             : 'px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition';
         }
       }
@@ -4638,7 +4681,7 @@ const STEP_BUILDERS = {
           </div>
           <div class="mt-2 flex items-center gap-2">
             <label class="inline-flex items-center gap-1.5 text-[10.5px] font-semibold text-slate-700 cursor-pointer">
-              <input type="checkbox" id="gui-${step}-legend-display" ${isLegendDisplay ? 'checked' : ''} onchange="saveGuiEditor(${step})" class="rounded border-slate-300 text-blue-600 focus:ring-blue-500" />
+              <input type="checkbox" id="gui-${step}-legend-display" ${isLegendDisplay ? 'checked' : ''} onchange="saveGuiEditor(${step})" class="rounded border-slate-300 text-blue-800 focus:ring-blue-700" />
               <span>Afficher la légende</span>
             </label>
           </div>
@@ -4690,7 +4733,7 @@ const STEP_BUILDERS = {
               <div class="font-bold text-slate-800 text-[11.5px] flex items-center gap-1.5">
                 <span>📊</span> Points de Données (${labels.length} éléments)
               </div>
-              <button type="button" onclick="guiAddRow(${step})" class="text-[10px] font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 px-2 py-0.5 rounded cursor-pointer transition shadow-2xs">
+              <button type="button" onclick="guiAddRow(${step})" class="text-[10px] font-bold text-blue-800 bg-blue-50 hover:bg-blue-100 border border-blue-200 px-2 py-0.5 rounded cursor-pointer transition shadow-2xs">
                 + Ajouter une ligne
               </button>
             </div>
@@ -4957,7 +5000,7 @@ const canvas = document.getElementById('mock-chart-q' + step + '-canvas');
           badge.className = "text-xs font-bold text-emerald-700 font-mono";
         } else if (q1 === 'B') {
           badge.textContent = "NTPL · Équilibrage Réseau & Slots";
-          badge.className = "text-xs font-bold text-blue-700 font-mono";
+          badge.className = "text-xs font-bold text-blue-800 font-mono";
         } else if (q1 === 'C') {
           badge.textContent = "FINC · Volumes & Coûts SV";
           badge.className = "text-xs font-bold text-amber-700 font-mono";
@@ -5099,7 +5142,7 @@ const canvas = document.getElementById('mock-chart-q' + step + '-canvas');
       let baseTat = (19.3 * m).toFixed(1);
       let tatVal = `${baseTat} j`;
       let tatSub = "Méthode: " + (metaInfo[3][q3]?.title || q3);
-      let tatColor = "text-blue-700";
+      let tatColor = "text-blue-800";
       let tatBorder = "border-blue-300";
       let medianDaysForCalc = 19.3 * m;
 
@@ -5149,7 +5192,7 @@ const canvas = document.getElementById('mock-chart-q' + step + '-canvas');
       const baseCap = Math.min(99, Math.round(83 * m));
       let capVal = `${baseCap} %`;
       let capSub = metaInfo[5][q5]?.title || q5;
-      let capColor = "text-blue-700";
+      let capColor = "text-blue-800";
       let capBorder = "border-blue-300";
 
       if (q5 === 'A') {
@@ -5160,7 +5203,7 @@ const canvas = document.getElementById('mock-chart-q' + step + '-canvas');
         const cert5a = Math.max(84, Math.min(95, Math.round(91 / m)));
         capVal = `${p50}% (${p5}% - ${p95}%)`;
         capSub = `Sur la base du carnet S&OP • Certitude: ${cert5a} %`;
-        capColor = "text-blue-700";
+        capColor = "text-blue-800";
         capBorder = "border-blue-300";
       } else if (q5 === 'B') {
         capLabel = "CHARGE EN-COURS (WIP INSTANT)";
@@ -5210,7 +5253,7 @@ const canvas = document.getElementById('mock-chart-q' + step + '-canvas');
         const chargeGlob = Math.min(99, Math.round(83 * m));
         const goulots = Math.max(1, Math.round(2 * m));
         kpis = [
-          { label: "CHARGE GLOBALE USINES", val: `${chargeGlob} %`, sub: "Seuil critique à 85 %", color: "text-blue-700", border: "border-blue-300" },
+          { label: "CHARGE GLOBALE USINES", val: `${chargeGlob} %`, sub: "Seuil critique à 85 %", color: "text-blue-800", border: "border-blue-300" },
           { label: "ATELIERS EN GOULOT", val: `${goulots}`, sub: "Montereau & Villaroche", color: "text-red-700", border: "border-red-300" },
           { label: tatLabel, val: tatVal, sub: tatSub, color: tatColor, border: tatBorder },
           { label: capLabel, val: capVal, sub: capSub, color: capColor, border: capBorder }
@@ -5420,7 +5463,7 @@ xychart-beta
     B -- "Dérive critique / AOG" --> F[🚨 AOG Critique • Escalade immédiate & Pénalités]
 
     style C fill:#dcfce7,stroke:#16a34a,stroke-width:1.5px
-    style D fill:#dbeafe,stroke:#2563eb,stroke-width:1.5px
+    style D fill:#dbeafe,stroke:#1e40af,stroke-width:1.5px
     style E fill:#fef3c7,stroke:#d97706,stroke-width:1.5px
     style F fill:#fee2e2,stroke:#dc2626,stroke-width:2px`,
       '4E': `pie title "Synthèse KPIs MRO — Conformité SLA des Demandes"
@@ -5562,7 +5605,7 @@ xychart-beta
       toggle.querySelectorAll('button').forEach((b) => {
         const active = b.dataset.view === view;
         b.className = 'px-2 py-0.5 text-[9.5px] font-bold transition ' +
-          (active ? 'bg-blue-600 text-white' : 'bg-white text-slate-600 hover:bg-slate-50');
+          (active ? 'bg-blue-800 text-white' : 'bg-white text-slate-600 hover:bg-slate-50');
       });
     }
 
@@ -5836,7 +5879,7 @@ xychart-beta
           },
           dims: [
             {
-              title: "en-tête (MDT_MAINTENANCE_REQ)", icon: "📁", color: "#2563eb", x: 10, y: 10, w: 172, h: 106,
+              title: "en-tête (MDT_MAINTENANCE_REQ)", icon: "📁", color: "#1e40af", x: 10, y: 10, w: 172, h: 106,
               rows: [
                 { type: 'PK', name: 'ID_DEMANDE', desc: 'Dossier parent' },
                 { type: 'A',  name: 'DEMANDEUR', desc: 'Compagnie donneuse d\'ordre' },
@@ -5948,7 +5991,7 @@ xychart-beta
         ctx.fillText("1", card1X, card1Y);
 
         // Badge Cardinalité 'N' côté fait
-        ctx.fillStyle = '#2563eb';
+        ctx.fillStyle = '#1e40af';
         ctx.font = 'bold 11px sans-serif';
         ctx.textAlign = 'center';
         ctx.fillText("N", cardNX, cardNY);
@@ -6000,7 +6043,7 @@ xychart-beta
         ctx.fillRect(factBox.x + 1, curY - 2, factBox.w - 2, rowHeight);
 
         // Badge Type (PK / FK / SAISIE / M)
-        let badgeColor = '#2563eb';
+        let badgeColor = '#1e40af';
         let badgeText = 'FK';
         if (row.type === 'PK') {
           badgeColor = '#d97706';
@@ -6127,7 +6170,7 @@ xychart-beta
       };
 
       if (titleEl) {
-        titleEl.innerHTML = `📋 Extrait de la table centrale <span class="font-mono text-blue-700 font-bold ml-1">${tableNames[q2]}</span>`;
+        titleEl.innerHTML = `📋 Extrait de la table centrale <span class="font-mono text-blue-800 font-bold ml-1">${tableNames[q2]}</span>`;
       }
       if (badgeEl) {
         badgeEl.textContent = `${levelLabels[q2]} + Méthode 3${q3}`;
@@ -6145,25 +6188,25 @@ xychart-beta
         if (q3 === 'A') {
           cols = ['ID_DEMANDE', 'DEMANDEUR', 'ENGINE_TYPE', 'INTERVENTION_COUNT', 'URGENCY_WEIGHT', 'TOTAL_ENGINE_TAT'];
           rows = [
-            ['D-2026-000123', 'Air France (AFR)', 'LEAP-1A26', '3 ops', '3.0 (AOG)', '<span class="text-blue-700 font-bold font-mono">21.5 j</span>'],
-            ['D-2026-000124', 'Lufthansa (DLH)', 'CFM56-5B', '2 ops', '2.0 (Moy)', '<span class="text-blue-700 font-bold font-mono">16.0 j</span>'],
-            ['D-2026-000125', 'Delta Air Lines (DAL)', 'CFM56-7B', '4 ops', '1.0 (Bas)', '<span class="text-blue-700 font-bold font-mono">24.5 j</span>']
+            ['D-2026-000123', 'Air France (AFR)', 'LEAP-1A26', '3 ops', '3.0 (AOG)', '<span class="text-blue-800 font-bold font-mono">21.5 j</span>'],
+            ['D-2026-000124', 'Lufthansa (DLH)', 'CFM56-5B', '2 ops', '2.0 (Moy)', '<span class="text-blue-800 font-bold font-mono">16.0 j</span>'],
+            ['D-2026-000125', 'Delta Air Lines (DAL)', 'CFM56-7B', '4 ops', '1.0 (Bas)', '<span class="text-blue-800 font-bold font-mono">24.5 j</span>']
           ];
           formulaNote = "<strong>Consolidation Demande (MDT_MAINTENANCE_REQUEST) :</strong> TAT consolidé au dossier selon les barèmes de gamme et forfaits logistiques.";
           daxSnippet = "Total_Engine_TAT = CALCULATE(MAX(MDT_INTERVENTION[INTERVENTION_TAT]), ALLEXCEPT(MDT_MAINTENANCE_REQUEST, MDT_MAINTENANCE_REQUEST[ID_DEMANDE]))";
         } else if (q3 === 'B') {
           cols = ['ID_DEMANDE', 'DEMANDEUR', 'ENGINE_TYPE', 'P05_OPT', 'P50_MEDIAN', 'P95_PESS', 'TOTAL_ENGINE_TAT'];
           rows = [
-            ['D-2026-000123', 'Air France (AFR)', 'LEAP-1A26', '15.0 j', '<span class="text-amber-700 font-bold font-mono">21.5 j</span>', '32.0 j', '<span class="text-blue-700 font-bold font-mono">21.5 j</span>'],
-            ['D-2026-000124', 'Lufthansa (DLH)', 'CFM56-5B', '11.5 j', '<span class="text-amber-700 font-bold font-mono">16.0 j</span>', '23.5 j', '<span class="text-blue-700 font-bold font-mono">16.0 j</span>'],
-            ['D-2026-000125', 'Delta Air Lines (DAL)', 'CFM56-7B', '18.0 j', '<span class="text-amber-700 font-bold font-mono">24.5 j</span>', '36.0 j', '<span class="text-blue-700 font-bold font-mono">24.5 j</span>']
+            ['D-2026-000123', 'Air France (AFR)', 'LEAP-1A26', '15.0 j', '<span class="text-amber-700 font-bold font-mono">21.5 j</span>', '32.0 j', '<span class="text-blue-800 font-bold font-mono">21.5 j</span>'],
+            ['D-2026-000124', 'Lufthansa (DLH)', 'CFM56-5B', '11.5 j', '<span class="text-amber-700 font-bold font-mono">16.0 j</span>', '23.5 j', '<span class="text-blue-800 font-bold font-mono">16.0 j</span>'],
+            ['D-2026-000125', 'Delta Air Lines (DAL)', 'CFM56-7B', '18.0 j', '<span class="text-amber-700 font-bold font-mono">24.5 j</span>', '36.0 j', '<span class="text-blue-800 font-bold font-mono">24.5 j</span>']
           ];
           formulaNote = "<strong>Table des délais moyens (5%, Médian, 95%) :</strong> Distribution empirique mesurée sur l'historique des demandes <code>MDT_MAINTENANCE_REQUEST</code>.";
           daxSnippet = "Total_Engine_TAT_Median = PERCENTILEX.INC(MDT_MAINTENANCE_REQUEST, [TOTAL_ENGINE_TAT], 0.50)";
         } else if (q3 === 'C') {
           cols = ['ID_DEMANDE', 'DEMANDEUR', 'ENGINE_TYPE', 'CHARGE_ATELIERS', 'QUEUE_TIME_EST', 'TOTAL_ENGINE_TAT'];
           rows = [
-            ['D-2026-000123', 'Air France (AFR)', 'LEAP-1A26', '<span class="text-emerald-700 font-bold">78 %</span> (Normal)', '+ 3.5 j', '<span class="text-blue-700 font-bold font-mono">21.5 j</span>'],
+            ['D-2026-000123', 'Air France (AFR)', 'LEAP-1A26', '<span class="text-emerald-700 font-bold">78 %</span> (Normal)', '+ 3.5 j', '<span class="text-blue-800 font-bold font-mono">21.5 j</span>'],
             ['D-2026-000124', 'Lufthansa (DLH)', 'CFM56-5B', '<span class="text-red-700 font-bold">92 %</span> (Saturé)', '+ 8.5 j', '<span class="text-red-700 font-bold font-mono">24.5 j ⚠️</span>'],
             ['D-2026-000125', 'Delta Air Lines (DAL)', 'CFM56-7B', '<span class="text-amber-700 font-bold">84 %</span> (Tendu)', '+ 5.0 j', '<span class="text-amber-700 font-bold font-mono">24.5 j</span>']
           ];
@@ -6185,18 +6228,18 @@ xychart-beta
         if (q3 === 'A') {
           cols = ['ID_DEMANDE', 'ID_INTERVENTION', 'TYPE_REPARATION', 'SHOP_ASSIGNE', 'ESTIMATED_REPAIR_DURATION', 'SHOP_QUEUE_TIME', 'INTERVENTION_TAT'];
           rows = [
-            ['D-2026-000123', 'I-2026-000123-01', 'T-INSCND', 'S-MON', '18.5 h', '+ 12.0 h', '<span class="text-blue-700 font-bold font-mono">30.5 h</span>'],
-            ['D-2026-000123', 'I-2026-000123-02', 'T-AUBTUR', 'S-MON', '28.0 h', '+ 8.5 h', '<span class="text-blue-700 font-bold font-mono">36.5 h</span>'],
-            ['D-2026-000123', 'I-2026-000123-03', 'T-EQUROT', 'S-VIL', '14.0 h', '+ 4.0 h', '<span class="text-blue-700 font-bold font-mono">18.0 h</span>']
+            ['D-2026-000123', 'I-2026-000123-01', 'T-INSCND', 'S-MON', '18.5 h', '+ 12.0 h', '<span class="text-blue-800 font-bold font-mono">30.5 h</span>'],
+            ['D-2026-000123', 'I-2026-000123-02', 'T-AUBTUR', 'S-MON', '28.0 h', '+ 8.5 h', '<span class="text-blue-800 font-bold font-mono">36.5 h</span>'],
+            ['D-2026-000123', 'I-2026-000123-03', 'T-EQUROT', 'S-VIL', '14.0 h', '+ 4.0 h', '<span class="text-blue-800 font-bold font-mono">18.0 h</span>']
           ];
           formulaNote = "<strong>Délais théoriques de traitement (Intervention) :</strong> Calcul basé sur <code>ESTIMATED_REPAIR_DURATION</code> et temps d'attente atelier <code>SHOP_QUEUE_TIME</code>.";
           daxSnippet = "Intervention_TAT = SUMX(MDT_INTERVENTION, [ESTIMATED_REPAIR_DURATION] + [SHOP_QUEUE_TIME])";
         } else if (q3 === 'B') {
           cols = ['ID_DEMANDE', 'ID_INTERVENTION', 'TYPE_REPARATION', 'SHOP_ASSIGNE', 'P05_OPT', 'P50_MEDIAN', 'INTERVENTION_TAT'];
           rows = [
-            ['D-2026-000123', 'I-2026-000123-01', 'T-INSCND', 'S-MON', '14.0 h', '<span class="text-amber-700 font-bold font-mono">18.5 h</span>', '<span class="text-blue-700 font-bold font-mono">30.5 h</span>'],
-            ['D-2026-000123', 'I-2026-000123-02', 'T-AUBTUR', 'S-MON', '22.0 h', '<span class="text-amber-700 font-bold font-mono">28.0 h</span>', '<span class="text-blue-700 font-bold font-mono">36.5 h</span>'],
-            ['D-2026-000123', 'I-2026-000123-03', 'T-EQUROT', 'S-VIL', '10.5 h', '<span class="text-amber-700 font-bold font-mono">14.0 h</span>', '<span class="text-blue-700 font-bold font-mono">18.0 h</span>']
+            ['D-2026-000123', 'I-2026-000123-01', 'T-INSCND', 'S-MON', '14.0 h', '<span class="text-amber-700 font-bold font-mono">18.5 h</span>', '<span class="text-blue-800 font-bold font-mono">30.5 h</span>'],
+            ['D-2026-000123', 'I-2026-000123-02', 'T-AUBTUR', 'S-MON', '22.0 h', '<span class="text-amber-700 font-bold font-mono">28.0 h</span>', '<span class="text-blue-800 font-bold font-mono">36.5 h</span>'],
+            ['D-2026-000123', 'I-2026-000123-03', 'T-EQUROT', 'S-VIL', '10.5 h', '<span class="text-amber-700 font-bold font-mono">14.0 h</span>', '<span class="text-blue-800 font-bold font-mono">18.0 h</span>']
           ];
           formulaNote = "<strong>Table des délais moyens (5%, Médian, 95%) :</strong> Statistique des pointages réels historiques par opération dans <code>MDT_INTERVENTION</code>.";
           daxSnippet = "Median_Intervention = PERCENTILEX.INC(MDT_INTERVENTION, [ESTIMATED_REPAIR_DURATION], 0.50)";
@@ -6204,7 +6247,7 @@ xychart-beta
           cols = ['ID_DEMANDE', 'ID_INTERVENTION', 'TYPE_REPARATION', 'SHOP_ASSIGNE', 'SEUIL_POSTE', 'ESTIMATED_REPAIR_DURATION', 'INTERVENTION_TAT'];
           rows = [
             ['D-2026-000123', 'I-2026-000123-01', 'T-INSCND', 'S-MON', '<span class="text-amber-700 font-bold">85 %</span>', '18.5 h', '<span class="text-amber-700 font-bold font-mono">30.5 h</span>'],
-            ['D-2026-000123', 'I-2026-000123-02', 'T-AUBTUR', 'S-MON', '<span class="text-emerald-700 font-bold">60 %</span>', '28.0 h', '<span class="text-blue-700 font-bold font-mono">36.5 h</span>'],
+            ['D-2026-000123', 'I-2026-000123-02', 'T-AUBTUR', 'S-MON', '<span class="text-emerald-700 font-bold">60 %</span>', '28.0 h', '<span class="text-blue-800 font-bold font-mono">36.5 h</span>'],
             ['D-2026-000123', 'I-2026-000123-03', 'T-EQUROT', 'S-VIL', '<span class="text-red-700 font-bold">95 %</span> (Goulot)', '14.0 h', '<span class="text-red-700 font-bold font-mono">28.0 h ⚠️</span>']
           ];
           formulaNote = "<strong>Délais selon le taux d'occupation :</strong> Attente générée par la charge de l'atelier <code>SHOP_ASSIGNE</code> sur chaque intervention.";
@@ -6230,7 +6273,7 @@ xychart-beta
       `;
       cols.forEach((col, idx) => {
         const isCalc = idx >= cols.length - (q3 === 'B' ? 4 : 2);
-        html += `<th class="py-1.5 px-2 font-semibold ${isCalc ? 'text-blue-700 bg-blue-50/70' : ''}">${col}</th>`;
+        html += `<th class="py-1.5 px-2 font-semibold ${isCalc ? 'text-blue-800 bg-blue-50/70' : ''}">${col}</th>`;
       });
       html += `
             </tr>
@@ -6260,7 +6303,7 @@ xychart-beta
           <div class="flex flex-col gap-1 w-full">
             <div class="flex items-center justify-between">
               <span class="font-bold text-slate-800">💡 Logique de calcul :</span>
-              <span class="text-blue-700 font-mono text-[9px] truncate max-w-[280px] font-semibold">${daxSnippet}</span>
+              <span class="text-blue-800 font-mono text-[9px] truncate max-w-[280px] font-semibold">${daxSnippet}</span>
             </div>
             <p class="text-slate-600 text-[10.5px] leading-snug">${formulaNote}</p>
           </div>
