@@ -1,91 +1,133 @@
 {
   "meta": {
     "source": "Simulateur Cadrage Décisionnel Maestro — Jeu de données de démonstration MRO",
-    "perimetre": "Flottes CFM56-7B / CFM56-5B / LEAP-1A / LEAP-1B / GE90-115B / M88-2 sur 10 centres Safron (FR-Villaroche, FR-Montereau, FR-Châtellerault, BE-Bruxelles, FR-Saint-Quentin, FR-Gennevilliers, FR-Bordeaux, FR-Toulouse, BE-Liège, FR-Le Creusot)",
-    "actualise": "2026-09-12",
+    "perimetre": "Flottes CFM56-7B / CFM56-5B / LEAP-1A / LEAP-1B / GE90-115B / M88-2 sur 10 centres SAE (S-VIL, S-MON, S-CHL, S-BRU, S-SQY, S-GEN, S-BDX, S-TLS, S-LGG, S-CRE)",
+    "actualise": "2026-09-13",
     "licence": "Données fictives à des fins de démonstration",
     "generation": "Ce fichier contient uniquement la structure des objets, les libellés et la donnée non chiffrée. Les valeurs chiffrées des graphiques Chart.js sont générées aléatoirement côté client selon des règles de cohérence, avec un seed stable (persistance entre sessions)."
   },
+  "types_reparation": [
+    {
+      "code": "T-INSCND",
+      "nom": "Inspection CND & Endoscopie",
+      "modeles": ["CFM56-7B", "CFM56-5B", "LEAP-1A"]
+    },
+    {
+      "code": "T-AUBTUR",
+      "nom": "Aubes de Turbine HP/BP",
+      "modeles": ["CFM56-7B", "LEAP-1A", "GE90-115B"]
+    },
+    {
+      "code": "T-MAJLOU",
+      "nom": "Maintenance Majeure & Révision Lourde",
+      "modeles": ["CFM56-7B", "LEAP-1B"]
+    },
+    {
+      "code": "T-BANESS",
+      "nom": "Passage Banc d'Essais & Recette",
+      "modeles": ["CFM56-5B", "LEAP-1B", "M88-2"]
+    },
+    {
+      "code": "T-EQUROT",
+      "nom": "Équilibrage Rotors & Arbres",
+      "modeles": ["LEAP-1A", "LEAP-1B"]
+    },
+    {
+      "code": "T-COMHOT",
+      "nom": "Chambres de Combustion & Parties Chaudes",
+      "modeles": ["CFM56-7B", "LEAP-1B", "GE90-115B"]
+    },
+    {
+      "code": "T-REVCAR",
+      "nom": "Revêtement & Traitement Carters",
+      "modeles": ["CFM56-5B", "M88-2"]
+    },
+    {
+      "code": "T-FODREP",
+      "nom": "Réparation Impacts FOD & Fan",
+      "modeles": ["CFM56-7B", "LEAP-1A"]
+    }
+  ],
   "sites": [
     {
-      "id_shop": "VIL",
-      "code": "VIL",
-      "nom": "FR-Villaroche",
-      "ateliers": "Compresseur & Rotors",
-      "type_of_repairs": "Compresseurs & Rotors",
-      "profil": "Modèles LEAP"
+      "id_shop": "S-VIL",
+      "code": "S-VIL",
+      "nom": "S-VIL (Villaroche)",
+      "types_reparation": ["T-EQUROT", "T-COMHOT", "T-INSCND", "T-MAJLOU"],
+      "ateliers": "T-EQUROT, T-COMHOT, T-INSCND, T-MAJLOU",
+      "profil": "Modèles LEAP & CFM56 (4 types de réparation)"
     },
     {
-      "id_shop": "MON",
-      "code": "MON",
-      "nom": "FR-Montereau",
-      "ateliers": "Chambre de combustion & Turbine",
-      "type_of_repairs": "Chambre de combustion & Turbine",
-      "profil": "CFM56 à haute tension"
+      "id_shop": "S-MON",
+      "code": "S-MON",
+      "nom": "S-MON (Montereau)",
+      "types_reparation": ["T-AUBTUR", "T-COMHOT", "T-FODREP"],
+      "ateliers": "T-AUBTUR, T-COMHOT, T-FODREP",
+      "profil": "Turbines & Combustion (3 types de réparation)"
     },
     {
-      "id_shop": "CHL",
-      "code": "CHL",
-      "nom": "FR-Châtellerault",
-      "ateliers": "Usinage base & Carter",
-      "type_of_repairs": "Usinage base & Carter",
-      "profil": "Gamme nominale"
+      "id_shop": "S-CHL",
+      "code": "S-CHL",
+      "nom": "S-CHL (Châtellerault)",
+      "types_reparation": ["T-MAJLOU", "T-REVCAR", "T-INSCND"],
+      "ateliers": "T-MAJLOU, T-REVCAR, T-INSCND",
+      "profil": "Révision Lourde & Carters (3 types de réparation)"
     },
     {
-      "id_shop": "BRU",
-      "code": "BRU",
-      "nom": "BE-Bruxelles",
-      "ateliers": "Contrôles CND & Revêtements",
-      "type_of_repairs": "Contrôles CND & Banc d'Essai",
-      "profil": "Services aéro encapsulés"
+      "id_shop": "S-BRU",
+      "code": "S-BRU",
+      "nom": "S-BRU (Bruxelles)",
+      "types_reparation": ["T-INSCND", "T-BANESS", "T-FODREP"],
+      "ateliers": "T-INSCND, T-BANESS, T-FODREP",
+      "profil": "Banc d'Essai & CND (3 types de réparation)"
     },
     {
-      "id_shop": "SQY",
-      "code": "SQY",
-      "nom": "FR-Saint-Quentin",
-      "ateliers": "Équipements & Systèmes FADEC",
-      "type_of_repairs": "Équipements & Systèmes FADEC",
-      "profil": "Avionique & Régulation"
+      "id_shop": "S-SQY",
+      "code": "S-SQY",
+      "nom": "S-SQY (Saint-Quentin)",
+      "types_reparation": ["T-EQUROT", "T-REVCAR"],
+      "ateliers": "T-EQUROT, T-REVCAR",
+      "profil": "Équilibrage & Revêtements (2 types de réparation)"
     },
     {
-      "id_shop": "GEN",
-      "code": "GEN",
-      "nom": "FR-Gennevilliers",
-      "ateliers": "Forge & Aubes Forgées",
-      "type_of_repairs": "Forge & Aubes Forgées",
-      "profil": "Composants bruts & métallurgie"
+      "id_shop": "S-GEN",
+      "code": "S-GEN",
+      "nom": "S-GEN (Gennevilliers)",
+      "types_reparation": ["T-AUBTUR", "T-REVCAR"],
+      "ateliers": "T-AUBTUR, T-REVCAR",
+      "profil": "Aubes & Métallurgie Carters (2 types de réparation)"
     },
     {
-      "id_shop": "BDX",
-      "code": "BDX",
-      "nom": "FR-Bordeaux",
-      "ateliers": "Matériaux composites & Nacelles",
-      "type_of_repairs": "Matériaux composites & Nacelles",
-      "profil": "Aérostructures & tuyères"
+      "id_shop": "S-BDX",
+      "code": "S-BDX",
+      "nom": "S-BDX (Bordeaux)",
+      "types_reparation": ["T-FODREP", "T-MAJLOU"],
+      "ateliers": "T-FODREP, T-MAJLOU",
+      "profil": "FOD & Réparation Structurale (2 types de réparation)"
     },
     {
-      "id_shop": "TLS",
-      "code": "TLS",
-      "nom": "FR-Toulouse",
-      "ateliers": "Intégration Moteurs & Nacelles",
-      "type_of_repairs": "Intégration Moteurs & Nacelles",
-      "profil": "Support avionneur & essais ligne"
+      "id_shop": "S-TLS",
+      "code": "S-TLS",
+      "nom": "S-TLS (Toulouse)",
+      "types_reparation": ["T-MAJLOU", "T-BANESS", "T-EQUROT"],
+      "ateliers": "T-MAJLOU, T-BANESS, T-EQUROT",
+      "profil": "Intégration Moteur & Essais (3 types de réparation)"
     },
     {
-      "id_shop": "LGG",
-      "code": "LGG",
-      "nom": "BE-Liège",
-      "ateliers": "Bancs d'Essais Grand Débit & CND",
-      "type_of_repairs": "Bancs d'Essais Grand Débit & CND",
-      "profil": "Recette & certification dynamique"
+      "id_shop": "S-LGG",
+      "code": "S-LGG",
+      "nom": "S-LGG (Liège)",
+      "types_reparation": ["T-BANESS", "T-INSCND"],
+      "ateliers": "T-BANESS, T-INSCND",
+      "profil": "Certification Banc & CND (2 types de réparation)"
     },
     {
-      "id_shop": "CRE",
-      "code": "CRE",
-      "nom": "FR-Le Creusot",
-      "ateliers": "Disques & Aubes Haute Précision",
-      "type_of_repairs": "Disques & Aubes Haute Précision",
-      "profil": "Forge lourde & usinage extrême"
+      "id_shop": "S-CRE",
+      "code": "S-CRE",
+      "nom": "S-CRE (Le Creusot)",
+      "types_reparation": ["T-AUBTUR", "T-COMHOT"],
+      "ateliers": "T-AUBTUR, T-COMHOT",
+      "profil": "Aubes Précision & Chaudes (2 types de réparation)"
     }
   ],
   "modeles": [
@@ -122,34 +164,22 @@
   ],
   "decompoTAT": [
     {
-      "site": "FR-Villaroche (VIL)"
+      "famille": "CFM56-7B"
     },
     {
-      "site": "FR-Montereau (MON)"
+      "famille": "CFM56-5B"
     },
     {
-      "site": "FR-Châtellerault (CHL)"
+      "famille": "LEAP-1A"
     },
     {
-      "site": "BE-Bruxelles (BRU)"
+      "famille": "LEAP-1B"
     },
     {
-      "site": "FR-Saint-Quentin (SQY)"
+      "famille": "GE90-115B"
     },
     {
-      "site": "FR-Gennevilliers (GEN)"
-    },
-    {
-      "site": "FR-Bordeaux (BDX)"
-    },
-    {
-      "site": "FR-Toulouse (TLS)"
-    },
-    {
-      "site": "BE-Liège (LGG)"
-    },
-    {
-      "site": "FR-Le Creusot (CRE)"
+      "famille": "M88-2"
     }
   ],
   "respectClients": [
@@ -184,180 +214,180 @@
   ],
   "alertesESN": [
     {
-      "id_demande": "D-09842",
-      "esn": "ESN-9842",
-      "id_moteur": "ESN-9842",
+      "id_demande": "D-2026-000123",
+      "esn": "D-2026-000123",
+      "id_moteur": "CFM56-7B",
       "client": "EZY",
-      "site": "FR-Montereau",
-      "id_shop": "MON",
+      "site": "S-MON",
+      "id_shop": "S-MON",
       "type": "CFM56-7B",
       "model": "CFM56-7B",
       "priorite": "AOG Critique",
       "statut": "AOG Critique"
     },
     {
-      "id_demande": "D-01021",
-      "esn": "ESN-1021",
-      "id_moteur": "ESN-1021",
+      "id_demande": "D-2026-000124",
+      "esn": "D-2026-000124",
+      "id_moteur": "LEAP-1A",
       "client": "DLH",
-      "site": "FR-Montereau",
-      "id_shop": "MON",
+      "site": "S-MON",
+      "id_shop": "S-MON",
       "type": "LEAP-1A",
       "model": "LEAP-1A",
       "priorite": "AOG Critique",
       "statut": "AOG Critique"
     },
     {
-      "id_demande": "D-00957",
-      "esn": "ESN-0957",
-      "id_moteur": "ESN-0957",
+      "id_demande": "D-2026-000125",
+      "esn": "D-2026-000125",
+      "id_moteur": "LEAP-1A",
       "client": "AFR",
-      "site": "FR-Villaroche",
-      "id_shop": "VIL",
+      "site": "S-VIL",
+      "id_shop": "S-VIL",
       "type": "LEAP-1A",
       "model": "LEAP-1A",
       "priorite": "En Retard",
       "statut": "En Retard"
     },
     {
-      "id_demande": "D-00993",
-      "esn": "ESN-0993",
-      "id_moteur": "ESN-0993",
+      "id_demande": "D-2026-000126",
+      "esn": "D-2026-000126",
+      "id_moteur": "LEAP-1B",
       "client": "DAL",
-      "site": "FR-Villaroche",
-      "id_shop": "VIL",
+      "site": "S-VIL",
+      "id_shop": "S-VIL",
       "type": "LEAP-1B",
       "model": "LEAP-1B",
       "priorite": "En Retard",
       "statut": "En Retard"
     },
     {
-      "id_demande": "D-01034",
-      "esn": "ESN-1034",
-      "id_moteur": "ESN-1034",
+      "id_demande": "D-2026-000127",
+      "esn": "D-2026-000127",
+      "id_moteur": "CFM56-7B",
       "client": "CCA",
-      "site": "FR-Châtellerault",
-      "id_shop": "CHL",
+      "site": "S-CHL",
+      "id_shop": "S-CHL",
       "type": "CFM56-7B",
       "model": "CFM56-7B",
       "priorite": "En Retard",
       "statut": "En Retard"
     },
     {
-      "id_demande": "D-01042",
-      "esn": "ESN-1042",
-      "id_moteur": "ESN-1042",
+      "id_demande": "D-2026-000128",
+      "esn": "D-2026-000128",
+      "id_moteur": "LEAP-1B",
       "client": "UAE",
-      "site": "FR-Châtellerault",
-      "id_shop": "CHL",
+      "site": "S-CHL",
+      "id_shop": "S-CHL",
       "type": "LEAP-1B",
       "model": "LEAP-1B",
       "priorite": "En Retard",
       "statut": "En Retard"
     },
     {
-      "id_demande": "D-00908",
-      "esn": "ESN-0908",
-      "id_moteur": "ESN-0908",
+      "id_demande": "D-2026-000129",
+      "esn": "D-2026-000129",
+      "id_moteur": "CFM56-7B",
       "client": "AFR",
-      "site": "BE-Bruxelles",
-      "id_shop": "BRU",
+      "site": "S-BRU",
+      "id_shop": "S-BRU",
       "type": "CFM56-7B",
       "model": "CFM56-7B",
       "priorite": "En Cours",
       "statut": "En Cours"
     },
     {
-      "id_demande": "D-01011",
-      "esn": "ESN-1011",
-      "id_moteur": "ESN-1011",
+      "id_demande": "D-2026-000130",
+      "esn": "D-2026-000130",
+      "id_moteur": "LEAP-1A",
       "client": "SIA",
-      "site": "BE-Bruxelles",
-      "id_shop": "BRU",
+      "site": "S-BRU",
+      "id_shop": "S-BRU",
       "type": "LEAP-1A",
       "model": "LEAP-1A",
       "priorite": "En Cours",
       "statut": "En Cours"
     },
     {
-      "id_demande": "D-00875",
-      "esn": "ESN-0875",
-      "id_moteur": "ESN-0875",
+      "id_demande": "D-2026-000131",
+      "esn": "D-2026-000131",
+      "id_moteur": "CFM56-7B",
       "client": "DAL",
-      "site": "FR-Montereau",
-      "id_shop": "MON",
+      "site": "S-MON",
+      "id_shop": "S-MON",
       "type": "CFM56-7B",
       "model": "CFM56-7B",
       "priorite": "Conforme",
       "statut": "Conforme"
     },
     {
-      "id_demande": "D-00986",
-      "esn": "ESN-0986",
-      "id_moteur": "ESN-0986",
+      "id_demande": "D-2026-000132",
+      "esn": "D-2026-000132",
+      "id_moteur": "LEAP-1B",
       "client": "EZY",
-      "site": "FR-Villaroche",
-      "id_shop": "VIL",
+      "site": "S-VIL",
+      "id_shop": "S-VIL",
       "type": "LEAP-1B",
       "model": "LEAP-1B",
       "priorite": "Conforme",
       "statut": "Conforme"
     },
     {
-      "id_demande": "D-00912",
-      "esn": "ESN-0912",
-      "id_moteur": "ESN-0912",
+      "id_demande": "D-2026-000133",
+      "esn": "D-2026-000133",
+      "id_moteur": "CFM56-7B",
       "client": "AFR",
-      "site": "FR-Montereau",
-      "id_shop": "MON",
+      "site": "S-MON",
+      "id_shop": "S-MON",
       "type": "CFM56-7B",
       "model": "CFM56-7B",
       "priorite": "Conforme",
       "statut": "Conforme"
     },
     {
-      "id_demande": "D-00971",
-      "esn": "ESN-0971",
-      "id_moteur": "ESN-0971",
+      "id_demande": "D-2026-000134",
+      "esn": "D-2026-000134",
+      "id_moteur": "LEAP-1A",
       "client": "UAE",
-      "site": "FR-Montereau",
-      "id_shop": "MON",
+      "site": "S-MON",
+      "id_shop": "S-MON",
       "type": "LEAP-1A",
       "model": "LEAP-1A",
       "priorite": "AOG Critique",
       "statut": "AOG Critique"
     },
     {
-      "id_demande": "D-01055",
-      "esn": "ESN-1055",
-      "id_moteur": "ESN-1055",
+      "id_demande": "D-2026-000135",
+      "esn": "D-2026-000135",
+      "id_moteur": "GE90-115B",
       "client": "AFR",
-      "site": "FR-Toulouse",
-      "id_shop": "TLS",
+      "site": "S-TLS",
+      "id_shop": "S-TLS",
       "type": "GE90-115B",
       "model": "GE90-115B",
       "priorite": "AOG Critique",
       "statut": "AOG Critique"
     },
     {
-      "id_demande": "D-01062",
-      "esn": "ESN-1062",
-      "id_moteur": "ESN-1062",
+      "id_demande": "D-2026-000136",
+      "esn": "D-2026-000136",
+      "id_moteur": "CFM56-5B",
       "client": "DLH",
-      "site": "BE-Liège",
-      "id_shop": "LGG",
+      "site": "S-LGG",
+      "id_shop": "S-LGG",
       "type": "CFM56-5B",
       "model": "CFM56-5B",
       "priorite": "En Retard",
       "statut": "En Retard"
     },
     {
-      "id_demande": "D-01078",
-      "esn": "ESN-1078",
-      "id_moteur": "ESN-1078",
+      "id_demande": "D-2026-000137",
+      "esn": "D-2026-000137",
+      "id_moteur": "M88-2",
       "client": "DAL",
-      "site": "FR-Le Creusot",
-      "id_shop": "CRE",
+      "site": "S-CRE",
+      "id_shop": "S-CRE",
       "type": "M88-2",
       "model": "M88-2",
       "priorite": "Conforme",
@@ -377,19 +407,19 @@
   },
   "modulesP85": [
     {
-      "module": "Aubes HP Monocristal"
+      "famille": "CFM56-7B"
     },
     {
-      "module": "Ressuage CND"
+      "famille": "CFM56-5B"
     },
     {
-      "module": "Révision Carter Fan"
+      "famille": "LEAP-1A"
     },
     {
-      "module": "Banc d'Essais Recette"
+      "famille": "LEAP-1B"
     },
     {
-      "module": "Revêtement Aubes LP"
+      "famille": "GE90-115B"
     }
   ],
   "waterfall": {
@@ -431,9 +461,9 @@
       "id_piece_pn": "P01125",
       "pn": "P01125",
       "libelle": "Aubes HP Monocristal",
-      "site": "FR-Montereau",
-      "id_shop": "MON",
-      "type_repair": "Aubes Turbine HP",
+      "site": "S-MON",
+      "id_shop": "S-MON",
+      "type_repair": "T-AUBTUR",
       "disponibilite_pct": 74,
       "confiance_appro_j": 5,
       "statut": "Critique"
@@ -442,9 +472,9 @@
       "id_piece_pn": "P02847",
       "pn": "P02847",
       "libelle": "Disques LLP Compresseur",
-      "site": "FR-Villaroche",
-      "id_shop": "VIL",
-      "type_repair": "Compresseurs",
+      "site": "S-VIL",
+      "id_shop": "S-VIL",
+      "type_repair": "T-COMHOT",
       "disponibilite_pct": 68,
       "confiance_appro_j": 6,
       "statut": "Critique"
@@ -453,9 +483,9 @@
       "id_piece_pn": "P03381",
       "pn": "P03381",
       "libelle": "Arbres HP (rotors)",
-      "site": "FR-Villaroche",
-      "id_shop": "VIL",
-      "type_repair": "Compresseurs",
+      "site": "S-VIL",
+      "id_shop": "S-VIL",
+      "type_repair": "T-EQUROT",
       "disponibilite_pct": 72,
       "confiance_appro_j": 5,
       "statut": "Critique"
@@ -464,9 +494,9 @@
       "id_piece_pn": "P01530",
       "pn": "P01530",
       "libelle": "Joints Fan & Turbine",
-      "site": "FR-Châtellerault",
-      "id_shop": "CHL",
-      "type_repair": "Usinage Base",
+      "site": "S-CHL",
+      "id_shop": "S-CHL",
+      "type_repair": "T-MAJLOU",
       "disponibilite_pct": 84,
       "confiance_appro_j": 3,
       "statut": "Modéré"
@@ -475,9 +505,9 @@
       "id_piece_pn": "P00912",
       "pn": "P00912",
       "libelle": "Injecteurs Carburant",
-      "site": "BE-Bruxelles",
-      "id_shop": "BRU",
-      "type_repair": "Contrôles CND",
+      "site": "S-BRU",
+      "id_shop": "S-BRU",
+      "type_repair": "T-INSCND",
       "disponibilite_pct": 86,
       "confiance_appro_j": 3,
       "statut": "Modéré"
@@ -485,10 +515,10 @@
     {
       "id_piece_pn": "P04102",
       "pn": "P04102",
-      "libelle": "Calculateurs FADEC",
-      "site": "FR-Saint-Quentin",
-      "id_shop": "SQY",
-      "type_repair": "FADEC & Systèmes",
+      "libelle": "Calculateurs FADEC & Capteurs",
+      "site": "S-SQY",
+      "id_shop": "S-SQY",
+      "type_repair": "T-EQUROT",
       "disponibilite_pct": 94,
       "confiance_appro_j": 2,
       "statut": "Veille"
@@ -497,9 +527,9 @@
       "id_piece_pn": "P00684",
       "pn": "P00684",
       "libelle": "Carters Forgés",
-      "site": "FR-Gennevilliers",
-      "id_shop": "GEN",
-      "type_repair": "Forge & Ébauches",
+      "site": "S-GEN",
+      "id_shop": "S-GEN",
+      "type_repair": "T-REVCAR",
       "disponibilite_pct": 96,
       "confiance_appro_j": 2,
       "statut": "Veille"
@@ -508,9 +538,9 @@
       "id_piece_pn": "P05118",
       "pn": "P05118",
       "libelle": "Nacelles & Inverseurs",
-      "site": "FR-Toulouse",
-      "id_shop": "TLS",
-      "type_repair": "Intégration Nacelles",
+      "site": "S-TLS",
+      "id_shop": "S-TLS",
+      "type_repair": "T-MAJLOU",
       "disponibilite_pct": 71,
       "confiance_appro_j": 6,
       "statut": "Critique"
@@ -519,9 +549,9 @@
       "id_piece_pn": "P05230",
       "pn": "P05230",
       "libelle": "Capteurs Banc d'Essai",
-      "site": "BE-Liège",
-      "id_shop": "LGG",
-      "type_repair": "Bancs d'Essais",
+      "site": "S-LGG",
+      "id_shop": "S-LGG",
+      "type_repair": "T-BANESS",
       "disponibilite_pct": 85,
       "confiance_appro_j": 4,
       "statut": "Modéré"
@@ -530,9 +560,9 @@
       "id_piece_pn": "P05342",
       "pn": "P05342",
       "libelle": "Disques Forgés Lourds",
-      "site": "FR-Le Creusot",
-      "id_shop": "CRE",
-      "type_repair": "Forge Disques HP",
+      "site": "S-CRE",
+      "id_shop": "S-CRE",
+      "type_repair": "T-AUBTUR",
       "disponibilite_pct": 95,
       "confiance_appro_j": 2,
       "statut": "Veille"
@@ -540,112 +570,121 @@
   ],
   "retardsOps": [
     {
-      "operation": "Usinage Carter Fan"
+      "operation": "T-INSCND"
     },
     {
-      "operation": "Ressuage CND"
+      "operation": "T-AUBTUR"
     },
     {
-      "operation": "Revêtement Aubes HP"
+      "operation": "T-MAJLOU"
     },
     {
-      "operation": "Recette Banc d'Essais"
+      "operation": "T-BANESS"
     },
     {
-      "operation": "Montage Final Modules"
+      "operation": "T-EQUROT"
+    },
+    {
+      "operation": "T-COMHOT"
+    },
+    {
+      "operation": "T-REVCAR"
+    },
+    {
+      "operation": "T-FODREP"
     }
   ],
   "routes": [
     {
-      "route": "FR-Montereau ➔ FR-Villaroche",
-      "shop_source": "FR-Montereau",
-      "shop_dest": "FR-Villaroche",
+      "route": "S-MON ➔ S-VIL",
+      "shop_source": "S-MON",
+      "shop_dest": "S-VIL",
       "delai_transit_j": 1.2
     },
     {
-      "route": "FR-Châtellerault ➔ BE-Bruxelles",
-      "shop_source": "FR-Châtellerault",
-      "shop_dest": "BE-Bruxelles",
+      "route": "S-CHL ➔ S-BRU",
+      "shop_source": "S-CHL",
+      "shop_dest": "S-BRU",
       "delai_transit_j": 2.4
     },
     {
-      "route": "FR-Villaroche ➔ FR-Saint-Quentin",
-      "shop_source": "FR-Villaroche",
-      "shop_dest": "FR-Saint-Quentin",
+      "route": "S-VIL ➔ S-SQY",
+      "shop_source": "S-VIL",
+      "shop_dest": "S-SQY",
       "delai_transit_j": 1.5
     },
     {
-      "route": "FR-Gennevilliers ➔ FR-Montereau",
-      "shop_source": "FR-Gennevilliers",
-      "shop_dest": "FR-Montereau",
+      "route": "S-GEN ➔ S-MON",
+      "shop_source": "S-GEN",
+      "shop_dest": "S-MON",
       "delai_transit_j": 1.8
     },
     {
-      "route": "FR-Bordeaux ➔ FR-Villaroche",
-      "shop_source": "FR-Bordeaux",
-      "shop_dest": "FR-Villaroche",
+      "route": "S-BDX ➔ S-VIL",
+      "shop_source": "S-BDX",
+      "shop_dest": "S-VIL",
       "delai_transit_j": 2.8
     },
     {
-      "route": "FR-Toulouse ➔ FR-Villaroche",
-      "shop_source": "FR-Toulouse",
-      "shop_dest": "FR-Villaroche",
+      "route": "S-TLS ➔ S-VIL",
+      "shop_source": "S-TLS",
+      "shop_dest": "S-VIL",
       "delai_transit_j": 3.1
     },
     {
-      "route": "BE-Liège ➔ BE-Bruxelles",
-      "shop_source": "BE-Liège",
-      "shop_dest": "BE-Bruxelles",
+      "route": "S-LGG ➔ S-BRU",
+      "shop_source": "S-LGG",
+      "shop_dest": "S-BRU",
       "delai_transit_j": 1.0
     },
     {
-      "route": "FR-Le Creusot ➔ FR-Montereau",
-      "shop_source": "FR-Le Creusot",
-      "shop_dest": "FR-Montereau",
+      "route": "S-CRE ➔ S-MON",
+      "shop_source": "S-CRE",
+      "shop_dest": "S-MON",
       "delai_transit_j": 2.2
     }
   ],
   "ratioLean": [
     {
-      "composante": "Temps de travail à valeur ajoutée"
+      "composante": "Temps travail VA atelier"
     },
     {
       "composante": "Attente passive pièces & outillage"
     },
     {
-      "composante": "Transfert logistique & navettes"
+      "composante": "Transfert logistique inter-shops"
     }
   ],
   "chargeAteliers": [
     {
-      "atelier": "VIL-01 Usinage Rotors"
+      "atelier": "S-VIL"
     },
     {
-      "atelier": "MON-01 Turbine Haute P."
+      "atelier": "S-MON"
     },
     {
-      "atelier": "MON-02 Chambre Combustion"
+      "atelier": "S-CHL"
     },
     {
-      "atelier": "CHL-01 Usinage Base"
+      "atelier": "S-BRU"
     },
     {
-      "atelier": "BRU-01 CND Ressuage"
+      "atelier": "S-SQY"
     },
     {
-      "atelier": "SQY-01 FADEC & Systèmes"
+      "atelier": "S-GEN"
     },
     {
-      "atelier": "GEN-01 Forge & Ébauches"
+      "atelier": "S-BDX"
     },
     {
-      "atelier": "TLS-01 Intégration Nacelles"
+      "atelier": "S-TLS"
     },
     {
-      "atelier": "LGG-01 Bancs d'Essais Débit"
+      "atelier": "S-LGG"
     },
     {
-      "atelier": "CRE-01 Forge Disques HP"
+      "atelier": "S-CRE"
     }
   ],
   "seuilCharge": 85,
@@ -658,16 +697,16 @@
       "S40"
     ],
     "sites": [
-      "FR-Montereau",
-      "FR-Villaroche",
-      "FR-Châtellerault",
-      "BE-Bruxelles",
-      "FR-Saint-Quentin",
-      "FR-Gennevilliers",
-      "FR-Bordeaux",
-      "FR-Toulouse",
-      "BE-Liège",
-      "FR-Le Creusot"
+      "S-MON",
+      "S-VIL",
+      "S-CHL",
+      "S-BRU",
+      "S-SQY",
+      "S-GEN",
+      "S-BDX",
+      "S-TLS",
+      "S-LGG",
+      "S-CRE"
     ]
   },
   "cfd": {
@@ -721,5 +760,97 @@
       "poste": "Soudeuse LAS-02",
       "seuil_saturation": 85
     }
+  ],
+  "retardShops": [
+    { "shop": "S-MON", "nom": "Montereau", "taux_retard_pct": 18.2, "total_interventions": 34, "seuil": 10 },
+    { "shop": "S-VIL", "nom": "Villaroche", "taux_retard_pct": 14.5, "total_interventions": 48, "seuil": 10 },
+    { "shop": "S-CHL", "nom": "Châtellerault", "taux_retard_pct": 12.0, "total_interventions": 26, "seuil": 10 },
+    { "shop": "S-BRU", "nom": "Bruxelles", "taux_retard_pct": 16.1, "total_interventions": 31, "seuil": 10 },
+    { "shop": "S-TLS", "nom": "Toulouse", "taux_retard_pct": 9.4, "total_interventions": 22, "seuil": 10 },
+    { "shop": "S-SQY", "nom": "Saint-Quentin", "taux_retard_pct": 7.8, "total_interventions": 18, "seuil": 10 },
+    { "shop": "S-GEN", "nom": "Gennevilliers", "taux_retard_pct": 11.2, "total_interventions": 20, "seuil": 10 },
+    { "shop": "S-BDX", "nom": "Bordeaux", "taux_retard_pct": 6.5, "total_interventions": 14, "seuil": 10 },
+    { "shop": "S-LGG", "nom": "Liège", "taux_retard_pct": 9.8, "total_interventions": 19, "seuil": 10 },
+    { "shop": "S-CRE", "nom": "Le Creusot", "taux_retard_pct": 5.9, "total_interventions": 12, "seuil": 10 }
+  ],
+  "decompoShopTAT": [
+    { "shop": "S-MON", "nom": "Montereau", "attente": 7.5, "reparation": 18.2, "transfert": 3.8 },
+    { "shop": "S-VIL", "nom": "Villaroche", "attente": 6.8, "reparation": 21.5, "transfert": 3.2 },
+    { "shop": "S-CHL", "nom": "Châtellerault", "attente": 5.2, "reparation": 16.4, "transfert": 2.8 },
+    { "shop": "S-BRU", "nom": "Bruxelles", "attente": 6.1, "reparation": 17.0, "transfert": 3.5 },
+    { "shop": "S-TLS", "nom": "Toulouse", "attente": 4.3, "reparation": 15.2, "transfert": 2.6 },
+    { "shop": "S-SQY", "nom": "Saint-Quentin", "attente": 3.4, "reparation": 12.8, "transfert": 2.1 },
+    { "shop": "S-GEN", "nom": "Gennevilliers", "attente": 4.1, "reparation": 14.0, "transfert": 2.3 },
+    { "shop": "S-BDX", "nom": "Bordeaux", "attente": 2.9, "reparation": 11.5, "transfert": 1.9 },
+    { "shop": "S-LGG", "nom": "Liège", "attente": 3.8, "reparation": 13.2, "transfert": 2.2 },
+    { "shop": "S-CRE", "nom": "Le Creusot", "attente": 2.7, "reparation": 10.4, "transfert": 1.8 }
+  ],
+  "chargeStations": [
+    { "id_station": "S-MON-01", "nom": "S-MON-01 (Aubes HP)", "shop": "S-MON", "charge": 94, "seuil": 85 },
+    { "id_station": "S-MON-02", "nom": "S-MON-02 (Combustion)", "shop": "S-MON", "charge": 88, "seuil": 85 },
+    { "id_station": "S-VIL-01", "nom": "S-VIL-01 (Équilibrage)", "shop": "S-VIL", "charge": 92, "seuil": 85 },
+    { "id_station": "S-VIL-02", "nom": "S-VIL-02 (Inspection CND)", "shop": "S-VIL", "charge": 86, "seuil": 85 },
+    { "id_station": "S-BRU-01", "nom": "S-BRU-01 (Banc Essai)", "shop": "S-BRU", "charge": 89, "seuil": 85 },
+    { "id_station": "S-CHL-01", "nom": "S-CHL-01 (Maint. Majeure)", "shop": "S-CHL", "charge": 81, "seuil": 85 },
+    { "id_station": "S-TLS-01", "nom": "S-TLS-01 (Intégration)", "shop": "S-TLS", "charge": 78, "seuil": 85 },
+    { "id_station": "S-SQY-01", "nom": "S-SQY-01 (Revêtements)", "shop": "S-SQY", "charge": 74, "seuil": 85 },
+    { "id_station": "S-GEN-01", "nom": "S-GEN-01 (Aubes Précision)", "shop": "S-GEN", "charge": 82, "seuil": 85 },
+    { "id_station": "S-LGG-01", "nom": "S-LGG-01 (Banc CND)", "shop": "S-LGG", "charge": 79, "seuil": 85 }
+  ],
+  "heatmapStation": {
+    "id_station": "S-MON-01",
+    "nom": "Station S-MON-01 (Aubes HP - Montereau)",
+    "jours": ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"],
+    "postes": ["Tour CN 5-axes", "Banc Ressuage", "Cabine Ébavurage", "Contrôle Final"]
+  },
+  "stations": [
+    { "id_station": "S-VIL-01", "id_shop": "S-VIL", "nom": "Équilibrage Rotor 1", "type_reparation": "T-EQUROT", "seuil_saturation": 85 },
+    { "id_station": "S-VIL-02", "id_shop": "S-VIL", "nom": "Équilibrage Rotor 2", "type_reparation": "T-EQUROT", "seuil_saturation": 85 },
+    { "id_station": "S-VIL-03", "id_shop": "S-VIL", "nom": "Chambres Chaudes A", "type_reparation": "T-COMHOT", "seuil_saturation": 85 },
+    { "id_station": "S-VIL-04", "id_shop": "S-VIL", "nom": "Chambres Chaudes B", "type_reparation": "T-COMHOT", "seuil_saturation": 85 },
+    { "id_station": "S-VIL-05", "id_shop": "S-VIL", "nom": "Endoscopie & CND 1", "type_reparation": "T-INSCND", "seuil_saturation": 85 },
+    { "id_station": "S-VIL-06", "id_shop": "S-VIL", "nom": "Endoscopie & CND 2", "type_reparation": "T-INSCND", "seuil_saturation": 85 },
+    { "id_station": "S-VIL-07", "id_shop": "S-VIL", "nom": "Ligne Révision Lourde 1", "type_reparation": "T-MAJLOU", "seuil_saturation": 85 },
+    { "id_station": "S-VIL-08", "id_shop": "S-VIL", "nom": "Ligne Révision Lourde 2", "type_reparation": "T-MAJLOU", "seuil_saturation": 85 },
+    { "id_station": "S-MON-01", "id_shop": "S-MON", "nom": "Usinage Aubes HP Tour CN", "type_reparation": "T-AUBTUR", "seuil_saturation": 85 },
+    { "id_station": "S-MON-02", "id_shop": "S-MON", "nom": "Rectification Aubes BP", "type_reparation": "T-AUBTUR", "seuil_saturation": 85 },
+    { "id_station": "S-MON-03", "id_shop": "S-MON", "nom": "Chambre de Combustion 1", "type_reparation": "T-COMHOT", "seuil_saturation": 85 },
+    { "id_station": "S-MON-04", "id_shop": "S-MON", "nom": "Chambre de Combustion 2", "type_reparation": "T-COMHOT", "seuil_saturation": 85 },
+    { "id_station": "S-MON-05", "id_shop": "S-MON", "nom": "Réparation Pales & Fan FOD", "type_reparation": "T-FODREP", "seuil_saturation": 85 },
+    { "id_station": "S-MON-06", "id_shop": "S-MON", "nom": "Contrôle Dimensionnel FOD", "type_reparation": "T-FODREP", "seuil_saturation": 85 },
+    { "id_station": "S-CHL-01", "id_shop": "S-CHL", "nom": "Démontage Majeur 1", "type_reparation": "T-MAJLOU", "seuil_saturation": 85 },
+    { "id_station": "S-CHL-02", "id_shop": "S-CHL", "nom": "Remontage Majeur 2", "type_reparation": "T-MAJLOU", "seuil_saturation": 85 },
+    { "id_station": "S-CHL-03", "id_shop": "S-CHL", "nom": "Cabine Traitement Carters", "type_reparation": "T-REVCAR", "seuil_saturation": 85 },
+    { "id_station": "S-CHL-04", "id_shop": "S-CHL", "nom": "Bain Revêtement Nickel", "type_reparation": "T-REVCAR", "seuil_saturation": 85 },
+    { "id_station": "S-CHL-05", "id_shop": "S-CHL", "nom": "Inspection Ressuage CND", "type_reparation": "T-INSCND", "seuil_saturation": 85 },
+    { "id_station": "S-BRU-01", "id_shop": "S-BRU", "nom": "Banc d'Essai Réacteur 1", "type_reparation": "T-BANESS", "seuil_saturation": 85 },
+    { "id_station": "S-BRU-02", "id_shop": "S-BRU", "nom": "Banc d'Essai Réacteur 2", "type_reparation": "T-BANESS", "seuil_saturation": 85 },
+    { "id_station": "S-BRU-03", "id_shop": "S-BRU", "nom": "Contrôle Magnétoscopie CND", "type_reparation": "T-INSCND", "seuil_saturation": 85 },
+    { "id_station": "S-BRU-04", "id_shop": "S-BRU", "nom": "Contrôle Ultrasons CND", "type_reparation": "T-INSCND", "seuil_saturation": 85 },
+    { "id_station": "S-BRU-05", "id_shop": "S-BRU", "nom": "Atelier Re-profilage FOD", "type_reparation": "T-FODREP", "seuil_saturation": 85 },
+    { "id_station": "S-BRU-06", "id_shop": "S-BRU", "nom": "Banc Équilibrage Fan FOD", "type_reparation": "T-FODREP", "seuil_saturation": 85 },
+    { "id_station": "S-TLS-01", "id_shop": "S-TLS", "nom": "Cellule Intégration Maint.", "type_reparation": "T-MAJLOU", "seuil_saturation": 85 },
+    { "id_station": "S-TLS-02", "id_shop": "S-TLS", "nom": "Zone Révision Modules", "type_reparation": "T-MAJLOU", "seuil_saturation": 85 },
+    { "id_station": "S-TLS-03", "id_shop": "S-TLS", "nom": "Banc Essai Dynamique", "type_reparation": "T-BANESS", "seuil_saturation": 85 },
+    { "id_station": "S-TLS-04", "id_shop": "S-TLS", "nom": "Équilibrage Dynamique Arbre", "type_reparation": "T-EQUROT", "seuil_saturation": 85 },
+    { "id_station": "S-TLS-05", "id_shop": "S-TLS", "nom": "Recette Sortie Atelier", "type_reparation": "T-EQUROT", "seuil_saturation": 85 },
+    { "id_station": "S-SQY-01", "id_shop": "S-SQY", "nom": "Banc Équilibrage Haute Vitesse", "type_reparation": "T-EQUROT", "seuil_saturation": 85 },
+    { "id_station": "S-SQY-02", "id_shop": "S-SQY", "nom": "Équilibrage Basse Pression", "type_reparation": "T-EQUROT", "seuil_saturation": 85 },
+    { "id_station": "S-SQY-03", "id_shop": "S-SQY", "nom": "Projection Plasma Revêtement", "type_reparation": "T-REVCAR", "seuil_saturation": 85 },
+    { "id_station": "S-SQY-04", "id_shop": "S-SQY", "nom": "Contrôle Épaisseur Revêtement", "type_reparation": "T-REVCAR", "seuil_saturation": 85 },
+    { "id_station": "S-GEN-01", "id_shop": "S-GEN", "nom": "Usinage Laser Aubes Monocristal", "type_reparation": "T-AUBTUR", "seuil_saturation": 85 },
+    { "id_station": "S-GEN-02", "id_shop": "S-GEN", "nom": "Contrôle Métallurgie Aubes", "type_reparation": "T-AUBTUR", "seuil_saturation": 85 },
+    { "id_station": "S-GEN-03", "id_shop": "S-GEN", "nom": "Rectification Carters Aubés", "type_reparation": "T-REVCAR", "seuil_saturation": 85 },
+    { "id_station": "S-GEN-04", "id_shop": "S-GEN", "nom": "Four Traitement Thermique", "type_reparation": "T-REVCAR", "seuil_saturation": 85 },
+    { "id_station": "S-BDX-01", "id_shop": "S-BDX", "nom": "Réparation Pales Fan Titane", "type_reparation": "T-FODREP", "seuil_saturation": 85 },
+    { "id_station": "S-BDX-02", "id_shop": "S-BDX", "nom": "Ressuage Post-FOD", "type_reparation": "T-FODREP", "seuil_saturation": 85 },
+    { "id_station": "S-BDX-03", "id_shop": "S-BDX", "nom": "Révision Ensembles Mobiles", "type_reparation": "T-MAJLOU", "seuil_saturation": 85 },
+    { "id_station": "S-LGG-01", "id_shop": "S-LGG", "nom": "Banc Homologation Moteur", "type_reparation": "T-BANESS", "seuil_saturation": 85 },
+    { "id_station": "S-LGG-02", "id_shop": "S-LGG", "nom": "Banc Acoustique & Vibratoire", "type_reparation": "T-BANESS", "seuil_saturation": 85 },
+    { "id_station": "S-LGG-03", "id_shop": "S-LGG", "nom": "Inspection Courants de Foucault", "type_reparation": "T-INSCND", "seuil_saturation": 85 },
+    { "id_station": "S-LGG-04", "id_shop": "S-LGG", "nom": "Radiographie X Réacteur", "type_reparation": "T-INSCND", "seuil_saturation": 85 },
+    { "id_station": "S-CRE-01", "id_shop": "S-CRE", "nom": "Forge & Ébauche Aubes HP", "type_reparation": "T-AUBTUR", "seuil_saturation": 85 },
+    { "id_station": "S-CRE-02", "id_shop": "S-CRE", "nom": "Chambre Combusteur Spécifique", "type_reparation": "T-COMHOT", "seuil_saturation": 85 },
+    { "id_station": "S-CRE-03", "id_shop": "S-CRE", "nom": "Contrôle Dimensionnel Haute Précision", "type_reparation": "T-COMHOT", "seuil_saturation": 85 }
   ]
 }

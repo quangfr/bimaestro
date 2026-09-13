@@ -11,7 +11,7 @@
 ### 🏛️ Enjeux de Gouvernance & Propriété des Données
 - **Propriétaire métier (Data Owner) :** Qui porte la responsabilité décisionnelle (Directeur de site, CSM client, Chef d'atelier ou Approvisionneur) ?
 - **Pouvoir d'arbitrage :** Quelle décision formelle est prise sur la donnée (escalade AOG, contestation SLA, dérogation stock) ?
-- **Niveau d'habilitation (RBAC) :** Qui a le droit de voir quoi (vue par contrat client, vision globale Safron ou cloisonnement par site) ?
+- **Niveau d'habilitation (RBAC) :** Qui a le droit de voir quoi (vue par contrat client, vision globale SAE ou cloisonnement par site) ?
 - **Pacte de service (SLA du rapport) :** Quel engagement de fraîcheur de la donnée (Direct live horaire vs consolidation hebdomadaire) ?
 - **Impact de non-conformité :** Quel coût financier, contractuel ou de réputation en cas d'erreur d'interprétation ou de retard de pilotage ?
 - **Rituel de gouvernance :** Dans quelle instance officielle la donnée est-elle arbitrée (War room quotidienne, Comité de direction, Revue S&OP) ?
@@ -23,7 +23,7 @@
 <a id="methodology-step-2"></a>
 
 ### 🏛️ Choix des Données, Patrimoine & Qualité
-- **Source de vérité unique (Golden Source) :** L'ERP Safron, le MES atelier ou le système de suivi commercial fait-il foi en cas de divergence ?
+- **Source de vérité unique (Golden Source) :** L'ERP SAE, le MES atelier ou le système de suivi commercial fait-il foi en cas de divergence ?
 - **Data Stewardship & Rôles :** Qui certifie la qualité et valide la saisie des pointages d'opérations sur les postes de travail ?
 - **Complétude & exhaustivité :** Existe-t-il des trous dans la raquette sur les gammes standards ou les matrices de transits logistiques ?
 - **Intégrité référentielle :** Les identifiants ESN moteur, numéros d'OF et codes postes sont-ils unifiés et normés entre applications ?
@@ -50,7 +50,7 @@
 
 ### 🏛️ Sémiologie Visuelle & Intégrité Décisionnelle
 - **Intégrité d'interprétation :** Le visuel évite-t-il les effets d'échelle trompeurs, les tronquages d'axe ou les faux sentiments d'urgence ?
-- **Standard Corporate Safron :** Les codes couleurs (vert conforme, orange aléas, rouge AOG) respectent-ils la charte graphique MRO ?
+- **Standard Corporate SAE :** Les codes couleurs (vert conforme, orange aléas, rouge AOG) respectent-ils la charte graphique MRO ?
 - **Neutralité & Fidélité :** Les seuils d'alerte (SLA contractuel, $P_{85}$) sont-ils objectivement opposables à tous les acteurs ?
 - **Accessibilité & Clarté cognitive :** Le lecteur novice comprend-il immédiatement l'action requise sans nécessiter une formation poussée ?
 - **Protection des données sensibles :** Les pénalités financières (€) doivent-elles être masquées selon le profil et le niveau d'habilitation ?

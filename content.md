@@ -6,7 +6,7 @@ Ce document constitue le référentiel textuel, méthodologique et technique syn
 
 ## Sommaire
 - [Étape 0 : Contexte & Documentation](#étape-0--contexte--documentation)
-- [Étape 1 : Question (Cadrage métier prioritaire)](#étape-1--question)
+- [Étape 1 : Métier (Cadrage métier prioritaire)](#étape-1--métier)
 - [Étape 2 : Modèle (Granularité & Tables de calcul)](#étape-2--modèle)
 - [Étape 3 : TAT (Méthode de calcul du Turn Around Time)](#étape-3--tat)
 - [Étape 4 : Délai (Visualisations & Alertes TAT)](#étape-4--délai)
@@ -20,72 +20,84 @@ Ce document constitue le référentiel textuel, méthodologique et technique syn
 ## Étape 0 : Contexte & Documentation
 
 > **En-tête de l'interface :** Étape 0 : Contexte & Documentation  
-> **Comportement :** La page Étape 0 charge et affiche le contenu des fichiers Markdown du dossier racine via un sélecteur en haut (`readme.md` par défaut, puis `content.md`, `gouvernance.md`, `AGENTS.md`, `data.json`). Les fichiers `.json` (`data.json`) sont affichés en JSON formaté (pretty-print) dans un bloc mono-police.
-
-### 0.1 Contenu par défaut (readme.md)
+> **Comportement :** La page Étape 0 charge et affiche le contenu des fichiers Markdown du dossier racine via un sélecteur en haut (`readme.md` par défaut, puis `content.md`, `gouvernance.md`, `AGENTS.md`, `data.json`). Les fichiers `.json` (`data.json`) sont affich### 0.1 Contenu par défaut (readme.md)
 Le fichier `readme.md`, affiché par défaut, porte le **contexte opérationnel** et le **rôle du consultant / data lead supervisor** :
-- **Contexte Opérationnel & Déploiement BI :** Déploiement d'un outil décisionnel Power BI de cadrage de charge et de pilotage du TAT sur les flottes CFM56-7B, CFM56-5B, LEAP-1A, LEAP-1B, GE90-115B, M88-2, sur 10 centres Safron (FR-Villaroche, FR-Montereau, FR-Châtellerault, BE-Bruxelles, FR-Saint-Quentin, FR-Gennevilliers, FR-Bordeaux, FR-Toulouse, BE-Liège, FR-Le Creusot).
+- **Contexte Opérationnel & Déploiement BI :** Déploiement d'un outil décisionnel Power BI de cadrage de charge et de pilotage du TAT sur les flottes CFM56-7B, CFM56-5B, LEAP-1A, LEAP-1B, GE90-115B, M88-2, sur 10 centres SAE (FR-Villaroche, FR-Montereau, FR-Châtellerault, BE-Bruxelles, FR-Saint-Quentin, FR-Gennevilliers, FR-Bordeaux, FR-Toulouse, BE-Liège, FR-Le Creusot).
 - **Rôle & Enjeux du Consultant / Data Lead Supervisor :** Arbitrage de la source de vérité (Golden Source), supervision de la qualité et du cycle de vie des données, normalisation des règles de calcul (Data Dictionary) et éthique de restitution (RLS/RBAC).
 
 > *(La **Méthodologie Data & Gouvernance** est consultable à tout moment via le bouton d'information `i` (icône Lucide) présent à côté du titre de chaque étape, ouvrant une modale globale avec ancres de navigation directe.)*
 
 ---
 
-## Étape 1 : Question
+## Étape 1 : Métier
 
 > **Question de cadrage :** Quel est le premier problème que le tableau de bord doit résoudre ?  
-> **En-tête de l'interface :** Étape 1 : Cadrer la question métier prioritaire (`🎯 Cadrage du Persona Métier`)
+> **En-tête de l'interface :** Étape 1 : Cadrer la question métier prioritaire
 
-### Options Décisionnelles Disponibles :
-1. **Option 1.A : Urgence opérationnelle (AOG)**
-   - *Sous-titre :* Alerte temps réel AOG & escalade immédiate
-   - *Description :* Alerter en direct sur les moteurs à risque d'immobilisation avion (**AOG**). Escalade immédiate vers les chefs d'atelier dès dérive critique.
-   - *Orientation de restitution :* Badges d'alerte rouge clignotant, identification des ESN en souffrance.
-   - *Exemples de questions métiers cibles :*
-     - Quels réacteurs en atelier risquent de clouer un appareil au sol sous 48h ?
-     - Quel chef d'atelier doit être alerté en priorité sur une dérive critique ?
-     - Quels dossiers urgents doivent préempter les créneaux d'usinage et de banc ?
-2. **Option 1.B : Engagements contractuels (SLA)**
-   - *Sous-titre :* Respect des SLA & vision globale par compagnie
-   - *Description :* Garantir le respect des **SLA** et du TAT moyen par compagnie aérienne et typologie de contrat.
-   - *Orientation de restitution :* Jauges de conformité contractuelle, décompte des dossiers livrés dans les temps.
-   - *Exemples de questions métiers cibles :*
-     - Quel est le taux de respect des SLA engagés auprès d'Air France ou Delta ?
-     - Quel contrat MRO génère les dépassements de TAT moyen les plus récurrents ?
-     - Comment benchmarke-t-on le TAT effectif vs contractuel par type de flotte ?
-3. **Option 1.C : Optimisation des capacités**
-   - *Sous-titre :* Lissage de charge & élimination des goulets ateliers
-   - *Description :* Équilibrer les charges multi-sites (Montereau, Villaroche, Bruxelles), lisser les goulets et l'usinage.
-   - *Orientation de restitution :* Comparatif capacitaire inter-sites et détection des îlots saturés.
-   - *Exemples de questions métiers cibles :*
-     - Quel site Safron approche du seuil critique de 85% de saturation ?
-     - Peut-on réorienter des modules CFM56 de Montereau vers Bruxelles ?
-     - Où se situent les goulets d'usinage retardant le passage sur banc ?
-4. **Option 1.D : Suivi Retard & Pénalités**
-   - *Sous-titre :* Dérapage en jours ouvrés & exposition financière (€)
-   - *Description :* Mesurer le dérapage en **jours ouvrés** au-delà du SLA et chiffrer l'exposition financière (€).
-   - *Orientation de restitution :* Exposition financière cumulée, compteurs d'ESN sous pénalités journalières.
-   - *Exemples de questions métiers cibles :*
-     - Quel montant de pénalités contractuelles court aujourd'hui sur les visites en retard ?
-     - Quels moteurs accumulent plus de 5 jours de dérive financièrement pénalisante ?
-     - Quel barème financier s'applique par jour ouvré supplémentaire sur chaque client ?
-5. **Option 1.E : Logistique & Approvisionnement (Kits & Pièces)**
-   - *Sous-titre :* Disponibilité stock, délais fournisseurs OTIF et kits complets (Repair Kits)
-   - *Description :* Disponibilité des kits de réparation (Repair Kits) et pièces critiques, délais fournisseurs OTIF et élimination des ruptures d'atelier.
-   - *Orientation de restitution :* Taux de service OTIF, détection des kits incomplets (aubes HP, LLP) et arrêts magasin.
-   - *Exemples de questions métiers cibles :*
-     - Quels kits de réparation (aubes monocristal, LLP) manquent pour ouvrir l'ordre atelier ?
-     - Quel est le taux de service OTIF des fournisseurs sur les kits critiques ?
-     - Combien d'heures d'attente atelier sont directement imputables à un kit incomplet ?
-6. **Option 1.F : Data Gouvernance**
-   - *Sous-titre :* Suivi des usages métiers, fiabilisation, pertinence des modèles & nouvelles sources
-   - *Description :* Suivre les usages métiers, fiabiliser la donnée, s'assurer de la pertinence des modèles en mesurant l'écart prévisionnel vs effectif, et détecter les opportunités de connexion à de nouvelles sources de données hors périmètre MAESTRO.
-   - *Orientation de restitution :* Dérive des algorithmes, contrôle qualité des tables, suivi de l'adoption décisionnelle et cartographie des gisements de données externes (télémétrie avionique, météo, supply tiers).
-   - *Exemples de questions métiers cibles :*
-     - Quel est l'écart moyen entre les durées de réparation prévues et constatées en atelier ?
-     - Les chefs d'atelier et ordonnanceurs consultent-ils régulièrement les rapports BI ?
-     - Quels modèles prédictifs subissent une dérive statistique nécessitant un recalibrage ?
-     - Quelles sources de données externes (télémétrie en vol, portail logistique tiers, IoT) pourraient enrichir la prédictivité hors périmètre MAESTRO actuel ?
+### Référentiel des Personas SAE (MAESTRO) :
+Le projet MAESTRO s'articule autour des acteurs décisionnels de la maintenance MRO :
+- **Engine Owner (EOWN) :** Assure le suivi technique et opérationnel de la flotte moteur et de ses modules (MM, SM). Valide les jalons du processus RTI (Return to Operation), gère les dérives d'atelier et les priorités.
+- **Customer Support Program Manager (CSPM) :** Assure la gestion contractuelle de la maintenance en relation directe client. Gère le removal plan client (chargé de PERF vers IBP), crée les demandes d'induction, suit les dates de Shop Visit prévues sous contrat et lève les alertes en cas de dérive. *Objectif :* Garantir le respect des engagements MRO (TAT Wing to Wing) tout en optimisant les coûts.
+- **Network Planner (NTPL) :** Pilote la planification de maintenance et l'attribution des créneaux (slots) à court/moyen terme sur l'ensemble des ateliers (12–36 mois). Assure l'adhérence MPS vs S&OP et gère les arbitrages entre moteurs/modules across all shops. *Objectif :* Assurer une vue consolidée charge/capacité réseau, réduire les surcharges et éliminer les slots perdus (lost slots).
+- **Shop Floor Planner (SHPL) :** Ordonnance les activités de maintenance au sein d'un atelier spécifique. Coordonne les lignes moteurs et modules, gère les flux de sous-traitance et réajuste le planning face aux aléas quotidiens (pannes, retards, absences). *Objectif :* Maximiser l'utilisation des postes et l'adhérence au plan court terme (MPS Adherence).
+- **Fleet Technical Management (FTM) :** Définit et adapte les gammes d'intervention technique et les workscopes de Shop Visit dans Walk. Évalue l'impact des découvertes techniques et des directives de navigabilité sur la durée prévisionnelle. *Objectif :* Fournir des standards techniques réalistes et ajuster les durées de visite selon l'état moteur.
+- **Finance & Controlling (FINC) :** Évalue les impacts budgétaires des choix de planification et chiffre le coût des dérives de TAT et des pénalités contractuelles. Assure le suivi du cost tracking (export IBP vers Cost Tracker). *Objectif :* Optimiser la rentabilité des Shop Visits et fiabiliser les prévisions de coûts.
+- **Demand Management & S&OP (DMMG) :** Centralise et consolide les prévisions de demande multi-sources (compagnies, loueurs, interne) lors de la Monthly Demand Review. *Objectif :* Établir un plan de demande partagé et réaliste pour dimensionner le réseau industriel.
+- **Data Governance & Quality (DGOV) :** Supervise la qualité, la traçabilité et l'auditabilité des données opérationnelles Part-145 et benchmarke les modèles face à la réalité terrain. *Objectif :* Assurer l'intégrité du modèle et la certification des prédictions.
+
+---
+
+### Options Décisionnelles (1.A à 1.F) :
+
+1. **Option 1.A : Engagements contractuels & Removal Plan (CSPM)**
+   - *Personas SAE :* CSPM • FTM, EOWN, NTPL
+   - *Sous-titre :* Respect des SLA, dates Shop Visit & removal plan PERF
+   - *Description :* Gérer la relation contractuelle de maintenance avec les compagnies clientes. Charger le **removal plan** client depuis **PERF** vers **SAP IBP**, suivre les dates programmées de Shop Visit (entrée et sortie atelier), sécuriser les **SLA** et lever les alertes en cas de déviation.
+   - *Orientation de restitution :* Jauges de conformité contractuelle, décompte des dossiers livrés dans les temps et suivi du removal plan PERF synchronisé.
+
+2. **Option 1.B : Équilibrage réseau 12-36 mois & Slotting (NTPL)**
+   - *Personas SAE :* NTPL • DMMG, SHPL, GBO
+   - *Sous-titre :* Charge/capacité multi-ateliers, MPS vs S&OP & slotting réseau
+   - *Description :* Piloter la planification et le slotting moyen/long terme (**12–36 mois**) across all shops. Équilibrer la charge/capacité réseau pour les moteurs et modules (**MM, SM**), assurer l'adhérence **MPS vs S&OP** et arbitrer les flux d'induction pour éliminer les créneaux perdus (**lost slots**).
+   - *Orientation de restitution :* Comparatif capacitaire inter-sites (VIL, CHL, MON, BRU) et détection des îlots saturés (> 85%).
+
+3. **Option 1.C : Volumes IBP, mix d'activités & coûts SV (FINC)**
+   - *Personas SAE :* FINC • CSPM, EOWN, S&OP
+   - *Sous-titre :* Pénalités de retard (€), mix moteurs/modules & IBP to Cost Tracker
+   - *Description :* Suivre les prévisions d'activité (volumes d'induction, charge globale, mix moteurs/modules **MM/SM**) et leur impact financier. Analyser les écarts budget vs réel, chiffrer les pénalités de retard et exporter les données IBP pour fiabiliser le cost tracking (**IBP to Cost Tracker**).
+   - *Orientation de restitution :* Exposition financière cumulée, compteurs d'ESN sous pénalités journalières et impact sur les coûts de Shop Visit.
+
+4. **Option 1.D : Ordonnancement atelier & aléas court terme (SHPL)**
+   - *Personas SAE :* SHPL • EOWN, NTPL
+   - *Sous-titre :* Aléas quotidiens (pannes, retards), flux MM/SM & MPS Adherence
+   - *Description :* Organiser les activités de Shop Visit au sein de son atelier et équilibrer charge/capacité locale. Réajuster le planning court terme face aux aléas quotidiens (**delays, breakdowns, absences**), séquencer l'arrivée des moteurs et modules (**MM, SM, internes, isolés ou sous-traités**) et optimiser les ressources critiques.
+   - *Orientation de restitution :* Vue d'ordonnancement d'atelier avec 2 lignes de flux (moteurs complets et modules), gestion des aléas machines et réaffectation dynamique de slots.
+
+5. **Option 1.E : Consolidation de la demande & workscopes (DMMG & FTM)**
+   - *Personas SAE :* DMMG & FTM • GBO, CSPM, S&OP
+   - *Sous-titre :* Demande multi-sources, workscopes Walk & variance début/fin SV
+   - *Description :* Consolider et fiabiliser les prévisions de Shop Visit multi-sources (compagnies, loueurs, flotte interne) via la **Monthly Demand Review**. Intégrer les **workscopes techniques** dans **Walk**, surveiller la variance de workscope entre l'entrée et la sortie d'atelier, et alimenter les cycles S&OP/MTP.
+   - *Orientation de restitution :* Courbe de prévision de la demande multi-sources, suivi de la dérive prévu vs réalisé et analyse de la variance des workscopes Walk.
+
+6. **Option 1.F : Qualité des données & Fiabilité des modèles (DGOV)**
+   - *Personas SAE :* DGOV • FTM, NTPL, SHPL, CSPM
+   - *Sous-titre :* Complétude de saisie, benchmark des méthodes de calcul & certitude
+   - *Description :* Auditer la qualité du patrimoine de données MRO : mesurer le taux de complétude des saisies pointées en atelier, benchmarker les 4 méthodes de calcul (forfait standard, distribution réelle P50, charge/goulots et simulation probabiliste) face au TAT effectif de référence, et certifier le niveau de confiance des prévisions.
+   - *Orientation de restitution :* Histogrammes comparatifs des méthodes de calcul (TAT et Capacité vs effectif réel), jauge de complétude et score de fiabilité statistique.
+
+---
+
+### Matrice des Besoins par Rôles (Needs Matrix SAE MAESTRO) :
+
+| Rôle SAE | Demande Long Terme | Suivi Moteurs (Dates/Priorités) | Simulation / What-If | Charge / Capacité | Planif Court Terme | Arbitrage Priorités | Comités MPS/S&OP | Analyse Écarts | Alertes Jalons/Dérives | Export Finance | Impacts Contrat | Engagements SLA/AOG |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **CSPM** | ✓ | ✓ | ✓ | | | ✓ | | ✓ | ✓ | | ✓ | ✓ |
+| **NTPL** | ✓ | ✓ | ✓ | ✓ | | ✓ | ✓ | ✓ | ✓ | | | |
+| **SHPL** | | ✓ | ✓ | ✓ | ✓ | ✓ | | ✓ | ✓ | | | |
+| **EOWN** | | ✓ | ✓ | | | ✓ | | ✓ | ✓ | | ✓ | |
+| **FTM** | ✓ | ✓ | ✓ | | | ✓ | | ✓ | ✓ | | ✓ | ✓ |
+| **DMMG** | ✓ | ✓ | ✓ | ✓ | | | ✓ | ✓ | | | | ✓ |
+| **FINC** | ✓ | ✓ | ✓ | ✓ | | | ✓ | ✓ | ✓ | ✓ | | |
 
 ```mermaid
 %%{init: {'theme': 'base'}}%%
@@ -101,306 +113,242 @@ xychart-beta
 
 ## Étape 2 : Modèle
 
-> **Question de cadrage :** Quelles tables permettent le calcul selon le niveau de détail unitaire ?  
+> **Question de cadrage :** Quelles tables et niveaux de granularité permettent le calcul du Turn Around Time (TAT) et la planification d'atelier ?  
 > **En-tête de l'interface :** Étape 2 : Données (Granularité & Tables pour le calcul)  
-> **Bouton d'affichage :** en haut à droite, le bouton `schema-toggle` bascule entre la vue SVG (`schemaCanvas`) et le code Mermaid (`SCHEMA_MERMAID` dans `index.html`, avec bouton dédié « Copier le code » et sélection intégrale sans toast intempestif), identique aux diagrammes `erDiagram` ci-dessous.
+> **Bouton d'affichage :** En haut à gauche du panel de droite, le bouton `schema-toggle` bascule entre la vue texte des règles métier (`txt` / `schema-rules-view`), la vue SVG interactive (`svg` / `schemaCanvas`) et le code Mermaid (`<>` / `SCHEMA_MERMAID` dans `index.html`), rigoureusement synchronisés avec les diagrammes `erDiagram` et définitions ci-dessous. L'onglet `txt` affiche **exclusivement** les éléments propres à l'option sélectionnée : uniquement les données et règles de **Demande** sous l'option 2.A (`#schema-rules-2a`), ou uniquement les données et règles d'**Intervention** sous l'option 2.B (`#schema-rules-2b`).
 
-### Les 3 Niveaux de Granularité :
+---
 
-#### Option 2.A : Macro — Demande de Visite (`visit`)
-- **Granularité :** 1 ligne = 1 visite complète moteur `visit (engine, priority, start, end)`.
-- **Transits logistiques :** Forfait logistique global rattaché au moteur.
-- **Hypothèses de simplification vs 2.C (Micro) :**
-  - **Forfaitisation des transferts :** Les temps de transit logistiques sont modélisés comme un forfait moyen global au moteur, masquant les navettes inter-ateliers unitaires.
-  - **Masquage des sous-étapes d'atelier :** Le cycle de visite est appréhendé de bout en bout sans détailler le cheminement interne entre îlots spécialisés.
-  - **Allotissement immédiat des pièces :** Le kit de pièces complet est réputé requis et alloué dès la date d'induction (`start_req_date`), sans suivre la séquence de consommation réelle au poste.
-- **Modélisation relationnelle Canvas :**
-  - **Fait central :** `visit` (`id_demande` / `id_visit` commençant par `D-xxxxx`, `id_moteur` / ESN, `priorite`, `date_entree [start]`, `date_livraison`, `id_kit_pieces`, `tat_realise_j`, `derapage_sla_j`, `penalites_eur`).
-  - **Dimensions liées (1:N) :** `engine` (type, modele, client), `contract_sla` (client, sla_cible_jours, penalite_jour_eur), `transits` (shop_source, shop_dest, delai_transit_j), `calendar` (date, semaine, ouvre), `engine_parts` (`id_piece_pn` au format `Pxxxxx`, modele_moteur, dispo %, intervalle confiance +/-, lien date start).
-  - **Identifiants normalisés (`data.json`) :** Demandes au format `D-xxxxx` (ex: `D-09842`), Pièces au format `Pxxxxx` (ex: `P01125`), clés étrangères alignées avec le schéma de l'Étape 2 (`id_demande`, `id_moteur`, `id_shop`, `id_piece_pn`).
+### 1. 🧱 Master Data Types (MDTs) Recommandés
 
-##### 📋 Dictionnaire de Données — Option 2.A (Macro)
+Les fondations du modèle de données reposent sur deux structures maîtres : l'en-tête de demande et les lignes d'interventions associées.
+
+#### 📁 MDT_MAINTENANCE_REQUEST *(Simple MDT — En-tête de Demande Dossier)*
+- **Rôle :** Représente l'en-tête de la demande de révision moteur émise par une compagnie aérienne ou un opérateur.
+- **🔑 Clé Primaire (PK) :** `ID_DEMANDE` (ex. `D-2026-000123`, `D-2026-000124`)
+- **🏷️ Attributs de Gestion :**
+  - `DEMANDEUR` : Compagnie cliente donneuse d'ordre (ex. `Air France (AFR)`, `Lufthansa (DLH)`, `Delta Air Lines (DAL)`).
+  - `DATE_DEMANDE` : Horodatage / date d'émission de la demande (`Date / Timestamp`, ex. `2026-03-01`).
+  - `PROGRAMME_MOTEUR` : Famille technologique de motorisation (ex. `CFM56`, `LEAP`, `GE90`).
+  - `ENGINE_TYPE` : Modèle et variante exacte de propulseur (ex. `CFM56-5B`, `CFM56-7B`, `LEAP-1A26`, `LEAP-1B`).
+  - `NIVEAU_URGENCE_GLOBAL` : Niveau de criticité opérationnelle (`Enum` : `Haute / AOG`, `Moyenne`, `Basse`).
+  - `COMMENTAIRE_GLOBAL` : Remarques d'admission, contraintes ou contexte de dépose (texte libre).
+
+#### 🔧 MDT_INTERVENTION *(Compound ou Simple MDT — Ligne d'Intervention Atelier)*
+- **Rôle :** Représente chaque opération ou intervention technique requise sur le moteur en atelier spécialisé.
+- **🔑 Clés Composites (PK) :** `ID_DEMANDE` + `ID_INTERVENTION` (ex. `D-2026-000123` + `I-2026-000123-01`, `I-2026-000123-02`)
+- **🏷️ Attributs Opérationnels :**
+  - `TYPE_REPARATION` : Famille ou type de révision (`Enum` : `T-INSCND`, `T-AUBTUR`, `T-MAJLOU`, `T-BANESS`, `T-EQUROT`, `T-COMHOT`, `T-REVCAR`, `T-FODREP`).
+  - `PRECISION_AUTRE` : Précision textuelle documentée si le type est qualifié en `"Autre"`.
+  - `SHOP_ASSIGNE` : Atelier industriel pressenti (`Enum` : `S-MON`, `S-VIL`, `S-CHL`, `S-BRU`, `S-SQY`, `S-GEN`, `S-BDX`, `S-TLS`, `S-LGG`, `S-CRE`).
+  - `DONNEES_TECHNIQUES` : Référence technique, manuel de révision OEM ou URL du rapport d'inspection / CND.
+
+---
+
+### 2. 🎛️ Planning Levels (Niveaux de Granularité des Calculs)
+
+Le modèle propose deux perspectives décisionnelles complémentaires selon le niveau de détail souhaité :
+
+#### 📈 Option 2.A : Niveau de Consolidation Demande (Granularité Dossier / Macro)
+- **Granularité :** 1 ligne = 1 demande de révision moteur consolidée.
+- **👥 Personas Cibles :** `CSPM`, `EOWN`, `FINC`, `DMMG`, `DGOV`.
+- **🧩 Dimensions Clés :** `ID_DEMANDE` + `ENGINE_TYPE` + `DEMANDEUR` + `TIMEPROFILE` (Semaine ou Mois).
+- **📊 Usage SAP IBP & Métier :**
+  - Consolidation du délai total moteur (**Total Engine TAT Dossier**).
+  - Suivi d'avancement global du dossier vis-à-vis des engagements contractuels SLA.
+  - Arbitrage macro-capacitaire S&OP et communication client.
+- **Hypothèses de simplification :**
+  - Forfaitisation des transits logistiques au niveau de la visite.
+  - Masquage du cheminement séquentiel interne entre îlots.
+  - Allotissement global des approvisionnements dès l'induction.
+
+##### 📋 Dictionnaire de Données — Option 2.A (Consolidation Demande)
 
 | Table & Champ | Type / Format | Cardinalité | Rôle & Description | Exemple Concret |
 | :--- | :--- | :--- | :--- | :--- |
-| **`VISIT`** *(Table de faits)* | | **Fait central** | **1 ligne = 1 visite complète moteur en atelier MRO** | `D-09842` |
-| ↳ `id_visit` | `String` (`D-xxxxx`) | **PK** (1:1) | Identifiant unique de la demande d'intervention MRO | `"D-09842"` |
-| ↳ `id_moteur` | `String` (`ESN-xxxxxx`) | **FK** (N:1 → `ENGINE`) | Numéro de série constructeur de l'équipement (*Engine Serial Number*) | `"ESN-884210"` |
-| ↳ `priorite` | `String` (`Enum`) | Attribut de fait | Niveau d'urgence opérationnelle de la dépose moteur | `"AOG Critique"` / `"Normal"` |
-| ↳ `date_entree` | `Date` (`YYYY-MM-DD`) | Attribut temporel (`start`) | Date d'induction physique sur le site de révision | `"2026-03-01"` |
-| ↳ `date_livraison` | `Date` (`YYYY-MM-DD`) | Attribut temporel (`end`) | Date de remise à disposition client après essais au banc | `"2026-03-22"` |
-| ↳ `id_kit_pieces` | `String` (`Pxxxxx`) | **FK** (N:1 → `ENGINE_PARTS`)| Référence du kit d'approvisionnement majeur alloué | `"P01125"` |
-| ↳ `tat_realise_j` | `Float` (`#.0` jours) | Métrique / *Key Figure* | Durée totale de traversée constatée (*Turnaround Time*) | `21.0` jours |
-| ↳ `derapage_sla_j`| `Float` (`#.0` jours) | Métrique calculée | Retard constaté par rapport à l'engagement contractuel SLA | `+3.0` jours (ou `0.0`) |
-| ↳ `penalites_eur` | `Integer` (`€`) | Métrique financière | Coût financier induit par le dépassement des engagements SLA | `4 500` € |
-| **`ENGINE`** *(Dimension)* | | **1:N** avec `VISIT` | **Référentiel des moteurs et de la flotte cliente** | `LEAP-1A26` |
-| ↳ `id_moteur` | `String` (`ESN-xxxxxx`) | **PK** (1:1) | Identifiant unique de l'équipement | `"ESN-884210"` |
-| ↳ `type` | `String` | Attribut de regroupement | Famille majeure de motorisation aéronautique | `"LEAP-1A"` / `"CFM56-7B"` |
-| ↳ `modele` | `String` | Attribut technique | Variante spécifique de poussée et d'aéronef | `"LEAP-1A26 (A320neo)"` |
-| ↳ `client` | `String` (Code OACI/IATA)| Attribut commercial | Compagnie aérienne propriétaire ou opératrice | `"AFR"` (Air France) |
-| **`CONTRACT_SLA`** *(Dimension)* | | **1:N** avec `VISIT` | **Paramètres contractuels et engagements de service** | Contrat SLA Ryannair |
-| ↳ `id_contrat` | `String` (`CTR-xxxx`) | **PK** (1:1) | Identifiant unique de l'accord-cadre commercial | `"CTR-RYR-2025"` |
-| ↳ `client` | `String` (Code client) | Attribut contractuel | Compagnie aérienne sous contrat | `"RYR"` (Ryanair) |
-| ↳ `sla_cible_jours` | `Integer` (Jours) | Seuil de référence | Objectif contractuel de TAT négocié | `18` jours |
-| ↳ `penalite_jour_eur`| `Integer` (`€/jour`) | Barème contractuel | Pénalité financière journalière par jour de dérive | `2 000` €/jour |
-| **`TRANSITS`** *(Dimension)* | | **1:N** avec `VISIT` | **Forfait logistique moyen de transport inter-sites** | Villaroche ↔ Saint-Quentin |
-| ↳ `id_liaison` | `String` (`TR-xxx-xxx`) | **PK** (1:1) | Code de la liaison logistique | `"TR-VIL-STQ"` |
-| ↳ `site_depart` | `String` (Site code) | Dimension géographique | Site d'expédition d'origine | `"Villaroche (VIL)"` |
-| ↳ `site_arrivee` | `String` (Site code) | Dimension géographique | Site de destination industrielle | `"Saint-Quentin (STQ)"` |
-| ↳ `delai_transit_j`| `Float` (Jours) | Paramètre forfaitaire | Durée forfaitaire d'acheminement aller-retour | `2.5` jours |
-| **`ENGINE_PARTS`** *(Dimension)* | | **1:N** avec `VISIT` | **État de disponibilité des kits pièces pour la visite** | Kit Aubes Mobiles |
-| ↳ `id_piece_pn` | `String` (`Pxxxxx`) | **PK** (1:1) | Référence normalisée de la pièce / kit (*Part Number*) | `"P01125"` |
-| ↳ `modele_moteur` | `String` | Clé de compatibilité | Modèle moteur sur lequel le kit est installable | `"LEAP-1A"` |
-| ↳ `disponibilite_pct`| `Float` (`0.0 - 100.0%`)| Mesure de service | Taux de disponibilité à date de lancement | `84.5` % |
-| ↳ `confiance_appro_j`| `Float` (± Jours) | Intervalle de risque | Marge d'incertitude sur la date de réception du kit | `± 3.0` jours |
-| **`CALENDAR`** *(Dimension)* | | **1:N** avec `VISIT` | **Référentiel temporel d'atelier** | Calendrier industriel |
-| ↳ `date` | `Date` (`YYYY-MM-DD`) | **PK** (1:1) | Date du calendrier civil | `"2026-03-15"` |
-| ↳ `semaine` | `String` (`YYYY-Wxx`) | Attribut d'agrégation | Numéro de semaine ISO | `"2026-W11"` |
-| ↳ `jour_ouvre` | `Boolean` (`true/false`)| Filtre d'activité | Indicateur de jour travaillé ouvré en atelier | `true` |
+| **`MDT_MAINTENANCE_REQUEST`** | | **Fait / MDT Central** | **1 ligne = 1 demande globale de maintenance moteur** | `D-2026-000123` |
+| ↳ `ID_DEMANDE` | `String` (`D-YYYY-XXXXXX`)| **PK** (1:1) | Identifiant unique de la demande | `"D-2026-000123"` |
+| ↳ `DEMANDEUR` | `String` (Code/Nom Client)| Attribut client | Compagnie aérienne propriétaire ou opératrice | `"Air France (AFR)"` |
+| ↳ `DATE_DEMANDE` | `Date` (`YYYY-MM-DD`) | Attribut temporel | Date d'émission de la demande d'intervention | `"2026-03-01"` |
+| ↳ `PROGRAMME_MOTEUR` | `String` (`Enum`) | Famille moteur | Famille technologique globale de motorisation | `"LEAP"` / `"CFM56"` |
+| ↳ `ENGINE_TYPE` | `String` (Modèle exact) | Clé technique | Variante précise de moteur d'aéronef | `"LEAP-1A26"` |
+| ↳ `NIVEAU_URGENCE_GLOBAL` | `String` (`Enum`) | Priorité dossier | Urgence opérationnelle (`Haute / AOG`, `Moyenne`, `Basse`) | `"Haute (AOG)"` |
+| ↳ `COMMENTAIRE_GLOBAL` | `String` (Texte libre) | Contexte dossier | Observations techniques de dépose et antécédents | `"Dépose sous aile suite FOD"` |
+| ↳ `INTERVENTION_COUNT` | `Integer` | **Key Figure** agrégée | Nombre d'interventions actives rattachées au dossier | `3` interventions |
+| ↳ `URGENCY_WEIGHT` | `Float` (Poids numérique) | **Key Figure** algo | Poids calculé pour prioriser l'allocation d'atelier | `3.0` (Priorité max) |
+| ↳ `TOTAL_ENGINE_TAT` | `Float` (Jours) | **Key Figure** consolidée| TAT consolidé du moteur (somme série / max parallèle) | `21.5` jours |
 
 ```mermaid
 erDiagram
-    VISIT ||--o{ ENGINE : "moteur ESN"
-    VISIT }o--|| CONTRACT_SLA : "client + engagement"
-    VISIT }o--|| TRANSITS : "transit forfaitaire"
-    VISIT }o--|| CALENDAR : "date entrée / livraison"
-    ENGINE ||--o{ ENGINE_PARTS : "filtre par modèle"
-    VISIT }o--|| ENGINE_PARTS : "kit pièces (start_req_date, dispo %)"
+    MDT_MAINTENANCE_REQUEST ||--o{ MDT_INTERVENTION : "détail des lignes (1:N)"
+    MDT_MAINTENANCE_REQUEST }o--|| TIMEPROFILE : "profil temporel (S/M)"
+    MDT_MAINTENANCE_REQUEST }o--|| CONTRACT_SLA : "engagements SLA client"
 
-    VISIT {
-        string id_visit PK "1 ligne = 1 visite"
-        string id_moteur FK "engine (ESN)"
-        string priorite "AOG / Normal"
-        date date_entree "start"
-        date date_livraison "end"
-        string id_kit_pieces FK "engine_parts"
-        number tat_realise_j "TAT global (j)"
-        number derapage_sla_j "Écart contractuel"
-        number penalites_eur "Exposition (€)"
+    MDT_MAINTENANCE_REQUEST {
+        string ID_DEMANDE PK "Clé unique demande"
+        string DEMANDEUR "Compagnie cliente"
+        date DATE_DEMANDE "Date d'émission"
+        string PROGRAMME_MOTEUR "CFM56 / LEAP"
+        string ENGINE_TYPE "Modèle exact"
+        string NIVEAU_URGENCE_GLOBAL "Haute / Moyenne / Basse"
+        string COMMENTAIRE_GLOBAL "Remarques"
+        number INTERVENTION_COUNT "COUNT(ID_INTERVENTION)"
+        number URGENCY_WEIGHT "Poids algorithmique"
+        number TOTAL_ENGINE_TAT "TAT global consolidé (j)"
     }
-    ENGINE {
-        string id_moteur PK "Numéro ESN"
-        string type "CFM56-5B/7B, LEAP-1A/1B"
-        string modele "Sous-variante"
-        string client "Compagnie"
-    }
-    ENGINE_PARTS {
-        string id_piece_pn PK "Part Number"
-        string modele_moteur "Filtre modèle"
-        number disponibilite_pct "Dispo %"
-        number confiance_appro_j "Intervalle +/-"
+    TIMEPROFILE {
+        string ID_PERIOD PK "Semaine / Mois"
+        date START_DATE
+        date END_DATE
+        boolean IS_WORKING_DAY
     }
     CONTRACT_SLA {
-        string id_contrat PK
-        string client
-        number sla_cible_jours
-        number penalite_jour_eur
-    }
-    TRANSITS {
-        string id_liaison PK
-        string site_depart
-        string site_arrivee
-        number delai_transit_j
-    }
-    CALENDAR {
-        date date PK
-        string semaine
-        boolean jour_ouvre
+        string ID_CONTRAT PK
+        string DEMANDEUR
+        number SLA_CIBLE_JOURS
+        number PENALITE_JOUR_EUR
     }
 ```
 
 ---
 
-#### Option 2.B : Méso — Réparation par Atelier (`repair`)
-- **Granularité :** 1 ligne = 1 réparation module par atelier `repair (type, visit, shop, start, end)`.
-- **Transits logistiques :** Navettes physiques mesurées via `durée des transits (shop, shop, length)`.
-- **Hypothèses de simplification vs 2.C (Micro) :**
-  - **Agrégation au niveau de l'atelier :** La réparation d'un module (ex: Turbine HP) est traitée comme un bloc homogène dans l'atelier, sans modéliser la succession des postes (démontage, usinage, ressuage, remontage).
-  - **Kits de réparation dédiés (Repair Kits) :** L'approvisionnement est géré sous forme de *Repair Kits* complets rattachés à la gamme d'atelier, sans descendre à la pièce ou consommable unitaire pointé au poste.
-  - **Non-modélisation des shifts et vacations :** Les délais sont comptabilisés en jours ouvrés atelier sans prise en compte des plannings de shift horaires (équipes 2x8 / 3x8).
-- **Modélisation relationnelle Canvas :**
-  - **Fait central :** `repair` (`id_réparation`, `id_visite`, `id_atelier`, `type_réparation_saisi`, `date_début [start]`, `date_fin`, `id_kit_module`, `tat_atelier_j`, `durée_navette_j`).
-  - **Dimensions liées (1:N) :** `visit` (moteur, priorité, client), `shop` (nom, spécialités, postes), `durée des transits` (atelier_source, atelier_dest, délai_transit_j), `calendar`, `repair_kits` (kits selon type de réparation).
+#### 🎯 Option 2.B : Niveau Interventions & Planification d'Atelier (Granularité Fine)
+- **Granularité :** 1 ligne = 1 intervention unitaire sur une **station de réparation** (`STATION_ASSIGNEE`) située dans un **shop** (`SHOP_ASSIGNE`).
+- **👥 Personas Cibles :** `SHPL`, `FTM`, `NTPL`, `EOWN`, `DGOV`.
+- **🧩 Dimensions Clés :** `ID_DEMANDE` + `ID_INTERVENTION` + `STATION_ASSIGNEE` (`S-XXX-YY`) + `SHOP_ASSIGNE` (`S-XXX`) + `TIMEPROFILE` (Semaine ou Jour).
+- **📊 Usage SAP IBP & Métier :**
+  - Stockage des dates réelles de démarrage, d'attente et de clôture de chaque opération unitaire.
+  - Ordonnancement fin par station (`S-XXX-YY`) et équilibrage de charge au sein de chaque shop (`S-XXX`).
+  - Suivi des files d'attente (`Shop Queue Time`) et des gammes standards constructeur (`Estimated Repair Duration`).
 
-##### 📋 Dictionnaire de Données — Option 2.B (Méso)
+##### 📋 Dictionnaire de Données — Option 2.B (Interventions, Stations & Ateliers)
 
 | Table & Champ | Type / Format | Cardinalité | Rôle & Description | Exemple Concret |
 | :--- | :--- | :--- | :--- | :--- |
-| **`REPAIR`** *(Table de faits)*| | **Fait central** | **1 ligne = 1 passage/réparation de module dans un atelier spécifique** | `REP-2026-0881` |
-| ↳ `id_repair` | `String` (`REP-xxxx-xxxx`)| **PK** (1:1) | Identifiant unique de l'ordre de réparation modulaire | `"REP-2026-0881"` |
-| ↳ `id_visite` | `String` (`D-xxxxx`) | **FK** (N:1 → `VISIT`) | Visite moteur globale chapeautant cette opération | `"D-09842"` |
-| ↳ `id_shop` | `String` (`SHP-xx`) | **FK** (N:1 → `SHOP`) | Atelier spécialisé réalisant la révision | `"SHP-VIL-HP"` (Shop Haute Pression) |
-| ↳ `type_repair` | `String` | Type d'intervention | Gamme d'intervention appliquée sur le module | `"Turbine HP"` / `"Compresseur BP"` |
-| ↳ `date_debut` | `Date` (`YYYY-MM-DD`) | Attribut temporel (`start`) | Date d'entrée effective du module dans l'atelier | `"2026-03-05"` |
-| ↳ `date_fin` | `Date` (`YYYY-MM-DD`) | Attribut temporel (`end`) | Date de fin de contrôle et sortie d'atelier | `"2026-03-14"` |
-| ↳ `id_kit_module` | `String` (`Pxxxxx`) | **FK** (N:1 → `REPAIR_KITS`)| Kit de réparation consommables dédié à ce type d'atelier (*Repair Kit*) | `"P02440"` |
-| ↳ `tat_atelier_j` | `Float` (Jours) | Métrique opérationnelle | Temps de passage net en atelier d'usinage/réparation | `9.0` jours |
-| ↳ `duree_navette_j`| `Float` (Jours) | Métrique logistique | Durée réelle de la navette physique vers le prochain atelier | `1.5` jours |
-| **`SHOP`** *(Dimension)* | | **1:N** avec `REPAIR` | **Référentiel des centres de compétence et ateliers industriels** | Atelier Aubes & Disques |
-| ↳ `id_shop` | `String` (`SHP-xx`) | **PK** (1:1) | Code unique de l'atelier de production | `"SHP-MON-BP"` (Shop Montereau BP) |
-| ↳ `nom` | `String` | Libellé usuel | Dénomination claire de l'unité de production | `"Atelier Modules BP Montereau"` |
-| ↳ `type_of_repairs`| `String` (CSV / Tags) | Attribut de compétence | Familles techniques prises en charge par l'atelier | `"Chambre Combustion, Turbine BP"` |
-| ↳ `stations` | `String` (Liste de codes)| Capacité installée | Postes de travail techniques rattachés à cet atelier | `"USI-01, USI-02, CND-01"` |
-| **`TRANSITS`** *(Dimension)* | | **1:N** avec `REPAIR` | **Matrice logistique dynamique des transferts physiques inter-ateliers** | Navette VIL ↔ MON |
-| ↳ `id_liaison` | `String` (`TR-xxx-xxx`) | **PK** (1:1) | Identifiant de la liaison inter-ateliers | `"TR-VIL-MON"` |
-| ↳ `shop_source` | `String` (`SHP-xx`) | Dimension origine | Atelier d'expédition amont | `"SHP-VIL-HP"` |
-| ↳ `shop_dest` | `String` (`SHP-xx`) | Dimension destination | Atelier récepteur aval | `"SHP-MON-BP"` |
-| ↳ `duree_transit_j`| `Float` (Jours) | Mesure logistique (*length*)| Durée moyenne constatée de transport par navette | `1.2` jours |
-| **`REPAIR_KITS`** *(Dimension)* | | **1:N** avec `REPAIR` | **Disponibilité des kits de réparation par gamme de module** | Kit Réparation HP |
-| ↳ `id_kit_module` | `String` (`Pxxxxx`) | **PK** (1:1) | Part number du sous-ensemble / kit de révision modulaire | `"P02440"` |
-| ↳ `type_repair` | `String` | Clé d'affectation | Gamme de réparation consommatrice de ce kit | `"Turbine HP"` |
-| ↳ `disponibilite_pct`| `Float` (`%`) | Mesure d'approvisionnement | Pourcentage de complétude du kit à l'entrée atelier | `91.0` % |
-| ↳ `confiance_appro_j`| `Float` (± Jours) | Indice de fiabilité | Aléa sur le réapprovisionnement des pièces critiques du kit | `± 1.5` jours |
-| **`VISIT`** *(Dimension parente)*| | **1:N** avec `REPAIR` | **Contexte général de la visite moteur parente** | Visite ESN-884210 |
-| ↳ `id_visit` | `String` (`D-xxxxx`) | **PK** (1:1) | Clé de la visite parente | `"D-09842"` |
-| ↳ `id_moteur` | `String` (`ESN-xxxxxx`) | Attribut d'identification | Moteur en cours de révision | `"ESN-884210"` |
-| ↳ `priorite` | `String` (`Enum`) | Priorité d'ordonnancement | Priorité globale répercutée sur les ateliers | `"AOG Critique"` |
+| **`MDT_INTERVENTION`** | | **Fait / MDT Central** | **1 ligne = 1 intervention unitaire sur station & shop** | `I-2026-000123-01` |
+| ↳ `ID_DEMANDE` | `String` (`D-YYYY-XXXXXX`)| **PK composite** (1/2)| Référence à l'en-tête de demande parente | `"D-2026-000123"` |
+| ↳ `ID_INTERVENTION` | `String` (`I-YYYY-XXXXXX-ZZ`)| **PK composite** (2/2)| Numéro d'opération unitaire dans le dossier | `"I-2026-000123-01"` |
+| ↳ `TYPE_REPARATION` | `String` (`Enum`) | Type de réparation | Gamme technique parmi les 8 types (`T-XXXXXX`) | `"T-AUBTUR"` |
+| ↳ `PRECISION_AUTRE` | `String` | Précision technique | Détail obligatoire si `TYPE_REPARATION` = "Autre" | `""` (ou `"Re-frettage spécifique"`) |
+| ↳ `STATION_ASSIGNEE` | `String` (`Enum`) | **FK vers STATION** | Station de réparation assignée (`S-XXX-YY`, 3-10 par shop) | `"S-MON-01"` |
+| ↳ `SHOP_ASSIGNE` | `String` (`Enum`) | **FK vers SHOP** | Shop industriel de rattachement (`S-XXX`, 10 sites) | `"S-MON"` |
+| ↳ `DONNEES_TECHNIQUES`| `String` (Lien / Réf) | Spécification Part-145| Référence ou URL du rapport d'inspection / procédure OEM | `"DOC-NDT-2026-442"` |
+| ↳ `ESTIMATED_REPAIR_DURATION` | `Float` (Heures) | **Key Figure** théorique| Durée standard de gamme estimée selon le type de réparation | `18.5` heures |
+| ↳ `SHOP_QUEUE_TIME` | `Float` (Heures) | **Key Figure** dynamique| Temps d'attente file calculé selon la charge station et shop | `12.0` heures |
+| ↳ `INTERVENTION_TAT` | `Float` (Heures) | **Key Figure** totale | Somme attente + durée traitement + transits éventuels | `32.5` heures |
+| **`STATION`** | | **Dimension Postes** | **3 à 10 stations de réparation par shop (`S-XXX-YY`)** | `S-MON-01` |
+| ↳ `ID_STATION` | `String` (`S-XXX-YY`) | **PK unique** | Identifiant de la station (`XXX` = shop, `YY` = numéro station) | `"S-MON-01"` |
+| ↳ `SHOP_ASSIGNE` | `String` (`S-XXX`) | **FK vers SHOP** | Shop parent hébergeant la station | `"S-MON"` |
+| ↳ `NOM_STATION` | `String` | Libellé équipement | Nom de la baie, banc ou machine de la station | `"Usinage Aubes HP Tour CN"` |
+| ↳ `TYPE_REPARATION` | `String` (`Enum`) | Spécialité | Type d'intervention opéré sur la station | `"T-AUBTUR"` |
+| ↳ `SEUIL_SATURATION` | `Float` (%) | Paramètre critique | Seuil d'alerte de saturation capacitaire | `85.0` % |
+| **`SHOP`** | | **Dimension Sites** | **10 ateliers industriels SAE (`S-XXX`)** | `S-MON` |
+| ↳ `SHOP_ASSIGNE` | `String` (`S-XXX`) | **PK unique** | Code trigramme du shop | `"S-MON"` |
+| ↳ `NOM_ATELIER` | `String` | Libellé site | Implantation géographique du centre MRO | `"Montereau"` |
+| ↳ `NB_STATIONS` | `Integer` | Nombre de postes | Volume de stations hébergées (3 à 10 stations) | `6` |
+| ↳ `CAPACITE_HEBDO` | `Float` (Heures) | Capacité nominale | Heures d'ouverture réseau disponibles par semaine | `1450.0` heures |
+
+##### ⚙️ Matrice Métier : 10 Shops, 3 à 10 Stations par Shop & 8 Types de Réparation
+- **Règles architecturales du réseau SAE :**
+  - Une intervention a lieu sur une **station de réparation** (`S-XXX-YY`) qui se trouve dans un **shop** (`S-XXX`).
+  - Chaque shop gère entre **3 et 10 stations** de réparation et entre **2 et 4 types de réparation**.
+  - Il existe exactement **8 types de réparation** (`T-XXXXXX`) et chaque type concerne **2 à 3 modèles de moteur** (sur les 6 flottes).
+
+| Shop SAE | Nom / Implantation | Nb Stations | Nomenclature Stations (S-XXX-YY) | Types de Réparation Gérés |
+| :--- | :--- | :---: | :--- | :--- |
+| `S-VIL` | Villaroche | 8 | `S-VIL-01` à `S-VIL-08` | `T-EQUROT`, `T-COMHOT`, `T-INSCND`, `T-MAJLOU` |
+| `S-MON` | Montereau | 6 | `S-MON-01` à `S-MON-06` | `T-AUBTUR`, `T-COMHOT`, `T-FODREP` |
+| `S-CHL` | Châtellerault | 5 | `S-CHL-01` à `S-CHL-05` | `T-MAJLOU`, `T-REVCAR`, `T-INSCND` |
+| `S-BRU` | Bruxelles | 6 | `S-BRU-01` à `S-BRU-06` | `T-INSCND`, `T-BANESS`, `T-FODREP` |
+| `S-TLS` | Toulouse | 5 | `S-TLS-01` à `S-TLS-05` | `T-MAJLOU`, `T-BANESS`, `T-EQUROT` |
+| `S-SQY` | Saint-Quentin | 4 | `S-SQY-01` à `S-SQY-04` | `T-EQUROT`, `T-REVCAR` |
+| `S-GEN` | Gennevilliers | 4 | `S-GEN-01` à `S-GEN-04` | `T-AUBTUR`, `T-REVCAR` |
+| `S-BDX` | Bordeaux | 3 | `S-BDX-01` à `S-BDX-03` | `T-FODREP`, `T-MAJLOU` |
+| `S-LGG` | Liège | 4 | `S-LGG-01` à `S-LGG-04` | `T-BANESS`, `T-INSCND` |
+| `S-CRE` | Le Creusot | 3 | `S-CRE-01` à `S-CRE-03` | `T-AUBTUR`, `T-COMHOT` |
 
 ```mermaid
 erDiagram
-    VISIT ||--o{ REPAIR : "visite moteur"
-    SHOP ||--o{ REPAIR : "atelier spécialisé"
-    TRANSITS ||--o{ REPAIR : "navette inter-ateliers"
-    CALENDAR ||--o{ REPAIR : "date début / fin"
-    REPAIR ||--o{ REPAIR_KITS : "kits selon type de réparation"
+    MDT_MAINTENANCE_REQUEST ||--o{ MDT_INTERVENTION : "contient (ID_DEMANDE)"
+    SHOP ||--o{ STATION : "contient 3 a 10 stations (1:N)"
+    STATION ||--o{ MDT_INTERVENTION : "accueille intervention (1:N)"
+    SHOP ||--o{ MDT_INTERVENTION : "shop de rattachement (1:N)"
+    TIMEPROFILE ||--o{ MDT_INTERVENTION : "horodatage (Jour / Semaine)"
+    DUREE_STANDARDS ||--o{ MDT_INTERVENTION : "duree estimee (type)"
 
-    REPAIR {
-        string id_repair PK "1 ligne = 1 réparation module"
-        string id_visite FK "visit"
-        string id_shop FK "atelier"
-        string type_repair "Gamme saisie (HP, BP...)"
-        date date_debut "start"
-        date date_fin "end"
-        string id_kit_module FK "repair_kits"
-        number tat_atelier_j "Délai atelier (j)"
-        number duree_navette_j "Transit inter-ateliers"
+    MDT_INTERVENTION {
+        string ID_DEMANDE PK "Cle composite 1/2"
+        string ID_INTERVENTION PK "Cle composite 2/2"
+        string TYPE_REPARATION "8 types (T-XXXXXX)"
+        string PRECISION_AUTRE "Detail si type Autre"
+        string SHOP_ASSIGNE FK "Shop (S-XXX)"
+        string STATION_ASSIGNEE FK "Station (S-XXX-YY)"
+        string DONNEES_TECHNIQUES "Ref / URL rapport"
+        number ESTIMATED_REPAIR_DURATION "Duree standard estimee (h)"
+        number SHOP_QUEUE_TIME "Temps attente file (h)"
+        number INTERVENTION_TAT "TAT unitaire cumule (h)"
     }
-    VISIT {
-        string id_visit PK "1 ligne = 1 visite moteur"
-        string id_moteur FK
-        string priorite "AOG / Normal"
+    MDT_MAINTENANCE_REQUEST {
+        string ID_DEMANDE PK "Dossier parent"
+        string DEMANDEUR "Compagnie donneuse ordre"
+        string ENGINE_TYPE "Modele exact reacteur"
+        string NIVEAU_URGENCE_GLOBAL "Criticite (AOG)"
     }
     SHOP {
-        string id_shop PK "Centre de réparation"
-        string nom
-        string type_of_repairs "Spécialités"
-        string stations "Postes rattachés"
+        string SHOP_ASSIGNE PK "Site SAE (S-XXX, 10 sites)"
+        string NOM_ATELIER "Montereau, Villaroche, etc."
+        string ZONE_GEO "Zone Europe / France"
+        number NB_STATIONS "3 a 10 stations par shop"
+        number CAPACITE_HEBDO "Capacite globale shop"
     }
-    TRANSITS {
-        string id_liaison PK
-        string shop_source
-        string shop_dest
-        number duree_transit_j "durée des transits (length)"
+    STATION {
+        string ID_STATION PK "Format S-XXX-YY (3 a 10 / shop)"
+        string SHOP_ASSIGNE FK "Shop parent (S-XXX)"
+        string NOM_STATION "Nom machine / baie"
+        string TYPE_REPARATION "Specialite (1 des 8 types)"
+        number SEUIL_SATURATION "Seuil alerte 85%"
     }
-    CALENDAR {
-        date date PK
-        string semaine
-        boolean jour_ouvre
+    DUREE_STANDARDS {
+        string ENGINE_TYPE PK "CFM56, LEAP, GE90"
+        string TYPE_REPARATION PK "8 types de reparation"
+        number DUREE_STANDARD_H "Temps gamme constructeur"
     }
-    REPAIR_KITS {
-        string id_kit_module PK "Part Number Kit Module"
-        string type_repair "Lié par type de réparation"
-        number disponibilite_pct "Dispo %"
-        number confiance_appro_j "Intervalle +/-"
+    TIMEPROFILE {
+        string ID_PERIOD PK "Jour / Semaine"
+        date DATE_DEBUT "Debut planification"
+        date DATE_FIN "Fin planification"
     }
 ```
 
 ---
 
-#### Option 2.C : Micro — Tâche sur Poste (`task`)
-- **Granularité :** 1 ligne = 1 tâche technique pointée sur poste `task (visit, repair, station, type)`.
-- **Référentiel des durées théoriques :** Seule option disposant de la table de référence `durée des tâches (type engine, type task, length)`.
-- **Modélisation relationnelle Canvas :**
-  - **Fait central :** `task` (`id_pointage_tâche`, `id_visite`, `id_réparation`, `id_poste`, `opération_saisie`, `horodatage_début [start]`, `horodatage_fin`, `id_composant_task`, `durée_pointée_h`).
-  - **Dimensions liées (1:N) :** `durée des tâches` (type engine, type task, durée_gamme_h), `station` (atelier, spécialités, seuil saturation 85%), `capacity` (taux d'occupation réel, heures dispo), `schedule` (créneau, shift), `engine_parts` (composant unitaire au poste).
+### 3. 📊 Key Figures (Indicateurs Clés Associés)
 
-##### 📋 Dictionnaire de Données — Option 2.C (Micro)
+Le modèle relie les MDTs et les Planning Levels aux Key Figures de calcul suivantes :
 
-| Table & Champ | Type / Format | Cardinalité | Rôle & Description | Exemple Concret |
-| :--- | :--- | :--- | :--- | :--- |
-| **`TASK`** *(Table de faits)* | | **Fait central** | **1 ligne = 1 pointage unitaire d'opération sur un poste de travail (MES)** | `TSK-109482` |
-| ↳ `id_task` | `String` (`TSK-xxxxxx`) | **PK** (1:1) | Numéro unique d'événement de pointage atelier | `"TSK-109482"` |
-| ↳ `id_visite` | `String` (`D-xxxxx`) | **FK** (N:1 → `VISIT`) | Visite globale de rattachement | `"D-09842"` |
-| ↳ `id_repair` | `String` (`REP-xxxx-xxxx`)| **FK** (N:1 → `REPAIR`) | Réparation modulaire parente | `"REP-2026-0881"` |
-| ↳ `id_station` | `String` (`STN-xx`) | **FK** (N:1 → `STATION`) | Poste de travail / machine où est réalisée la tâche | `"STN-USI-04"` (Fraiseuse 5-axes) |
-| ↳ `operation` | `String` (`Enum`) | Type d'intervention technique | Nature physique de l'opération technique pointée | `"Usinage Aubes"`, `"Contrôle CND Ressuage"` |
-| ↳ `horodatage_debut`| `DateTime` (`ISO-8601`) | Pointage temps (`start`) | Début effectif de travail par le technicien | `"2026-03-06T08:15:00Z"` |
-| ↳ `horodatage_fin` | `DateTime` (`ISO-8601`) | Pointage temps (`end`) | Fin effective de travail et libération du poste | `"2026-03-06T14:45:00Z"` |
-| ↳ `id_composant` | `String` (`Pxxxxx`) | **FK** (N:1 → `ENGINE_PARTS`)| Pièce ou consommable unitaire monté au poste | `"P09931"` |
-| ↳ `duree_pointee_h` | `Float` (Heures) | Métrique d'effort net | Heures effectives de travail productif enregistrées | `6.5` heures |
-| **`STATION`** *(Dimension)* | | **1:N** avec `TASK` | **Référentiel des machines, bancs et postes de travail unitaires** | Poste Usinage 5-axes |
-| ↳ `id_station` | `String` (`STN-xx`) | **PK** (1:1) | Identifiant unique de la station de travail | `"STN-USI-04"` |
-| ↳ `id_shop` | `String` (`SHP-xx`) | **FK** (N:1 → `SHOP`) | Atelier d'appartenance hiérarchique | `"SHP-VIL-HP"` |
-| ↳ `type_of_repairs`| `String` | Capacité technique | Gammes opérables sur cette machine | `"Usinage aubes titane & disques"` |
-| ↳ `seuil_saturation`| `Float` (`85.0%`) | Règle de gestion / Alerte | Seuil d'engorgement critique déclenchant un goulot | `85.0` % |
-| **`DUREE_TACHES`** *(Dimension)*| | **1:N** avec `TASK` | **Gamme standard et temps alloués théoriques constructeur** | Temps de gamme CFM56 / Usinage |
-| ↳ `type_engine` | `String` | **PK composite** (1/2) | Famille de moteur concernée | `"LEAP-1A"` |
-| ↳ `type_task` | `String` | **PK composite** (2/2) | Libellé standard de l'opération de gamme | `"Usinage Aubes"` |
-| ↳ `duree_gamme_h` | `Float` (Heures) | Standard théorique (*length*)| Temps standard alloué par le bureau des méthodes | `4.5` heures |
-| **`CAPACITY`** *(Dimension)* | | **1:1** avec `STATION` | **Suivi de la disponibilité machine et charge instantanée** | Charge journalière machine |
-| ↳ `id_station` | `String` (`STN-xx`) | **PK** (1:1) | Poste évalué | `"STN-USI-04"` |
-| ↳ `taux_occupation_reel`| `Float` (`%`) | Métrique d'utilisation | Taux d'occupation mesuré sur le cycle d'équipe | `92.4` % (Goulot actif) |
-| ↳ `heures_dispo` | `Float` (Heures) | Capacité résiduelle | Heures ouvrables restantes sur la vacation | `1.5` h disponibles |
-| **`SCHEDULE`** *(Dimension)* | | **1:N** avec `STATION` | **Organisation du travail et vacations d'équipes (shifts)** | Shift 2x8 Matin |
-| ↳ `id_station` | `String` (`STN-xx`) | **FK** (N:1 → `STATION`) | Poste concerné par le créneau | `"STN-USI-04"` |
-| ↳ `creneau` | `String` (`HH:MM-HH:MM`)| Plage horaire | Fenêtre temporelle d'ouverture | `"06:00 - 14:00"` |
-| ↳ `shift` | `String` (`Enum`) | Organisation d'équipe | Désignation du shift | `"Matin (2x8)"` / `"Nuit"` |
-| **`ENGINE_PARTS`** *(Dimension)* | | **1:N** avec `TASK` | **Disponibilité des références unitaires au bac poste** | Fraise carbure spécifique |
-| ↳ `id_piece_pn` | `String` (`Pxxxxx`) | **PK** (1:1) | Numéro de nomenclature unitaire | `"P09931"` |
-| ↳ `id_station` | `String` (`STN-xx`) | **FK** de localisation | Poste consommateur de la référence | `"STN-USI-04"` |
-| ↳ `disponibilite_pct`| `Float` (`%`) | Disponibilité locale | Taux de présence en bac de bord de ligne | `98.0` % |
-| ↳ `confiance_appro_j`| `Float` (± Jours) | Délai de réappro | Temps de réapprovisionnement magasin central | `± 0.5` jour |
+#### 📥 Indicateurs d'Ordre & État (Pilotage Dossier) :
+1. **`Intervention Count`** :
+   - *Définition :* Nombre d'interventions actives rattachées au dossier de visite.
+   - *Formule :* `COUNT(ID_INTERVENTION)` groupé par `ID_DEMANDE`.
+   - *Usage :* Dimensionnement de la complexité du chantier moteur et suivi de complétude.
+2. **`Urgency Weight`** :
+   - *Définition :* Poids numérique associé au `NIVEAU_URGENCE_GLOBAL` pour prioriser le séquencement dans l'algorithme d'allocation capacitaire.
+   - *Barème standard :* `Haute / AOG = 3.0`, `Moyenne = 2.0`, `Basse = 1.0`.
+   - *Usage :* Tri prioritaire des files d'attente machines et réservation prioritaire de baies.
 
-```mermaid
-erDiagram
-    VISIT ||--o{ TASK : "visite moteur"
-    REPAIR ||--o{ TASK : "réparation parente"
-    STATION ||--o{ TASK : "poste de réparation"
-    DUREE_TACHES ||--o{ TASK : "durée théorique (type engine + type task)"
-    SHOP ||--o{ STATION : "atelier"
-    CAPACITY ||--o{ STATION : "capacité / occupation"
-    SCHEDULE ||--o{ STATION : "calendrier des réparations"
-    ENGINE_PARTS }o--|| TASK : "composant pointé au poste"
-
-    TASK {
-        string id_task PK "1 ligne = 1 tâche unitaire"
-        string id_visite FK
-        string id_repair FK
-        string id_station FK "poste"
-        string operation "type task"
-        date horodatage_debut "start"
-        date horodatage_fin "end"
-        string id_composant FK "engine_parts"
-        number duree_pointee_h "Durée réelle (h)"
-    }
-    STATION {
-        string id_station PK "Poste de réparation"
-        string id_shop FK "atelier"
-        string type_of_repairs
-        number seuil_saturation "85 %"
-    }
-    DUREE_TACHES {
-        string type_engine PK
-        string type_task PK
-        number duree_gamme_h "Durée théorique (length)"
-    }
-    CAPACITY {
-        string id_station PK
-        number taux_occupation_reel
-        number heures_dispo
-    }
-    SCHEDULE {
-        string id_station PK
-        string creneau
-        string shift
-    }
-    ENGINE_PARTS {
-        string id_piece_pn PK "Part Number"
-        string id_station FK "Composant unitaire au poste"
-        number disponibilite_pct "Dispo %"
-        number confiance_appro_j "Intervalle +/-"
-    }
-```
+#### ⏱️ Indicateurs de Temps & Charge par Atelier :
+1. **`Estimated Repair Duration`** :
+   - *Définition :* Durée standard théorique estimée pour le `TYPE_REPARATION` et l'`ENGINE_TYPE` retenus.
+   - *Source :* Barème méthode constructeur issu de la table de référence dimensionnelle.
+2. **`Shop Queue Time`** :
+   - *Définition :* Temps d'attente estimé dans le `SHOP_ASSIGNE`, calculé en fonction de la charge instantanée et de l'engorgement de l'atelier face au seuil critique (85%).
+   - *Formule :* `Shop_Queue_Time = f(Taux_Occupation_Shop, Seuil_Saturation)`.
+3. **`Intervention TAT`** :
+   - *Définition :* Turn Around Time unitaire de l'opération d'atelier.
+   - *Formule :* `Intervention_TAT = Shop_Queue_Time + Estimated_Repair_Duration + Delai_Transit_Eventuel`.
+4. **`Total Engine TAT (Dossier)`** :
+   - *Définition :* Délai global consolidé de la visite moteur pour le client.
+   - *Formule :* $\max(\text{Intervention\_TAT})$ pour les opérations menées en parallèle, ou $\sum(\text{Intervention\_TAT})$ pour les opérations menées sur le chemin critique en série.
 
 ---
 
@@ -409,96 +357,98 @@ erDiagram
 ## Étape 3 : TAT
 
 > **Question de cadrage :** Quel niveau de complexité mathématique et d'hypothèse adopter ?  
-> **En-tête de l'interface :** Étape 3 : Choisir la méthode de calcul du délai (TAT) (`📐 Méthode & Rigueur de Calcul`)
+> **En-tête de l'interface :** Étape 3 : Choisir la méthode de calcul du délai (TAT)
 
 ### Les 4 Méthodes de Calcul du TAT :
-1. **Option 3.A : Délais théoriques de traitement**
-   - *Principe :* Somme arithmétique des temps de gammes standards constructeur et des forfaits logistiques.
-   - *Formule DAX :* `SUMX(FAIT, FAIT[Duree_Standard] + FAIT[Transit_Forfait])`
-   - ⚠️ **Règle stricte :** Indisponible en Granularité 2.B (bascule automatique sur 3.B).
-2. **Option 3.B : Table des délais moyens (5%, 95%, médian)**
+1. **Option 3.A : S&OP (D-SOP)**
+   - *Principe :* Somme des durées de gammes standards (`ESTIMATED_REPAIR_DURATION`) et des forfaits de transit selon la granularité retenue en Étape 2 (`MDT_MAINTENANCE_REQUEST` ou `MDT_INTERVENTION`).
+   - *Formule DAX :* `SUMX(MDT_INTERVENTION, [ESTIMATED_REPAIR_DURATION] + [TRANSIT_BUFFER])`
+2. **Option 3.B : Projection statistique (D-STA)**
    - *Principe :* Distribution empirique réelle ($P_5, P_{50}, P_{95}$) mesurée sur l'historique de passage.
    - *Formule DAX :* `PERCENTILEX.INC(FAIT, FAIT[Duree_Reelle], 0.50)`
-3. **Option 3.C : Délais selon le taux d'occupation atelier**
+3. **Option 3.C : Projection capacitaire (D-CAP)**
    - *Principe :* Modélisation de l'engorgement des files d'attente à l'approche du seuil critique (85%).
    - *Formule DAX :* `DIVIDE(Temps_Usinage, 1 - RELATED(DIM_SITE[Taux_Charge]))`
-4. **Option 3.D : Modélisation avancée**
+4. **Option 3.D : Modélisation avancée (D-ML)**
    - *Principe :* Simulation dynamique probabiliste multi-factorielle contextuelle.
    - *Formule DAX :* `SIMULATE_TAT_ADVANCED(FAIT, CONTEXT)`
 
 ### Extraits des Tables Dynamiques d'Atelier (Croisement Granularité × TAT)
 
-#### Extrait A : Demande Macro (visit) × Table des Délais Moyens (3.B)
+#### Extrait A : Consolidation Demande (MDT_MAINTENANCE_REQUEST) × Projection Statistique (3.B D-STA)
 ```text
-| id_visit       | engine          | priority | délai à 5% (Opt) | délai médian (50%) | délai à 95% (Pess) | écart_type |
-| :------------- | :-------------- | :------- | :--------------- | :----------------- | :----------------- | :--------- |
-| VISIT-2024-089 | CFM56-7B (AFR)  | AOG      | 14.5 j           | 18.2 j             | 27.0 j             | 3.8 j      |
-| VISIT-2024-094 | LEAP-1A (DLH)   | Standard | 18.0 j           | 22.5 j             | 34.5 j             | 4.2 j      |
-| VISIT-2024-102 | CFM56-5B (RYR)  | Standard | 11.0 j           | 14.0 j             | 21.0 j             | 2.5 j      |
+| ID_DEMANDE     | DEMANDEUR       | ENGINE_TYPE | P05_OPT | P50_MEDIAN | P95_PESS | TOTAL_ENGINE_TAT |
+| :------------- | :-------------- | :---------- | :------ | :--------- | :------- | :--------------- |
+| D-2026-000123  | Air France      | LEAP-1A26   | 15.0 j  | 21.5 j     | 32.0 j   | 21.5 j           |
+| D-2026-000124  | Lufthansa       | CFM56-5B    | 11.5 j  | 16.0 j     | 23.5 j   | 16.0 j           |
+| D-2026-000125  | Delta Air Lines | CFM56-7B    | 18.0 j  | 24.5 j     | 36.0 j   | 24.5 j           |
 ```
-*Formule DAX associée :* `TAT_Median = PERCENTILEX.INC(visit, [tat_days], 0.50)`
+*Formule DAX associée :* `Total_Engine_TAT_Median = PERCENTILEX.INC(MDT_MAINTENANCE_REQUEST, [TOTAL_ENGINE_TAT], 0.50)`
 
-#### Extrait B : Réparation Méso (repair) × Délais selon Taux d'Occupation (3.C)
+#### Extrait B : Lignes d'Intervention (MDT_INTERVENTION) × S&OP (3.A D-SOP)
 ```text
-| repair_id    | type            | shop       | taux_occupation_shop | tps_atelier_hist_j | attente_saturation_j | tat_total_shop |
-| :----------- | :-------------- | :--------- | :------------------- | :----------------- | :------------------- | :------------- |
-| REP-701-AUB  | Aubes HP        | Montereau  | 72 % (Normal)        | 6.5 j              | + 1.2 j              | 7.7 j          |
-| REP-701-COM  | Compresseur BP  | Villaroche | 86 % (Tendu)         | 12.0 j             | + 4.8 j              | 16.8 j         |
-| REP-701-TST  | Banc d'Essai    | Bruxelles  | 94 % (Goulot 🚨)     | 2.5 j              | + 7.4 j              | 9.9 j ⚠️       |
+| ID_DEMANDE     | ID_INTERVENTION  | TYPE_REPARATION | SHOP_ASSIGNE | ESTIMATED_REPAIR_DURATION | SHOP_QUEUE_TIME | INTERVENTION_TAT |
+| :------------- | :--------------- | :-------------- | :----------- | :------------------------ | :-------------- | :--------------- |
+| D-2026-000123  | I-2026-000123-01 | T-INSCND        | S-MON        | 18.5 h                    | + 12.0 h        | 30.5 h           |
+| D-2026-000123  | I-2026-000123-02 | T-AUBTUR        | S-MON        | 28.0 h                    | + 8.5 h         | 36.5 h           |
+| D-2026-000123  | I-2026-000123-03 | T-EQUROT        | S-VIL        | 14.0 h                    | + 4.0 h         | 18.0 h           |
 ```
-*Formule DAX associée :* `TAT_Repair_Charge = [shop_history_tat] / (1 - RELATED(shop[taux_occupation]))`
-
-#### Extrait C : Tâche Micro (task) × Délais Théoriques (3.A)
-```text
-| task_id     | type engine | type task         | station       | durée des tâches (length) | transit_buffer_h | cycle_total_h |
-| :---------- | :---------- | :---------------- | :------------ | :------------------------ | :--------------- | :------------ |
-| TASK-901-01 | CFM56-7B    | Tournage Carter   | USI-04 (VIL)  | 4.5 h                     | + 1.0 h          | 5.5 h         |
-| TASK-901-02 | LEAP-1A     | Ressuage Chimique | CND-02 (MON)  | 2.0 h                     | + 0.5 h          | 2.5 h         |
-| TASK-901-03 | LEAP-1B     | Équilibrage Rotor | EQU-01 (VIL)  | 3.5 h                     | + 0.5 h          | 4.0 h         |
-```
-*Formule DAX associée :* `Duree_Totale_Theorique = SUMX('durée des tâches', [length])`
+*Formule DAX associée :* `Intervention_TAT = SUMX(MDT_INTERVENTION, [ESTIMATED_REPAIR_DURATION] + [SHOP_QUEUE_TIME])`
 
 ---
 
 ## Étape 4 : Délai
 
-> **Question de cadrage :** Quels visuels utiliser pour piloter les délais et les engagements clients ?  
-> **En-tête de l'interface :** Étape 4 : Sélectionner les visuels pour le Délai (TAT) (`📊 Dataviz & Conception Graphique`)
-> **Rendu Chart.js (Étape 4) :** Les cartes d'options disposent d'un panneau Chart.js à droite (titres et sous-titres avec description explicite de la mesure et des axes X et Y, canvas `#step-4-canvas`). Les valeurs graphiques sont affichées par défaut sur chaque point, barre ou tranche via `chartjs-plugin-datalabels` (sans nécessiter de survol). Les données sont générées côté client (PRNG seedé `maestro_seed`, persistant) sur la base des libellés de `data.json` avec 10 sites Safron préfixés (`BE-`, `FR-`) et les flottes de moteurs (*CFM56-7B, CFM56-5B, LEAP-1A, LEAP-1B, GE90-115B, M88-2*).
+> **Question de cadrage :** Quels visuels utiliser pour piloter les délais des demandes de maintenance (MDT_MAINTENANCE_REQUEST) et les engagements clients ?  
+> **En-tête de l'interface :** Étape 4 : Sélectionner les visuels pour le Délai (TAT)  
+> **Rendu Chart.js (Étape 4) :** Les cartes d'options disposent d'un panneau Chart.js à droite (titres et sous-titres avec description explicite de la mesure et des axes X et Y, canvas `#step-4-canvas`). Les valeurs graphiques sont affichées par défaut sur chaque point, barre ou tranche via `chartjs-plugin-datalabels`. Les données reflètent le modèle macro des demandes de visite (`MDT_MAINTENANCE_REQUEST`) avec les flottes de moteurs (*CFM56-7B, CFM56-5B, LEAP-1A, LEAP-1B, GE90-115B, M88-2*).
 
-### Les 8 Graphiques Disponibles pour le Délai :
+### Les 9 Graphiques Disponibles pour le Délai :
 - **4.A : TAT Médian & Bornes 5%-95% par Moteur**  
-  *Titre & Sous-titre :* Mesure du TAT Médian et intervalle P5-P95 (j) | Axe X : Modèle Moteur (CFM56-7B, CFM56-5B, LEAP-1A, LEAP-1B, GE90-115B, M88-2) | Axe Y : Durée du TAT (jours).  
+  *Personas cibles :* FTM & NTPL.  
+  *Analytics SAC / IBP :* Boxplot / Barres de Dispersion (Percentiles P5-P50-P95) | Axes : X = `ENGINE_TYPE` (CFM56-7B, LEAP-1A, LEAP-1B) • Y = `TOTAL_ENGINE_TAT` (jours) | Mesures : `P50_MEDIAN_TAT`, `P5_LOWER_TAT`, `P95_UPPER_TAT`.  
   *Rendu :* Distribution statistique avec étiquettes de valeurs par défaut sur les médianes et bornes.  
-  *Usages associés :* `Pilotage`, `Gouvernance`.
-- **4.B : Décomposition du TAT par Site**  
-  *Titre & Sous-titre :* Décomposition du TAT cumulé (j) | Axe X : Site Industriel Safron (10 sites : FR-Villaroche, FR-Montereau, FR-Châtellerault, BE-Bruxelles, FR-Saint-Quentin, FR-Gennevilliers, FR-Bordeaux, FR-Toulouse, BE-Liège, FR-Le Creusot) | Axe Y : Jours cumulés (j).  
-  *Rendu :* Barres empilées (Attente, Réparation, Transit) avec affichage systématique des valeurs chiffrées en jours sur chaque segment.  
-  *Usages associés :* `Opérationnel`, `Pilotage`, `Logistique`.
+  *Badges personas & usages :* `NTPL`, `DMMG`, `FTM`, `DGOV`.
+- **4.B : Décomposition du TAT par Phase Dossier**  
+  *Personas cibles :* CSPM & DMMG.  
+  *Analytics SAC / IBP :* Stacked Bar Chart / Barres Empilées Horizontales | Axes : X = `ENGINE_TYPE` (CFM56-7B, CFM56-5B, LEAP-1A, LEAP-1B, GE90-115B) • Y = Mesures Cumulées (jours) | Mesures : `TEMPS_REVISION_ATELIER`, `ATTENTE_VALIDATION_APPRO`, `TRANSIT_LOGISTIQUE`.  
+  *Rendu :* Barres empilées décomposant le TAT global de la visite (Atelier, Attente appro/client, Transit) avec affichage systématique des valeurs en jours.  
+  *Badges personas & usages :* `CSPM`, `DMMG`, `EOWN`.
 - **4.C : Respect des Délais Contractuels par Client & Moteur**  
-  *Titre & Sous-titre :* Respect Contractuel et Taux de Dérive SLA (%) | Axe X : Compagnies Aériennes (Air France, Air China, EasyJet, Lufthansa, Delta Air Lines, Emirates, Singapore Airlines) | Axe Y1 : Jours (j) / Axe Y2 : Dérive SLA (%).  
+  *Personas cibles :* CSPM & FINC.  
+  *Analytics SAC / IBP :* Dual-Axis Combination Chart / Barres Groupées & Ligne % | Axes : X = `DEMANDEUR` (Air France, Lufthansa, Delta Air Lines, Ryanair), `ENGINE_TYPE` • Y1 = `TOTAL_ENGINE_TAT` (jours) • Y2 = `SLA_NON_RESPECT_PCT` (%) | Mesures : `SLA_CIBLE_JOURS`, `TOTAL_ENGINE_TAT`, `SLA_NON_RESPECT_PCT`.  
   *Rendu :* Barres groupées et courbe combinée avec étiquettes de valeurs actives en permanence.  
-  *Usages associés :* `Contractuel`, `Financier`.
-- **4.D : Tableau d'Alertes Nominatives**  
-  *Titre & Sous-titre :* Cartographie des Dossiers ESN et Niveaux d'Escalade | Axe X : Moteur / Compagnie | Axe Y : Retard Effectif (jours).  
-  *Rendu :* Répartition catégorisée (Conforme, En cours, Retard, AOG critique) avec badges et valeurs associées.  
-  *Usages associés :* `Opérationnel`, `Contractuel`, `Financier`.
+  *Badges personas & usages :* `CSPM`, `FTM`, `FINC`.
+- **4.D : Tableau d'Alertes Nominatives des Demandes**  
+  *Personas cibles :* EOWN & CSPM.  
+  *Analytics SAC / IBP :* Table Matrice SAC avec Seuils Conditionnels | Axes : Lignes = `MDT_MAINTENANCE_REQUEST` (`ID_DEMANDE`) • Colonnes = Attributs & Mesures | Dimensions : `ID_DEMANDE` (D-2026-XXXXXX), `DEMANDEUR`, `ENGINE_TYPE`, `NIVEAU_URGENCE_GLOBAL` | Mesures : `TOTAL_ENGINE_TAT`, `TAT_DELAY_DAYS`, `PENALITE_JOUR_EUR`, `TOTAL_PENALTIES`.  
+  *Rendu :* Répartition catégorisée (Conforme, En cours, Retard, AOG critique) avec badges et pénalités de retard.  
+  *Badges personas & usages :* `EOWN`, `CSPM`, `SHPL`.
 - **4.E : Cartes KPIs Synthétiques**  
-  *Titre & Sous-titre :* Indicateurs Phares Globaux | Métriques : TAT Moyen Réel (j), Taux SLA (%), En-cours Critique.  
-  *Rendu :* Cartes métriques scalaires et donut de répartition des statuts avec affichage direct des volumes.  
-  *Usages associés :* `Pilotage`, `Contractuel`.
-- **4.F : Barres vs Seuils Cibles P85**  
-  *Titre & Sous-titre :* Positionnement TAT vs Seuil Tolérance P85 (j) | Axe X : Durée constatée (j) | Axe Y : Modules & Types de Réparation.  
-  *Rendu :* Barres horizontales avec seuils cibles et valeurs exactes affichées en bout de barre.  
-  *Usages associés :* `Opérationnel`, `Gouvernance`.
+  *Personas cibles :* CSPM & Direction MRO.  
+  *Analytics SAC / IBP :* Numeric Multi-KPI Tile (Cartes Métriques SAC) | Axes : N/A (Indicateurs scalaires agrégés) | Dimensions : `PROGRAMME_MOTEUR`, `TIMEPROFILE` | Mesures : `AVG_TOTAL_ENGINE_TAT`, `SLA_COMPLIANCE_RATE`, `CRITICAL_WIP_DEVIATION`.  
+  *Rendu :* Cartes métriques scalaires et indicateurs de volume global des demandes avec affichage direct des valeurs.  
+  *Badges personas & usages :* `CSPM`, `NTPL`, `FTM`.
+- **4.F : Barres vs Seuils Cibles P85 par Flotte**  
+  *Personas cibles :* FTM & CSPM.  
+  *Analytics SAC / IBP :* Horizontal Bar Chart avec Reference Line (Seuil Cible P85) | Axes : X = `TOTAL_ENGINE_TAT` (jours) • Y = `ENGINE_TYPE` (CFM56-7B, CFM56-5B, LEAP-1A, LEAP-1B, GE90-115B) | Mesures : `ACTUAL_TOTAL_TAT`, `P85_CONTRACTUAL_THRESHOLD`.  
+  *Rendu :* Barres horizontales avec seuils cibles SLA P85 par motorisation et valeurs exactes en bout de barre.  
+  *Badges personas & usages :* `FTM`, `CSPM`, `DMMG`.
 - **4.G : Waterfall des Dérives TAT**  
-  *Titre & Sous-titre :* Décomposition Cumulative des Dérives TAT (j) | Axe X : Facteurs de Dérive / Étapes | Axe Y : Impact sur le Délai (jours).  
-  *Rendu :* Cascade de barres flottantes avec delta chiffré sur chaque composante de retard.  
-  *Usages associés :* `Contractuel`, `Financier`, `Gouvernance`.
-- **4.H : Jalons de Traversée (Gates)**  
-  *Titre & Sous-titre :* Durée de Traversée par Gate Industrielle (G1 à G3) | Axe X : Portes Industrielles | Axe Y : Durée de Passage (jours).  
-  *Rendu :* Chronogramme avec valeurs affichées par étape et chemin critique mis en exergue.  
-  *Usages associés :* `Opérationnel`, `Pilotage`, `Logistique`.
+  *Personas cibles :* FINC & CSPM.  
+  *Analytics SAC / IBP :* Waterfall / Cascade Chart (Bridge Analysis SAC) | Axes : X = `CAUSE_DERIVE` (SLA_CIBLE, WAITING_PARTS, UNPLANNED_CND, FAST_TRACK, TAT_REEL) • Y = `CUMULATIVE_ENGINE_TAT` (Variance Cumulée en jours) | Mesures : `TAT_VARIANCE_DAYS`, `CUMULATIVE_ENGINE_TAT`.  
+  *Rendu :* Cascade de barres flottantes avec delta chiffré sur chaque composante de retard au dossier.  
+  *Badges personas & usages :* `FINC`, `CSPM`, `DMMG`.
+- **4.H : Jalons de Traversée (Gates de la Demande)**  
+  *Personas cibles :* EOWN & SHPL.  
+  *Analytics SAC / IBP :* Milestone Timeline / Chronogramme de Traversée Part-145 | Axes : X = `TIMEPROFILE` (`DATE_DEBUT` / `DATE_FIN`) • Y = `GATE_JALON` (G1 Démontage, G2 Contrôle CND, G3 Remontage, G4 Banc Test & Clôture) | Mesures : `PLANNED_GATE_DURATION`, `ACTUAL_GATE_DURATION`, `CRITICAL_PATH_SLIPPAGE`.  
+  *Rendu :* Chronogramme avec valeurs affichées par jalon de traversée moteur et chemin critique mis en exergue.  
+  *Badges personas & usages :* `EOWN`, `SHPL`, `FTM`.
+- **4.I : Comparatif TAT Demande selon les 4 Méthodes vs Réel (DGOV)**  
+  *Personas cibles :* DGOV & FTM.  
+  *Analytics SAC / IBP :* Dual-Axis Clustered Bar & Deviation Line Chart | Axes : X = `METHODE_CALCUL` (D-SOP, D-STA, D-CAP, D-ML) • Y1 = `TAT_ESTIME_JOURS` • Y2 = `%_VARIANCE_VS_EFFECTIF` | Dimensions : `METHODE_CALCUL_TAT` (D-SOP, D-STA, D-CAP, D-ML), `STATUT_CERTITUDE` | Mesures : `TAT_CALCULE_JOURS`, `TAT_EFFECTIF_REF` (18.2 j), `ECART_RELATIF_PCT`, `DATA_COMPLETENESS_RATE` (93.4%).  
+  *Rendu :* Histogramme à barres comparant le TAT calculé de chaque méthode face au TAT effectif de référence, avec ligne de % d'écart et taux de complétude des saisies.  
+  *Badges personas & usages :* `DGOV`, `FTM`, `NTPL`.
 
 ### Illustrations Graphiques en Mermaid (Étape 4)
 
@@ -522,16 +472,16 @@ gantt
     Médian P50 (18.2j)                   :milestone, m3, 18, 0d
 ```
 
-#### 2. Décomposition du TAT par Site Industriel (Illustration 4.B)
+#### 2. Décomposition du TAT Dossier par Phase Macro (Illustration 4.B)
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#3b82f6'}}}%%
 xychart-beta
-    title "Décomposition du TAT (Jours) par Site Safron : Réparation vs Navette vs Attente"
-    x-axis ["FR-Villaroche", "FR-Montereau", "FR-Châtellerault", "BE-Bruxelles", "FR-St-Quentin", "FR-Gennevilliers", "FR-Bordeaux"]
-    y-axis "Jours cumulés" 0 --> 25
-    bar [11, 10, 12, 10, 11, 13, 12]
-    bar [3, 4, 2, 3, 2, 3, 2]
-    bar [4, 7, 3, 3, 4, 5, 4]
+    title "Décomposition du TAT Dossier (Jours) : Réparation vs Transit vs Attente"
+    x-axis ["CFM56-7B", "CFM56-5B", "LEAP-1A", "LEAP-1B", "GE90-115B"]
+    y-axis "Jours cumulés" 0 --> 30
+    bar [10, 9, 13, 12, 16]
+    bar [2, 2, 3, 3, 4]
+    bar [3, 3, 5, 4, 6]
 ```
 
 #### 3. Respect des Délais Contractuels vs Effectifs par Client (Illustration 4.C)
@@ -561,143 +511,208 @@ graph TD
     style F fill:#fee2e2,stroke:#dc2626,stroke-width:2px
 ```
 
+#### 5. Benchmark TAT Demande : 4 Méthodes vs Effectif Référence (Illustration 4.I)
+```mermaid
+%%{init: {'theme': 'base'}}%%
+xychart-beta
+    title "Benchmark TAT Demande : 4 Méthodes vs Effectif Référence (18.2 j)"
+    x-axis ["D-SOP", "D-STA", "D-CAP", "D-ML"]
+    y-axis "TAT (Jours)" 0 --> 30
+    bar [15.4, 17.8, 22.4, 18.6]
+    line [18.2, 18.2, 18.2, 18.2]
+```
+
 ---
 
 ## Étape 5 : Capacité
 
-> **Question de cadrage :** Sur quelle base dimensionner et projeter la capacité des ateliers ?  
-> **En-tête de l'interface :** Étape 5 : Choisir la méthode d'évaluation de la Capacité Atelier (`⚖️ Modélisation du Capacitaire`)
+> **Question de cadrage :** Sur quelle base dimensionner et projeter la capacité des interventions d'atelier sur chaque shop (`S-XXX`) ?  
+> **En-tête de l'interface :** Étape 5 : Choisir la méthode d'évaluation de la Capacité d'Intervention en Atelier
 
 ### Les 4 Méthodes d'Évaluation de la Capacité :
-1. **Option 5.A : Prévisions des Demandes (Plan S&OP)**
-   - *Principe :* Croisement des déposes annoncées par les compagnies à 3-6 mois et des créneaux de baies réservés.
-   - *Formule DAX :* `Charge_Prevue_SOP = SUM(prevision_visit[visites_fermes]) / [capacité_mensuelle]`
-2. **Option 5.B : Demandes Effectives à l'Instant (WIP Réel)**
-   - *Principe :* Photographie exacte des moteurs et lots physiquement présents sur plancher et pointés en direct.
-   - *Formule DAX :* `Taux_Occupation_Live = DIVIDE(COUNTROWS(FILTER(visit, ISBLANK([date_end]))), [capacité_baies])`
-3. **Option 5.C : Capacité & Approvisionnement Pièces**
-   - *Principe :* Débit d'atelier directement contraint par la disponibilité des kits de rechange (OTIF) et les délais OEM.
-   - *Formule DAX :* `Debit_Visite_Pieces = MIN([Capacite_Baies], [Kits_OTIF_Disponibles])`
-4. **Option 5.D : Prévisions Multi-factorielles (Réalité MRO)**
-   - *Principe :* Simulation probabiliste intégrant rebuts aux contrôles CND/ressuage, créneaux bancs et usure des pièces LLP.
-   - *Formule DAX :* `Demande_Predictive_MRO = FORECAST_MRO(cycles_tsn_csn, rebuts_cnd, banc_slots, llp_attrition)`
+1. **Option 5.A : Capacité S&OP (C-SOP)**
+   - *Principe :* Capacité nominale planifiée par atelier (`S-XXX`) selon le plan de charge S&OP (croisement du volume d'heures prévues et de la capacité théorique des shops).
+   - *Usage MRO :* Arbitrage réseau 12–36 mois, réservation prévisionnelle des créneaux et équilibrage multi-sites.
+   - *Formule DAX :* `Charge_SOP = DIVIDE(SUM(MDT_INTERVENTION[HEURES_GAMME]), [CAPACITE_HEURES_SHOP])`
+2. **Option 5.B : Projection statistique (C-STA)**
+   - *Principe :* Capacité projetée par analyse statistique du débit réel et de l'en-cours actif (WIP aux postes).
+   - *Usage MRO :* Régulation opérationnelle hebdomadaire et pilotage de la cadence d'écoulement.
+   - *Formule DAX :* `Debit_Stats = CALCULATE([INTERVENTIONS_CLOTUREES], DATESINPERIOD('Calendar'[Date], TODAY(), -3, MONTH))`
+3. **Option 5.C : Projection logistique (C-LOG)**
+   - *Principe :* Capacité bridée par la disponibilité effective des pièces et kits de réparation (OTIF).
+   - *Usage MRO :* Synchronisation des lancements d'interventions sur les dates de livraison confirmées.
+   - *Formule DAX :* `Capacite_Logistique = MIN([CAPACITE_POSTES], [KITS_DISPO] * [CADENCE_STANDARD])`
+4. **Option 5.D : Modélisation avancée (C-ML)**
+   - *Principe :* Simulation prédictive de capacité intégrant les aléas réels, contrôles CND et pannes de bancs d'essais.
+   - *Usage MRO :* Dimensionnement dynamique des tampons, gestion proactive des goulots et variabilité.
+   - *Formule DAX :* `Capacite_ML = FORECAST_CAPACITY([INTERVENTIONS_PREVUES], [ALEAS_CND], [DISPO_BANCS])`
 
 ### Extraits des Vues Capacitaires d'Atelier (Croisement Granularité × Capacité)
 
-#### Extrait A : Visite Macro (visit) × Prévisions S&OP (5.A)
+#### Extrait A : Lignes d'Intervention (MDT_INTERVENTION) × Capacité S&OP par Shop (5.A C-SOP)
 ```text
-| engine type | mois_cible     | visites_annoncées (S&OP) | créneaux_réservés | couverture_plan         |
-| :---------- | :------------- | :----------------------- | :---------------- | :---------------------- |
-| CFM56       | M+1 (Octobre)  | 14 visites fermes        | 12 slots          | 116.7 % (Déficit 🚨)    |
-| LEAP-1A     | M+1 (Octobre)  | 7 visites fermes         | 8 slots           | 87.5 % (OK)             |
-| LEAP-1B     | M+1 (Octobre)  | 5 visites fermes         | 6 slots           | 83.3 % (OK)             |
+| SHOP_ASSIGNE | TYPE_REPARATION | INTERVENTIONS_PLANIFIEES | CAPACITE_ALLOUEE | TENSION_PREVISIONNELLE  |
+| :----------- | :-------------- | :----------------------- | :--------------- | :---------------------- |
+| S-MON        | T-AUBTUR        | 68 interventions         | 72 slots max     | 94.4 % (Tendu)          |
+| S-VIL        | T-MAJLOU        | 42 interventions         | 48 slots max     | 87.5 % (OK)             |
+| S-BRU        | T-BANESS        | 35 passages banc         | 30 slots max     | 116.7 % (Saturation 🚨) |
 ```
-*Formule DAX associée :* `Charge_Prevue_SOP = SUM(prevision_visit[visites_fermes]) / [capacité_mensuelle]`
+*Formule DAX associée :* `Tension_Intervention_SOP = DIVIDE(SUM(MDT_INTERVENTION[INTERVENTIONS_PLANIFIEES]), [CAPACITE_SHOP_PERIODE])`
 
-#### Extrait B : Réparation Méso (repair) × WIP Instantané d'Atelier (5.B)
+#### Extrait B : Lignes d'Intervention (MDT_INTERVENTION) × Projection Statistique / WIP en Shop (5.B C-STA)
 ```text
-| shop (atelier)    | type of repairs  | lots_repair_wip | durée des transits (en cours) | taux_occupation |
-| :---------------- | :--------------- | :-------------- | :---------------------------- | :-------------- |
-| FR-Montereau      | Aubes Turbine HP | 22 lots actifs  | 3 navettes route              | 91.7 % ⚠️       |
-| FR-Villaroche     | Compresseurs     | 11 lots actifs  | 1 navette route               | 68.8 %          |
-| BE-Bruxelles      | Banc d'Essai     | 10 lots actifs  | 2 en attente quai             | 100.0 % 🚨      |
-| FR-Saint-Quentin  | Éléments Chauds  | 8 lots actifs   | 1 navette route               | 78.4 %          |
+| SHOP_ASSIGNE | TYPE_REPARATION | INTERVENTIONS_WIP | POSTES_STATION_TAMPON | TAUX_OCCUPATION |
+| :----------- | :-------------- | :---------------- | :-------------------- | :-------------- |
+| S-MON        | T-AUBTUR        | 22 en cours       | USI-04, CND-02        | 91.7 % ⚠️       |
+| S-VIL        | T-EQUROT        | 11 en cours       | EQU-01, USI-01        | 68.8 %          |
+| S-BRU        | T-BANESS        | 10 en cours       | TST-01                | 100.0 % 🚨      |
+| S-SQY        | T-COMHOT        | 8 en cours        | CHAU-01               | 78.4 %          |
 ```
-*Formule DAX associée :* `Occupation_Shop_Live = DIVIDE(COUNTROWS(FILTER(repair, ISBLANK([end]))), [capacité_lots_hebdo])`
-
-#### Extrait C : Tâche Micro (task) × Approvisionnement Pièces au Poste (5.C)
-```text
-| station [poste]       | composants_requis            | disponibilité_bacs_tampons | manquants_poste         | temps_attente_induit |
-| :-------------------- | :--------------------------- | :------------------------- | :---------------------- | :------------------- |
-| USI-04 (5-Axes)       | Plaquettes carbure & fraises | 96 %                       | 0 rupture               | 0.0 h                |
-| CND-02 (Ressuage)     | Kits éprouvettes ressuage    | 98 %                       | 0 rupture               | 0.0 h                |
-| EQU-01 (Équilibrage)  | Masselottes d'équilibrage    | 75 %                       | 3 références en rupture | +6.5 h attente ⚠️    |
-```
-*Formule DAX associée :* `Attente_Pieces_Poste = SUMX(task, [heures_arret_manquant])`
+*Formule DAX associée :* `Occupation_Shop_Live = DIVIDE(COUNTROWS(FILTER(MDT_INTERVENTION, ISBLANK([HORODATAGE_FIN]))), [CAPACITE_INTERVENTIONS_HEBDO])`
 
 ---
 
 ## Étape 6 : Saturation
 
-> **Question de cadrage :** Quels visuels choisir pour repérer les goulots d'étranglement et la surcharge ?  
-> **En-tête de l'interface :** Étape 6 : Sélectionner les visuels pour la Saturation des Ateliers (`📊 Dataviz & Conception Graphique`)
-> **Rendu Chart.js (Étape 6) :** Les cartes d'options disposent d'un panneau Chart.js à droite (titres et sous-titres avec description explicite de la mesure et des axes X et Y, canvas `#step-6-canvas`). Les valeurs graphiques sont affichées par défaut sur chaque point, barre ou tranche via `chartjs-plugin-datalabels` (sans nécessiter de survol). Les données sont générées côté client (PRNG seedé `maestro_seed`, persistant) sur la base des libellés de `data.json` avec 7 sites Safron préfixés (`BE-`, `FR-`) et les vraies compagnies aériennes.
+> **Question de cadrage :** Quels visuels choisir pour repérer les goulots d'intervention et la surcharge des ateliers (`S-XXX`) ?  
+> **En-tête de l'interface :** Étape 6 : Sélectionner les visuels pour la Saturation des Interventions en Atelier  
+> **Rendu Chart.js (Étape 6) :** Les cartes d'options disposent d'un panneau Chart.js à droite (titres et sous-titres avec description explicite de la mesure et des axes X et Y, canvas `#step-6-canvas`). Les valeurs graphiques sont affichées par défaut sur chaque point, barre ou tranche via `chartjs-plugin-datalabels`. Les données sont générées sur la base des lignes d'intervention (`MDT_INTERVENTION`) avec les 10 shops SAE (`S-XXX`), les gammes (`T-XXXXXX`) et les postes d'usinage/contrôle.
 
-### Les 8 Graphiques de Saturation :
-- **6.A : Top Pièces Manquantes par Site**  
-  *Titre & Sous-titre :* Heures d'Attente Induites par les Pièces Manquantes (h) | Axe X : Références Pièces Critiques (Aubes HP, Disques LLP, etc.) | Axe Y : Heures d'attente cumulées (h).  
-  *Rendu :* Barres avec affichage permanent des heures d'attente cumulées sur chaque barre.  
-  *Usages associés :* `Logistique`, `Opérationnel`.
-- **6.B : Retards par Réparation & Moteur**  
-  *Titre & Sous-titre :* Taux de Retard par Type de Réparation et Flotte Moteur (%) | Axe X : Typologie de Réparation | Axe Y : % de Dossiers Décalés (%).  
-  *Rendu :* Barres groupées CFM56 vs LEAP avec pourcentages affichés par défaut.  
-  *Usages associés :* `Opérationnel`, `Gouvernance`.
-- **6.C : Top Routes de Transfert Inter-Sites**  
-  *Titre & Sous-titre :* Flux Navettes et Délais de Transfert Inter-Sites | Axe X : Axes Logistiques Inter-Sites | Axe Y1 : % du Flux Global / Axe Y2 : Délai Moyen Navette (j).  
-  *Rendu :* Barres de volume de flux combinées à la courbe des délais avec valeurs visibles sur chaque point et barre.  
-  *Usages associés :* `Logistique`, `Pilotage`.
-- **6.D : Ratio Attente vs Travail Effectif**  
-  *Titre & Sous-titre :* Répartition du Lead Time Global Atelier (Lean MRO) | Donut : Travail VA, Attente pièces, Transferts navettes.  
-  *Rendu :* Donut Lean avec étiquettes de pourcentages et d'heures affichées directement sur chaque segment.  
-  *Usages associés :* `Pilotage`, `Gouvernance`.
-- **6.E : Barres de Charge vs Seuil 85%**  
-  *Titre & Sous-titre :* Taux de Charge Atelier vs Seuil Critique 85% (%) | Axe X : Centres Industriels Safron | Axe Y : Taux d'Occupation Réel (%).  
-  *Rendu :* Barres de charge avec coloration d'alerte et étiquette du taux d'occupation exact par site.  
-  *Usages associés :* `Opérationnel`, `Pilotage`.
-- **6.F : Heatmap Hebdomadaire / Site**  
-  *Titre & Sous-titre :* Matrice d'Intensité Hebdomadaire de Charge (%) | Axe X : Semaines Calendaires (S1 à S8) | Axe Y : Sites Safron (7 centres).  
-  *Rendu :* Matrice thermique avec affichage des taux de charge moyens par site.  
-  *Usages associés :* `Pilotage`, `Opérationnel`.
-- **6.G : Courbes Entrées vs Sorties WIP**  
-  *Titre & Sous-titre :* Cumulative Flow Diagram - Entrées vs Sorties WIP (unités) | Axe X : Semaines Calendaires (S1 à S6) | Axe Y : Volumes Cumulés (moteurs).  
-  *Rendu :* Courbes d'accumulation avec volumes visibles par défaut sur chaque jalon hebdomadaire.  
-  *Usages associés :* `Logistique`, `Financier`, `Gouvernance`.
-- **6.H : Treemap des Goulots d'Atelier**  
-  *Titre & Sous-titre :* En-cours Cumulé et Taux de Saturation par Poste Critique | Axe X : En-cours Cumulé WIP (heures) | Axe Y : Postes & Machines d'Atelier.  
-  *Rendu :* Barres horizontales avec étiquettes détaillées `[WIP h (Saturation %)]` affichées en bout de ligne.  
-  *Usages associés :* `Opérationnel`, `Pilotage`, `Logistique`.
+### Les 9 Graphiques de Saturation :
+- **6.A : Taux de Retard des Interventions par Shop**  
+  *Personas cibles :* SHPL & NTPL.  
+  *Analytics SAC / IBP :* Column / Bar Chart avec Seuil de Tolérance (10%) | Axes : X = `SHOP_ASSIGNE` (`S-XXX`) • Y = `% INTERVENTION_DELAY_RATE` | Dimensions : `SHOP_ASSIGNE` (S-MON, S-VIL, S-CHL, S-BRU, S-TLS, S-SQY, S-GEN, S-BDX, S-LGG, S-CRE) | Mesures : `INTERVENTION_DELAY_RATE` (%), `SEUIL_RETARD_TOLERANCE` (10%), `TOTAL_INTERVENTIONS_COUNT`.  
+  *Rendu :* Barres de taux de retard par atelier face à la ligne de seuil de tolérance (10%), avec coloration d'alerte (rouge si ≥ 15%, ambre si ≥ 10%).  
+  *Badges personas & usages :* `SHPL`, `NTPL`, `DGOV`.
+- **6.B : Retards par Type d'Intervention & Shop**  
+  *Personas cibles :* FTM & DMMG.  
+  *Analytics SAC / IBP :* Clustered Column Chart (Comparatif Types d'Intervention) | Axes : X = `TYPE_REPARATION` (`T-XXXXXX`) • Y = `% UNPLANNED_DELAY_RATE` | Dimensions : `TYPE_REPARATION` (T-INSCND, T-AUBTUR, T-BANESS, T-EQUROT), `SHOP_ASSIGNE` (S-MON, S-VIL, S-BRU) | Mesures : `DELAYED_INTERVENTIONS_PCT`, `AVG_SLIPPAGE_HOURS`.  
+  *Rendu :* Barres groupées par type d'intervention et atelier avec pourcentages affichés par défaut.  
+  *Badges personas & usages :* `FTM`, `DMMG`, `SHPL`, `DGOV`.
+- **6.C : Top Routes de Transfert Inter-Shops**  
+  *Personas cibles :* NTPL & SHPL.  
+  *Analytics SAC / IBP :* Dual-Axis Combination Bar & Line Chart (Flux & Délais) | Axes : X = `ROUTE_TRANSFERT` (Origine ➔ Destination) • Y1 = Part Volume (%) • Y2 = `TRANSIT_DAYS` | Dimensions : `SHOP_SOURCE` ➔ `SHOP_DEST` (S-MON ➔ S-VIL, S-CHL ➔ S-BRU, S-VIL ➔ S-SQY) | Mesures : `INTER_SHOP_TRANSFER_VOLUME_PCT`, `AVG_TRANSIT_DURATION_DAYS`.  
+  *Rendu :* Barres de volume de flux d'interventions combinées à la courbe des délais de navette avec valeurs visibles sur chaque point et barre.  
+  *Badges personas & usages :* `NTPL`, `SHPL`, `DMMG`.
+- **6.D : Décomposition du Délai Moyen d'Intervention par Shop**  
+  *Personas cibles :* SHPL & Continuous Improvement.  
+  *Analytics SAC / IBP :* Horizontal Stacked Bar Chart (Délai Moyen Décomposé) | Axes : X = Heures Moyennes de Traitement (h) • Y = `SHOP_ASSIGNE` (`S-XXX`) | Dimensions : `SHOP_ASSIGNE` (10 shops SAE), `STATUT_TEMPS` (Attente File/Pièces, Réparation Effective, Transfert Logistique) | Mesures : `AVG_QUEUE_HOURS`, `AVG_REPAIR_HOURS`, `AVG_TRANSIT_HOURS`, `TOTAL_INTERVENTION_HOURS`.  
+  *Rendu :* Barres horizontales empilées décomposant pour chaque shop le délai moyen en attente file/pièces (ambre), usinage/réparation effectif (bleu) et transit logistique (violet).  
+  *Badges personas & usages :* `SHPL`, `DMMG`, `DGOV`.
+- **6.E : Taux de Charge par Station de Réparation (S-XXX-YY)**  
+  *Personas cibles :* SHPL & NTPL.  
+  *Analytics SAC / IBP :* Horizontal Bar Chart avec Threshold Line (Seuil de Saturation 85%) | Axes : X = `TAUX_OCCUPATION_STATION` (%) • Y = `ID_STATION` (`S-XXX-YY`) | Dimensions : `ID_STATION` (S-MON-01 à S-CRE-03, 3 à 10 stations par shop), `SHOP_ASSIGNE` (`S-XXX`) | Mesures : `TAUX_OCCUPATION_STATION` (%), `SEUIL_SATURATION_CRITIQUE` (85%).  
+  *Rendu :* Barres horizontales de charge par station face à la ligne rouge critique des 85%, isolant les machines et baies goulots.  
+  *Badges personas & usages :* `SHPL`, `NTPL`.
+- **6.F : Heatmap d'Occupation des Stations par Shop**  
+  *Personas cibles :* SHPL & Continuous Improvement.  
+  *Analytics SAC / IBP :* Heatmap Matrix SAC (Saturation Stations Shop) | Axes : X = Jours Ouvrés (Lundi à Vendredi) • Y = Stations de Réparation du Shop (`S-MON-YY`) | Dimensions : `SHOP_ASSIGNE` (S-MON), `ID_STATION` (S-MON-01 à S-MON-06), `JOUR_SEMAINE` | Mesures : `WORKLOAD_TENSION_RATE` (%), `SEUIL_SATURATION_CRITIQUE` (85%).  
+  *Rendu :* Matrice thermique croisant les stations du shop (en Y) et les jours ouvrés de la semaine (en X) avec code couleur de saturation (rouge ≥ 90%, ambre ≥ 85%).  
+  *Badges personas & usages :* `SHPL`, `NTPL`, `DMMG`.
+- **6.G : Courbes Entrées vs Sorties d'Interventions (WIP)**  
+  *Personas cibles :* DMMG & NTPL.  
+  *Analytics SAC / IBP :* Cumulative Flow Diagram (Area / Multi-Line Chart SAC) | Axes : X = `TIMEPROFILE` (Jours Ouvrés J1-J10) • Y = Cumul Lignes d'Intervention | Dimensions : `FLUX_DIRECTION` (Cumul Lignes Interventions Lancées vs Clôturées) | Mesures : `CUMULATIVE_INTERVENTION_INDUCTION`, `CUMULATIVE_INTERVENTION_RELEASE`, `SHOP_WIP_INTERVENTIONS`.  
+  *Rendu :* Courbes d'accumulation avec volumes d'interventions visibles par défaut sur chaque jalon journalier.  
+  *Badges personas & usages :* `DMMG`, `NTPL`, `FINC`, `DGOV`.
+- **6.H : Treemap Temps Passé & Retard par Moteur / Réparation (Shop)**  
+  *Personas cibles :* SHPL & EOWN.  
+  *Analytics SAC / IBP :* Interactive Hierarchical Treemap (Drill-down Moteur ➔ Réparation) | Axes : N/A (Taille du Bloc = Temps Passé en Heures • Couleur = Taux de Retard %) | Dimensions : Niveau 1 = `ENGINE_TYPE` (CFM56-7B, LEAP-1A...) ➔ Niveau 2 = `TYPE_REPARATION` (T-AUBTUR, T-COMHOT...) | Mesures : `TEMPS_PASSE_HEURES`, `TAUX_RETARD_INTERVENTIONS` (%), `SEUIL_RETARD` (10%).  
+  *Rendu :* Treemap interactive à deux niveaux sur le shop : vue initiale par type de moteur, drill-down au clic pour explorer la répartition par type de réparation. Coloration selon le taux de retard (vert < 10%, ambre 10-15%, rouge ≥ 15%).  
+  *Badges personas & usages :* `SHPL`, `EOWN`, `NTPL`.
+- **6.I : Comparatif Capacité Interventions selon 4 Méthodes vs Réel (DGOV)**  
+  *Personas cibles :* DGOV & NTPL.  
+  *Analytics SAC / IBP :* Clustered Bar & Deviation Line Chart (Benchmark Capacité) | Axes : X = `METHODE_PREVISION` (C-SOP, C-STA, C-LOG, C-ML) • Y1 = `CAPACITE_SIMULEE_INTERVENTIONS` • Y2 = `%_DEVIATION_VS_EFFECTIF` | Dimensions : `METHODE_CHARGE_CAPA` (C-SOP, C-STA, C-LOG, C-ML), `INTERVALLE_CERTITUDE` | Mesures : `CAPACITE_PREVUE_INTERVENTIONS`, `CAPACITE_EFFECTIVE_REF` (124 interventions), `ECART_CHARGE_PCT`, `TAUX_COMPLETUDE_MES` (96.1%).  
+  *Rendu :* Histogramme à barres comparant la charge/capacité simulée de chaque méthode face au débit effectif mesuré, avec courbe du pourcentage d'écart et taux de complétude des données.  
+  *Badges personas & usages :* `DGOV`, `NTPL`, `SHPL`.
 
 ### Illustrations Graphiques en Mermaid (Étape 6)
 
-
-#### 1. Top des Pièces Manquantes Causant l'Attente par Site (Illustration 6.A)
+#### 1. Taux de Retard des Interventions par Shop (Illustration 6.A)
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ef4444'}}}%%
 xychart-beta
-    title "Heures de Blocage d'Attente par Référence Critique et Site"
-    x-axis ["Aubes HP (FR-Montereau)", "Disques LLP (FR-Villaroche)", "Joints Fan (FR-Châtellerault)", "Injecteurs (BE-Bruxelles)"]
-    y-axis "Heures de rupture cumulées" 0 --> 100
-    bar [84, 52, 28, 16]
+    title "Taux de Retard des Interventions par Shop (%) vs Seuil Tolérance (10%)"
+    x-axis ["S-MON", "S-VIL", "S-CHL", "S-BRU", "S-TLS", "S-SQY", "S-GEN", "S-BDX", "S-LGG", "S-CRE"]
+    y-axis "% Interventions en Retard" 0 --> 25
+    bar [18.2, 15.4, 12.1, 16.5, 9.2, 7.6, 11.4, 6.8, 9.6, 5.8]
+    line [10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
 ```
 
-#### 2. Dérive et Retard par Type d'Opération Atelier et Moteur (Illustration 6.B)
+#### 2. Dérive et Retard par Type d'Intervention en Shop (Illustration 6.B)
 ```mermaid
 %%{init: {'theme': 'base'}}%%
 xychart-beta
-    title "Part des Demandes Subissant un Aléa Imprévu (% Retard) : CFM56 vs LEAP"
-    x-axis ["Usinage Carter Fan", "Ressuage CND", "Revêtement Aubes HP", "Recette Banc d'Essais"]
-    y-axis "% Demandes Décalées" 0 --> 35
+    title "Part des Interventions Subissant un Aléa Imprévu (% Retard) : CFM56 vs LEAP"
+    x-axis ["T-REVCAR", "T-INSCND", "T-AUBTUR", "T-BANESS"]
+    y-axis "% Interventions Décalées" 0 --> 35
     bar [18, 14, 12, 8]
     bar [29, 24, 26, 17]
 ```
 
-#### 3. Top des Routes de Sous-Traitance et Délais Navettes (Illustration 6.C)
+#### 3. Top des Routes de Transfert Inter-Shops (Illustration 6.C)
 ```mermaid
 %%{init: {'theme': 'base'}}%%
 xychart-beta
-    title "Flux de Sous-Traitance (% Demandes) et Délai Navette Route (Jours)"
-    x-axis ["FR-Montereau ➔ FR-Villaroche", "FR-Châtellerault ➔ BE-Bruxelles", "FR-Villaroche ➔ FR-Châtellerault", "FR-Montereau ➔ BE-Bruxelles"]
+    title "Flux Inter-Shops (% Interventions) et Délai Navette Route (Jours)"
+    x-axis ["S-MON ➔ S-VIL", "S-CHL ➔ S-BRU", "S-VIL ➔ S-SQY", "S-GEN ➔ S-MON"]
     y-axis "% Part du Flux Global" 0 --> 45
     bar [38, 27, 19, 16]
     line [12, 24, 18, 31]
 ```
 
-#### 4. Donut Lean : Temps Contact vs Temps d'Attente (Illustration 6.D)
+#### 4. Décomposition du Délai Moyen d'Intervention par Shop (Illustration 6.D)
 ```mermaid
-pie title "Répartition du Lead Time Global MRO"
-    "Temps de travail à Valeur Ajoutée (Usinage/Montage)" : 56
-    "Attente passive pièces et outillage" : 28
-    "Transfert logistique et navettes inter-sites" : 16
+%%{init: {'theme': 'base'}}%%
+xychart-beta
+    title "Délai Moyen d'Intervention par Shop (h) : Attente vs Réparation vs Transfert"
+    x-axis ["S-MON", "S-VIL", "S-CHL", "S-BRU", "S-TLS", "S-SQY", "S-GEN", "S-BDX"]
+    y-axis "Heures Moyennes Cumulées" 0 --> 35
+    bar [7.5, 6.8, 5.2, 6.1, 4.3, 3.4, 4.1, 2.9]
+    bar [18.2, 21.5, 16.4, 17.0, 15.2, 12.8, 14.0, 11.5]
+    bar [3.8, 3.2, 2.8, 3.5, 2.6, 2.1, 2.3, 1.9]
+```
+
+#### 5. Taux de Charge par Station de Réparation (Illustration 6.E)
+```mermaid
+xychart-beta
+    title "Taux de Charge par Station de Réparation (S-XXX-YY) vs Seuil Critique 85%"
+    x-axis ["S-MON-01", "S-VIL-01", "S-BRU-01", "S-MON-02", "S-VIL-02", "S-GEN-01", "S-CHL-01", "S-TLS-01"]
+    y-axis "% Charge Station" 0 --> 100
+    bar [94, 92, 89, 88, 86, 82, 81, 78]
+    line [85, 85, 85, 85, 85, 85, 85, 85]
+```
+
+#### 6. Heatmap d'Occupation des Stations du Shop S-MON (Illustration 6.F)
+```mermaid
+%%{init: {'theme': 'base'}}%%
+xychart-beta
+    title "Heatmap d'Occupation des Stations (Shop S-MON) : Charge Hebdo (%)"
+    x-axis ["S-MON-01 (Aubes)", "S-MON-02 (Comb.)", "S-MON-03 (CND)", "S-MON-04 (Usin.)", "S-MON-05 (Équil.)", "S-MON-06 (FOD)"]
+    y-axis "% Charge Journalière Moyenne" 0 --> 100
+    bar [94, 88, 86, 82, 79, 72]
+    line [85, 85, 85, 85, 85, 85]
+```
+
+#### 7. Treemap Temps Passé & Taux de Retard par Moteur Shop S-MON (Illustration 6.H)
+```mermaid
+%%{init: {'theme': 'base'}}%%
+xychart-beta
+    title "Treemap Shop S-MON : Temps Passé par Moteur (h) et Taux de Retard (%)"
+    x-axis ["CFM56-7B", "LEAP-1A", "CFM56-5B", "LEAP-1B", "GE90-115B"]
+    y-axis "Temps Passé (Heures)" 0 --> 500
+    bar [480, 390, 290, 240, 160]
+    line [16.2, 18.5, 11.4, 8.6, 6.2]
+```
+
+#### 8. Benchmark Capacité Interventions Shop : 4 Méthodes vs Débit Réel (Illustration 6.I)
+```mermaid
+%%{init: {'theme': 'base'}}%%
+xychart-beta
+    title "Benchmark Capacité Interventions Shop : 4 Méthodes vs Débit Réel (124 interventions)"
+    x-axis ["C-SOP", "C-STA", "C-LOG", "C-ML"]
+    y-axis "Capacité Mensuelle (Interventions)" 0 --> 160
+    bar [142, 115, 108, 126]
+    line [124, 124, 124, 124]
 ```
 
 ---
@@ -706,6 +721,16 @@ pie title "Répartition du Lead Time Global MRO"
 
 > **Question de cadrage :** Comment structurer la restitution finale pour engager les parties prenantes ?  
 > **En-tête de l'interface :** Étape 7 : Slide de Synthèse Décisionnel & Dashboard Projeté (`✨ Fiche Architecture`)
+
+### Profils Décisionnels Personas SAE & Recommandations Dérivées :
+Selon l'option sélectionnée en Étape 1, le dashboard projette un profil persona dédié :
+- **🔧 EOWN · Processus RTI & Jalons Moteurs/Modules :** Modèle opérationnel sur `MDT_MAINTENANCE_REQUEST` traçant les jalons du processus **RTI (Return to Operation)** en temps réel dans SAP IBP, détection des dérives sur modules MM/SM, priorisation d'atelier et maîtrise des coûts (IBP to Cost Tracker).
+- **✈️ CSPM · Engagements Contractuels & Removal Plan (PERF) :** Modèle tabulaire reliant le removal plan client (PERF) aux faits d'induction SAP IBP, suivi des dates de Shop Visit et simulation de scénarios pour garantir le Customer Service Level.
+- **🌐 NTPL · Équilibrage Réseau 12-36 mois & Slots :** Modèle consolidant la charge/capacité multi-ateliers across all shops, adhérence **MPS vs S&OP** et arbitrage des slots réacteurs / modules (MM, SM) pour éliminer les lost slots.
+- **💰 FINC · Volumes IBP, Mix & Coûts SV :** Rapprochement des volumes consolidés et du mix moteurs/modules avec les coûts réels de Shop Visit (IBP to Cost Tracker), pénalités contractuelles de retard chiffrées en jours ouvrés.
+- **🏭 SHPL · Ordonnancement Atelier & Aléas Court Terme :** Modèle d'atelier réactif absorbant les aléas quotidiens (pannes machines, retards amont, absences), séquencement des flux moteurs et modules (MM, SM, isolés ou sous-traités) pour maximiser la MPS Adherence.
+- **📊 DMMG & FTM · Prévisions Demande & Workscopes (Walk) :** Consolidation multi-sources de la demande Shop Visit (Monthly Demand Review), intégration des workscopes techniques dans Walk, analyse de variance début/fin de SV et alimentation S&OP/MTP.
+- **🏛️ DGOV · Qualité des Données & Fiabilité des Modèles :** Modèle d'audit et gouvernance sur `MDT_MAINTENANCE_REQUEST` assurant la complétude des saisies d'atelier (MES), le benchmark statistique des méthodes de calcul de TAT et de capacité face aux données effectives constatées sur le terrain, avec certification du degré de certitude et auditabilité Part-145.
 
 ### Fonctionnalités Clés du Slide Décisionnel :
 1. **Dropdowns Interactifs Synchronisés (`#select-q1` à `#select-q6`) :**
@@ -734,7 +759,7 @@ Cette section formalise la stratégie d'ingénierie des données et de mock dyna
 
 ### 1. Découplage Structure vs Métriques Chiffrées
 Afin d'assurer une étanchéité totale entre la nomenclature métier et les calculs dynamiques :
-- **`data.json` ne contient AUCUN chiffre figé :** il agit comme un catalogue de référence déclarant uniquement les dimensions, entités réelles (10 sites Safron MRO, 7 compagnies aériennes réelles, 6 familles moteurs, références de pièces au format `Pxxxxx`, demandes au format `D-xxxxx`) et liens structurels.
+- **`data.json` ne contient AUCUN chiffre figé :** il agit comme un catalogue de référence déclarant uniquement les dimensions, entités réelles (10 sites SAE MRO, 7 compagnies aériennes réelles, 6 familles moteurs, références de pièces au format `Pxxxxx`, demandes au format `D-xxxxx`) et liens structurels.
 - **Les visualisations Chart.js sont alimentées à chaud :** les séries temporelles, percentiles, pourcentages de saturation et matrices de charge sont instanciés dynamiquement en mémoire via la fonction `buildMaestroData(base)`.
 
 ```text
