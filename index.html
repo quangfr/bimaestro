@@ -869,9 +869,6 @@
                   <button type="button" onclick="openDataGeneratorModal()" class="w-6 h-6 rounded border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 flex items-center justify-center transition text-xs shadow-2xs cursor-pointer" title="Paramètres du générateur de données (regex-genex / distributions)">
                     ✏️
                   </button>
-                  <button type="button" onclick="regenerateActiveDataTable()" class="px-2 py-0.5 rounded border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 text-[10px] font-bold transition shadow-2xs cursor-pointer" title="Regénérer les données aléatoires de cette table">
-                    🎲 Tirer
-                  </button>
                 </div>
               </div>
 
@@ -2486,19 +2483,22 @@
       }
 
       if (step === 2) {
-        setTimeout(() => drawSchema(selections[2]), 50);
+        setTimeout(() => {
+          drawSchema(selections[2]);
+          toggleSchemaView(schemaViewMode);
+        }, 50);
       }
       if (step === 3) {
-        renderStep3TablePreview();
+        toggleTableMode(3, tablePanelViewMode[3]);
       }
       if (step === 5) {
-        renderStep5TablePreview();
+        toggleTableMode(5, tablePanelViewMode[5]);
       }
       if (step === 4) {
-        setTimeout(() => renderStepChart(4), 50);
+        setTimeout(() => toggleChartMode(4, chartViewMode[4]), 50);
       }
       if (step === 6) {
-        setTimeout(() => renderStepChart(6), 50);
+        setTimeout(() => toggleChartMode(6, chartViewMode[6]), 50);
       }
       if (step === 7) {
         renderFinalDashboard();
@@ -5089,7 +5089,10 @@ const STEP_BUILDERS = {
     }
 
     // ===== Gestionnaire du Mode Éditeur Visuel Chart.js Dynamique (Étapes 4 & 6) =====
-    const chartViewMode = { 4: 'chart', 6: 'chart' };
+    const chartViewMode = {
+      4: (function() { try { return localStorage.getItem('maestro_switch_chart_4') || 'chart'; } catch(e) { return 'chart'; } })(),
+      6: (function() { try { return localStorage.getItem('maestro_switch_chart_6') || 'chart'; } catch(e) { return 'chart'; } })()
+    };
     const editingChartConfig = { 4: null, 6: null };
 
     const COLOR_PALETTES = [
@@ -5569,7 +5572,10 @@ ENTRÉES
       });
     }
 
-    const tablePanelViewMode = { 3: 'ui', 5: 'ui' };
+    const tablePanelViewMode = {
+      3: (function() { try { return localStorage.getItem('maestro_switch_table_3') || 'ui'; } catch(e) { return 'ui'; } })(),
+      5: (function() { try { return localStorage.getItem('maestro_switch_table_5') || 'ui'; } catch(e) { return 'ui'; } })()
+    };
 
     function generateTableAiPrompt(step) {
       const opt = selections[step] || (step === 3 ? 'B' : 'B');
@@ -5629,6 +5635,9 @@ ENTRÉES
       else targetMode = 'ui';
 
       tablePanelViewMode[step] = targetMode;
+      try {
+        localStorage.setItem(`maestro_switch_table_${step}`, targetMode);
+      } catch (e) {}
 
       const uiView = document.getElementById(`step-${step}-ui-view`);
       const aiView = document.getElementById(`step-${step}-ai-view`);
@@ -5950,6 +5959,9 @@ ${uml2B}
       if (mode === 'ui') targetMode = 'chart';
       if (mode === 'ai') targetMode = 'sap';
       chartViewMode[step] = targetMode;
+      try {
+        localStorage.setItem('maestro_switch_chart_' + step, targetMode);
+      } catch (e) {}
 
       const chartView = document.getElementById('step-' + step + '-chart-view');
       const configView = document.getElementById('step-' + step + '-config-view');
@@ -7342,6 +7354,15 @@ SORTIE
       } catch (e) {}
     }
 
+    // Mode actif pour le panneau de l'Étape 2 (ui, uml, erd, data)
+    let schemaViewMode = (function() {
+      try {
+        return localStorage.getItem('maestro_switch_schema') || 'ui';
+      } catch (e) {
+        return 'ui';
+      }
+    })();
+
     // État du tableau de données de l'Étape 2
     let schemaDataState = {
       activeTable: null,
@@ -8382,6 +8403,9 @@ SORTIE
       else targetMode = 'ui';
 
       schemaViewMode = targetMode;
+      try {
+        localStorage.setItem('maestro_switch_schema', targetMode);
+      } catch (e) {}
 
       if (svgView) svgView.classList.toggle('hidden', targetMode !== 'ui');
       if (mermaidView) mermaidView.classList.toggle('hidden', targetMode !== 'uml');
@@ -9219,7 +9243,8 @@ SORTIE
 
       switchStep(startStep);
       renderCustomSchemaOptions();
-      drawSchema('A');
+      drawSchema(selections[2] || 'A');
+      toggleSchemaView(schemaViewMode);
       buildNavDropdowns();
       updateCompatibilities();
       renderCustomVisualCards(4);
