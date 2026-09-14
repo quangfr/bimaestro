@@ -391,7 +391,7 @@
         <div class="mb-2 shrink-0">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 mb-1.5">
             <div class="flex items-center gap-1.5">
-              <h2 class="text-sm md:text-base font-bold text-blue-800">Étape 1 : Cadrer la question métier prioritaire</h2>
+              <h2 class="text-sm md:text-base font-bold text-blue-800">Étape 1 : Question Métier</h2>
               <button type="button" onclick="openMethodologyModal(1)" title="Méthodologie Data &amp; Gouvernance" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-800 transition hover:scale-110 shadow-2xs font-bold text-[10px]">
                 <i data-lucide="info" class="w-3.5 h-3.5"></i>Gouvernance</button>
             </div>
@@ -652,7 +652,7 @@
         <div class="mb-2 shrink-0">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
             <div class="flex items-center gap-1.5">
-              <h2 class="text-sm md:text-base font-bold text-blue-800">Étape 2 : Données (Granularité & Tables pour le calcul)</h2>
+              <h2 class="text-sm md:text-base font-bold text-blue-800">Étape 2 : Modèle de Données</h2>
               <button type="button" onclick="openMethodologyModal(2)" title="Méthodologie Data & Gouvernance" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-800 transition hover:scale-110 shadow-2xs font-bold text-[10px]">
                 <i data-lucide="info" class="w-3.5 h-3.5"></i>Gouvernance</button>
             </div>
@@ -750,9 +750,11 @@
             class="lg:col-span-8 bg-slate-50/80 rounded-xl p-2 border border-slate-200 shadow-sm flex flex-col items-stretch justify-between h-full max-h-full min-h-0 overflow-hidden w-full min-w-0 relative">
             <div id="schema-toggle"
               class="absolute top-1.5 left-1.5 z-10 flex items-start rounded-lg border border-slate-200 bg-white shadow-sm overflow-hidden">
-              <button type="button" data-view="svg" onclick="toggleSchemaView('svg')"
-                class="px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition">uml</button>
-              <button type="button" data-view="mermaid" onclick="toggleSchemaView('mermaid')"
+              <button type="button" data-view="ui" onclick="toggleSchemaView('ui')"
+                class="px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition">ui</button>
+              <button type="button" data-view="uml" onclick="toggleSchemaView('uml')"
+                class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">uml</button>
+              <button type="button" data-view="prompt" onclick="toggleSchemaView('prompt')"
                 class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">&lt;&gt;</button>
             </div>
             <div id="schema-svg-view" class="w-full flex-1 flex flex-col items-center justify-between overflow-hidden pt-6">
@@ -762,7 +764,7 @@
             </div>
             <div id="schema-mermaid-view" class="hidden w-full flex-1 flex flex-col min-h-0 relative overflow-hidden pt-6">
               <div class="flex items-center justify-between pb-1 shrink-0">
-                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Modèle Mermaid ERD (&lt;&gt;)</span>
+                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Modèle Mermaid ERD (uml)</span>
                 <div class="flex items-center gap-1.5">
                   <span id="schema-mermaid-saved-msg" class="text-[9.5px] text-emerald-600 font-semibold hidden">✓ Enregistré</span>
                   <button type="button" id="schema-copy-btn" onclick="copyMermaidSchema()" title="Copier le code Mermaid" class="p-1 text-slate-500 hover:text-slate-800 hover:bg-slate-200 rounded transition cursor-pointer text-xs leading-none">
@@ -775,6 +777,16 @@
               </div>
               <textarea id="schema-mermaid-code" oninput="onMermaidCodeChange(this.value)" spellcheck="false" class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-3 font-mono text-[11px] leading-relaxed whitespace-pre resize-none focus:outline-hidden focus:ring-1 focus:ring-blue-700 border border-slate-700"></textarea>
             </div>
+            <div id="schema-prompt-view" class="hidden w-full flex-1 flex flex-col min-h-0 relative overflow-hidden pt-6">
+              <div class="flex items-center justify-between pb-1 shrink-0">
+                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Prompt IA : Diagramme ER (&lt;&gt;)</span>
+                <div class="flex items-center gap-1.5">
+                  <button type="button" id="schema-prompt-copy-btn" onclick="copySchemaPrompt()" title="Copier le prompt IA" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
+                    ⧉
+                  </button>
+                </div>
+              </div>
+              <textarea id="schema-prompt-code" readonly spellcheck="false" class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-3 font-mono text-[11px] leading-relaxed whitespace-pre resize-none focus:outline-hidden border border-slate-700 select-text"></textarea>
             </div>
           </div>
         </div>
@@ -787,7 +799,7 @@
         <div class="mb-2 shrink-0">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
             <div class="flex items-center gap-1.5">
-              <h2 class="text-sm md:text-base font-bold text-blue-800">Étape 3 : Choisir la méthode de calcul du délai (TAT)</h2>
+              <h2 class="text-sm md:text-base font-bold text-blue-800">Étape 3 : Calcul du Délai (TAT)</h2>
               <button type="button" onclick="openMethodologyModal(3)" title="Méthodologie Data & Gouvernance" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-800 transition hover:scale-110 shadow-2xs font-bold text-[10px]">
                 <i data-lucide="info" class="w-3.5 h-3.5"></i>Gouvernance</button>
             </div>
@@ -809,13 +821,11 @@
                   A. S&amp;OP (D-SOP)
                 </div>
                 <p class="text-[10.5px] text-slate-600 leading-snug">
-                  Délais théoriques par Demande (MDT_MAINTENANCE_REQUEST) ou par Ligne d'Intervention (MDT_INTERVENTION) selon la granularité retenue en Étape 2.
+                  Délais contractuels et standards constructeur basés sur les gammes opératoires et les forfaits d'acheminement.
                 </p>
                 <div class="text-[10px] text-slate-500 mt-1 space-y-0.5">
-                  <div><span class="text-blue-800 font-semibold">Principe :</span> Somme des durées de gammes standards (<code>ESTIMATED_REPAIR_DURATION</code>) et forfaits de transit.</div>
-                  <div><span class="text-slate-500">Usage MRO :</span> Devis d'admission Part-145 & barème contractuel de référence constructeur.</div>
+                  <div><span class="text-blue-800 font-semibold">Principe :</span> Barème fixe additionnant le temps de révision nominal et les transits logistiques.</div>
                 </div>
-                <div class="text-[9px] text-blue-800 font-mono mt-1 font-semibold"><code>SUMX(MDT_INTERVENTION, [ESTIMATED_REPAIR_DURATION] + [TRANSIT_BUFFER])</code></div>
               </div>
               <div id="opt-3-A-illust"
                 class="w-14 h-14 bg-white rounded-lg p-1 border border-slate-200 shadow-sm flex items-center justify-center shrink-0">
@@ -837,13 +847,11 @@
                   B. Projection statistique (D-STA)
                 </div>
                 <p class="text-[10.5px] text-slate-600 leading-snug">
-                  Table des délais moyens de traitement (à 5%, à 95%, médian).
+                  Historique réel des visites et dispersion constatée (P5, P50, P95) pour sécuriser les engagements clients.
                 </p>
                 <div class="text-[10px] text-slate-500 mt-1 space-y-0.5">
-                  <div><span class="text-amber-700 font-semibold">Principe :</span> Distribution statistique réelle basée sur l'historique des visites ($P_{5}, P_{50}, P_{95}$).</div>
-                  <div><span class="text-slate-500">Usage MRO :</span> Évaluation de la dispersion, engagement contractuel garanti & gestion des risques.</div>
+                  <div><span class="text-amber-700 font-semibold">Principe :</span> Distribution empirique issue des passages réels pour mesurer les aléas de visite.</div>
                 </div>
-                <div class="text-[9px] text-amber-700 font-mono mt-1 font-semibold"><code>PERCENTILEX.INC(FAIT, FAIT[Duree_Reelle], 0.50)</code></div>
               </div>
               <div id="opt-3-B-illust"
                 class="w-14 h-14 bg-white rounded-lg p-1 border border-slate-200 shadow-sm flex items-center justify-center shrink-0">
@@ -866,13 +874,11 @@
                   C. Projection capacitaire (D-CAP)
                 </div>
                 <p class="text-[10.5px] text-slate-600 leading-snug">
-                  Table des délais de traitement moyens selon le taux d'occupation de l'atelier.
+                  Délais réels ajustés selon le niveau de charge et l'encombrement des ateliers.
                 </p>
                 <div class="text-[10px] text-slate-500 mt-1 space-y-0.5">
-                  <div><span class="text-red-700 font-semibold">Principe :</span> Prise en compte physique des goulots et files d'attente quand l'atelier approche de la saturation.</div>
-                  <div><span class="text-slate-500">Usage MRO :</span> Alerte précoce d'encombrement & arbitrage de capacité d'accueil.</div>
+                  <div><span class="text-red-700 font-semibold">Principe :</span> Allongement dynamique des délais d'attente à mesure que l'atelier sature (&gt; 85%).</div>
                 </div>
-                <div class="text-[9px] text-red-700 font-mono mt-1 font-semibold"><code>DIVIDE(Temps_Usinage, 1 - RELATED(DIM_SITE[Taux_Charge]))</code></div>
               </div>
               <div id="opt-3-C-illust"
                 class="w-14 h-14 bg-white rounded-lg p-1 border border-slate-200 shadow-sm flex items-center justify-center shrink-0">
@@ -894,13 +900,11 @@
                   D. Modélisation avancée (D-ML)
                 </div>
                 <p class="text-[10.5px] text-slate-600 leading-snug">
-                  Table des délais de traitement dynamiques selon une modélisation avancée (probabiliste multi-factorielle).
+                  Prévision dynamique combinant l'usure prédictive des pièces et les aléas techniques de visite.
                 </p>
                 <div class="text-[10px] text-slate-500 mt-1 space-y-0.5">
-                  <div><span class="text-emerald-700 font-semibold">Principe :</span> Simulation prédictive intégrant les facteurs contextuels et aléas multiples d'usure.</div>
-                  <div><span class="text-slate-500">Usage MRO :</span> Pilotage prédictif fin et optimisation dynamique des plannings.</div>
+                  <div><span class="text-emerald-700 font-semibold">Principe :</span> Simulation multi-paramètres intégrant l'historique moteur, les contrôles et les rebuts.</div>
                 </div>
-                <div class="text-[9px] text-emerald-700 font-mono mt-1 font-semibold"><code>SIMULATE_TAT_ADVANCED(FAIT, CONTEXT)</code></div>
               </div>
               <div id="opt-3-D-illust"
                 class="w-14 h-14 bg-white rounded-lg p-1 border border-slate-200 shadow-sm flex items-center justify-center shrink-0">
@@ -916,19 +920,48 @@
 
           <!-- Moitié Droite : Extrait Illustré de la Table de Données Calculée (Dépend de Q2 & Q3) -->
           <div id="step-3-table-panel"
-            class="lg:col-span-6 bg-white rounded-xl p-3 border border-slate-200 flex flex-col justify-between h-full max-h-full min-h-0 overflow-hidden shadow-sm relative">
+            class="lg:col-span-6 bg-white rounded-xl p-2.5 border border-slate-200 flex flex-col justify-between h-full max-h-full min-h-0 overflow-hidden shadow-sm relative">
             <span id="step3-table-title" class="hidden"></span>
             <span id="step3-combo-badge" class="hidden"></span>
 
-            <!-- Conteneur du tableau dynamique de données -->
-            <div id="step3-table-container" class="flex-1 overflow-x-auto min-h-0 flex flex-col justify-center">
-              <!-- Rempli par renderStep3TablePreview() -->
+            <!-- Barre d'outils supérieure : Toggle ui / <> & Actions Template / Copie -->
+            <div class="flex items-center justify-between gap-2 shrink-0 pb-1.5 border-b border-slate-200">
+              <div class="flex items-center gap-2 min-w-0">
+                <div id="step-3-toggle" class="flex items-center rounded-lg border border-slate-200 bg-white shadow-xs overflow-hidden">
+                  <button type="button" data-view="ui" onclick="toggleTableMode(3, 'ui')" title="Vue Tableau (ui)" class="px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition">ui</button>
+                  <button type="button" data-view="ai" onclick="toggleTableMode(3, 'ai')" title="Prompt IA pour propositions visuelles (<>)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">&lt;&gt;</button>
+                </div>
+              </div>
+              <div class="flex items-center gap-1.5 shrink-0">
+                <button id="step-3-prompt-template-btn" type="button" onclick="openPromptTemplateModal(3)" title="Éditer le template de prompt (<>)" class="px-1.5 py-0.5 text-[10px] font-bold text-slate-600 hover:text-blue-800 bg-slate-50 hover:bg-blue-50 border border-slate-200 rounded cursor-pointer transition shadow-2xs">
+                  ✎
+                </button>
+              </div>
             </div>
 
-            <!-- Explication technique combinée (Granularité Étape 2 x Méthode Étape 3) -->
-            <div id="step3-table-note"
-              class="mt-2 p-2 bg-slate-50 rounded-lg border border-slate-200 text-[10px] text-slate-600 shrink-0 flex items-center justify-between">
-              <!-- Note dynamique -->
+            <!-- Vue Tableau (ui - par défaut) -->
+            <div id="step-3-ui-view" class="flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden">
+              <!-- Conteneur du tableau dynamique de données -->
+              <div id="step3-table-container" class="flex-1 overflow-x-auto min-h-0 flex flex-col justify-center">
+                <!-- Rempli par renderStep3TablePreview() -->
+              </div>
+
+              <!-- Explication technique combinée (Granularité Étape 2 x Méthode Étape 3) -->
+              <div id="step3-table-note"
+                class="mt-2 p-2 bg-slate-50 rounded-lg border border-slate-200 text-[10px] text-slate-600 shrink-0 flex items-center justify-between">
+                <!-- Note dynamique -->
+              </div>
+            </div>
+
+            <!-- Vue Spécification Prompt IA (<>) -->
+            <div id="step-3-ai-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
+              <div class="flex items-center justify-between pb-1 shrink-0">
+                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Prompt IA — Suggestions Visuels (&lt;&gt;)</span>
+                <button type="button" id="step-3-ai-copy-btn" onclick="copyTableAi(3)" title="Copier le prompt IA" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
+                  ⧉
+                </button>
+              </div>
+              <pre class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-2.5 overflow-x-auto overflow-y-auto text-[11px] leading-relaxed whitespace-pre-wrap select-all font-mono"><code id="step-3-ai-code"></code></pre>
             </div>
           </div>
         </div>
@@ -941,24 +974,14 @@
         <div class="mb-2 shrink-0">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
             <div class="flex items-center gap-1.5">
-              <h2 class="text-sm md:text-base font-bold text-blue-800">Étape 4 : Sélectionner les visuels pour le Délai (TAT)</h2>
+              <h2 class="text-sm md:text-base font-bold text-blue-800">Étape 4 : Visuels de Délai (TAT)</h2>
               <button type="button" onclick="openMethodologyModal(4)" title="Méthodologie Data & Gouvernance" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-800 transition hover:scale-110 shadow-2xs font-bold text-[10px]">
                 <i data-lucide="info" class="w-3.5 h-3.5"></i>Gouvernance</button>
             </div>
             <div class="flex items-center gap-2 self-start sm:self-auto">
-              <!-- Sélecteur d'usage synchronisé avec l'Étape 1 -->
-              <div class="flex items-center gap-1.5 bg-white border border-slate-300 rounded-lg px-2 py-0.5 shadow-xs">
-                <select id="select-usage-step4" onchange="onUsageChange(this.value)"
-                  class="bg-transparent text-[10.5px] font-bold text-blue-800 outline-none cursor-pointer">
-                  <option value="A">EOWN · Processus RTI & Moteurs/Modules</option>
-                  <option value="B">CSPM · Engagements SLA & Removal Plan (PERF)</option>
-                  <option value="C">NTPL · Équilibrage Réseau 12-36 mois & Slots</option>
-                  <option value="D">FINC · Volumes IBP, Mix & Coûts SV</option>
-                  <option value="E">SHPL · Ordonnancement Atelier & Aléas Court Terme</option>
-                  <option value="F">DMMG & FTM · Prévisions Demande & Workscopes (Walk)</option>
-                  <option value="G">DGOV · Qualité des Données & Modèles</option>
-                </select>
-              </div>
+              <button type="button" onclick="openAddVisualModal(4)" class="px-2.5 h-6 sm:h-7 rounded-md bg-blue-800 hover:bg-blue-700 text-white text-xs font-bold transition shadow-xs flex items-center gap-1 hover:scale-105 active:scale-95 cursor-pointer" title="Ajouter une visualisation personnalisée">
+                <span>+</span> Ajouter un visuel
+              </button>
               <div class="flex items-center gap-1 shrink-0">
                 <button type="button" onclick="prevStep()" class="px-2 h-6 sm:h-7 rounded-md bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-sm font-bold transition shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 cursor-pointer" title="Précédent">Préc.</button>
                 <button type="button" onclick="nextStep()" class="px-2 h-6 sm:h-7 rounded-md bg-blue-800 hover:bg-blue-800 text-white text-sm font-bold transition shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 cursor-pointer" title="Suivant">Suiv.</button>
@@ -969,6 +992,8 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 flex-1 min-h-0 overflow-hidden" style="grid-template-rows: minmax(0, 1fr);">
           <div id="step-4-answers" class="answers-scroll-area lg:col-span-5 flex flex-col justify-start space-y-2.5 h-full max-h-full min-h-0 overflow-y-auto overflow-x-hidden pr-1.5">
+            <!-- Zone des visuels personnalisés Étape 4 (toujours plus hauts) -->
+            <div id="step-4-custom-answers" class="flex flex-col space-y-2.5 empty:hidden"></div>
     <div onclick="selectOption(4, 'A')" id="opt-4-A"
                 class="option-card step-answers-card glass-card rounded-xl border border-slate-200 cursor-pointer flex flex-row items-start gap-3">
                 <div id="opt-4-A-body" class="flex-1 min-w-0">
@@ -1118,9 +1143,9 @@
               <div class="flex items-center justify-between gap-2 shrink-0 pb-1.5 border-b border-slate-200">
                 <div class="flex items-center gap-2 min-w-0">
                   <div id="step-4-chart-toggle" class="flex items-center rounded-lg border border-slate-200 bg-white shadow-xs overflow-hidden">
-                    <button type="button" data-view="chart" onclick="toggleChartMode(4, 'chart')" title="Vue Graphique (js)" class="px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition">js</button>
-                    <button type="button" data-view="code" onclick="toggleChartMode(4, 'code')" title="Éditeur Visuel de Configuration" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">ui</button>
-                    <button type="button" data-view="ai" onclick="toggleChartMode(4, 'ai')" title="Spécification Chart.js pour IA" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">&lt;&gt;</button>
+                    <button type="button" data-view="chart" onclick="toggleChartMode(4, 'chart')" title="Vue Graphique (ui)" class="px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition">ui</button>
+                    <button type="button" data-view="js" onclick="toggleChartMode(4, 'js')" title="Données Chart.js (js)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">js</button>
+                    <button type="button" data-view="ai" onclick="toggleChartMode(4, 'ai')" title="Spécification Chart.js pour IA (<>)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">&lt;&gt;</button>
                   </div>
                 </div>
                 <div class="flex items-center gap-1.5 shrink-0">
@@ -1137,11 +1162,16 @@
                 <div id="step-4-chart-box" class="flex-1 w-full min-h-0 relative overflow-hidden my-1">
                   <canvas id="step-4-canvas" style="display: block; width: 100%; height: 100%;"></canvas>
                 </div>
-                <div id="step-4-chart-note" class="shrink-0 text-[9.5px] text-slate-600 bg-slate-50 rounded-lg border border-slate-200 px-2 py-1.5"></div>
               </div>
-              <!-- Vue Éditeur Visuel (masquée par défaut) -->
-              <div id="step-4-code-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
-                <div id="step-4-gui-editor" class="flex-1 w-full min-h-0 overflow-y-auto pr-1 space-y-2 text-[11px] text-slate-700"></div>
+              <!-- Vue Code Source Configuration Chart.js (js) -->
+              <div id="step-4-js-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
+                <div class="flex items-center justify-between pb-1 shrink-0">
+                  <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Configuration Chart.js (config)</span>
+                  <button type="button" id="step-4-js-copy-btn" onclick="copyChartDataJs(4)" title="Copier la configuration Chart.js complète" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
+                    ⧉
+                  </button>
+                </div>
+                <pre class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-2.5 overflow-x-auto overflow-y-auto text-[11px] leading-relaxed whitespace-pre-wrap select-all font-mono"><code id="step-4-js-code"></code></pre>
               </div>
               <!-- Vue Spécification Chart.js Prompt IA (ai) -->
               <div id="step-4-ai-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
@@ -1164,7 +1194,7 @@
         <div class="mb-2 shrink-0">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
             <div class="flex items-center gap-1.5">
-              <h2 class="text-sm md:text-base font-bold text-blue-800">Étape 5 : Choisir la méthode d'évaluation de la Capacité d'Intervention en Atelier</h2>
+              <h2 class="text-sm md:text-base font-bold text-blue-800">Étape 5 : Évaluation de la Capacité</h2>
               <button type="button" onclick="openMethodologyModal(5)" title="Méthodologie Data & Gouvernance" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-800 transition hover:scale-110 shadow-2xs font-bold text-[10px]">
                 <i data-lucide="info" class="w-3.5 h-3.5"></i>Gouvernance</button>
             </div>
@@ -1186,13 +1216,11 @@
                   A. Capacité S&amp;OP (C-SOP)
                 </div>
                 <p class="text-[10.5px] text-slate-600 leading-snug">
-                  Capacité nominale planifiée par atelier (S-XXX) selon le plan de charge S&amp;OP.
+                  Capacité nominale planifiée pour l'arbitrage réseau et la réservation des créneaux à moyen terme (12–36 mois).
                 </p>
                 <div class="text-[10px] text-slate-500 mt-1 space-y-0.5">
-                  <div><span class="text-purple-700 font-semibold">Principe :</span> Adéquation macro entre le volume d'heures de gammes prévues et la capacité théorique des shops.</div>
-                  <div><span class="text-slate-500">Usage MRO :</span> Arbitrage réseau 12–36 mois, réservation prévisionnelle des créneaux et équilibrage multi-sites.</div>
+                  <div><span class="text-purple-700 font-semibold">Principe :</span> Adéquation globale entre les volumes d'heures prévisionnels et l'ouverture théorique des baies.</div>
                 </div>
-                <div class="text-[9px] text-purple-700 font-mono mt-1 font-semibold"><code>Charge_SOP = DIVIDE(SUM(MDT_INTERVENTION[HEURES_GAMME]), [CAPACITE_HEURES_SHOP])</code></div>
               </div>
               <div id="opt-5-A-illust"
                 class="w-14 h-14 bg-white rounded-lg p-1 border border-slate-200 shadow-sm flex items-center justify-center shrink-0">
@@ -1219,13 +1247,11 @@
                   B. Projection statistique (C-STA)
                 </div>
                 <p class="text-[10.5px] text-slate-600 leading-snug">
-                  Capacité projetée par analyse statistique du débit réel et de l'en-cours actif (WIP).
+                  Cadence réelle d'écoulement et débit effectif basés sur les moteurs actuellement en cours (WIP) dans les ateliers.
                 </p>
                 <div class="text-[10px] text-slate-500 mt-1 space-y-0.5">
-                  <div><span class="text-amber-700 font-semibold">Principe :</span> Cadence d'interventions extrapolée sur l'historique récent et le WIP réel en atelier.</div>
-                  <div><span class="text-slate-500">Usage MRO :</span> Régulation opérationnelle hebdomadaire et pilotage de la cadence d'écoulement.</div>
+                  <div><span class="text-amber-700 font-semibold">Principe :</span> Extrapolation du rythme de sortie constaté sur les dernières semaines selon l'en-cours actif.</div>
                 </div>
-                <div class="text-[9px] text-amber-700 font-mono mt-1 font-semibold"><code>Debit_Stats = CALCULATE([INTERVENTIONS_CLOTUREES], DATESINPERIOD('Calendar'[Date], TODAY(), -3, MONTH))</code></div>
               </div>
               <div id="opt-5-B-illust"
                 class="w-14 h-14 bg-white rounded-lg p-1 border border-slate-200 shadow-sm flex items-center justify-center shrink-0">
@@ -1246,13 +1272,11 @@
                   C. Projection logistique (C-LOG)
                 </div>
                 <p class="text-[10.5px] text-slate-600 leading-snug">
-                  Capacité bridée par la disponibilité effective des pièces et kits de réparation (OTIF).
+                  Capacité d'intervention alignée sur la disponibilité effective des pièces et kits critiques de réparation (OTIF).
                 </p>
                 <div class="text-[10px] text-slate-500 mt-1 space-y-0.5">
-                  <div><span class="text-blue-800 font-semibold">Principe :</span> Le débit des stations est limité par la pièce critique la plus lente (kits, aubes, LLP).</div>
-                  <div><span class="text-slate-500">Usage MRO :</span> Synchronisation des lancements d'interventions sur les dates de livraison confirmées.</div>
+                  <div><span class="text-blue-800 font-semibold">Principe :</span> Capacité utile bridée par la pièce manquante la plus lente (aubes, disques, kits LLP).</div>
                 </div>
-                <div class="text-[9px] text-blue-800 font-mono mt-1 font-semibold"><code>Capacite_Logistique = MIN([CAPACITE_POSTES], [KITS_DISPO] * [CADENCE_STANDARD])</code></div>
               </div>
               <div id="opt-5-C-illust"
                 class="w-14 h-14 bg-white rounded-lg p-1 border border-slate-200 shadow-sm flex items-center justify-center shrink-0">
@@ -1276,13 +1300,11 @@
                   D. Modélisation avancée (C-ML)
                 </div>
                 <p class="text-[10.5px] text-slate-600 leading-snug">
-                  Simulation prédictive de capacité intégrant les aléas, contrôles CND et pannes bancs.
+                  Capacité prédictive intégrant les retouches d'usinage, les contrôles CND et la disponibilité des bancs d'essai.
                 </p>
                 <div class="text-[10px] text-slate-500 mt-1 space-y-0.5">
-                  <div><span class="text-emerald-700 font-semibold">Principe :</span> Modèle prédictif combinant usure pièces, probabilité de retouches et disponibilité des bancs.</div>
-                  <div><span class="text-slate-500">Usage MRO :</span> Dimensionnement dynamique des tampons, gestion proactive des goulots et variabilité.</div>
+                  <div><span class="text-emerald-700 font-semibold">Principe :</span> Simulation prévisionnelle tenant compte des taux de rebut et pannes d'équipements critiques.</div>
                 </div>
-                <div class="text-[9px] text-emerald-700 font-mono mt-1 font-semibold"><code>Capacite_ML = FORECAST_CAPACITY([INTERVENTIONS_PREVUES], [ALEAS_CND], [DISPO_BANCS])</code></div>
               </div>
               <div id="opt-5-D-illust"
                 class="w-14 h-14 bg-white rounded-lg p-1 border border-slate-200 shadow-sm flex items-center justify-center shrink-0">
@@ -1299,19 +1321,48 @@
 
           <!-- Moitié Droite : Extrait Illustré du Bilan de Capacité (Dépend de Q2 & Q5) -->
           <div id="step-5-table-panel"
-            class="lg:col-span-6 bg-white rounded-xl p-3 border border-slate-200 flex flex-col justify-between h-full max-h-full min-h-0 overflow-hidden shadow-sm relative">
+            class="lg:col-span-6 bg-white rounded-xl p-2.5 border border-slate-200 flex flex-col justify-between h-full max-h-full min-h-0 overflow-hidden shadow-sm relative">
             <span id="step5-table-title" class="hidden"></span>
             <span id="step5-combo-badge" class="hidden"></span>
 
-            <!-- Conteneur du tableau dynamique de capacité -->
-            <div id="step5-table-container" class="flex-1 overflow-x-auto min-h-0 flex flex-col justify-center">
-              <!-- Rempli par renderStep5TablePreview() -->
+            <!-- Barre d'outils supérieure : Toggle ui / <> & Actions Template / Copie -->
+            <div class="flex items-center justify-between gap-2 shrink-0 pb-1.5 border-b border-slate-200">
+              <div class="flex items-center gap-2 min-w-0">
+                <div id="step-5-toggle" class="flex items-center rounded-lg border border-slate-200 bg-white shadow-xs overflow-hidden">
+                  <button type="button" data-view="ui" onclick="toggleTableMode(5, 'ui')" title="Vue Tableau (ui)" class="px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition">ui</button>
+                  <button type="button" data-view="ai" onclick="toggleTableMode(5, 'ai')" title="Prompt IA pour propositions visuelles (<>)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">&lt;&gt;</button>
+                </div>
+              </div>
+              <div class="flex items-center gap-1.5 shrink-0">
+                <button id="step-5-prompt-template-btn" type="button" onclick="openPromptTemplateModal(5)" title="Éditer le template de prompt (<>)" class="px-1.5 py-0.5 text-[10px] font-bold text-slate-600 hover:text-blue-800 bg-slate-50 hover:bg-blue-50 border border-slate-200 rounded cursor-pointer transition shadow-2xs">
+                  ✎
+                </button>
+              </div>
             </div>
 
-            <!-- Explication technique combinée -->
-            <div id="step5-table-note"
-              class="mt-2 p-2 bg-slate-50 rounded-lg border border-slate-200 text-[10px] text-slate-600 shrink-0 flex items-center justify-between">
-              <!-- Note dynamique -->
+            <!-- Vue Tableau (ui - par défaut) -->
+            <div id="step-5-ui-view" class="flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden">
+              <!-- Conteneur du tableau dynamique de capacité -->
+              <div id="step5-table-container" class="flex-1 overflow-x-auto min-h-0 flex flex-col justify-center">
+                <!-- Rempli par renderStep5TablePreview() -->
+              </div>
+
+              <!-- Explication technique combinée -->
+              <div id="step5-table-note"
+                class="mt-2 p-2 bg-slate-50 rounded-lg border border-slate-200 text-[10px] text-slate-600 shrink-0 flex items-center justify-between">
+                <!-- Note dynamique -->
+              </div>
+            </div>
+
+            <!-- Vue Spécification Prompt IA (<>) -->
+            <div id="step-5-ai-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
+              <div class="flex items-center justify-between pb-1 shrink-0">
+                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Prompt IA — Suggestions Visuels (&lt;&gt;)</span>
+                <button type="button" id="step-5-ai-copy-btn" onclick="copyTableAi(5)" title="Copier le prompt IA" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
+                  ⧉
+                </button>
+              </div>
+              <pre class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-2.5 overflow-x-auto overflow-y-auto text-[11px] leading-relaxed whitespace-pre-wrap select-all font-mono"><code id="step-5-ai-code"></code></pre>
             </div>
           </div>
         </div>
@@ -1324,24 +1375,14 @@
         <div class="mb-2 shrink-0">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
             <div class="flex items-center gap-1.5">
-              <h2 class="text-sm md:text-base font-bold text-blue-800">Étape 6 : Sélectionner les visuels pour la Saturation des Interventions en Atelier</h2>
+              <h2 class="text-sm md:text-base font-bold text-blue-800">Étape 6 : Visuels de Saturation</h2>
               <button type="button" onclick="openMethodologyModal(6)" title="Méthodologie Data & Gouvernance" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-800 transition hover:scale-110 shadow-2xs font-bold text-[10px]">
                 <i data-lucide="info" class="w-3.5 h-3.5"></i>Gouvernance</button>
             </div>
             <div class="flex items-center gap-2 self-start sm:self-auto">
-              <!-- Sélecteur d'usage synchronisé avec l'Étape 1 -->
-              <div class="flex items-center gap-1.5 bg-white border border-slate-300 rounded-lg px-2 py-0.5 shadow-xs">
-                <select id="select-usage-step6" onchange="onUsageChange(this.value)"
-                  class="bg-transparent text-[10.5px] font-bold text-blue-800 outline-none cursor-pointer">
-                  <option value="A">EOWN · Processus RTI & Moteurs/Modules</option>
-                  <option value="B">CSPM · Engagements SLA & Removal Plan (PERF)</option>
-                  <option value="C">NTPL · Équilibrage Réseau 12-36 mois & Slots</option>
-                  <option value="D">FINC · Volumes IBP, Mix & Coûts SV</option>
-                  <option value="E">SHPL · Ordonnancement Atelier & Aléas Court Terme</option>
-                  <option value="F">DMMG & FTM · Prévisions Demande & Workscopes (Walk)</option>
-                  <option value="G">DGOV · Qualité des Données & Modèles</option>
-                </select>
-              </div>
+              <button type="button" onclick="openAddVisualModal(6)" class="px-2.5 h-6 sm:h-7 rounded-md bg-blue-800 hover:bg-blue-700 text-white text-xs font-bold transition shadow-xs flex items-center gap-1 hover:scale-105 active:scale-95 cursor-pointer" title="Ajouter une visualisation personnalisée">
+                <span>+</span> Ajouter un visuel
+              </button>
               <div class="flex items-center gap-1 shrink-0">
                 <button type="button" onclick="prevStep()" class="px-2 h-6 sm:h-7 rounded-md bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-sm font-bold transition shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 cursor-pointer" title="Précédent">Préc.</button>
                 <button type="button" onclick="nextStep()" class="px-2 h-6 sm:h-7 rounded-md bg-blue-800 hover:bg-blue-800 text-white text-sm font-bold transition shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 cursor-pointer" title="Suivant">Suiv.</button>
@@ -1352,6 +1393,8 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 flex-1 min-h-0 overflow-hidden" style="grid-template-rows: minmax(0, 1fr);">
           <div id="step-6-answers" class="answers-scroll-area lg:col-span-5 flex flex-col justify-start space-y-2.5 h-full max-h-full min-h-0 overflow-y-auto overflow-x-hidden pr-1.5">
+            <!-- Zone des visuels personnalisés Étape 6 (toujours plus hauts) -->
+            <div id="step-6-custom-answers" class="flex flex-col space-y-2.5 empty:hidden"></div>
     <div onclick="selectOption(6, 'A')" id="opt-6-A"
                 class="option-card active step-answers-card glass-card rounded-xl border border-slate-200 cursor-pointer flex flex-col justify-between items-stretch">
                 <div id="opt-6-A-body">
@@ -1501,9 +1544,9 @@
               <div class="flex items-center justify-between gap-2 shrink-0 pb-1.5 border-b border-slate-200">
                 <div class="flex items-center gap-2 min-w-0">
                   <div id="step-6-chart-toggle" class="flex items-center rounded-lg border border-slate-200 bg-white shadow-xs overflow-hidden">
-                    <button type="button" data-view="chart" onclick="toggleChartMode(6, 'chart')" title="Vue Graphique (js)" class="px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition">js</button>
-                    <button type="button" data-view="code" onclick="toggleChartMode(6, 'code')" title="Éditeur Visuel de Configuration" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">ui</button>
-                    <button type="button" data-view="ai" onclick="toggleChartMode(6, 'ai')" title="Spécification Chart.js pour IA" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">&lt;&gt;</button>
+                    <button type="button" data-view="chart" onclick="toggleChartMode(6, 'chart')" title="Vue Graphique (ui)" class="px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition">ui</button>
+                    <button type="button" data-view="js" onclick="toggleChartMode(6, 'js')" title="Données Chart.js (js)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">js</button>
+                    <button type="button" data-view="ai" onclick="toggleChartMode(6, 'ai')" title="Spécification Chart.js pour IA (<>)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">&lt;&gt;</button>
                   </div>
                   <button id="step-6-treemap-reset" type="button" onclick="resetTreemapDrill()" class="hidden text-[9.5px] font-bold text-blue-800 bg-blue-50 hover:bg-blue-100 border border-blue-200 px-2 py-0.5 rounded cursor-pointer transition shadow-2xs shrink-0">
                     ◀ Revenir aux Moteurs
@@ -1524,9 +1567,15 @@
                   <canvas id="step-6-canvas" style="display: block; width: 100%; height: 100%;"></canvas>
                 </div>
               </div>
-              <!-- Vue Éditeur Visuel (masquée par défaut) -->
-              <div id="step-6-code-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
-                <div id="step-6-gui-editor" class="flex-1 w-full min-h-0 overflow-y-auto pr-1 space-y-2 text-[11px] text-slate-700"></div>
+              <!-- Vue Code Source Configuration Chart.js (js) -->
+              <div id="step-6-js-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
+                <div class="flex items-center justify-between pb-1 shrink-0">
+                  <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Configuration Chart.js (config)</span>
+                  <button type="button" id="step-6-js-copy-btn" onclick="copyChartDataJs(6)" title="Copier la configuration Chart.js complète" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
+                    ⧉
+                  </button>
+                </div>
+                <pre class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-2.5 overflow-x-auto overflow-y-auto text-[11px] leading-relaxed whitespace-pre-wrap select-all font-mono"><code id="step-6-js-code"></code></pre>
               </div>
               <!-- Vue Spécification Chart.js Prompt IA (ai) -->
               <div id="step-6-ai-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
@@ -1720,8 +1769,8 @@
         <div class="flex items-center gap-2.5">
           <span class="w-1 h-6 rounded-full bg-blue-800 shrink-0"></span>
           <div>
-            <h3 class="text-xs md:text-sm font-bold tracking-tight text-slate-900">Configuration du Template de Prompt Visuel (&lt;&gt;)</h3>
-            <p class="text-[10.5px] text-slate-500 font-normal">Personnalisation du prompt Markdown généré pour tous les graphiques (stocké en LocalStorage)</p>
+            <h3 id="prompt-template-modal-title" class="text-xs md:text-sm font-bold tracking-tight text-slate-900">Configuration du Template de Prompt Visuel (&lt;&gt;)</h3>
+            <p id="prompt-template-modal-subtitle" class="text-[10.5px] text-slate-500 font-normal">Personnalisation du prompt Markdown généré (stocké en LocalStorage)</p>
           </div>
         </div>
         <button type="button" onclick="closePromptTemplateModal()" class="w-7 h-7 rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center transition text-sm font-bold" title="Fermer (Échap)">
@@ -1730,8 +1779,11 @@
       </div>
 
       <!-- Variables disponibles -->
-      <div class="px-4 py-2 bg-slate-50 border-b border-slate-200 flex items-center flex-wrap gap-1.5 shrink-0 text-[11px] text-slate-600">
+      <div id="prompt-template-vars-container" class="px-4 py-2 bg-slate-50 border-b border-slate-200 flex items-center flex-wrap gap-1.5 shrink-0 text-[11px] text-slate-600">
         <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mr-1">Variables :</span>
+        <code class="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-blue-800 font-mono text-[10.5px]">{optBody}</code>
+        <code class="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-blue-800 font-mono text-[10.5px]">{uml2A}</code>
+        <code class="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-blue-800 font-mono text-[10.5px]">{uml2B}</code>
         <code class="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-blue-800 font-mono text-[10.5px]">{title}</code>
         <code class="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-blue-800 font-mono text-[10.5px]">{desc}</code>
         <code class="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-blue-800 font-mono text-[10.5px]">{chartType}</code>
@@ -1765,6 +1817,90 @@
           </button>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- ================= MODALE AJOUT / ÉDITION DE VISUEL PERSONNALISÉ (ÉTAPES 4 & 6) ================= -->
+  <div id="add-visual-modal" class="fixed inset-0 z-50 hidden bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-1 sm:p-2">
+    <div class="bg-white w-[98vw] max-w-5xl h-[98vh] max-h-[98vh] rounded-xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- En-tête de la modale -->
+      <div class="px-4 py-3 bg-white border-b border-slate-200 flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-2.5">
+          <span class="w-1 h-6 rounded-full bg-blue-800 shrink-0"></span>
+          <div>
+            <h3 id="add-visual-modal-title" class="text-xs md:text-sm font-bold tracking-tight text-slate-900">Ajouter une visualisation personnalisée</h3>
+            <p id="add-visual-modal-subtitle" class="text-[10.5px] text-slate-500 font-normal">Saisissez les informations métier et collez le code Chart.js (data ou config)</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeAddVisualModal()" class="w-7 h-7 rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center transition text-sm font-bold cursor-pointer" title="Fermer (Échap)">
+          ✕
+        </button>
+      </div>
+
+      <!-- Corps du formulaire -->
+      <div class="px-4 py-2 overflow-y-auto space-y-2 flex-1 min-h-0 text-xs flex flex-col">
+        <input type="hidden" id="custom-visual-id" value="" />
+        
+        <!-- Titre -->
+        <div class="shrink-0">
+          <label for="custom-visual-title" class="block font-bold text-slate-700 mb-0.5 text-[11px]">Titre du visuel <span class="text-red-500">*</span></label>
+          <input type="text" id="custom-visual-title" placeholder="Ex: Dérive TAT par Atelier & Spécialité" 
+            class="w-full px-2.5 py-1 bg-white border border-slate-300 rounded-lg text-slate-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-xs" />
+        </div>
+
+        <!-- Description -->
+        <div class="shrink-0">
+          <label for="custom-visual-desc" class="block font-bold text-slate-700 mb-0.5 text-[11px]">Description <span class="text-slate-400 font-normal text-[10px]">(facultatif)</span></label>
+          <textarea id="custom-visual-desc" rows="1" placeholder="Ex: Analyse comparative détaillée du délai d'attente..."
+            class="w-full px-2.5 py-1 bg-white border border-slate-300 rounded-lg text-slate-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-xs resize-none"></textarea>
+        </div>
+
+        <!-- Personas -->
+        <div class="shrink-0">
+          <label class="block font-bold text-slate-700 mb-1 text-[11px]">Personas associés <span class="text-slate-400 font-normal text-[10px]">(facultatif)</span></label>
+          <div id="custom-visual-personas" class="flex flex-wrap gap-1">
+            <button type="button" data-persona="cspm" onclick="toggleCustomPersonaChip(this)" class="custom-persona-btn px-2 py-0.5 rounded-md border border-slate-200 bg-slate-50 text-slate-600 font-semibold text-[10px] hover:border-slate-300 cursor-pointer transition">✈️ CSPM</button>
+            <button type="button" data-persona="eo" onclick="toggleCustomPersonaChip(this)" class="custom-persona-btn px-2 py-0.5 rounded-md border border-slate-200 bg-slate-50 text-slate-600 font-semibold text-[10px] hover:border-slate-300 cursor-pointer transition">🔧 EOWN</button>
+            <button type="button" data-persona="network" onclick="toggleCustomPersonaChip(this)" class="custom-persona-btn px-2 py-0.5 rounded-md border border-slate-200 bg-slate-50 text-slate-600 font-semibold text-[10px] hover:border-slate-300 cursor-pointer transition">🌐 NTPL</button>
+            <button type="button" data-persona="shop" onclick="toggleCustomPersonaChip(this)" class="custom-persona-btn px-2 py-0.5 rounded-md border border-slate-200 bg-slate-50 text-slate-600 font-semibold text-[10px] hover:border-slate-300 cursor-pointer transition">🏭 SHPL</button>
+            <button type="button" data-persona="ftm" onclick="toggleCustomPersonaChip(this)" class="custom-persona-btn px-2 py-0.5 rounded-md border border-slate-200 bg-slate-50 text-slate-600 font-semibold text-[10px] hover:border-slate-300 cursor-pointer transition">📐 FTM</button>
+            <button type="button" data-persona="finance" onclick="toggleCustomPersonaChip(this)" class="custom-persona-btn px-2 py-0.5 rounded-md border border-slate-200 bg-slate-50 text-slate-600 font-semibold text-[10px] hover:border-slate-300 cursor-pointer transition">💰 FINC</button>
+            <button type="button" data-persona="demand" onclick="toggleCustomPersonaChip(this)" class="custom-persona-btn px-2 py-0.5 rounded-md border border-slate-200 bg-slate-50 text-slate-600 font-semibold text-[10px] hover:border-slate-300 cursor-pointer transition">📊 DMMG</button>
+            <button type="button" data-persona="dgov" onclick="toggleCustomPersonaChip(this)" class="custom-persona-btn px-2 py-0.5 rounded-md border border-slate-200 bg-slate-50 text-slate-600 font-semibold text-[10px] hover:border-slate-300 cursor-pointer transition">🏛️ DGOV</button>
+          </div>
+        </div>
+
+        <!-- Code Chart.js -->
+        <div class="flex-1 min-h-0 flex flex-col">
+          <div class="flex items-center justify-between mb-1 shrink-0">
+            <label for="custom-visual-code" class="font-bold text-slate-700 text-[11px]">Code JS ChartJS (data ou config) <span class="text-red-500">*</span></label>
+            <button type="button" id="custom-visual-copy-ai-btn" onclick="copyAiPromptForCustomVisual()" class="text-[10px] text-blue-800 hover:underline font-semibold cursor-pointer flex items-center gap-1">
+              <span>⧉</span> <span id="custom-visual-copy-ai-label">Copier le prompt IA</span>
+            </button>
+          </div>
+          <textarea id="custom-visual-code" spellcheck="false" placeholder="{\n  labels: ['Site A', 'Site B', 'Site C'],\n  datasets: [{\n    label: 'TAT Moyen (j)',\n    data: [14.2, 18.5, 21.0],\n    backgroundColor: '#3b82f6'\n  }]\n}"
+            class="w-full flex-1 min-h-[180px] p-2.5 bg-slate-900 text-slate-100 font-mono text-[11px] leading-relaxed rounded-lg border border-slate-700 focus:outline-none focus:ring-1 focus:ring-blue-500 resize-none whitespace-pre"></textarea>
+          
+          <!-- Message d'erreur de validation syntaxique -->
+          <div id="custom-visual-error" class="hidden mt-1 p-2 bg-red-50 border border-red-200 text-red-700 text-[11px] rounded-lg font-mono flex items-start gap-1.5 shrink-0">
+            <span class="font-bold">⚠️</span>
+            <span id="custom-visual-error-text" class="flex-1"></span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Pied de la modale -->
+      <div class="px-4 py-2.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between shrink-0 text-xs">
+        <button type="button" onclick="closeAddVisualModal()" class="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-semibold transition shadow-xs cursor-pointer">
+          Annuler
+        </button>
+        <button type="button" id="custom-visual-submit-btn" onclick="submitCustomVisual()" class="px-4 py-1.5 rounded-lg bg-blue-800 hover:bg-blue-700 text-white font-bold transition shadow-sm cursor-pointer flex items-center gap-1.5">
+          Sauvegarder et afficher
+        </button>
+      </div>
+
     </div>
   </div>
 
@@ -1844,6 +1980,7 @@
           })
           .then(md => {
             container.innerHTML = marked.parse(md);
+            attachCopyButtonsToPre(container);
             methodologyLoaded = true;
             if (stepNum) {
               setTimeout(() => scrollToMethodology(stepNum), 80);
@@ -1878,11 +2015,26 @@
       }
     }
 
-    function openPromptTemplateModal() {
+    let targetPromptModalStep = 4;
+
+    function openPromptTemplateModal(step) {
+      targetPromptModalStep = (step === 3 || step === 5) ? step : 4;
       const modal = document.getElementById("prompt-template-modal");
       const textarea = document.getElementById("prompt-template-textarea");
+      const titleEl = document.getElementById("prompt-template-modal-title");
+      const subEl = document.getElementById("prompt-template-modal-subtitle");
       if (!modal || !textarea) return;
-      textarea.value = getPromptTemplate();
+
+      if (targetPromptModalStep === 3 || targetPromptModalStep === 5) {
+        if (titleEl) titleEl.textContent = "Configuration du Template de Prompt IA Tables (Étape " + targetPromptModalStep + ") (<>)";
+        if (subEl) subEl.textContent = "Génération de propositions de visualisations avec analyse comparative et modèles ERD (stocké en LocalStorage)";
+        textarea.value = getTablePromptTemplate();
+      } else {
+        if (titleEl) titleEl.textContent = "Configuration du Template de Prompt Visuel (<>)";
+        if (subEl) subEl.textContent = "Personnalisation du prompt Markdown généré pour tous les graphiques (stocké en LocalStorage)";
+        textarea.value = getPromptTemplate();
+      }
+
       const msg = document.getElementById("prompt-template-saved-msg");
       if (msg) msg.classList.add("hidden");
       modal.classList.remove("hidden");
@@ -1897,22 +2049,41 @@
     function savePromptTemplateModal() {
       const textarea = document.getElementById("prompt-template-textarea");
       if (!textarea) return;
-      savePromptTemplate(textarea.value);
+
+      if (targetPromptModalStep === 3 || targetPromptModalStep === 5) {
+        saveTablePromptTemplate(textarea.value);
+        renderTableAiView(3);
+        renderTableAiView(5);
+      } else {
+        savePromptTemplate(textarea.value);
+        renderChartAiView(4);
+        renderChartAiView(6);
+      }
+
       const msg = document.getElementById("prompt-template-saved-msg");
       if (msg) {
         msg.classList.remove("hidden");
         setTimeout(() => msg.classList.add("hidden"), 1800);
       }
-      renderChartAiView(4);
-      renderChartAiView(6);
       setTimeout(() => closePromptTemplateModal(), 400);
     }
 
     function resetPromptTemplateModal() {
       const textarea = document.getElementById("prompt-template-textarea");
       if (!textarea) return;
-      textarea.value = DEFAULT_PROMPT_TEMPLATE;
-      localStorage.removeItem(PROMPT_TEMPLATE_STORAGE_KEY);
+
+      if (targetPromptModalStep === 3 || targetPromptModalStep === 5) {
+        textarea.value = DEFAULT_TABLE_PROMPT_TEMPLATE;
+        localStorage.removeItem(TABLE_PROMPT_TEMPLATE_STORAGE_KEY);
+        renderTableAiView(3);
+        renderTableAiView(5);
+      } else {
+        textarea.value = DEFAULT_PROMPT_TEMPLATE;
+        localStorage.removeItem(PROMPT_TEMPLATE_STORAGE_KEY);
+        renderChartAiView(4);
+        renderChartAiView(6);
+      }
+
       const msg = document.getElementById("prompt-template-saved-msg");
       if (msg) {
         msg.textContent = "✓ Réinitialisé";
@@ -1922,14 +2093,13 @@
           msg.classList.add("hidden");
         }, 1800);
       }
-      renderChartAiView(4);
-      renderChartAiView(6);
     }
 
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
         closeMethodologyModal();
         closePromptTemplateModal();
+        closeAddVisualModal();
       }
     });
 
@@ -2180,14 +2350,16 @@
       // Mise à jour dynamique des badges d'usage filtrés par Q1 sur les cartes 4 et 6
       renderUsageBadges();
 
-      // Si sélection invalide, basculer sur l'option recommandée principale
+      // Si sélection invalide (et non custom), basculer sur l'option recommandée principale
       const validOptions = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
-      if (!validOptions.includes(selections[4])) {
+      const isCustom4 = typeof selections[4] === 'string' && selections[4].startsWith('custom_') && !!getCustomVisualById(4, selections[4]);
+      if (!isCustom4 && !validOptions.includes(selections[4])) {
         selections[4] = reco.step4[0];
         const sel4 = document.getElementById('select-q4');
         if (sel4) sel4.value = selections[4];
       }
-      if (!validOptions.includes(selections[6])) {
+      const isCustom6 = typeof selections[6] === 'string' && selections[6].startsWith('custom_') && !!getCustomVisualById(6, selections[6]);
+      if (!isCustom6 && !validOptions.includes(selections[6])) {
         selections[6] = reco.step6[0];
         const sel6 = document.getElementById('select-q6');
         if (sel6) sel6.value = selections[6];
@@ -2341,7 +2513,7 @@
       updateCompatibilities();
 
       drawSchema(opt);
-      if (schemaViewMode === 'mermaid') updateMermaidCode(opt);
+      if (schemaViewMode === 'uml' || schemaViewMode === 'mermaid') updateMermaidCode(opt);
       renderStep3TablePreview();
       renderStep5TablePreview();
       updateRecap();
@@ -2353,6 +2525,435 @@
 
     function onUsageChange(val) {
       selectOption(1, val);
+    }
+
+    // ===== Gestion des Visualisations Personnalisées (Étapes 4 & 6) =====
+    let activeAddVisualStep = 4;
+
+    function getCustomVisuals(step) {
+      try {
+        const raw = localStorage.getItem(`maestro_custom_visuals_${step}`);
+        if (raw) {
+          const arr = JSON.parse(raw);
+          if (Array.isArray(arr)) return arr;
+        }
+      } catch (e) {
+        console.warn('Erreur lecture custom visuals:', e);
+      }
+      return [];
+    }
+
+    function saveCustomVisuals(step, list) {
+      try {
+        localStorage.setItem(`maestro_custom_visuals_${step}`, JSON.stringify(list));
+      } catch (e) {
+        console.warn('Erreur sauvegarde custom visuals:', e);
+      }
+    }
+
+    function getCustomVisualById(step, customId) {
+      const list = getCustomVisuals(step);
+      return list.find(v => v.id === customId) || null;
+    }
+
+    function openAddVisualModal(step, editId = null) {
+      activeAddVisualStep = (step === 6) ? 6 : 4;
+      const modal = document.getElementById('add-visual-modal');
+      const titleEl = document.getElementById('add-visual-modal-title');
+      const subtitleEl = document.getElementById('add-visual-modal-subtitle');
+      const idInput = document.getElementById('custom-visual-id');
+      const inputTitle = document.getElementById('custom-visual-title');
+      const inputDesc = document.getElementById('custom-visual-desc');
+      const inputCode = document.getElementById('custom-visual-code');
+      const errorDiv = document.getElementById('custom-visual-error');
+      const submitBtn = document.getElementById('custom-visual-submit-btn');
+
+      if (!modal) return;
+
+      if (idInput) idInput.value = editId || '';
+
+      const isEdit = !!editId;
+      const existing = isEdit ? getCustomVisualById(activeAddVisualStep, editId) : null;
+
+      if (titleEl) {
+        titleEl.textContent = isEdit
+          ? `Modifier le visuel personnalisé (Étape ${activeAddVisualStep})`
+          : `Ajouter un visuel personnalisé (Étape ${activeAddVisualStep})`;
+      }
+      if (subtitleEl) {
+        subtitleEl.textContent = (activeAddVisualStep === 4)
+          ? 'Visuel de Turn Around Time (TAT) / Délais MRO'
+          : 'Visuel de Capacité / Saturation Atelier';
+      }
+      if (submitBtn) {
+        submitBtn.textContent = isEdit ? 'Mettre à jour et afficher' : 'Sauvegarder et afficher';
+      }
+
+      if (inputTitle) inputTitle.value = existing ? existing.title : '';
+      if (inputDesc) inputDesc.value = existing ? (existing.desc || '') : '';
+      if (inputCode) inputCode.value = existing ? (existing.codeJs || '') : '';
+      if (errorDiv) errorDiv.classList.add('hidden');
+
+      // Réinitialiser les chips personas
+      const existingPersonas = (existing && Array.isArray(existing.personas)) ? existing.personas : [];
+      document.querySelectorAll('#custom-visual-personas .custom-persona-btn').forEach(btn => {
+        const p = btn.dataset.persona;
+        if (isEdit && existingPersonas.includes(p)) {
+          btn.classList.add('bg-blue-800', 'text-white', 'border-blue-800', 'shadow-xs');
+          btn.classList.remove('bg-slate-50', 'text-slate-600', 'border-slate-200');
+        } else {
+          btn.classList.remove('bg-blue-800', 'text-white', 'border-blue-800', 'shadow-xs');
+          btn.classList.add('bg-slate-50', 'text-slate-600', 'border-slate-200');
+        }
+      });
+
+      modal.classList.remove('hidden');
+      if (inputTitle) inputTitle.focus();
+    }
+
+    function closeAddVisualModal() {
+      const modal = document.getElementById('add-visual-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function toggleCustomPersonaChip(btn) {
+      const isSelected = btn.classList.contains('bg-blue-800');
+      if (isSelected) {
+        btn.classList.remove('bg-blue-800', 'text-white', 'border-blue-800', 'shadow-xs');
+        btn.classList.add('bg-slate-50', 'text-slate-600', 'border-slate-200');
+      } else {
+        btn.classList.add('bg-blue-800', 'text-white', 'border-blue-800', 'shadow-xs');
+        btn.classList.remove('bg-slate-50', 'text-slate-600', 'border-slate-200');
+      }
+    }
+
+    function copyAiPromptForCustomVisual() {
+      // Pour l'étape 4 (ajout visuel) -> prompt de l'étape 3
+      // Pour l'étape 6 (ajout visuel) -> prompt de l'étape 5
+      const sourceStep = (activeAddVisualStep === 6) ? 5 : 3;
+      let promptText = (typeof generateTableAiPrompt === 'function')
+        ? generateTableAiPrompt(sourceStep)
+        : '';
+
+      if (!promptText) return;
+
+      // Récupération du titre et de la description saisis dans la modal
+      const titleInput = document.getElementById('custom-visual-title');
+      const descInput = document.getElementById('custom-visual-desc');
+      const title = titleInput ? titleInput.value.trim() : '';
+      const desc = descInput ? descInput.value.trim() : '';
+
+      let customContext = '';
+      if (title) customContext += `Titre du visuel : ${title}\n`;
+      if (desc) customContext += `Description : ${desc}\n`;
+
+      if (customContext) {
+        if (promptText.includes('ENTRÉES\n')) {
+          promptText = promptText.replace('ENTRÉES\n', `ENTRÉES\n${customContext}\n`);
+        } else if (promptText.includes('ENTRÉES')) {
+          promptText = promptText.replace('ENTRÉES', `ENTRÉES\n${customContext}`);
+        } else {
+          promptText = `${customContext}\n${promptText}`;
+        }
+      }
+
+      const labelEl = document.getElementById('custom-visual-copy-ai-label');
+      copyTextToClipboard(promptText).then(() => {
+        if (labelEl) {
+          const original = labelEl.textContent;
+          labelEl.textContent = 'Prompt copié !';
+          setTimeout(() => {
+            labelEl.textContent = original;
+          }, 1800);
+        }
+      });
+    }
+
+    function submitCustomVisual() {
+      const step = activeAddVisualStep;
+      const idInput = document.getElementById('custom-visual-id');
+      const titleInput = document.getElementById('custom-visual-title');
+      const descInput = document.getElementById('custom-visual-desc');
+      const codeInput = document.getElementById('custom-visual-code');
+      const errorDiv = document.getElementById('custom-visual-error');
+      const errorText = document.getElementById('custom-visual-error-text');
+
+      const editId = idInput ? idInput.value.trim() : '';
+      const title = titleInput ? titleInput.value.trim() : '';
+      const desc = descInput ? descInput.value.trim() : '';
+      let codeStr = codeInput ? codeInput.value.trim() : '';
+
+      const showError = (msg) => {
+        if (errorDiv && errorText) {
+          errorText.textContent = msg;
+          errorDiv.classList.remove('hidden');
+        }
+      };
+
+      if (!title) {
+        showError("Veuillez saisir un titre pour la visualisation.");
+        if (titleInput) titleInput.focus();
+        return;
+      }
+      if (!codeStr) {
+        showError("Veuillez coller le code JavaScript Chart.js.");
+        if (codeInput) codeInput.focus();
+        return;
+      }
+
+      // Nettoyage préalable (retrait des blocs Markdown ```js ... ``` si présents)
+      codeStr = codeStr.replace(/^```(?:javascript|js|json)?\s*\n?/i, '').replace(/\n?\s*```$/i, '').trim();
+
+      // Évaluation permissive multi-modes
+      let evaluated = null;
+      let finalCode = codeStr;
+      let evalErr = null;
+
+      // 1. Essai direct en tant que JSON
+      try {
+        const parsedJson = JSON.parse(codeStr);
+        if (parsedJson && typeof parsedJson === 'object') {
+          evaluated = parsedJson;
+        }
+      } catch (e) {}
+
+      // 2. Essais d'évaluation JavaScript sécurisée
+      if (!evaluated) {
+        const attempts = [
+          // A: Objet dénué d'accolades englobantes ({ ... })
+          { body: 'return ({\n' + codeStr + '\n});', wrap: true },
+          // B: Objet déjà entouré d'accolades ou expression standard
+          { body: 'return (' + codeStr + ');', wrap: false },
+          // C: Script contenant des déclarations (ex: const config = { ... })
+          { body: codeStr + '\n;return (typeof config !== "undefined" ? config : (typeof data !== "undefined" ? data : (typeof chart !== "undefined" ? chart : null)));', isScript: true }
+        ];
+
+        for (const att of attempts) {
+          try {
+            const fn = new Function(att.body);
+            const res = fn();
+            if (res && typeof res === 'object') {
+              evaluated = res;
+              if (att.wrap && !finalCode.startsWith('{')) {
+                finalCode = '{\n' + finalCode + '\n}';
+              }
+              evalErr = null;
+              break;
+            }
+          } catch (err) {
+            if (!evalErr) evalErr = err;
+          }
+        }
+      }
+
+      if (!evaluated || typeof evaluated !== 'object') {
+        let msg = evalErr ? (evalErr.message || String(evalErr)) : "Le code doit retourner un objet JavaScript valide ({ labels, datasets } ou config Chart.js).";
+        // Détection de la ligne d'erreur si disponible
+        let lineDetail = '';
+        if (evalErr && evalErr.stack) {
+          const match = evalErr.stack.match(/<anonymous>:(\d+):(\d+)/);
+          if (match) {
+            const lineNum = Math.max(1, parseInt(match[1], 10) - 1);
+            lineDetail = ` (ligne ~${lineNum})`;
+          }
+        }
+        showError(`Erreur de syntaxe JS : ${msg}${lineDetail}`);
+        return;
+      }
+
+      // Synchronisation du champ de saisie avec le code normalisé
+      codeStr = finalCode;
+      if (codeInput) {
+        codeInput.value = codeStr;
+      }
+
+      let chartConfig = null;
+      // Cas 1 : L'utilisateur a collé juste { labels: [...], datasets: [...] }
+      if (Array.isArray(evaluated.datasets)) {
+        chartConfig = {
+          type: evaluated.type || 'bar',
+          data: {
+            labels: evaluated.labels || [],
+            datasets: evaluated.datasets
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: true, position: 'top' },
+              datalabels: { display: false }
+            }
+          }
+        };
+      } else if (evaluated.data && Array.isArray(evaluated.data.datasets)) {
+        // Cas 2 : L'utilisateur a collé une configuration Chart.js complète
+        chartConfig = evaluated;
+        if (!chartConfig.options) chartConfig.options = {};
+        chartConfig.options.responsive = true;
+        chartConfig.options.maintainAspectRatio = false;
+      } else {
+        showError("L'objet doit contenir une propriété 'datasets' ou une propriété 'data' avec 'datasets'.");
+        return;
+      }
+
+      // Récupérer les personas sélectionnés (facultatifs)
+      const selectedPersonas = [];
+      document.querySelectorAll('#custom-visual-personas .custom-persona-btn').forEach(btn => {
+        if (btn.classList.contains('bg-blue-800') && btn.dataset.persona) {
+          selectedPersonas.push(btn.dataset.persona);
+        }
+      });
+
+      const list = getCustomVisuals(step);
+      let targetId = editId;
+
+      if (editId) {
+        // Modification d'un visuel personnalisé existant
+        const idx = list.findIndex(v => v.id === editId);
+        if (idx !== -1) {
+          list[idx].title = title;
+          list[idx].desc = desc;
+          list[idx].personas = selectedPersonas;
+          list[idx].codeJs = codeStr;
+          list[idx].config = chartConfig;
+          list[idx].updatedAt = Date.now();
+        } else {
+          targetId = 'custom_' + Date.now();
+          list.unshift({
+            id: targetId,
+            title: title,
+            desc: desc,
+            personas: selectedPersonas,
+            codeJs: codeStr,
+            config: chartConfig,
+            createdAt: Date.now()
+          });
+        }
+      } else {
+        // Création d'un nouveau visuel
+        targetId = 'custom_' + Date.now();
+        const customItem = {
+          id: targetId,
+          title: title,
+          desc: desc,
+          personas: selectedPersonas,
+          codeJs: codeStr,
+          config: chartConfig,
+          createdAt: Date.now()
+        };
+        list.unshift(customItem);
+      }
+
+      saveCustomVisuals(step, list);
+
+      renderCustomVisualCards(step);
+      closeAddVisualModal();
+
+      // Sélectionner immédiatement et afficher à droite
+      selectCustomOption(step, targetId);
+      showToast(editId ? `✨ Visuel personnalisé <b>${title}</b> mis à jour.` : `✨ Visuel personnalisé <b>${title}</b> ajouté et affiché.`);
+    }
+
+    function deleteCustomVisual(step, customId, ev) {
+      if (ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+      }
+      if (!confirm("Voulez-vous vraiment supprimer ce visuel personnalisé ?")) return;
+
+      let list = getCustomVisuals(step);
+      list = list.filter(v => v.id !== customId);
+      saveCustomVisuals(step, list);
+
+      // Si le visuel supprimé était actuellement sélectionné, basculer sur l'option par défaut 'A'
+      if (selections[step] === customId) {
+        selectOption(step, 'A');
+      }
+
+      renderCustomVisualCards(step);
+      showToast("🗑 Visuel personnalisé supprimé.");
+    }
+
+    function selectCustomOption(step, customId) {
+      const custom = getCustomVisualById(step, customId);
+      if (!custom) return;
+
+      selections[step] = customId;
+
+      const parent = document.getElementById(`step-${step}`);
+      if (parent) {
+        parent.querySelectorAll('.option-card').forEach(el => el.classList.remove('active'));
+        const target = document.getElementById(`opt-${step}-${customId}`);
+        if (target) target.classList.add('active');
+      }
+
+      if (currentStep === step) {
+        renderStepChart(step);
+      }
+      updateRecap();
+    }
+
+    function renderCustomVisualCards(step) {
+      const container = document.getElementById(`step-${step}-custom-answers`);
+      if (!container) return;
+
+      const list = getCustomVisuals(step);
+      if (list.length === 0) {
+        container.innerHTML = '';
+        container.classList.add('hidden');
+        return;
+      }
+
+      container.classList.remove('hidden');
+      container.innerHTML = '';
+
+      list.forEach(v => {
+        const isSel = (selections[step] === v.id);
+        const card = document.createElement('div');
+        card.id = `opt-${step}-${v.id}`;
+        card.onclick = () => selectCustomOption(step, v.id);
+        card.className = `option-card step-answers-card glass-card rounded-xl border border-blue-300/80 cursor-pointer flex flex-row items-start gap-3 p-3 transition relative group ${isSel ? 'active bg-blue-50/90' : 'hover:bg-slate-50/80'}`;
+
+        // Personas badges
+        let personasHtml = '';
+        if (Array.isArray(v.personas) && v.personas.length > 0) {
+          personasHtml = `<div class="flex flex-wrap items-center gap-1 mb-1.5">`;
+          v.personas.forEach(pKey => {
+            const meta = usageBadgeConfig.usageMeta[pKey];
+            if (meta) {
+              personasHtml += `<span class="inline-flex items-center gap-0.5 text-[9px] font-bold px-1.5 py-0.5 rounded border ${meta.classes}"><span>${meta.icon}</span> <span>${meta.label}</span></span>`;
+            }
+          });
+          personasHtml += `</div>`;
+        }
+
+        const descHtml = v.desc ? `<p class="ans-desc text-slate-600 leading-snug mb-1.5 text-[11px]">${v.desc}</p>` : '';
+
+        card.innerHTML = `
+          <div id="opt-${step}-${v.id}-body" class="flex-1 min-w-0 pr-14">
+            <div class="flex items-center gap-1.5 mb-1">
+              <span class="px-1.5 py-0.5 rounded text-[8.5px] font-bold bg-blue-100 text-blue-800 uppercase tracking-wider">Personnalisé</span>
+            </div>
+            <div class="ans-title font-bold text-slate-900 mb-1 flex items-center gap-1.5">
+              <span>${v.title}</span>
+            </div>
+            ${descHtml}
+            ${personasHtml}
+          </div>
+          <div class="absolute top-2.5 right-2.5 flex items-center gap-1">
+            <button type="button" onclick="openAddVisualModal(${step}, '${v.id}')" title="Modifier ce visuel personnalisé"
+              class="w-6 h-6 rounded-md bg-white hover:bg-blue-50 text-slate-400 hover:text-blue-700 border border-slate-200 hover:border-blue-200 flex items-center justify-center transition shadow-2xs cursor-pointer text-xs">
+              ✎
+            </button>
+            <button type="button" onclick="deleteCustomVisual(${step}, '${v.id}', event)" title="Supprimer ce visuel personnalisé"
+              class="w-6 h-6 rounded-md bg-white hover:bg-red-50 text-slate-400 hover:text-red-600 border border-slate-200 hover:border-red-200 flex items-center justify-center transition shadow-2xs cursor-pointer text-xs">
+              🗑
+            </button>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
     }
 
     // ===== Dropdowns de la barre de navigation : changer une réponse au survol (Étapes 1 à 6) =====
@@ -4109,6 +4710,17 @@ const STEP_BUILDERS = {
     };
 
     function buildStepChartSpec(step, opt, mult) {
+      if (typeof opt === 'string' && opt.startsWith('custom_')) {
+        const custom = getCustomVisualById(step, opt);
+        if (custom) {
+          return {
+            config: custom.config,
+            title: `✨ ${custom.title}`,
+            sub: `Visuel personnalisé (Étape ${step})`,
+            note: custom.desc
+          };
+        }
+      }
       const D = maestroData();
       if (!D) return null;
       const builder = STEP_BUILDERS[step][opt];
@@ -4449,6 +5061,120 @@ const STEP_BUILDERS = {
 - Règles : 
 {businessRules}`;
 
+    const TABLE_PROMPT_TEMPLATE_STORAGE_KEY = 'maestro_table_prompt_template';
+    const DEFAULT_TABLE_PROMPT_TEMPLATE = `Proposer une visualisation pertinente basée sur les ENTRÉES dans un code bloc au format contenu sans le { } de l'objet js de ChartJS avec un minimum de données d'exemples.
+
+ENTRÉES
+{optBody}
+
+Modèles Relationnels ERD (2.A et 2.B) :
+--- Modèle 2.A (Consolidation Demande) ---
+{uml2A}
+
+--- Modèle 2.B (Lignes d'Intervention) ---
+{uml2B}`;
+
+    function getTablePromptTemplate() {
+      try {
+        const custom = localStorage.getItem(TABLE_PROMPT_TEMPLATE_STORAGE_KEY);
+        if (custom && custom.trim().length > 0) return custom;
+      } catch (e) {}
+      return DEFAULT_TABLE_PROMPT_TEMPLATE;
+    }
+
+    function saveTablePromptTemplate(templateStr) {
+      try {
+        localStorage.setItem(TABLE_PROMPT_TEMPLATE_STORAGE_KEY, templateStr);
+      } catch (e) {}
+    }
+
+    const tablePanelViewMode = { 3: 'ui', 5: 'ui' };
+
+    function generateTableAiPrompt(step) {
+      const opt = selections[step] || (step === 3 ? 'B' : 'B');
+      const bodyEl = document.getElementById(`opt-${step}-${opt}-body`);
+      let optText = "";
+      if (bodyEl) {
+        const clone = bodyEl.cloneNode(true);
+        clone.querySelectorAll('.opt-copy-btn').forEach(b => b.remove());
+        const raw = (clone.innerText || clone.textContent || '');
+        optText = raw.split('\n').map(l => l.trim()).filter(Boolean).join('\n');
+      } else if (metaInfo[step] && metaInfo[step][opt]) {
+        optText = `${metaInfo[step][opt].title}\n${metaInfo[step][opt].desc}`;
+      }
+
+      const uml2A = (getMermaidSchema('A') || '').trim();
+      const uml2B = (getMermaidSchema('B') || '').trim();
+
+      let tpl = getTablePromptTemplate();
+      const replacements = {
+        '{optBody}': optText,
+        '{uml2A}': uml2A,
+        '{uml2B}': uml2B
+      };
+
+      for (const [k, v] of Object.entries(replacements)) {
+        tpl = tpl.split(k).join(v);
+      }
+      return tpl;
+    }
+
+    function renderTableAiView(step) {
+      const codeEl = document.getElementById(`step-${step}-ai-code`);
+      if (codeEl) {
+        codeEl.textContent = generateTableAiPrompt(step);
+      }
+    }
+
+    function copyTableAi(step) {
+      const text = generateTableAiPrompt(step);
+      const btn = document.getElementById(`step-${step}-ai-copy-btn`);
+      copyTextToClipboard(text).then(() => {
+        if (btn) {
+          btn.textContent = '✓';
+          btn.classList.add('text-emerald-400');
+          setTimeout(() => {
+            btn.textContent = '⧉';
+            btn.classList.remove('text-emerald-400');
+          }, 1500);
+        }
+      });
+    }
+
+    function toggleTableMode(step, mode) {
+      const targetMode = mode === 'ai' || mode === '<>' ? 'ai' : 'ui';
+      tablePanelViewMode[step] = targetMode;
+
+      const uiView = document.getElementById(`step-${step}-ui-view`);
+      const aiView = document.getElementById(`step-${step}-ai-view`);
+      const toggleContainer = document.getElementById(`step-${step}-toggle`);
+
+      if (toggleContainer) {
+        const btnUi = toggleContainer.querySelector('[data-view="ui"]');
+        const btnAi = toggleContainer.querySelector('[data-view="ai"]');
+        if (btnUi) {
+          btnUi.className = targetMode === 'ui'
+            ? 'px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition'
+            : 'px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition';
+        }
+        if (btnAi) {
+          btnAi.className = targetMode === 'ai'
+            ? 'px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition'
+            : 'px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition';
+        }
+      }
+
+      if (uiView) uiView.classList.toggle('hidden', targetMode !== 'ui');
+      if (aiView) aiView.classList.toggle('hidden', targetMode !== 'ai');
+
+      if (targetMode === 'ai') {
+        renderTableAiView(step);
+      } else {
+        if (step === 3) renderStep3TablePreview();
+        else if (step === 5) renderStep5TablePreview();
+      }
+    }
+
     function getPromptTemplate() {
       try {
         const custom = localStorage.getItem(PROMPT_TEMPLATE_STORAGE_KEY);
@@ -4478,6 +5204,32 @@ const STEP_BUILDERS = {
     }
 
     function generateChartMarkdownPrompt(step, opt) {
+      if (typeof opt === 'string' && opt.startsWith('custom_')) {
+        const custom = getCustomVisualById(step, opt);
+        if (custom) {
+          const jsCode = (custom.codeJs || (custom.config ? JSON.stringify(custom.config, null, 2) : '')).trim();
+          const uml2A = (typeof getMermaidSchema === 'function' ? getMermaidSchema('A') : '').trim();
+          const uml2B = (typeof getMermaidSchema === 'function' ? getMermaidSchema('B') : '').trim();
+
+          return `Générer les hypothèses et les instructions pour utiliser SAP-IBP / SAP Analytics Stories pour générer le même graphique pas à pas, en connaissant le VISUEL et les ENTRÉES :
+
+VISUEL :
+\`\`\`javascript
+${jsCode}
+\`\`\`
+
+ENTRÉES :
+--- Modèle 2.A (Consolidation Demande) ---
+\`\`\`mermaid
+${uml2A}
+\`\`\`
+
+--- Modèle 2.B (Lignes d'Intervention) ---
+\`\`\`mermaid
+${uml2B}
+\`\`\``;
+        }
+      }
       const s = CHART_MD_SPECS[step] && CHART_MD_SPECS[step][opt];
       if (!s) return `# Spécification Visuel\n\nDonnées en cours d'initialisation...\n`;
       const desc = getOptionDescription(step, opt);
@@ -4511,6 +5263,33 @@ const STEP_BUILDERS = {
       if (codeEl) {
         codeEl.textContent = generateChartMarkdownPrompt(step, opt);
       }
+    }
+
+    function renderChartDataJsView(step) {
+      const codeEl = document.getElementById('step-' + step + '-js-code');
+      if (!codeEl) return;
+      const cfg = getActiveChartConfig(step);
+      let text = '// Aucune configuration disponible';
+      if (cfg) {
+        text = JSON.stringify(cfg, null, 2);
+      }
+      codeEl.textContent = text;
+    }
+
+    function copyChartDataJs(step) {
+      const codeEl = document.getElementById('step-' + step + '-js-code');
+      const text = codeEl ? codeEl.textContent : '';
+      const btn = document.getElementById('step-' + step + '-js-copy-btn');
+      copyTextToClipboard(text).then(() => {
+        if (btn) {
+          btn.textContent = '✓';
+          btn.classList.add('text-emerald-400');
+          setTimeout(() => {
+            btn.textContent = '⧉';
+            btn.classList.remove('text-emerald-400');
+          }, 1500);
+        }
+      });
     }
 
     function copyChartAi(step) {
@@ -4555,7 +5334,7 @@ const STEP_BUILDERS = {
     }
 
     function initOptionCopyButtons() {
-      [4, 6].forEach(step => {
+      [3, 4, 5, 6].forEach(step => {
         ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'].forEach(opt => {
           const bodyEl = document.getElementById(`opt-${step}-${opt}-body`);
           if (!bodyEl || bodyEl.querySelector('.opt-copy-btn')) return;
@@ -4576,38 +5355,42 @@ const STEP_BUILDERS = {
     }
 
     function toggleChartMode(step, mode) {
-      chartViewMode[step] = mode;
+      // Normaliser le mode : 'ui' correspond à la vue graphique ('chart')
+      const targetMode = mode === 'ui' ? 'chart' : mode;
+      chartViewMode[step] = targetMode;
       const chartView = document.getElementById('step-' + step + '-chart-view');
-      const codeView = document.getElementById('step-' + step + '-code-view');
+      const jsView = document.getElementById('step-' + step + '-js-view') || document.getElementById('step-' + step + '-code-view');
       const aiView = document.getElementById('step-' + step + '-ai-view');
       const toggleContainer = document.getElementById('step-' + step + '-chart-toggle');
 
       if (toggleContainer) {
         const btnChart = toggleContainer.querySelector('[data-view="chart"]');
-        const btnCode = toggleContainer.querySelector('[data-view="code"]');
+        const btnJs = toggleContainer.querySelector('[data-view="js"]') || toggleContainer.querySelector('[data-view="code"]');
         const btnAi = toggleContainer.querySelector('[data-view="ai"]');
-        if (btnChart && btnCode) {
-          btnChart.className = mode === 'chart'
+        if (btnChart) {
+          btnChart.className = targetMode === 'chart'
             ? 'px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition'
             : 'px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition';
-          btnCode.className = mode === 'code'
+        }
+        if (btnJs) {
+          btnJs.className = (targetMode === 'js' || targetMode === 'code')
             ? 'px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition'
             : 'px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition';
         }
         if (btnAi) {
-          btnAi.className = mode === 'ai'
+          btnAi.className = targetMode === 'ai'
             ? 'px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition'
             : 'px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition';
         }
       }
 
-      if (chartView) chartView.classList.toggle('hidden', mode !== 'chart');
-      if (codeView) codeView.classList.toggle('hidden', mode !== 'code');
-      if (aiView) aiView.classList.toggle('hidden', mode !== 'ai');
+      if (chartView) chartView.classList.toggle('hidden', targetMode !== 'chart');
+      if (jsView) jsView.classList.toggle('hidden', targetMode !== 'js' && targetMode !== 'code');
+      if (aiView) aiView.classList.toggle('hidden', targetMode !== 'ai');
 
-      if (mode === 'code') {
-        renderGuiEditor(step);
-      } else if (mode === 'ai' || mode === 'md') {
+      if (targetMode === 'js' || targetMode === 'code') {
+        renderChartDataJsView(step);
+      } else if (targetMode === 'ai' || targetMode === 'md') {
         renderChartAiView(step);
       } else {
         renderStepChart(step);
@@ -4881,8 +5664,8 @@ const STEP_BUILDERS = {
       const opt = selections[step];
       const key = getChartStorageKey(step, opt);
       localStorage.removeItem(key);
-      if (chartViewMode[step] === 'code') {
-        renderGuiEditor(step);
+      if (chartViewMode[step] === 'js' || chartViewMode[step] === 'code') {
+        renderChartDataJsView(step);
       }
       renderStepChart(step);
     }
@@ -4894,9 +5677,7 @@ const STEP_BUILDERS = {
       if (!spec) return;
       const canvas = document.getElementById('step-' + step + '-canvas');
       const titleEl = document.getElementById('step-' + step + '-chart-title');
-      const noteEl = document.getElementById('step-' + step + '-chart-note');
       if (titleEl) titleEl.innerHTML = spec.title;
-      if (noteEl) noteEl.textContent = spec.note;
 
       if (step === 6) {
         const resetBtn = document.getElementById('step-6-treemap-reset');
@@ -4923,9 +5704,9 @@ const STEP_BUILDERS = {
         }
       }
 
-      // Synchroniser l'éditeur visuel ou la vue Markdown si ouverts
-      if (chartViewMode[step] === 'code') {
-        renderGuiEditor(step);
+      // Synchroniser la vue données js ou la vue Prompt IA si ouvertes
+      if (chartViewMode[step] === 'js' || chartViewMode[step] === 'code') {
+        renderChartDataJsView(step);
       } else if (chartViewMode[step] === 'ai' || chartViewMode[step] === 'md') {
         renderChartAiView(step);
       }
@@ -4950,11 +5731,6 @@ const canvas = document.getElementById('mock-chart-q' + step + '-canvas');
           `Q1: ${q1} (${metaInfo[1][q1]?.title || ''}) • Q2: ${q2} • Q3: ${q3} • Q4: ${q4} • Q5: ${q5} • Q6: ${q6}`;
       }
 
-      // Synchroniser également les sélecteurs d'usage des étapes 4 et 6
-      const selUsage4 = document.getElementById('select-usage-step4');
-      if (selUsage4 && selUsage4.value !== q1) selUsage4.value = q1;
-      const selUsage6 = document.getElementById('select-usage-step6');
-      if (selUsage6 && selUsage6.value !== q1) selUsage6.value = q1;
 
       // Synchroniser également tous les dropdowns de l'étape 7 et leurs descriptions
       for (let i = 1; i <= 6; i++) {
@@ -5760,17 +6536,62 @@ xychart-beta
       }
     }
 
+    const ERD_GENERIC_PROMPT = `Génère un diagramme ERD Mermaid :
+
+**Type :** Type avec \`*\` devant si une valeur est obligatoire à la création.
+**Nom :** Nom court.
+**Contraintes :** \`PK\`, \`FK\`, \`UK\` si applicable.
+**Commentaire :** Exemple concret si texte libre, ou liste des valeurs possibles. Mettre \`*\` sur celle par défaut (ex: \`"*true | false"\` ou \`*DATE_NOW\`).
+**Relations :** Cardinalités Mermaid standard avec libellé débutant par un verbe à l'infinitif.`;
+
+    function updateSchemaPromptView() {
+      const promptEl = document.getElementById('schema-prompt-code');
+      if (promptEl) {
+        promptEl.value = ERD_GENERIC_PROMPT;
+      }
+    }
+
+    function copySchemaPrompt() {
+      const promptEl = document.getElementById('schema-prompt-code');
+      const btn = document.getElementById('schema-prompt-copy-btn');
+      const text = promptEl ? promptEl.value : ERD_GENERIC_PROMPT;
+      copyTextToClipboard(text).then(() => {
+        if (btn) {
+          btn.textContent = '✓';
+          btn.classList.add('text-emerald-400');
+          setTimeout(() => {
+            btn.textContent = '⧉';
+            btn.classList.remove('text-emerald-400');
+          }, 1500);
+        }
+      });
+    }
+
     function toggleSchemaView(view) {
       const svgView = document.getElementById('schema-svg-view');
       const mermaidView = document.getElementById('schema-mermaid-view');
-      schemaViewMode = (view === 'ai' || view === 'md' || view === 'txt' || view === 'rules') ? 'mermaid' : view;
-      if (svgView) svgView.classList.toggle('hidden', schemaViewMode !== 'svg');
-      if (mermaidView) mermaidView.classList.toggle('hidden', schemaViewMode !== 'mermaid');
-      updateToggleButtons('schema-toggle', schemaViewMode);
-      if (schemaViewMode === 'svg') {
+      const promptView = document.getElementById('schema-prompt-view');
+
+      // Normalisation des vues : 'ui' (visuel svg), 'uml' (code mermaid), 'prompt' (<>)
+      let targetMode = 'ui';
+      if (view === 'uml' || view === 'mermaid') targetMode = 'uml';
+      else if (view === 'prompt' || view === '<>' || view === 'ai' || view === 'md') targetMode = 'prompt';
+      else targetMode = 'ui';
+
+      schemaViewMode = targetMode;
+
+      if (svgView) svgView.classList.toggle('hidden', targetMode !== 'ui');
+      if (mermaidView) mermaidView.classList.toggle('hidden', targetMode !== 'uml');
+      if (promptView) promptView.classList.toggle('hidden', targetMode !== 'prompt');
+
+      updateToggleButtons('schema-toggle', targetMode);
+
+      if (targetMode === 'ui') {
         renderMermaidVisual(selections[2] || 'A');
-      } else if (schemaViewMode === 'mermaid') {
+      } else if (targetMode === 'uml') {
         updateMermaidCode(selections[2] || 'A');
+      } else if (targetMode === 'prompt') {
+        updateSchemaPromptView();
       }
     }
 
@@ -6303,6 +7124,10 @@ xychart-beta
           </div>
         `;
       }
+
+      if (tablePanelViewMode[3] === 'ai') {
+        renderTableAiView(3);
+      }
     }
 
     function renderStep5TablePreview() {
@@ -6463,6 +7288,10 @@ xychart-beta
           </div>
         `;
       }
+
+      if (tablePanelViewMode[5] === 'ai') {
+        renderTableAiView(5);
+      }
     }
 
     // --- Page 0 : Lecteur des fichiers Markdown du dossier racine (chargement à la volée) ---
@@ -6523,12 +7352,44 @@ xychart-beta
             } catch (e) { /* fallback: on affiche le texte brut */ }
           }
           container.innerHTML = marked.parse(text);
+          attachCopyButtonsToPre(container);
         })
         .catch((err) => {
           container.innerHTML =
             '<p class="text-red-600 font-bold">❌ Impossible de charger <code>' + file + '</code> : ' + err.message + '</p>' +
             '<p class="text-slate-500 text-[10.5px]">Astuce : servir la page via un serveur HTTP (VS Code Live Server, GitHub Pages ou Firebase Hosting).</p>';
         });
+    }
+
+    function attachCopyButtonsToPre(root) {
+      if (!root) return;
+      const pres = root.querySelectorAll('pre');
+      pres.forEach((pre) => {
+        if (pre.dataset.hasCopyBtn) return;
+        pre.dataset.hasCopyBtn = 'true';
+        pre.classList.add('relative', 'group');
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.title = 'Copier le code';
+        btn.textContent = '⧉';
+        btn.className = 'absolute top-1.5 right-1.5 px-2 py-0.5 text-xs rounded bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-slate-600/60 opacity-80 group-hover:opacity-100 transition-opacity font-mono cursor-pointer shadow-sm';
+        btn.onclick = (e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          const codeEl = pre.querySelector('code') || pre;
+          const textToCopy = codeEl.innerText || codeEl.textContent || '';
+          copyTextToClipboard(textToCopy).then(() => {
+            const orig = btn.textContent;
+            btn.textContent = '✓ Copié';
+            btn.classList.add('text-emerald-400');
+            setTimeout(() => {
+              btn.textContent = orig;
+              btn.classList.remove('text-emerald-400');
+            }, 1500);
+          });
+        };
+        pre.appendChild(btn);
+      });
     }
 
     window.addEventListener('load', () => {
@@ -6546,6 +7407,8 @@ xychart-beta
       drawSchema('A');
       buildNavDropdowns();
       updateCompatibilities();
+      renderCustomVisualCards(4);
+      renderCustomVisualCards(6);
       renderStep3TablePreview();
       renderStep5TablePreview();
       updateRecap();

@@ -6,12 +6,12 @@ Ce document constitue le référentiel textuel, méthodologique et technique syn
 
 ## Sommaire
 - [Étape 0 : Contexte & Documentation](#étape-0--contexte--documentation)
-- [Étape 1 : Métier (Cadrage métier prioritaire)](#étape-1--métier)
-- [Étape 2 : Modèle (Granularité & Tables de calcul)](#étape-2--modèle)
-- [Étape 3 : TAT (Méthode de calcul du Turn Around Time)](#étape-3--tat)
-- [Étape 4 : Délai (Visualisations & Alertes TAT)](#étape-4--délai)
-- [Étape 5 : Capacité (Méthode d'évaluation de la Capacité Atelier)](#étape-5--capacité)
-- [Étape 6 : Saturation (Visualisations de la Charge Atelier)](#étape-6--saturation)
+- [Étape 1 : Question Métier](#étape-1--question-métier)
+- [Étape 2 : Modèle de Données](#étape-2--modèle-de-données)
+- [Étape 3 : Calcul du Délai (TAT)](#étape-3--calcul-du-délai-tat)
+- [Étape 4 : Visuels de Délai (TAT)](#étape-4--visuels-de-délai-tat)
+- [Étape 5 : Évaluation de la Capacité](#étape-5--évaluation-de-la-capacité)
+- [Étape 6 : Visuels de Saturation](#étape-6--visuels-de-saturation)
 - [Étape 7 : Synthèse, Profils & Dashboard Dérivé](#étape-7--synthèse-profils--dashboard-dérivé)
 - [Stratégie de Génération de Données & Moteur Pseudo-Aléatoire Seedé](#stratégie-de-génération-de-données--moteur-pseudo-aléatoire-seedé)
 
@@ -29,10 +29,10 @@ Le fichier `readme.md`, affiché par défaut, porte le **contexte opérationnel*
 
 ---
 
-## Étape 1 : Métier
+## Étape 1 : Question Métier
 
 > **Question de cadrage :** Quel est le premier problème que le tableau de bord doit résoudre ?  
-> **En-tête de l'interface :** Étape 1 : Cadrer la question métier prioritaire
+> **En-tête de l'interface :** Étape 1 : Question Métier
 
 ### Référentiel des Personas SAE (MAESTRO) :
 Le projet MAESTRO s'articule autour des acteurs décisionnels de la maintenance MRO :
@@ -87,10 +87,10 @@ Le projet MAESTRO s'articule autour des acteurs décisionnels de la maintenance 
 
 ---
 
-## Étape 2 : Modèle
+## Étape 2 : Modèle de Données
 
 > **Question de cadrage :** Quelles tables et niveaux de granularité permettent le calcul du Turn Around Time (TAT) et la planification d'atelier ?  
-> **En-tête de l'interface :** Étape 2 : Données (Granularité & Tables pour le calcul)  
+> **En-tête de l'interface :** Étape 2 : Modèle de Données  
 > **Bouton d'affichage :** En haut à gauche du panel de droite, le bouton `schema-toggle` bascule entre la vue texte Markdown du modèle sémantique (`ai` / `#schema-rules-view`), la vue SVG interactive (`svg` / `schemaCanvas`) et le code Mermaid (`<>` / `SCHEMA_MERMAID` dans `index.html`), rigoureusement synchronisés avec les diagrammes `erDiagram` et définitions ci-dessous. L'onglet `ai` affiche un modèle sémantique Markdown épuré et directement copiable (bouton unicode `⧉`), avec ancres rapides vers l'en-tête de **Demande** (2.A) et les **Interventions d'Ateliers** (2.B).
 
 ---
@@ -342,23 +342,35 @@ Le modèle relie les MDTs et les Planning Levels aux Key Figures de calcul suiva
 
 ---
 
-## Étape 3 : TAT
+## Étape 3 : Calcul du Délai (TAT)
 
 > **Question de cadrage :** Quel niveau de complexité mathématique et d'hypothèse adopter ?  
-> **En-tête de l'interface :** Étape 3 : Choisir la méthode de calcul du délai (TAT)
+> **En-tête de l'interface :** Étape 3 : Calcul du Délai (TAT)
+
+> **Rendu Tableau & Modes de Vue (Étape 3) :** Le panneau latéral droit dispose d'un sélecteur à deux modes :
+> - **`ui` :** Vue tableau dynamique avec les données calculées et la note d'explication de la méthode.
+> - **`<>` :** Prompt IA standardisé et personnalisable (modale `✎`, copie `⧉`) pour proposer une visualisation pertinente basée sur les entrées dans un code bloc au format contenu sans le { } de l'objet js de ChartJS avec un minimum de données d'exemples et les diagrammes relationnels ERD 2.A et 2.B.
 
 ### Les 4 Méthodes de Calcul du TAT :
 1. **Option 3.A : S&OP (D-SOP)**
-   - *Principe :* Somme des durées de gammes standards (`ESTIMATED_REPAIR_DURATION`) et des forfaits de transit selon la granularité retenue en Étape 2 (`MDT_MAINTENANCE_REQUEST` ou `MDT_INTERVENTION`).
+   - *Description :* Délais contractuels et standards constructeur basés sur les gammes opératoires et les forfaits d'acheminement.
+   - *Principe :* Barème fixe additionnant le temps de révision nominal et les transits logistiques (`ESTIMATED_REPAIR_DURATION` + `TRANSIT_BUFFER`).
+   - *Usage MRO :* Devis d'engagement initial Part-145 et planification macro à moyen terme.
    - *Formule DAX :* `SUMX(MDT_INTERVENTION, [ESTIMATED_REPAIR_DURATION] + [TRANSIT_BUFFER])`
 2. **Option 3.B : Projection statistique (D-STA)**
-   - *Principe :* Distribution empirique réelle ($P_5, P_{50}, P_{95}$) mesurée sur l'historique de passage.
+   - *Description :* Historique réel des visites et dispersion constatée (P5, P50, P95) pour sécuriser les engagements clients.
+   - *Principe :* Distribution empirique réelle issue des passages réels pour mesurer les aléas de visite ($P_5, P_{50}, P_{95}$).
+   - *Usage MRO :* Négociation des fenêtres de vol garanties (SLA) et maîtrise du risque de pénalité.
    - *Formule DAX :* `PERCENTILEX.INC(FAIT, FAIT[Duree_Reelle], 0.50)`
 3. **Option 3.C : Projection capacitaire (D-CAP)**
-   - *Principe :* Modélisation de l'engorgement des files d'attente à l'approche du seuil critique (85%).
+   - *Description :* Délais réels ajustés selon le niveau de charge et l'encombrement des ateliers.
+   - *Principe :* Allongement dynamique des délais d'attente à mesure que l'atelier sature (> 85%).
+   - *Usage MRO :* Alerte précoce sur les goulets d'étranglement et réorientation préventive des moteurs.
    - *Formule DAX :* `DIVIDE(Temps_Usinage, 1 - RELATED(DIM_SITE[Taux_Charge]))`
 4. **Option 3.D : Modélisation avancée (D-ML)**
-   - *Principe :* Simulation dynamique probabiliste multi-factorielle contextuelle.
+   - *Description :* Prévision dynamique combinant l'usure prédictive des pièces et les aléas techniques de visite.
+   - *Principe :* Simulation multi-paramètres intégrant l'historique moteur, les contrôles et les rebuts.
+   - *Usage MRO :* Pilotage prédictif fin de l'ordonnancement et optimisation continue des créneaux.
    - *Formule DAX :* `SIMULATE_TAT_ADVANCED(FAIT, CONTEXT)`
 
 ### Extraits des Tables Dynamiques d'Atelier (Croisement Granularité × TAT)
@@ -390,8 +402,8 @@ Le modèle relie les MDTs et les Planning Levels aux Key Figures de calcul suiva
 > **Question de cadrage :** Quels visuels utiliser pour piloter les délais des demandes de maintenance (MDT_MAINTENANCE_REQUEST) et les engagements clients ?  
 > **En-tête de l'interface :** Étape 4 : Sélectionner les visuels pour le Délai (TAT)  
 > **Rendu Chart.js & Modes de Vue (Étape 4) :** Les cartes d'options disposent d'un panneau à droite piloté par un sélecteur à 3 modes :
-> - **`js` :** Vue graphique Chart.js interactive avec infobulles et étiquettes de données (`chartjs-plugin-datalabels`).
-> - **`ui` :** Éditeur visuel de configuration avec application à la volée (modification des libellés, valeurs numériques par série, axes X/Y, titre de légende et palette de couleurs) avec persistance locale `localStorage`.
+> - **`ui` :** Vue graphique Chart.js interactive avec infobulles et étiquettes de données (`chartjs-plugin-datalabels`).
+> - **`js` :** Bloc de code copiable (`⧉`) contenant la configuration complète de l'objet Chart.js (`type`, `data`, `options`, `plugins`) utilisé pour créer le graphique.
 > - **`<>` :** Descriptif structuré technique et autoporteur en Markdown aligné sur l'interface et les possibilités natives de SAP-IBP et SAC (titre, composant SAC, modèle MDT IBP, axes X/Y, dimensions, mesures et Key Figures, règles et seuils d'alerte) avec bouton de copie rapide pour injection directe dans un prompt IA.
 
 ### Les 9 Graphiques Disponibles pour le Délai :
@@ -531,22 +543,30 @@ xychart-beta
 > **Question de cadrage :** Sur quelle base dimensionner et projeter la capacité des interventions d'atelier sur chaque shop (`S-XXX`) ?  
 > **En-tête de l'interface :** Étape 5 : Choisir la méthode d'évaluation de la Capacité d'Intervention en Atelier
 
+> **Rendu Tableau & Modes de Vue (Étape 5) :** Le panneau latéral droit dispose d'un sélecteur à deux modes :
+> - **`ui` :** Vue tableau dynamique avec les capacités calculées et la note d'explication de la méthode.
+> - **`<>` :** Prompt IA standardisé et personnalisable (modale `✎`, copie `⧉`) formulant des propositions de visualisations comparatives à partir de l'option active et des diagrammes relationnels ERD 2.A et 2.B.
+
 ### Les 4 Méthodes d'Évaluation de la Capacité :
 1. **Option 5.A : Capacité S&OP (C-SOP)**
-   - *Principe :* Capacité nominale planifiée par atelier (`S-XXX`) selon le plan de charge S&OP (croisement du volume d'heures prévues et de la capacité théorique des shops).
-   - *Usage MRO :* Arbitrage réseau 12–36 mois, réservation prévisionnelle des créneaux et équilibrage multi-sites.
+   - *Description :* Capacité nominale planifiée pour l'arbitrage réseau et la réservation des créneaux à moyen terme (12–36 mois).
+   - *Principe :* Adéquation globale entre les volumes d'heures prévisionnels et l'ouverture théorique des baies (`SUM(MDT_INTERVENTION[HEURES_GAMME])` / `[CAPACITE_HEURES_SHOP]`).
+   - *Usage MRO :* Plan industriel de charge, équilibrage multi-sites et dimensionnement des équipes.
    - *Formule DAX :* `Charge_SOP = DIVIDE(SUM(MDT_INTERVENTION[HEURES_GAMME]), [CAPACITE_HEURES_SHOP])`
 2. **Option 5.B : Projection statistique (C-STA)**
-   - *Principe :* Capacité projetée par analyse statistique du débit réel et de l'en-cours actif (WIP aux postes).
-   - *Usage MRO :* Régulation opérationnelle hebdomadaire et pilotage de la cadence d'écoulement.
+   - *Description :* Cadence réelle d'écoulement et débit effectif basés sur les moteurs actuellement en cours (WIP) dans les ateliers.
+   - *Principe :* Extrapolation du rythme de sortie constaté sur les dernières semaines selon l'en-cours actif.
+   - *Usage MRO :* Régulation hebdomadaire des lancements et détection des baisses de rythme aux postes.
    - *Formule DAX :* `Debit_Stats = CALCULATE([INTERVENTIONS_CLOTUREES], DATESINPERIOD('Calendar'[Date], TODAY(), -3, MONTH))`
 3. **Option 5.C : Projection logistique (C-LOG)**
-   - *Principe :* Capacité bridée par la disponibilité effective des pièces et kits de réparation (OTIF).
-   - *Usage MRO :* Synchronisation des lancements d'interventions sur les dates de livraison confirmées.
+   - *Description :* Capacité d'intervention alignée sur la disponibilité effective des pièces et kits critiques de réparation (OTIF).
+   - *Principe :* Capacité utile bridée par la pièce manquante la plus lente (aubes, disques, kits LLP).
+   - *Usage MRO :* Synchronisation des montages d'intervention sur les dates confirmées d'approvisionnement.
    - *Formule DAX :* `Capacite_Logistique = MIN([CAPACITE_POSTES], [KITS_DISPO] * [CADENCE_STANDARD])`
 4. **Option 5.D : Modélisation avancée (C-ML)**
-   - *Principe :* Simulation prédictive de capacité intégrant les aléas réels, contrôles CND et pannes de bancs d'essais.
-   - *Usage MRO :* Dimensionnement dynamique des tampons, gestion proactive des goulots et variabilité.
+   - *Description :* Capacité prédictive intégrant les retouches d'usinage, les contrôles CND et la disponibilité des bancs d'essai.
+   - *Principe :* Simulation prévisionnelle tenant compte des taux de rebut et pannes d'équipements critiques.
+   - *Usage MRO :* Dimensionnement dynamique des stocks tampons et gestion proactive de la variabilité.
    - *Formule DAX :* `Capacite_ML = FORECAST_CAPACITY([INTERVENTIONS_PREVUES], [ALEAS_CND], [DISPO_BANCS])`
 
 ### Extraits des Vues Capacitaires d'Atelier (Croisement Granularité × Capacité)
@@ -579,8 +599,8 @@ xychart-beta
 > **Question de cadrage :** Quels visuels choisir pour repérer les goulots d'intervention et la surcharge des ateliers (`S-XXX`) ?  
 > **En-tête de l'interface :** Étape 6 : Sélectionner les visuels pour la Saturation des Interventions en Atelier  
 > **Rendu Chart.js & Modes de Vue (Étape 6) :** Les cartes d'options disposent d'un panneau à droite piloté par un sélecteur à 3 modes :
-> - **`js` :** Vue graphique Chart.js interactive (dont Treemap 6.H avec drill-down au clic Moteurs ➔ Réparations et Heatmap 6.F par semaine).
-> - **`ui` :** Éditeur visuel de configuration avec application à la volée (libellés, valeurs par série, axes X/Y, légende, couleurs) avec persistance `localStorage`.
+> - **`ui` :** Vue graphique Chart.js interactive (dont Treemap 6.H avec drill-down au clic Moteurs ➔ Réparations et Heatmap 6.F par semaine).
+> - **`js` :** Bloc de code copiable (`⧉`) contenant la configuration complète de l'objet Chart.js (`type`, `data`, `options`, `plugins`) utilisé pour créer le graphique.
 > - **`<>` :** Descriptif technique structuré et autoporteur en Markdown aligné sur l'interface et les possibilités natives de SAP-IBP et SAC (titre, composant SAC, modèle MDT IBP, dimensions, mesures et Key Figures, filtres, règles et seuils d'alerte) avec bouton copier.
 
 ### Les 9 Graphiques de Saturation :
@@ -819,23 +839,18 @@ Pour injecter des données d'un autre secteur industriel (ex: ferroviaire ou nav
 
 ---
 
-## Mode Éditeur Visuel & Configuration Chart.js Dynamique (Étapes 4 & 6)
+## Panneaux Visuels & Données Chart.js (Étapes 4 & 6)
 
-Afin d'offrir une flexibilité maximale aux utilisateurs, experts métiers, architectes BI et développeurs, les panneaux de graphiques des **Étapes 4 et 6** disposent d'un mode de configuration visuelle interactif en direct :
+Afin d'offrir une flexibilité maximale aux utilisateurs, experts métiers, architectes BI et développeurs, les panneaux de graphiques des **Étapes 4 et 6** disposent d'un sélecteur à trois vues complémentaires :
 
-1. **Bascule Graphique / Éditeur / Spécification IA (`chart-toggle`) :**
-   - Bouton `js` : affiche la vue graphique standard Chart.js (rendu canvas responsive haute performance).
-   - Bouton `ui` : bascule instantanément vers l'éditeur visuel de configuration ergonomique (saisie des points, axes et couleurs).
+1. **Bascule Graphique / Données JS / Spécification IA (`chart-toggle`) :**
+   - Bouton `ui` : affiche la vue graphique standard Chart.js (rendu canvas responsive haute performance).
+   - Bouton `js` : affiche le bloc de code copiable (`⧉`) contenant la structure exacte de l'objet `data` Chart.js (`labels`, `datasets` avec valeurs et couleurs) utilisé pour instancier le graphique.
    - Bouton `<>` : affiche la spécification technique en pur texte Markdown, compacte, auto-porteuse et calquée sur les interfaces et possibilités natives de SAP-IBP et SAP Analytics Cloud (SAC) (métadonnées du composant SAC, modèle MDT IBP, dimensions, mesures et Key Figures, règles de filtrage et seuils d'alerte).
-2. **Saisie Graphique & Personnalisation Complète :**
-   - **Labels et Données :** modification à la volée du libellé de chaque point, saisie des valeurs numériques, ajout de nouvelles lignes (`+ Ajouter une ligne`) ou suppression de points (`✕`).
-   - **Titres des Axes & Légende :** édition dynamique des titres de l'Axe X et de l'Axe Y, case à cocher d'activation/désactivation de la légende.
-   - **Séries & Palette de Couleurs :** modification du nom des séries de données et sélection de la couleur via un nuancier direct (Bleu SAE, Émeraude Conforme, Ambre Vigilance, Rouge Critique, etc.) ou sélecteur couleur natif.
-3. **Application & Persistance Locale (`localStorage`) :**
-   - Le bouton `✓ Appliquer` sauvegarde l'état personnalisé sous la clé `maestro_custom_chart_{step}_{opt}` et régénère immédiatement le graphique Chart.js.
-   - Les personnalisations sont conservées entre les rechargements de page et les changements d'étape.
-4. **Réinitialisation Usine (`↻`) & Boutons de Copie Unicodes :**
-   - Le bouton `↻` purge la personnalisation dans le `localStorage` et restitue la configuration standard d'origine du modèle.
-   - La vue `<>` dispose en haut à droite d'un bouton de copie unicode discret (`⧉`) avec accusé de confirmation instantané (`✓`).
+2. **Consultation & Copie des Données (`js`) :**
+   - Affichage structuré et indenté de l'objet JSON `data` (séries, valeurs, étiquettes).
+   - Bouton de copie instantané (`⧉`) avec accusé de réception (`✓`).
+3. **Réinitialisation Usine (`↻`) :**
+   - Le bouton `↻` restitue la configuration standard d'origine du modèle Chart.js.
 
 

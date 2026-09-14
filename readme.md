@@ -7,14 +7,24 @@
 
 ## 1. Vision & Architecture de Prototypage IA
 
-L'objectif de Maestro est de transformer une expression de besoin métier en spécifications décisionnelles exploitables dans **SAP IBP Analytics Stories**, en exploitant l'IA comme pair-programmeur et copilote méthodologique :
+L'objectif de Maestro est de transformer une expression de besoin métier en spécifications décisionnelles exploitables dans **SAP IBP Analytics Stories**, en exploitant l'IA comme pair-programmeur et copilote méthodologique à travers 4 approches complémentaires :
 
 ```text
-[ Besoin Métier ] ──(Prompt IA)──> [ Prototypage SPA (HTML/Chart.js) ] ──(Spécification)──> [ SAP IBP Analytics Story ]
-                                          ▲                  │
-                                          │                  ▼
-                                     data.json         UML / erDiagram
-                                 (Structure/Dimensions) (Clés & Relations)
+                     ┌────────────────────────────────────────────────────────┐
+                     │                     BESOIN MÉTIER                      │
+                     └──────────────────────────┬─────────────────────────────┘
+                                                │
+       ┌───────────────────┬────────────────────┴───────────────────┬────────────────────┐
+       │ (Prompt 2.2)      │ (Prompt 2.3)                           │ (Prompt 2.1)       │ (Prompt 2.4)
+       ▼                   ▼                                        ▼                    ▼
+┌──────────────┐   ┌──────────────┐                        ┌──────────────┐      ┌──────────────┐
+│  Modèle ERD  │   │ Visuel Agile │                        │ Transposition│      │ Spécification│
+│   (Mermaid)  │   │   Chart.js   │ ──personnalisé──>      │  SAC / IBP   │      │ Exemples 4/6 │
+└──────┬───────┘   └──────┬───────┘                        └──────┬───────┘      └──────┬───────┘
+       │                  │                                        │                     │
+       ▼                  ▼                                        ▼                     ▼
+Étape 2 (Modèle)   Étapes 4 & 6 (Visuels)                  Hypothèses & Pas-à-pas   Story SAC & Formules
+UML & Entités MRO  Rendu & Données Démo                    Rétro-ingénierie         Catalogue standard
 ```
 
 ### Règles d'Architecture & Modèle de Données (alignées sur `content.md`) :
@@ -39,60 +49,117 @@ L'objectif de Maestro est de transformer une expression de besoin métier en sp�
 
 ---
 
-## 2. Guide de Prompting IA : Conception, Arbitrage & Limites Techniques
+## 2. Guide de Prompting IA : Prototypage & Spécifications SAP
 
-Cette section fournit des canevas de prompt directifs pour guider une IA selon les possibilités natives de SAP-IBP et SAC.
+Ce guide met à disposition quatre canevas de prompting directifs pour interagir efficacement avec un LLM (ChatGPT, Claude, Gemini). Chaque bloc de code ci-dessous est **directement copiable** dans le presse-papier grâce à l'icône de copie (`⧉`) située en haut à droite de son conteneur.
 
-### Prompt IA 1 : Cadrage Visuel & Restitution SAC
-```markdown
-Agis en tant qu'Architecte de Tableaux de Bord & Expert SAP Analytics Stories (SAC).
-Contexte : Conception d'un tableau de bord de pilotage industriel MRO / aéronautique.
-Question métier : "[Insérer la question, ex: Quels ateliers concentrent les goulots d'étranglement ?]".
+---
 
-En respectant strictement les POSSIBILITÉS NATIVES de SAP Analytics Stories (SAC) :
-1. Composant SAC recommandé : sélectionne le visuel standard adapté (KPI Card, Boxplot, Treemap, Waterfall, Combo Chart...).
-2. Dimensions & Mesures : précise l'Axe Catégories (X), l'Axe Valeurs (Y) et les Key Figures associées.
-3. Volumétrie & Filtres : définis les filtres d'en-tête (Story Filters) pour respecter le seuil de fluidité d'affichage (< 2000 points).
-4. Seuils d'Alerte (Thresholds) : indique les paliers visuels opposables (ex: 85% de charge critique, tolérance 10%).
+### 2.1 Transposer un visuel dans SAP-IBP / SAP Analytics Stories
+
+**Objectif & Démarche :**
+1. **Point de départ :** On dispose d'un visuel personnalisé ou prototypé en **Étape 4** (délais / TAT) ou **Étape 6** (charge / capacité), ainsi que des modèles relationnels ERD Mermaid (2.A et 2.B) définis en **Étape 2**.
+2. **Extraction automatique :** Lorsqu'un visuel personnalisé est sélectionné, l'onglet `<>` du panneau graphique de droite génère automatiquement le prompt ci-dessous avec le code JavaScript Chart.js du visuel et les deux schémas relationnels Mermaid.
+3. **Restitution IA attendue :** En soumettant ce prompt à un LLM (ChatGPT, Claude, Gemini), celui-ci produit :
+   - Les **hypothèses fonctionnelles et techniques** (Master Data Types, granularité temporelle et organisationnelle, Key Figures associées).
+   - Les **instructions pas à pas** pour implémenter et paramétrer le même graphique dans **SAP-IBP** et **SAP Analytics Cloud (SAC)** (type de composant SAC, dimensions en axe X/séries, mesures, formules de calcul Base Planning Level, Input Controls et seuils conditionnels).
+
+````markdown
+Générer les hypothèses et les instructions pour utiliser SAP-IBP / SAP Analytics Stories pour générer le même graphique pas à pas, en connaissant le VISUEL et les ENTRÉES :
+
+VISUEL :
+```javascript
+[code js chartjs]
 ```
 
-### Prompt IA 2 : Cadrage Modèle & Calculs SAP-IBP
-```markdown
-Agis en tant qu'Architecte Solution SAP Integrated Business Planning (SAP IBP).
-Contexte : Modélisation des données MRO et règles de calcul du Turn Around Time (TAT) et de la capacité.
-Problématique : "[Insérer le sujet, ex: Calcul du délai prévisionnel pondéré par la saturation atelier]".
+ENTRÉES :
+--- Modèle 2.A (Consolidation Demande) ---
+```mermaid
+[Schéma Mermaid 2.A]
+```
 
-En respectant rigoureusement les CONTRAINTES DE SAP IBP :
-1. Master Data Types (MDT) : indique les MDTs requis (Simple pour en-tête demande, Compound pour lignes d'intervention) et leurs clés primaires racines.
-2. Planning Level : définis le Base Planning Level adéquat pour le stockage des indicateurs.
-3. Expression de Calcul : fournis la formule déterministe au niveau de base (Base Level) et la règle d'agrégation temporelle/dimensionnelle.
-4. Simulation : précise comment paramétrer la Key Figure pour autoriser les scénarios What-If sans impacter la baseline.
+--- Modèle 2.B (Lignes d'Intervention) ---
+```mermaid
+[Schéma Mermaid 2.B]
+```
+````
+
+---
+
+### 2.2 Générer un diagramme Entité-Relationnel (ERD)
+
+**Objectif & Démarche :**
+1. Pour explorer de nouveaux visuels ou injecter des données fictives plausibles, il est crucial d'enrichir le contexte de l'IA avec une compréhension rigoureuse du modèle de données métier ou SAP-IBP.
+2. Grâce au prompt structuré ci-dessous, l'IA génère la structure de données formelle sous la forme d'un diagramme Entité-Relationnel Mermaid (`erDiagram`).
+3. **Visualisation instantanée dans BI Maestro :** Vous pouvez copier le bloc Mermaid généré par l'IA et le **coller directement dans l'éditeur de code (`<>`) du panneau droit de l'Étape 2 (Modèle)**. Vous visualiserez ainsi immédiatement le schéma relationnel sans impacter le reste de l'application.
+
+```markdown
+Génère un diagramme ERD Mermaid :
+
+**Type :** Type avec `*` devant si une valeur est obligatoire à la création.
+**Nom :** Nom court.
+**Contraintes :** `PK`, `FK`, `UK` si applicable.
+**Commentaire :** Exemple concret si texte libre, ou liste des valeurs possibles. Mettre `*` sur celle par défaut (ex: `"*true | false"` ou `*DATE_NOW`).
+**Relations :** Cardinalités Mermaid standard avec libellé débutant par un verbe à l'infinitif.
 ```
 
 ---
 
-## 3. Guide de Prompting IA : Modélisation des Données (`data.json`) & Schémas Relationnels
+### 2.3 Créer un visuel ChartJS et des données d'exemple
 
-### Template de Prompt IA : Structuration de Données & Diagramme Mermaid
+**Objectif & Démarche :**
+1. **Point de départ :** On s'appuie sur le modèle de données retenu en **Étape 2** (Macro Demande `visit` ou Atelier `intervention`) et sur la méthode de calcul choisie en amont (**Étape 3** pour le TAT / délais, ou **Étape 5** pour la charge / capacité).
+2. **Cadrage du besoin :** Dans la modale d'ajout d'un visuel personnalisé (accessible depuis l'Étape 4 ou l'Étape 6), on saisit le **titre du visuel** souhaité et, facultativement, sa **description** ainsi que les personas ciblés.
+3. **Génération du prompt enrichi :** En cliquant sur **"Copier le prompt IA"**, le prompt est automatiquement alimenté avec :
+   - Le modèle de données ERD Mermaid,
+   - La méthode de calcul et la table de faits sélectionnées,
+   - Le titre et la description saisis en cours dans la modale.
+4. **Intégration directe :** On soumet ce prompt à un LLM (ChatGPT, Claude, Gemini). Celui-ci produit le code JavaScript Chart.js prêt à l'emploi (avec un jeu de données de démonstration cohérent). Il suffit de coller le code dans la modale pour voir le graphique s'afficher instantanément dans l'application.
+
 ```markdown
-Agis en tant que Data Modeler SAP IBP.
-Domaine industriel cible : "[Décrire le domaine, ex: Maintenance de rames ferroviaires TGV]".
+Proposer une visualisation pertinente basée sur les ENTRÉES dans un code bloc au format contenu sans le { } de l'objet js de ChartJS avec un minimum de données d'exemples.
 
-1. Structure JSON pour `data.json` : déclare les référentiels (sites, modèles, clients, alertes, gammes, routes) avec des identifiants normés et sans mesures chiffrées en dur.
-2. Diagramme Mermaid (`erDiagram`) : formalise les tables de faits (demandes, interventions) et dimensions (sites, calendrier, matériel, SLA) avec leurs cardinalités (||--o{).
+ENTRÉES
+Titre du visuel : "[Ex: Dérive TAT par Atelier & Spécialité]"
+Description : "[Ex: Comparatif du délai moyen constaté selon les grands segments de réparation]"
+[Méthode de calcul & Table de faits issue de l'Étape 3 ou 5]
+
+Modèles Relationnels ERD (2.A et 2.B) :
+[Schéma Mermaid 2.A & 2.B]
 ```
 
 ---
 
-## 4. Guide de Prompting IA : Méthodes de Calcul & Mesure de Fiabilité
+### 2.4 Explorer les exemples de visuel BIMAESTRO avec l'IA et dans SAP-IBP/SAC
 
-### Template de Prompt IA : Comparaison de Méthodes & Analyse de Dérive
+**Objectif & Démarche :**
+1. **Point de départ :** On sélectionne l'un des graphiques prédéfinis du catalogue BIMAESTRO en **Étape 4** (Boxplot 4.A, Stacked 4.B, Clients 4.C, Listing ESN 4.D, KPIs 4.E, P85 4.F, Waterfall 4.G, Gates 4.H) ou en **Étape 6** (Pièces 6.A, Retards 6.B, Navettes 6.C, Lean 6.D, Seuil 85% 6.E, Heatmap 6.F, In/Out 6.G, Treemap 6.H).
+2. **Extraction automatique :** Dans le panneau graphique de droite, l'onglet `<>` (accessible aussi via le bouton `⧉`) génère la fiche de spécification formelle du visuel actif (titre, contexte opérationnel, type, modèle MDT, dimensions, mesures, filtres et règles métier).
+3. **Exploration & Restitution IA :** En soumettant ce prompt à un LLM, on obtient à la fois :
+   - Un prototype autonome (code HTML/Tailwind/Chart.js) pour explorer des variantes ou tester d'autres jeux de données.
+   - Les directives complètes pour recréer le visuel dans **SAP Analytics Cloud (SAC)** et mapper les calculs dans **SAP-IBP**.
+
 ```markdown
-Agis en tant que Data Scientist & Expert SAP IBP Demand Sensing / Forecasting.
-Contexte : Estimation du TAT de révision d'équipements industriels.
+Générer un graphique en HTML à la SAP-IBP / SAC incluant dedans les instructions pour le faire pas à pas
+- Titre : "[Titre du visuel BIMAESTRO sélectionné]"
 
-1. Benchmark des 4 méthodes : compare (A) Gammes standards S&OP, (B) Distribution empirique P50, (C) Saturation capacitaire files d'attente, et (D) Modélisation probabiliste / ML.
-2. Évaluation de la dérive : formule pour mesurer l'écart prévu vs effectif (MAPE, dérive > 15%) et restituer un indice de certitude exploitable dans une Analytics Story SAC.
+- Contexte : 
+"[Description et contexte opérationnel du visuel]"
+
+- Type  : [Type de composant SAC / Chart.js recommandé]
+- Modèle & Grain : [MDT_MAINTENANCE_REQUEST ou MDT_INTERVENTION] — [Grain unitaire]
+- Axe X : [Dimension temporelle, catégorielle ou organisationnelle]
+- Axe Y : [Métrique ou indicateur principal]
+
+- Dimensions :
+  * [Liste des dimensions requises]
+- Mesures :
+  * [Liste des Key Figures IBP / mesures associées]
+
+- Filtres : 
+[Story Filters / Input Controls indispensables]
+- Règles : 
+[Formules de calcul, seuils d'alerte et règles métier]
 ```
 
 ---
