@@ -924,12 +924,13 @@
             <span id="step3-table-title" class="hidden"></span>
             <span id="step3-combo-badge" class="hidden"></span>
 
-            <!-- Barre d'outils supérieure : Toggle ui / <> & Actions Template / Copie -->
+            <!-- Barre d'outils supérieure : Toggle ui / chartjs / visuels & Actions Template / Copie -->
             <div class="flex items-center justify-between gap-2 shrink-0 pb-1.5 border-b border-slate-200">
               <div class="flex items-center gap-2 min-w-0">
                 <div id="step-3-toggle" class="flex items-center rounded-lg border border-slate-200 bg-white shadow-xs overflow-hidden">
                   <button type="button" data-view="ui" onclick="toggleTableMode(3, 'ui')" title="Vue Tableau (ui)" class="px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition">ui</button>
-                  <button type="button" data-view="ai" onclick="toggleTableMode(3, 'ai')" title="Prompt IA pour propositions visuelles (<>)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">&lt;&gt;</button>
+                  <button type="button" data-view="ai" onclick="toggleTableMode(3, 'ai')" title="Prompt IA pour propositions visuelles (chartjs)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">chartjs</button>
+                  <button type="button" data-view="visuels" onclick="toggleTableMode(3, 'visuels')" title="Prompt IA suggestions de visuels SAP-IBP / SAC (visuels)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">visuels</button>
                 </div>
               </div>
               <div class="flex items-center gap-1.5 shrink-0">
@@ -953,15 +954,28 @@
               </div>
             </div>
 
-            <!-- Vue Spécification Prompt IA (<>) -->
+            <!-- Vue Spécification Prompt IA (chartjs) -->
             <div id="step-3-ai-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
               <div class="flex items-center justify-between pb-1 shrink-0">
-                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Prompt IA — Suggestions Visuels (&lt;&gt;)</span>
+                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Prompt IA — Suggestions Visuels (chartjs)</span>
                 <button type="button" id="step-3-ai-copy-btn" onclick="copyTableAi(3)" title="Copier le prompt IA" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
                   ⧉
                 </button>
               </div>
               <pre class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-2.5 overflow-x-auto overflow-y-auto text-[11px] leading-relaxed whitespace-pre-wrap select-all font-mono"><code id="step-3-ai-code"></code></pre>
+            </div>
+
+            <!-- Vue Idées de Visuels SAP-IBP / SAC (visuels) -->
+            <div id="step-3-visuels-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
+              <div class="flex items-center justify-between pb-1 shrink-0">
+                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Prompt IA — 3 Idées de Visuels SAP-IBP / SAC (visuels)</span>
+                <div class="flex items-center gap-1.5">
+                  <button type="button" id="step-3-visuels-copy-btn" onclick="copyVisuelsPrompt(3)" title="Copier le prompt visuels" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
+                    ⧉
+                  </button>
+                </div>
+              </div>
+              <pre class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-2.5 overflow-x-auto overflow-y-auto text-[11px] leading-relaxed whitespace-pre-wrap select-all font-mono"><code id="step-3-visuels-code"></code></pre>
             </div>
           </div>
         </div>
@@ -1144,15 +1158,18 @@
                 <div class="flex items-center gap-2 min-w-0">
                   <div id="step-4-chart-toggle" class="flex items-center rounded-lg border border-slate-200 bg-white shadow-xs overflow-hidden">
                     <button type="button" data-view="chart" onclick="toggleChartMode(4, 'chart')" title="Vue Graphique (ui)" class="px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition">ui</button>
-                    <button type="button" data-view="js" onclick="toggleChartMode(4, 'js')" title="Données Chart.js (js)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">js</button>
-                    <button type="button" data-view="ai" onclick="toggleChartMode(4, 'ai')" title="Spécification Chart.js pour IA (<>)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">&lt;&gt;</button>
+                    <button type="button" data-view="config" onclick="toggleChartMode(4, 'config')" title="Configuration JSON Chart.js (config)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">config</button>
+                    <button type="button" data-view="js" onclick="toggleChartMode(4, 'js')" title="Code JavaScript Chart.js (js)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">js</button>
+                    <button type="button" data-view="chartjs" onclick="toggleChartMode(4, 'chartjs')" title="Prompt IA génération Chart.js (chartjs)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">chartjs</button>
+                    <button type="button" data-view="visuels" onclick="toggleChartMode(4, 'visuels')" title="Prompt IA suggestions de visuels SAP-IBP / SAC (visuels)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">visuels</button>
+                    <button type="button" data-view="sap" onclick="toggleChartMode(4, 'sap')" title="Prompt IA SAP-IBP / SAC (sap)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">sap</button>
                   </div>
                 </div>
                 <div class="flex items-center gap-1.5 shrink-0">
                   <button id="step-4-chart-reset" type="button" onclick="resetChartCode(4)" title="Réinitialiser le graphique (configuration standard)" class="px-1.5 py-0.5 text-[10px] font-bold text-slate-600 hover:text-blue-800 bg-slate-50 hover:bg-blue-50 border border-slate-200 rounded cursor-pointer transition shadow-2xs">
                     ↻
                   </button>
-                  <button id="step-4-prompt-template-btn" type="button" onclick="openPromptTemplateModal()" title="Éditer le template de prompt (<>)" class="px-1.5 py-0.5 text-[10px] font-bold text-slate-600 hover:text-blue-800 bg-slate-50 hover:bg-blue-50 border border-slate-200 rounded cursor-pointer transition shadow-2xs">
+                  <button id="step-4-prompt-template-btn" type="button" onclick="openPromptTemplateModal(4)" title="Éditer le template de prompt (<>)" class="px-1.5 py-0.5 text-[10px] font-bold text-slate-600 hover:text-blue-800 bg-slate-50 hover:bg-blue-50 border border-slate-200 rounded cursor-pointer transition shadow-2xs">
                     ✎
                   </button>
                 </div>
@@ -1163,25 +1180,57 @@
                   <canvas id="step-4-canvas" style="display: block; width: 100%; height: 100%;"></canvas>
                 </div>
               </div>
-              <!-- Vue Code Source Configuration Chart.js (js) -->
-              <div id="step-4-js-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
+              <!-- Vue Configuration JSON Chart.js (config) -->
+              <div id="step-4-config-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
                 <div class="flex items-center justify-between pb-1 shrink-0">
                   <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Configuration Chart.js (config)</span>
-                  <button type="button" id="step-4-js-copy-btn" onclick="copyChartDataJs(4)" title="Copier la configuration Chart.js complète" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
+                  <button type="button" id="step-4-config-copy-btn" onclick="copyChartConfigJson(4)" title="Copier la configuration Chart.js complète" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
+                    ⧉
+                  </button>
+                </div>
+                <pre class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-2.5 overflow-x-auto overflow-y-auto text-[11px] leading-relaxed whitespace-pre-wrap select-all font-mono"><code id="step-4-config-code"></code></pre>
+              </div>
+              <!-- Vue Code Source JavaScript Chart.js (js) -->
+              <div id="step-4-js-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
+                <div class="flex items-center justify-between pb-1 shrink-0">
+                  <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Code JavaScript Chart.js (js)</span>
+                  <button type="button" id="step-4-js-copy-btn" onclick="copyChartJsCode(4)" title="Copier le code JavaScript" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
                     ⧉
                   </button>
                 </div>
                 <pre class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-2.5 overflow-x-auto overflow-y-auto text-[11px] leading-relaxed whitespace-pre-wrap select-all font-mono"><code id="step-4-js-code"></code></pre>
               </div>
-              <!-- Vue Spécification Chart.js Prompt IA (ai) -->
-              <div id="step-4-ai-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
+              <!-- Vue Prompt IA Génération Chart.js (chartjs) -->
+              <div id="step-4-chartjs-prompt-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
                 <div class="flex items-center justify-between pb-1 shrink-0">
-                  <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Spécification Visuel (Prompt IA)</span>
-                  <button type="button" id="step-4-ai-copy-btn" onclick="copyChartAi(4)" title="Copier la spécification pour l'IA" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
+                  <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Prompt IA Génération Chart.js (chartjs)</span>
+                  <button type="button" id="step-4-chartjs-prompt-copy-btn" onclick="copyChartJsPrompt(4)" title="Copier le prompt Chart.js pour l'IA" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
                     ⧉
                   </button>
                 </div>
-                <pre class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-2.5 overflow-x-auto overflow-y-auto text-[11px] leading-relaxed whitespace-pre-wrap select-all font-mono"><code id="step-4-ai-code"></code></pre>
+                <pre class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-2.5 overflow-x-auto overflow-y-auto text-[11px] leading-relaxed whitespace-pre-wrap select-all font-mono"><code id="step-4-chartjs-prompt-code"></code></pre>
+              </div>
+              <!-- Vue Idées de Visuels SAP-IBP / SAC (visuels) -->
+              <div id="step-4-visuels-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
+                <div class="flex items-center justify-between pb-1 shrink-0">
+                  <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Prompt IA — 3 Idées de Visuels SAP-IBP / SAC (visuels)</span>
+                  <div class="flex items-center gap-1.5">
+                    <button type="button" id="step-4-visuels-copy-btn" onclick="copyVisuelsPrompt(4)" title="Copier le prompt visuels" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
+                      ⧉
+                    </button>
+                  </div>
+                </div>
+                <pre class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-2.5 overflow-x-auto overflow-y-auto text-[11px] leading-relaxed whitespace-pre-wrap select-all font-mono"><code id="step-4-visuels-code"></code></pre>
+              </div>
+              <!-- Vue Transposition SAP-IBP / SAC (sap) -->
+              <div id="step-4-sap-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
+                <div class="flex items-center justify-between pb-1 shrink-0">
+                  <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Transposition SAP-IBP / SAC (sap)</span>
+                  <button type="button" id="step-4-sap-copy-btn" onclick="copyChartSapPrompt(4)" title="Copier le prompt de transposition SAP" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
+                    ⧉
+                  </button>
+                </div>
+                <pre class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-2.5 overflow-x-auto overflow-y-auto text-[11px] leading-relaxed whitespace-pre-wrap select-all font-mono"><code id="step-4-sap-code"></code></pre>
               </div>
             </div>
           </div>
@@ -1325,12 +1374,13 @@
             <span id="step5-table-title" class="hidden"></span>
             <span id="step5-combo-badge" class="hidden"></span>
 
-            <!-- Barre d'outils supérieure : Toggle ui / <> & Actions Template / Copie -->
+            <!-- Barre d'outils supérieure : Toggle ui / chartjs / visuels & Actions Template / Copie -->
             <div class="flex items-center justify-between gap-2 shrink-0 pb-1.5 border-b border-slate-200">
               <div class="flex items-center gap-2 min-w-0">
                 <div id="step-5-toggle" class="flex items-center rounded-lg border border-slate-200 bg-white shadow-xs overflow-hidden">
                   <button type="button" data-view="ui" onclick="toggleTableMode(5, 'ui')" title="Vue Tableau (ui)" class="px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition">ui</button>
-                  <button type="button" data-view="ai" onclick="toggleTableMode(5, 'ai')" title="Prompt IA pour propositions visuelles (<>)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">&lt;&gt;</button>
+                  <button type="button" data-view="ai" onclick="toggleTableMode(5, 'ai')" title="Prompt IA pour propositions visuelles (chartjs)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">chartjs</button>
+                  <button type="button" data-view="visuels" onclick="toggleTableMode(5, 'visuels')" title="Prompt IA suggestions de visuels SAP-IBP / SAC (visuels)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">visuels</button>
                 </div>
               </div>
               <div class="flex items-center gap-1.5 shrink-0">
@@ -1354,15 +1404,28 @@
               </div>
             </div>
 
-            <!-- Vue Spécification Prompt IA (<>) -->
+            <!-- Vue Spécification Prompt IA (chartjs) -->
             <div id="step-5-ai-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
               <div class="flex items-center justify-between pb-1 shrink-0">
-                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Prompt IA — Suggestions Visuels (&lt;&gt;)</span>
+                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Prompt IA — Suggestions Visuels (chartjs)</span>
                 <button type="button" id="step-5-ai-copy-btn" onclick="copyTableAi(5)" title="Copier le prompt IA" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
                   ⧉
                 </button>
               </div>
               <pre class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-2.5 overflow-x-auto overflow-y-auto text-[11px] leading-relaxed whitespace-pre-wrap select-all font-mono"><code id="step-5-ai-code"></code></pre>
+            </div>
+
+            <!-- Vue Idées de Visuels SAP-IBP / SAC (visuels) -->
+            <div id="step-5-visuels-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
+              <div class="flex items-center justify-between pb-1 shrink-0">
+                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Prompt IA — 3 Idées de Visuels SAP-IBP / SAC (visuels)</span>
+                <div class="flex items-center gap-1.5">
+                  <button type="button" id="step-5-visuels-copy-btn" onclick="copyVisuelsPrompt(5)" title="Copier le prompt visuels" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
+                    ⧉
+                  </button>
+                </div>
+              </div>
+              <pre class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-2.5 overflow-x-auto overflow-y-auto text-[11px] leading-relaxed whitespace-pre-wrap select-all font-mono"><code id="step-5-visuels-code"></code></pre>
             </div>
           </div>
         </div>
@@ -1545,8 +1608,11 @@
                 <div class="flex items-center gap-2 min-w-0">
                   <div id="step-6-chart-toggle" class="flex items-center rounded-lg border border-slate-200 bg-white shadow-xs overflow-hidden">
                     <button type="button" data-view="chart" onclick="toggleChartMode(6, 'chart')" title="Vue Graphique (ui)" class="px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition">ui</button>
-                    <button type="button" data-view="js" onclick="toggleChartMode(6, 'js')" title="Données Chart.js (js)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">js</button>
-                    <button type="button" data-view="ai" onclick="toggleChartMode(6, 'ai')" title="Spécification Chart.js pour IA (<>)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">&lt;&gt;</button>
+                    <button type="button" data-view="config" onclick="toggleChartMode(6, 'config')" title="Configuration JSON Chart.js (config)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">config</button>
+                    <button type="button" data-view="js" onclick="toggleChartMode(6, 'js')" title="Code JavaScript Chart.js (js)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">js</button>
+                    <button type="button" data-view="chartjs" onclick="toggleChartMode(6, 'chartjs')" title="Prompt IA génération Chart.js (chartjs)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">chartjs</button>
+                    <button type="button" data-view="visuels" onclick="toggleChartMode(6, 'visuels')" title="Prompt IA suggestions de visuels SAP-IBP / SAC (visuels)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">visuels</button>
+                    <button type="button" data-view="sap" onclick="toggleChartMode(6, 'sap')" title="Prompt IA SAP-IBP / SAC (sap)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">sap</button>
                   </div>
                   <button id="step-6-treemap-reset" type="button" onclick="resetTreemapDrill()" class="hidden text-[9.5px] font-bold text-blue-800 bg-blue-50 hover:bg-blue-100 border border-blue-200 px-2 py-0.5 rounded cursor-pointer transition shadow-2xs shrink-0">
                     ◀ Revenir aux Moteurs
@@ -1556,7 +1622,7 @@
                   <button id="step-6-chart-reset" type="button" onclick="resetChartCode(6)" title="Réinitialiser le graphique (configuration standard)" class="px-1.5 py-0.5 text-[10px] font-bold text-slate-600 hover:text-blue-800 bg-slate-50 hover:bg-blue-50 border border-slate-200 rounded cursor-pointer transition shadow-2xs">
                     ↻
                   </button>
-                  <button id="step-6-prompt-template-btn" type="button" onclick="openPromptTemplateModal()" title="Éditer le template de prompt (<>)" class="px-1.5 py-0.5 text-[10px] font-bold text-slate-600 hover:text-blue-800 bg-slate-50 hover:bg-blue-50 border border-slate-200 rounded cursor-pointer transition shadow-2xs">
+                  <button id="step-6-prompt-template-btn" type="button" onclick="openPromptTemplateModal(6)" title="Éditer le template de prompt (<>)" class="px-1.5 py-0.5 text-[10px] font-bold text-slate-600 hover:text-blue-800 bg-slate-50 hover:bg-blue-50 border border-slate-200 rounded cursor-pointer transition shadow-2xs">
                     ✎
                   </button>
                 </div>
@@ -1567,25 +1633,57 @@
                   <canvas id="step-6-canvas" style="display: block; width: 100%; height: 100%;"></canvas>
                 </div>
               </div>
-              <!-- Vue Code Source Configuration Chart.js (js) -->
-              <div id="step-6-js-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
+              <!-- Vue Configuration JSON Chart.js (config) -->
+              <div id="step-6-config-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
                 <div class="flex items-center justify-between pb-1 shrink-0">
                   <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Configuration Chart.js (config)</span>
-                  <button type="button" id="step-6-js-copy-btn" onclick="copyChartDataJs(6)" title="Copier la configuration Chart.js complète" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
+                  <button type="button" id="step-6-config-copy-btn" onclick="copyChartConfigJson(6)" title="Copier la configuration Chart.js complète" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
+                    ⧉
+                  </button>
+                </div>
+                <pre class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-2.5 overflow-x-auto overflow-y-auto text-[11px] leading-relaxed whitespace-pre-wrap select-all font-mono"><code id="step-6-config-code"></code></pre>
+              </div>
+              <!-- Vue Code Source JavaScript Chart.js (js) -->
+              <div id="step-6-js-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
+                <div class="flex items-center justify-between pb-1 shrink-0">
+                  <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Code JavaScript Chart.js (js)</span>
+                  <button type="button" id="step-6-js-copy-btn" onclick="copyChartJsCode(6)" title="Copier le code JavaScript" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
                     ⧉
                   </button>
                 </div>
                 <pre class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-2.5 overflow-x-auto overflow-y-auto text-[11px] leading-relaxed whitespace-pre-wrap select-all font-mono"><code id="step-6-js-code"></code></pre>
               </div>
-              <!-- Vue Spécification Chart.js Prompt IA (ai) -->
-              <div id="step-6-ai-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
+              <!-- Vue Prompt IA Génération Chart.js (chartjs) -->
+              <div id="step-6-chartjs-prompt-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
                 <div class="flex items-center justify-between pb-1 shrink-0">
-                  <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Spécification Visuel (Prompt IA)</span>
-                  <button type="button" id="step-6-ai-copy-btn" onclick="copyChartAi(6)" title="Copier la spécification pour l'IA" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
+                  <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Prompt IA Génération Chart.js (chartjs)</span>
+                  <button type="button" id="step-6-chartjs-prompt-copy-btn" onclick="copyChartJsPrompt(6)" title="Copier le prompt Chart.js pour l'IA" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
                     ⧉
                   </button>
                 </div>
-                <pre class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-2.5 overflow-x-auto overflow-y-auto text-[11px] leading-relaxed whitespace-pre-wrap select-all font-mono"><code id="step-6-ai-code"></code></pre>
+                <pre class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-2.5 overflow-x-auto overflow-y-auto text-[11px] leading-relaxed whitespace-pre-wrap select-all font-mono"><code id="step-6-chartjs-prompt-code"></code></pre>
+              </div>
+              <!-- Vue Idées de Visuels SAP-IBP / SAC (visuels) -->
+              <div id="step-6-visuels-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
+                <div class="flex items-center justify-between pb-1 shrink-0">
+                  <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Prompt IA — 3 Idées de Visuels SAP-IBP / SAC (visuels)</span>
+                  <div class="flex items-center gap-1.5">
+                    <button type="button" id="step-6-visuels-copy-btn" onclick="copyVisuelsPrompt(6)" title="Copier le prompt visuels" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
+                      ⧉
+                    </button>
+                  </div>
+                </div>
+                <pre class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-2.5 overflow-x-auto overflow-y-auto text-[11px] leading-relaxed whitespace-pre-wrap select-all font-mono"><code id="step-6-visuels-code"></code></pre>
+              </div>
+              <!-- Vue Transposition SAP-IBP / SAC (sap) -->
+              <div id="step-6-sap-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
+                <div class="flex items-center justify-between pb-1 shrink-0">
+                  <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Transposition SAP-IBP / SAC (sap)</span>
+                  <button type="button" id="step-6-sap-copy-btn" onclick="copyChartSapPrompt(6)" title="Copier le prompt de transposition SAP" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
+                    ⧉
+                  </button>
+                </div>
+                <pre class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-2.5 overflow-x-auto overflow-y-auto text-[11px] leading-relaxed whitespace-pre-wrap select-all font-mono"><code id="step-6-sap-code"></code></pre>
               </div>
             </div>
           </div>
@@ -1681,30 +1779,84 @@
               <!-- Visualisation Q4 (Délai & TAT) -->
               <div id="card-step-7-chart-q4"
                 class="lg:col-span-6 bg-white rounded-lg p-1.5 border border-slate-200 flex flex-col justify-between overflow-hidden shadow-sm">
-                <div class="flex justify-between items-center mb-0.5 shrink-0">
-                  <h3 class="text-[11px] font-bold text-slate-900 flex items-center gap-1" id="mock-chart-q4-title">
-                    <span>⏱️</span> Suivi Délai & Engagements
-                  </h3>
-                  <span class="text-[9px] text-slate-500" id="mock-chart-q4-sub">Choix Q4</span>
+                <div class="flex justify-between items-center mb-0.5 shrink-0 gap-2">
+                  <div class="flex items-center gap-2 min-w-0">
+                    <h3 class="text-[11px] font-bold text-slate-900 flex items-center gap-1 truncate" id="mock-chart-q4-title">
+                      <span>⏱️</span> Suivi Délai & Engagements
+                    </h3>
+                    <div id="mock-chart-q4-toggle" class="flex items-center rounded border border-slate-200 bg-white shadow-2xs overflow-hidden shrink-0">
+                      <button type="button" data-view="ui" onclick="toggleDashboardCardMode(4, 'ui')" title="Vue Graphique (ui)" class="px-1.5 py-0.5 text-[8.5px] font-bold bg-blue-800 text-white transition">ui</button>
+                      <button type="button" data-view="config" onclick="toggleDashboardCardMode(4, 'config')" title="Configuration JSON Chart.js (config)" class="px-1.5 py-0.5 text-[8.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">config</button>
+                      <button type="button" data-view="sap" onclick="toggleDashboardCardMode(4, 'sap')" title="Prompt Transposition SAP-IBP / SAC (sap)" class="px-1.5 py-0.5 text-[8.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">sap</button>
+                    </div>
+                  </div>
+                  <span class="text-[9px] text-slate-500 shrink-0" id="mock-chart-q4-sub">Choix Q4</span>
                 </div>
+                <!-- Vue Graphique (ui) -->
                 <div id="mock-chart-q4-container" class="flex-1 relative overflow-hidden">
-                  <!-- Chart.js Dynamique Q4 -->
                   <canvas id="mock-chart-q4-canvas"></canvas>
+                </div>
+                <!-- Vue Configuration Chart.js (config) -->
+                <div id="mock-chart-q4-config-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-0.5">
+                  <div class="flex items-center justify-between pb-1 shrink-0">
+                    <span class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">Configuration Chart.js (config)</span>
+                    <button type="button" id="mock-chart-q4-config-copy-btn" onclick="copyDashboardCardConfig(4)" title="Copier la configuration Chart.js" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
+                      ⧉
+                    </button>
+                  </div>
+                  <pre class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-2 overflow-x-auto overflow-y-auto text-[10.5px] leading-relaxed whitespace-pre-wrap select-all font-mono"><code id="mock-chart-q4-config-code"></code></pre>
+                </div>
+                <!-- Vue Transposition SAP-IBP / SAC (sap) -->
+                <div id="mock-chart-q4-sap-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-0.5">
+                  <div class="flex items-center justify-between pb-1 shrink-0">
+                    <span class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">Transposition SAP-IBP / SAC (sap)</span>
+                    <button type="button" id="mock-chart-q4-sap-copy-btn" onclick="copyDashboardCardSap(4)" title="Copier le prompt de transposition SAP" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
+                      ⧉
+                    </button>
+                  </div>
+                  <pre class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-2 overflow-x-auto overflow-y-auto text-[10.5px] leading-relaxed whitespace-pre-wrap select-all font-mono"><code id="mock-chart-q4-sap-code"></code></pre>
                 </div>
               </div>
 
               <!-- Visualisation Q6 (Saturation & Capacité) -->
               <div id="card-step-7-chart-q6"
                 class="lg:col-span-6 bg-white rounded-lg p-1.5 border border-slate-200 flex flex-col justify-between overflow-hidden shadow-sm">
-                <div class="flex justify-between items-center mb-0.5 shrink-0">
-                  <h3 class="text-[11px] font-bold text-slate-900 flex items-center gap-1" id="mock-chart-q6-title">
-                    <span>🏭</span> Charge & Saturation Ateliers
-                  </h3>
-                  <span class="text-[9px] text-slate-500" id="mock-chart-q6-sub">Choix Q6</span>
+                <div class="flex justify-between items-center mb-0.5 shrink-0 gap-2">
+                  <div class="flex items-center gap-2 min-w-0">
+                    <h3 class="text-[11px] font-bold text-slate-900 flex items-center gap-1 truncate" id="mock-chart-q6-title">
+                      <span>🏭</span> Charge & Saturation Ateliers
+                    </h3>
+                    <div id="mock-chart-q6-toggle" class="flex items-center rounded border border-slate-200 bg-white shadow-2xs overflow-hidden shrink-0">
+                      <button type="button" data-view="ui" onclick="toggleDashboardCardMode(6, 'ui')" title="Vue Graphique (ui)" class="px-1.5 py-0.5 text-[8.5px] font-bold bg-blue-800 text-white transition">ui</button>
+                      <button type="button" data-view="config" onclick="toggleDashboardCardMode(6, 'config')" title="Configuration JSON Chart.js (config)" class="px-1.5 py-0.5 text-[8.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">config</button>
+                      <button type="button" data-view="sap" onclick="toggleDashboardCardMode(6, 'sap')" title="Prompt Transposition SAP-IBP / SAC (sap)" class="px-1.5 py-0.5 text-[8.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">sap</button>
+                    </div>
+                  </div>
+                  <span class="text-[9px] text-slate-500 shrink-0" id="mock-chart-q6-sub">Choix Q6</span>
                 </div>
+                <!-- Vue Graphique (ui) -->
                 <div id="mock-chart-q6-container" class="flex-1 relative overflow-hidden">
-                  <!-- Chart.js Dynamique Q6 -->
                   <canvas id="mock-chart-q6-canvas"></canvas>
+                </div>
+                <!-- Vue Configuration Chart.js (config) -->
+                <div id="mock-chart-q6-config-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-0.5">
+                  <div class="flex items-center justify-between pb-1 shrink-0">
+                    <span class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">Configuration Chart.js (config)</span>
+                    <button type="button" id="mock-chart-q6-config-copy-btn" onclick="copyDashboardCardConfig(6)" title="Copier la configuration Chart.js" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
+                      ⧉
+                    </button>
+                  </div>
+                  <pre class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-2 overflow-x-auto overflow-y-auto text-[10.5px] leading-relaxed whitespace-pre-wrap select-all font-mono"><code id="mock-chart-q6-config-code"></code></pre>
+                </div>
+                <!-- Vue Transposition SAP-IBP / SAC (sap) -->
+                <div id="mock-chart-q6-sap-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-0.5">
+                  <div class="flex items-center justify-between pb-1 shrink-0">
+                    <span class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">Transposition SAP-IBP / SAC (sap)</span>
+                    <button type="button" id="mock-chart-q6-sap-copy-btn" onclick="copyDashboardCardSap(6)" title="Copier le prompt de transposition SAP" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
+                      ⧉
+                    </button>
+                  </div>
+                  <pre class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-2 overflow-x-auto overflow-y-auto text-[10.5px] leading-relaxed whitespace-pre-wrap select-all font-mono"><code id="mock-chart-q6-sap-code"></code></pre>
                 </div>
               </div>
             </div>
@@ -2016,21 +2168,34 @@
     }
 
     let targetPromptModalStep = 4;
+    let targetPromptModalType = 'chart'; // 'chart', 'table', 'visuels'
 
     function openPromptTemplateModal(step) {
-      targetPromptModalStep = (step === 3 || step === 5) ? step : 4;
+      targetPromptModalStep = step;
       const modal = document.getElementById("prompt-template-modal");
       const textarea = document.getElementById("prompt-template-textarea");
       const titleEl = document.getElementById("prompt-template-modal-title");
       const subEl = document.getElementById("prompt-template-modal-subtitle");
       if (!modal || !textarea) return;
 
-      if (targetPromptModalStep === 3 || targetPromptModalStep === 5) {
-        if (titleEl) titleEl.textContent = "Configuration du Template de Prompt IA Tables (Étape " + targetPromptModalStep + ") (<>)";
+      const isTableStep = (step === 3 || step === 5);
+      const isVisuelsActive = isTableStep
+        ? (tablePanelViewMode[step] === 'visuels')
+        : (chartViewMode[step] === 'visuels');
+
+      if (isVisuelsActive) {
+        targetPromptModalType = 'visuels';
+        if (titleEl) titleEl.textContent = `Configuration du Template de Prompt Idées de Visuels (Étape ${step}) (visuels)`;
+        if (subEl) subEl.textContent = "Structure SORTIE & ENTRÉES pour génération de 3 idées de visuels compatibles SAP-IBP / SAC (stocké en LocalStorage)";
+        textarea.value = getVisuelsPromptTemplate();
+      } else if (isTableStep) {
+        targetPromptModalType = 'table';
+        if (titleEl) titleEl.textContent = `Configuration du Template de Prompt IA Tables (Étape ${step}) (chartjs)`;
         if (subEl) subEl.textContent = "Génération de propositions de visualisations avec analyse comparative et modèles ERD (stocké en LocalStorage)";
         textarea.value = getTablePromptTemplate();
       } else {
-        if (titleEl) titleEl.textContent = "Configuration du Template de Prompt Visuel (<>)";
+        targetPromptModalType = 'chart';
+        if (titleEl) titleEl.textContent = `Configuration du Template de Prompt Visuel (Étape ${step}) (sap)`;
         if (subEl) subEl.textContent = "Personnalisation du prompt Markdown généré pour tous les graphiques (stocké en LocalStorage)";
         textarea.value = getPromptTemplate();
       }
@@ -2050,7 +2215,10 @@
       const textarea = document.getElementById("prompt-template-textarea");
       if (!textarea) return;
 
-      if (targetPromptModalStep === 3 || targetPromptModalStep === 5) {
+      if (targetPromptModalType === 'visuels') {
+        saveVisuelsPromptTemplate(textarea.value);
+        [3, 4, 5, 6].forEach(s => renderVisuelsPromptView(s));
+      } else if (targetPromptModalType === 'table') {
         saveTablePromptTemplate(textarea.value);
         renderTableAiView(3);
         renderTableAiView(5);
@@ -2072,7 +2240,11 @@
       const textarea = document.getElementById("prompt-template-textarea");
       if (!textarea) return;
 
-      if (targetPromptModalStep === 3 || targetPromptModalStep === 5) {
+      if (targetPromptModalType === 'visuels') {
+        textarea.value = DEFAULT_VISUELS_PROMPT_TEMPLATE;
+        localStorage.removeItem(VISUELS_PROMPT_TEMPLATE_STORAGE_KEY);
+        [3, 4, 5, 6].forEach(s => renderVisuelsPromptView(s));
+      } else if (targetPromptModalType === 'table') {
         textarea.value = DEFAULT_TABLE_PROMPT_TEMPLATE;
         localStorage.removeItem(TABLE_PROMPT_TEMPLATE_STORAGE_KEY);
         renderTableAiView(3);
@@ -5074,6 +5246,29 @@ Modèles Relationnels ERD (2.A et 2.B) :
 --- Modèle 2.B (Lignes d'Intervention) ---
 {uml2B}`;
 
+    const VISUELS_PROMPT_TEMPLATE_STORAGE_KEY = 'maestro_visuels_prompt_template';
+    const DEFAULT_VISUELS_PROMPT_TEMPLATE = `Générer 3 idées de visuels compatibles avec SAP-IBP / SAC, chacune est dans un bloc de code qui suit la structure exacte suivante SORTIE sur la base des ENTRÉES : 
+
+SORTIE
+
+- Titre : 
+- Contexte : 
+- Type  : (type de graphique)
+- Axe X : (éventuellement X1, X2 selon les graphiques)
+- Axe Y : (idem)
+
+- Dimensions :
+  * NOM_DIMENSION (Description ou liste de valeurs séparé d'une virgule) 
+
+- Mesures :
+  * NOM_MESURE (Description et exemples)
+
+- Filtres : (suggestions de dimensions en filtre sur le graphique)
+- Règles : (instructions sur la génération automatique des données, nombre d'éléments, moyenne, distribution et intervalle pour les valeurs)
+
+ENTRÉES
+{stepEntries}`;
+
     function getTablePromptTemplate() {
       try {
         const custom = localStorage.getItem(TABLE_PROMPT_TEMPLATE_STORAGE_KEY);
@@ -5086,6 +5281,110 @@ Modèles Relationnels ERD (2.A et 2.B) :
       try {
         localStorage.setItem(TABLE_PROMPT_TEMPLATE_STORAGE_KEY, templateStr);
       } catch (e) {}
+    }
+
+    function getVisuelsPromptTemplate() {
+      try {
+        const custom = localStorage.getItem(VISUELS_PROMPT_TEMPLATE_STORAGE_KEY);
+        if (custom && custom.trim().length > 0) return custom;
+      } catch (e) {}
+      return DEFAULT_VISUELS_PROMPT_TEMPLATE;
+    }
+
+    function saveVisuelsPromptTemplate(templateStr) {
+      try {
+        localStorage.setItem(VISUELS_PROMPT_TEMPLATE_STORAGE_KEY, templateStr);
+      } catch (e) {}
+    }
+
+    function getOptionCardPureText(step, opt) {
+      const bodyEl = document.getElementById(`opt-${step}-${opt}-body`);
+      if (bodyEl) {
+        const clone = bodyEl.cloneNode(true);
+        clone.querySelectorAll('.opt-copy-btn').forEach(b => b.remove());
+        const raw = (clone.innerText || clone.textContent || '');
+        return raw.split('\n').map(l => l.trim()).filter(Boolean).join('\n');
+      }
+      if (metaInfo[step] && metaInfo[step][opt]) {
+        return `${metaInfo[step][opt].title}\n${metaInfo[step][opt].desc}`;
+      }
+      return '';
+    }
+
+    function generateVisuelsPrompt(step) {
+      // Réponse sélectionnée Étape 1
+      const q1 = selections[1] || 'A';
+      const q1Info = (metaInfo[1] && metaInfo[1][q1]) ? metaInfo[1][q1] : { title: 'Objectif', desc: '' };
+      const q1Text = `Objectif Étape 1 : ${q1Info.title} (${q1Info.desc || ''})`;
+
+      // Modèles ERD 2.A et 2.B
+      const uml2A = (typeof getMermaidSchema === 'function' ? getMermaidSchema('A') : '').trim();
+      const uml2B = (typeof getMermaidSchema === 'function' ? getMermaidSchema('B') : '').trim();
+
+      let entries = [];
+      entries.push(`--- Objectif Métier (Étape 1) ---\n${q1Text}`);
+      entries.push(`--- Modèles Relationnels ERD (Étapes 2.A et 2.B) ---\nModèle 2.A (Consolidation Demande) :\n\`\`\`mermaid\n${uml2A}\n\`\`\`\n\nModèle 2.B (Lignes d'Intervention) :\n\`\`\`mermaid\n${uml2B}\n\`\`\``);
+
+      if (step === 3 || step === 5) {
+        const opt = selections[step] || 'B';
+        const optText = getOptionCardPureText(step, opt);
+        const stepLabel = (step === 3) ? "Méthode de Calcul TAT (Étape 3)" : "Méthode de Projection Capacité (Étape 5)";
+        entries.push(`--- ${stepLabel} ---\nOption ${opt} :\n${optText}`);
+      } else if (step === 4) {
+        const opt3 = selections[3] || 'B';
+        const opt3Text = getOptionCardPureText(3, opt3);
+        entries.push(`--- Méthode de Calcul TAT (Étape 3) ---\nOption ${opt3} :\n${opt3Text}`);
+
+        const opt4 = selections[4] || 'B';
+        let opt4Text = '';
+        if (typeof opt4 === 'string' && opt4.startsWith('custom_')) {
+          const custom = getCustomVisualById(4, opt4);
+          opt4Text = custom ? `Visuel Personnalisé : ${custom.title}\n${custom.desc || ''}` : opt4;
+        } else {
+          opt4Text = `Option ${opt4} :\n${getOptionCardPureText(4, opt4)}`;
+        }
+        entries.push(`--- Visuel TAT Sélectionné (Étape 4) ---\n${opt4Text}`);
+      } else if (step === 6) {
+        const opt5 = selections[5] || 'B';
+        const opt5Text = getOptionCardPureText(5, opt5);
+        entries.push(`--- Méthode de Projection Capacité (Étape 5) ---\nOption ${opt5} :\n${opt5Text}`);
+
+        const opt6 = selections[6] || 'A';
+        let opt6Text = '';
+        if (typeof opt6 === 'string' && opt6.startsWith('custom_')) {
+          const custom = getCustomVisualById(6, opt6);
+          opt6Text = custom ? `Visuel Personnalisé : ${custom.title}\n${custom.desc || ''}` : opt6;
+        } else {
+          opt6Text = `Option ${opt6} :\n${getOptionCardPureText(6, opt6)}`;
+        }
+        entries.push(`--- Visuel Capacité Sélectionné (Étape 6) ---\n${opt6Text}`);
+      }
+
+      const entriesFormatted = entries.join('\n\n');
+      let tpl = getVisuelsPromptTemplate();
+      return tpl.replace('{stepEntries}', entriesFormatted);
+    }
+
+    function renderVisuelsPromptView(step) {
+      const codeEl = document.getElementById(`step-${step}-visuels-code`);
+      if (codeEl) {
+        codeEl.textContent = generateVisuelsPrompt(step);
+      }
+    }
+
+    function copyVisuelsPrompt(step) {
+      const text = generateVisuelsPrompt(step);
+      const btn = document.getElementById(`step-${step}-visuels-copy-btn`);
+      copyTextToClipboard(text).then(() => {
+        if (btn) {
+          btn.textContent = '✓';
+          btn.classList.add('text-emerald-400');
+          setTimeout(() => {
+            btn.textContent = '⧉';
+            btn.classList.remove('text-emerald-400');
+          }, 1500);
+        }
+      });
     }
 
     const tablePanelViewMode = { 3: 'ui', 5: 'ui' };
@@ -5142,33 +5441,36 @@ Modèles Relationnels ERD (2.A et 2.B) :
     }
 
     function toggleTableMode(step, mode) {
-      const targetMode = mode === 'ai' || mode === '<>' ? 'ai' : 'ui';
+      let targetMode = 'ui';
+      if (mode === 'visuels') targetMode = 'visuels';
+      else if (mode === 'ai' || mode === 'chartjs' || mode === '<>') targetMode = 'ai';
+      else targetMode = 'ui';
+
       tablePanelViewMode[step] = targetMode;
 
       const uiView = document.getElementById(`step-${step}-ui-view`);
       const aiView = document.getElementById(`step-${step}-ai-view`);
+      const visuelsView = document.getElementById(`step-${step}-visuels-view`);
       const toggleContainer = document.getElementById(`step-${step}-toggle`);
 
       if (toggleContainer) {
-        const btnUi = toggleContainer.querySelector('[data-view="ui"]');
-        const btnAi = toggleContainer.querySelector('[data-view="ai"]');
-        if (btnUi) {
-          btnUi.className = targetMode === 'ui'
+        toggleContainer.querySelectorAll('button[data-view]').forEach(btn => {
+          const v = btn.dataset.view;
+          const isActive = (v === targetMode) || (v === 'ai' && targetMode === 'ai');
+          btn.className = isActive
             ? 'px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition'
             : 'px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition';
-        }
-        if (btnAi) {
-          btnAi.className = targetMode === 'ai'
-            ? 'px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition'
-            : 'px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition';
-        }
+        });
       }
 
       if (uiView) uiView.classList.toggle('hidden', targetMode !== 'ui');
       if (aiView) aiView.classList.toggle('hidden', targetMode !== 'ai');
+      if (visuelsView) visuelsView.classList.toggle('hidden', targetMode !== 'visuels');
 
       if (targetMode === 'ai') {
         renderTableAiView(step);
+      } else if (targetMode === 'visuels') {
+        renderVisuelsPromptView(step);
       } else {
         if (step === 3) renderStep3TablePreview();
         else if (step === 5) renderStep5TablePreview();
@@ -5203,15 +5505,65 @@ Modèles Relationnels ERD (2.A et 2.B) :
       return "";
     }
 
-    function generateChartMarkdownPrompt(step, opt) {
+    function getChartJsSourceCode(step, opt) {
       if (typeof opt === 'string' && opt.startsWith('custom_')) {
         const custom = getCustomVisualById(step, opt);
-        if (custom) {
-          const jsCode = (custom.codeJs || (custom.config ? JSON.stringify(custom.config, null, 2) : '')).trim();
-          const uml2A = (typeof getMermaidSchema === 'function' ? getMermaidSchema('A') : '').trim();
-          const uml2B = (typeof getMermaidSchema === 'function' ? getMermaidSchema('B') : '').trim();
+        if (custom && custom.codeJs) return custom.codeJs.trim();
+        if (custom && custom.config) return JSON.stringify(custom.config, null, 2);
+      }
+      const key = getChartStorageKey(step, opt);
+      const saved = localStorage.getItem(key);
+      if (saved) {
+        try {
+          return JSON.stringify(JSON.parse(saved), null, 2);
+        } catch (e) {}
+      }
+      const spec = buildStepChartSpec(step, opt, 1);
+      if (spec && spec.config) {
+        return JSON.stringify(spec.config, (k, v) => typeof v === 'function' ? undefined : v, 2);
+      }
+      return '// Code source Chart.js non disponible';
+    }
 
-          return `Générer les hypothèses et les instructions pour utiliser SAP-IBP / SAP Analytics Stories pour générer le même graphique pas à pas, en connaissant le VISUEL et les ENTRÉES :
+    function generateChartJsPrompt(step, opt) {
+      // Prompt basé sur les ENTRÉES (table de calculs & modèles ERD 2.A/2.B)
+      const sourceStep = (step === 6) ? 5 : 3;
+      let promptText = (typeof generateTableAiPrompt === 'function')
+        ? generateTableAiPrompt(sourceStep)
+        : '';
+
+      const desc = getOptionDescription(step, opt);
+      let visualTitle = '';
+      if (typeof opt === 'string' && opt.startsWith('custom_')) {
+        const custom = getCustomVisualById(step, opt);
+        visualTitle = custom ? custom.title : opt;
+      } else if (metaInfo[step] && metaInfo[step][opt]) {
+        visualTitle = metaInfo[step][opt].title;
+      }
+
+      let customContext = '';
+      if (visualTitle) customContext += `Titre du visuel : "${visualTitle}"\n`;
+      if (desc) customContext += `Description : "${desc}"\n`;
+
+      if (customContext && promptText) {
+        if (promptText.includes('ENTRÉES\n')) {
+          promptText = promptText.replace('ENTRÉES\n', `ENTRÉES\n${customContext}\n`);
+        } else if (promptText.includes('ENTRÉES')) {
+          promptText = promptText.replace('ENTRÉES', `ENTRÉES\n${customContext}`);
+        } else {
+          promptText = `${customContext}\n${promptText}`;
+        }
+      }
+      return promptText || `Proposer une visualisation pertinente basée sur les ENTRÉES dans un code bloc au format contenu sans le { } de l'objet js de ChartJS avec un minimum de données d'exemples.`;
+    }
+
+    function generateSapPrompt(step, opt) {
+      // Prompt de transposition SAP-IBP / SAP Analytics Stories
+      const jsCode = getChartJsSourceCode(step, opt);
+      const uml2A = (typeof getMermaidSchema === 'function' ? getMermaidSchema('A') : '').trim();
+      const uml2B = (typeof getMermaidSchema === 'function' ? getMermaidSchema('B') : '').trim();
+
+      return `Générer les hypothèses et les instructions pour utiliser SAP-IBP / SAP Analytics Stories pour générer le même graphique pas à pas, en connaissant le VISUEL et les ENTRÉES :
 
 VISUEL :
 \`\`\`javascript
@@ -5228,45 +5580,26 @@ ${uml2A}
 \`\`\`mermaid
 ${uml2B}
 \`\`\``;
-        }
-      }
-      const s = CHART_MD_SPECS[step] && CHART_MD_SPECS[step][opt];
-      if (!s) return `# Spécification Visuel\n\nDonnées en cours d'initialisation...\n`;
-      const desc = getOptionDescription(step, opt);
-      const dimsStr = Array.isArray(s.dimensions) ? s.dimensions.map(d => `  * ${d}`).join('\n') : (s.dimensions || '');
-      const measuresStr = Array.isArray(s.measures) ? s.measures.map(m => `  * ${m}`).join('\n') : (s.measures || '');
+    }
 
-      let tpl = getPromptTemplate();
-      const replacements = {
-        '{title}': s.title || '',
-        '{desc}': desc,
-        '{chartType}': s.chartType || '',
-        '{model}': s.model || '',
-        '{grain}': s.grain || '',
-        '{axisX}': s.axisX || '',
-        '{axisY}': s.axisY || '',
-        '{dimensions}': dimsStr,
-        '{measures}': measuresStr,
-        '{filters}': s.filters || '',
-        '{businessRules}': s.businessRules || ''
-      };
-
-      for (const [k, v] of Object.entries(replacements)) {
-        tpl = tpl.split(k).join(v);
-      }
-      return tpl;
+    function generateChartMarkdownPrompt(step, opt) {
+      return generateSapPrompt(step, opt);
     }
 
     function renderChartAiView(step) {
       const opt = selections[step];
-      const codeEl = document.getElementById('step-' + step + '-ai-code');
+      const codeEl = document.getElementById('step-' + step + '-sap-code') || document.getElementById('step-' + step + '-ai-code');
       if (codeEl) {
-        codeEl.textContent = generateChartMarkdownPrompt(step, opt);
+        codeEl.textContent = generateSapPrompt(step, opt);
       }
     }
 
-    function renderChartDataJsView(step) {
-      const codeEl = document.getElementById('step-' + step + '-js-code');
+    function renderChartSapView(step) {
+      renderChartAiView(step);
+    }
+
+    function renderChartConfigView(step) {
+      const codeEl = document.getElementById('step-' + step + '-config-code') || document.getElementById('step-' + step + '-js-code');
       if (!codeEl) return;
       const cfg = getActiveChartConfig(step);
       let text = '// Aucune configuration disponible';
@@ -5276,7 +5609,43 @@ ${uml2B}
       codeEl.textContent = text;
     }
 
+    function renderChartDataJsView(step) {
+      renderChartConfigView(step);
+    }
+
+    function renderChartJsCodeView(step) {
+      const codeEl = document.getElementById('step-' + step + '-js-code');
+      if (!codeEl) return;
+      codeEl.textContent = getChartJsSourceCode(step, selections[step]);
+    }
+
+    function renderChartJsPromptView(step) {
+      const codeEl = document.getElementById('step-' + step + '-chartjs-prompt-code');
+      if (!codeEl) return;
+      codeEl.textContent = generateChartJsPrompt(step, selections[step]);
+    }
+
+    function copyChartConfigJson(step) {
+      const codeEl = document.getElementById('step-' + step + '-config-code') || document.getElementById('step-' + step + '-js-code');
+      const text = codeEl ? codeEl.textContent : '';
+      const btn = document.getElementById('step-' + step + '-config-copy-btn') || document.getElementById('step-' + step + '-js-copy-btn');
+      copyTextToClipboard(text).then(() => {
+        if (btn) {
+          btn.textContent = '✓';
+          btn.classList.add('text-emerald-400');
+          setTimeout(() => {
+            btn.textContent = '⧉';
+            btn.classList.remove('text-emerald-400');
+          }, 1500);
+        }
+      });
+    }
+
     function copyChartDataJs(step) {
+      copyChartConfigJson(step);
+    }
+
+    function copyChartJsCode(step) {
       const codeEl = document.getElementById('step-' + step + '-js-code');
       const text = codeEl ? codeEl.textContent : '';
       const btn = document.getElementById('step-' + step + '-js-copy-btn');
@@ -5292,10 +5661,10 @@ ${uml2B}
       });
     }
 
-    function copyChartAi(step) {
+    function copyChartJsPrompt(step) {
       const opt = selections[step];
-      const text = generateChartMarkdownPrompt(step, opt);
-      const btn = document.getElementById('step-' + step + '-ai-copy-btn');
+      const text = generateChartJsPrompt(step, opt);
+      const btn = document.getElementById('step-' + step + '-chartjs-prompt-copy-btn');
       copyTextToClipboard(text).then(() => {
         if (btn) {
           btn.textContent = '✓';
@@ -5306,6 +5675,26 @@ ${uml2B}
           }, 1500);
         }
       });
+    }
+
+    function copyChartSapPrompt(step) {
+      const opt = selections[step];
+      const text = generateSapPrompt(step, opt);
+      const btn = document.getElementById('step-' + step + '-sap-copy-btn') || document.getElementById('step-' + step + '-ai-copy-btn');
+      copyTextToClipboard(text).then(() => {
+        if (btn) {
+          btn.textContent = '✓';
+          btn.classList.add('text-emerald-400');
+          setTimeout(() => {
+            btn.textContent = '⧉';
+            btn.classList.remove('text-emerald-400');
+          }, 1500);
+        }
+      });
+    }
+
+    function copyChartAi(step) {
+      copyChartSapPrompt(step);
     }
 
     function copyOptionCard(step, opt, ev) {
@@ -5355,43 +5744,47 @@ ${uml2B}
     }
 
     function toggleChartMode(step, mode) {
-      // Normaliser le mode : 'ui' correspond à la vue graphique ('chart')
-      const targetMode = mode === 'ui' ? 'chart' : mode;
+      // Normaliser le mode
+      let targetMode = mode;
+      if (mode === 'ui') targetMode = 'chart';
+      if (mode === 'ai') targetMode = 'sap';
       chartViewMode[step] = targetMode;
+
       const chartView = document.getElementById('step-' + step + '-chart-view');
-      const jsView = document.getElementById('step-' + step + '-js-view') || document.getElementById('step-' + step + '-code-view');
-      const aiView = document.getElementById('step-' + step + '-ai-view');
+      const configView = document.getElementById('step-' + step + '-config-view');
+      const jsView = document.getElementById('step-' + step + '-js-view');
+      const chartjsPromptView = document.getElementById('step-' + step + '-chartjs-prompt-view');
+      const visuelsView = document.getElementById('step-' + step + '-visuels-view');
+      const sapView = document.getElementById('step-' + step + '-sap-view') || document.getElementById('step-' + step + '-ai-view');
       const toggleContainer = document.getElementById('step-' + step + '-chart-toggle');
 
       if (toggleContainer) {
-        const btnChart = toggleContainer.querySelector('[data-view="chart"]');
-        const btnJs = toggleContainer.querySelector('[data-view="js"]') || toggleContainer.querySelector('[data-view="code"]');
-        const btnAi = toggleContainer.querySelector('[data-view="ai"]');
-        if (btnChart) {
-          btnChart.className = targetMode === 'chart'
+        toggleContainer.querySelectorAll('button[data-view]').forEach(btn => {
+          const v = btn.dataset.view;
+          const isActive = (v === targetMode) || (v === 'chart' && targetMode === 'chart');
+          btn.className = isActive
             ? 'px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition'
             : 'px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition';
-        }
-        if (btnJs) {
-          btnJs.className = (targetMode === 'js' || targetMode === 'code')
-            ? 'px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition'
-            : 'px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition';
-        }
-        if (btnAi) {
-          btnAi.className = targetMode === 'ai'
-            ? 'px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition'
-            : 'px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition';
-        }
+        });
       }
 
       if (chartView) chartView.classList.toggle('hidden', targetMode !== 'chart');
-      if (jsView) jsView.classList.toggle('hidden', targetMode !== 'js' && targetMode !== 'code');
-      if (aiView) aiView.classList.toggle('hidden', targetMode !== 'ai');
+      if (configView) configView.classList.toggle('hidden', targetMode !== 'config');
+      if (jsView) jsView.classList.toggle('hidden', targetMode !== 'js');
+      if (chartjsPromptView) chartjsPromptView.classList.toggle('hidden', targetMode !== 'chartjs');
+      if (visuelsView) visuelsView.classList.toggle('hidden', targetMode !== 'visuels');
+      if (sapView) sapView.classList.toggle('hidden', targetMode !== 'sap');
 
-      if (targetMode === 'js' || targetMode === 'code') {
-        renderChartDataJsView(step);
-      } else if (targetMode === 'ai' || targetMode === 'md') {
-        renderChartAiView(step);
+      if (targetMode === 'config') {
+        renderChartConfigView(step);
+      } else if (targetMode === 'js') {
+        renderChartJsCodeView(step);
+      } else if (targetMode === 'chartjs') {
+        renderChartJsPromptView(step);
+      } else if (targetMode === 'visuels') {
+        renderVisuelsPromptView(step);
+      } else if (targetMode === 'sap') {
+        renderChartSapView(step);
       } else {
         renderStepChart(step);
       }
@@ -5704,14 +6097,103 @@ ${uml2B}
         }
       }
 
-      // Synchroniser la vue données js ou la vue Prompt IA si ouvertes
-      if (chartViewMode[step] === 'js' || chartViewMode[step] === 'code') {
-        renderChartDataJsView(step);
-      } else if (chartViewMode[step] === 'ai' || chartViewMode[step] === 'md') {
-        renderChartAiView(step);
+      // Synchroniser la vue ouverte (config, js, chartjs, visuels, sap)
+      if (chartViewMode[step] === 'config') {
+        renderChartConfigView(step);
+      } else if (chartViewMode[step] === 'js' || chartViewMode[step] === 'code') {
+        renderChartJsCodeView(step);
+      } else if (chartViewMode[step] === 'chartjs') {
+        renderChartJsPromptView(step);
+      } else if (chartViewMode[step] === 'visuels') {
+        renderVisuelsPromptView(step);
+      } else if (chartViewMode[step] === 'sap' || chartViewMode[step] === 'ai' || chartViewMode[step] === 'md') {
+        renderChartSapView(step);
       }
 
       renderChartInto(canvas, activeConfig);
+    }
+
+    const dashboardCardMode = { 4: 'ui', 6: 'ui' };
+
+    function toggleDashboardCardMode(step, mode) {
+      dashboardCardMode[step] = mode;
+      const cardContainer = document.getElementById('card-step-7-chart-q' + step);
+      const toggle = document.getElementById('mock-chart-q' + step + '-toggle');
+      const chartView = document.getElementById('mock-chart-q' + step + '-container');
+      const configView = document.getElementById('mock-chart-q' + step + '-config-view');
+      const sapView = document.getElementById('mock-chart-q' + step + '-sap-view');
+
+      if (toggle) {
+        toggle.querySelectorAll('button[data-view]').forEach(btn => {
+          const v = btn.dataset.view;
+          btn.className = (v === mode)
+            ? 'px-1.5 py-0.5 text-[8.5px] font-bold bg-blue-800 text-white transition'
+            : 'px-1.5 py-0.5 text-[8.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition';
+        });
+      }
+
+      if (chartView) chartView.classList.toggle('hidden', mode !== 'ui');
+      if (configView) configView.classList.toggle('hidden', mode !== 'config');
+      if (sapView) sapView.classList.toggle('hidden', mode !== 'sap');
+
+      if (mode === 'ui') {
+        renderDashboardChart(step);
+      } else if (mode === 'config') {
+        renderDashboardCardConfig(step);
+      } else if (mode === 'sap') {
+        renderDashboardCardSap(step);
+      }
+    }
+
+    function renderDashboardCardConfig(step) {
+      const codeEl = document.getElementById('mock-chart-q' + step + '-config-code');
+      if (!codeEl) return;
+      const opt = selections[step];
+      const spec = buildStepChartSpec(step, opt, getFilterMultiplier());
+      let text = '// Aucune configuration disponible';
+      if (spec && spec.config) {
+        text = JSON.stringify(spec.config, null, 2);
+      }
+      codeEl.textContent = text;
+    }
+
+    function renderDashboardCardSap(step) {
+      const codeEl = document.getElementById('mock-chart-q' + step + '-sap-code');
+      if (!codeEl) return;
+      const opt = selections[step];
+      codeEl.textContent = generateSapPrompt(step, opt);
+    }
+
+    function copyDashboardCardConfig(step) {
+      const codeEl = document.getElementById('mock-chart-q' + step + '-config-code');
+      const text = codeEl ? codeEl.textContent : '';
+      const btn = document.getElementById('mock-chart-q' + step + '-config-copy-btn');
+      copyTextToClipboard(text).then(() => {
+        if (btn) {
+          btn.textContent = '✓';
+          btn.classList.add('text-emerald-400');
+          setTimeout(() => {
+            btn.textContent = '⧉';
+            btn.classList.remove('text-emerald-400');
+          }, 1500);
+        }
+      });
+    }
+
+    function copyDashboardCardSap(step) {
+      const codeEl = document.getElementById('mock-chart-q' + step + '-sap-code');
+      const text = codeEl ? codeEl.textContent : '';
+      const btn = document.getElementById('mock-chart-q' + step + '-sap-copy-btn');
+      copyTextToClipboard(text).then(() => {
+        if (btn) {
+          btn.textContent = '✓';
+          btn.classList.add('text-emerald-400');
+          setTimeout(() => {
+            btn.textContent = '⧉';
+            btn.classList.remove('text-emerald-400');
+          }, 1500);
+        }
+      });
     }
 
     function renderDashboardChart(step) {
@@ -5719,7 +6201,7 @@ ${uml2B}
       if (!opt) return;
       const spec = buildStepChartSpec(step, opt, getFilterMultiplier());
       if (!spec) return;
-const canvas = document.getElementById('mock-chart-q' + step + '-canvas');
+      const canvas = document.getElementById('mock-chart-q' + step + '-canvas');
       renderChartInto(canvas, spec.config);
     }
 
@@ -5793,8 +6275,20 @@ const canvas = document.getElementById('mock-chart-q' + step + '-canvas');
       renderKpis(q1, q3, q5);
 
       // Afficher l'explication des cartes sélectionnées Q4 et Q6 dans les encadrés synthèse
-      const q4Meta = metaInfo[4][q4] || {};
-      const q6Meta = metaInfo[6][q6] || {};
+      let q4Meta = metaInfo[4][q4] || {};
+      if (typeof q4 === 'string' && q4.startsWith('custom_')) {
+        const custom4 = getCustomVisualById(4, q4);
+        if (custom4) {
+          q4Meta = { icon: '✨', title: custom4.title, desc: custom4.desc || 'Visuel personnalisé' };
+        }
+      }
+      let q6Meta = metaInfo[6][q6] || {};
+      if (typeof q6 === 'string' && q6.startsWith('custom_')) {
+        const custom6 = getCustomVisualById(6, q6);
+        if (custom6) {
+          q6Meta = { icon: '✨', title: custom6.title, desc: custom6.desc || 'Visuel personnalisé' };
+        }
+      }
 
       const q4TitleEl = document.getElementById('mock-chart-q4-title');
       const q4SubEl   = document.getElementById('mock-chart-q4-sub');
@@ -5806,11 +6300,22 @@ const canvas = document.getElementById('mock-chart-q' + step + '-canvas');
       if (q6TitleEl) q6TitleEl.innerHTML = `<span>${q6Meta.icon || '🏭'}</span> ${q6Meta.title || 'Charge & Saturation Ateliers'}`;
       if (q6SubEl)   q6SubEl.textContent = q6Meta.desc || `Choix Q6 : ${q6}`;
 
-      // Génération du Chart Délai (Q4)
-      renderChartQ4(q4, q1, q3, q2);
+      // Synchroniser les vues actives dans les encadrés Q4 & Q6
+      if (dashboardCardMode[4] === 'ui') {
+        renderChartQ4(q4, q1, q3, q2);
+      } else if (dashboardCardMode[4] === 'config') {
+        renderDashboardCardConfig(4);
+      } else if (dashboardCardMode[4] === 'sap') {
+        renderDashboardCardSap(4);
+      }
 
-      // Génération du Chart Saturation (Q6)
-      renderChartQ6(q6, q2);
+      if (dashboardCardMode[6] === 'ui') {
+        renderChartQ6(q6, q2);
+      } else if (dashboardCardMode[6] === 'config') {
+        renderDashboardCardConfig(6);
+      } else if (dashboardCardMode[6] === 'sap') {
+        renderDashboardCardSap(6);
+      }
     }
 
     // État des filtres interactifs Étape 7
@@ -7127,6 +7632,8 @@ xychart-beta
 
       if (tablePanelViewMode[3] === 'ai') {
         renderTableAiView(3);
+      } else if (tablePanelViewMode[3] === 'visuels') {
+        renderVisuelsPromptView(3);
       }
     }
 
@@ -7291,6 +7798,8 @@ xychart-beta
 
       if (tablePanelViewMode[5] === 'ai') {
         renderTableAiView(5);
+      } else if (tablePanelViewMode[5] === 'visuels') {
+        renderVisuelsPromptView(5);
       }
     }
 

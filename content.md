@@ -839,18 +839,24 @@ Pour injecter des données d'un autre secteur industriel (ex: ferroviaire ou nav
 
 ---
 
-## Panneaux Visuels & Données Chart.js (Étapes 4 & 6)
+## Panneaux Visuels & Données (Étapes 3 à 6)
 
-Afin d'offrir une flexibilité maximale aux utilisateurs, experts métiers, architectes BI et développeurs, les panneaux de graphiques des **Étapes 4 et 6** disposent d'un sélecteur à trois vues complémentaires :
+Afin d'offrir une flexibilité maximale aux utilisateurs, experts métiers, architectes BI et développeurs, les panneaux latéraux des **Étapes 3 à 6** disposent de sélecteurs multi-vues complémentaires :
 
-1. **Bascule Graphique / Données JS / Spécification IA (`chart-toggle`) :**
-   - Bouton `ui` : affiche la vue graphique standard Chart.js (rendu canvas responsive haute performance).
-   - Bouton `js` : affiche le bloc de code copiable (`⧉`) contenant la structure exacte de l'objet `data` Chart.js (`labels`, `datasets` avec valeurs et couleurs) utilisé pour instancier le graphique.
-   - Bouton `<>` : affiche la spécification technique en pur texte Markdown, compacte, auto-porteuse et calquée sur les interfaces et possibilités natives de SAP-IBP et SAP Analytics Cloud (SAC) (métadonnées du composant SAC, modèle MDT IBP, dimensions, mesures et Key Figures, règles de filtrage et seuils d'alerte).
-2. **Consultation & Copie des Données (`js`) :**
-   - Affichage structuré et indenté de l'objet JSON `data` (séries, valeurs, étiquettes).
-   - Bouton de copie instantané (`⧉`) avec accusé de réception (`✓`).
-3. **Réinitialisation Usine (`↻`) :**
-   - Le bouton `↻` restitue la configuration standard d'origine du modèle Chart.js.
+1. **Panneaux Tabulaires de Calcul (Étapes 3 et 5) :**
+   - Bouton `ui` : affiche le tableau dynamique de calcul (données factuelles et indicateurs calculés).
+   - Bouton `chartjs` : affiche le prompt IA Markdown pour proposer un code Chart.js à partir des entrées calculées et des schémas 2.A/2.B (`copyTableAi(step)`).
+   - Bouton `visuels` : affiche le prompt IA structuré proposant 3 idées de visuels compatibles SAP-IBP / SAC (`copyVisuelsPrompt(step)`).
+   - Bouton `✎` : ouvre la modale de personnalisation du template de prompt (`openPromptTemplateModal(step)`).
+
+2. **Panneaux Graphiques (Étapes 4 et 6) :**
+   - Bouton `ui` : affiche le rendu canvas Chart.js interactif (rendu responsive haute performance).
+   - Bouton `config` : présente la configuration JSON de l'objet Chart.js (`copyChartConfigJson(step)`).
+   - Bouton `js` : expose le bloc de code JavaScript complet et copiable (`copyChartJsCode(step)`).
+   - Bouton `chartjs` : affiche le prompt IA permettant de générer une configuration Chart.js à partir des entrées calculées et des schémas 2.A/2.B (`copyChartJsPrompt(step)`).
+   - Bouton `visuels` : expose le prompt IA structuré de génération de 3 idées de visuels SAP-IBP / SAC basé sur les étapes 1, 2, 3/5 et 4/6 (`copyVisuelsPrompt(step)`).
+   - Bouton `sap` : affiche le prompt IA de transposition pas à pas vers SAP-IBP / SAC (`copyChartSapPrompt(step)`).
+   - Bouton `↻` : réinitialise le graphique à sa configuration standard d'origine.
+   - Bouton `✎` : permet d'éditer le template de prompt associé dans la modale.
 
 
