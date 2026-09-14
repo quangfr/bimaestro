@@ -13,6 +13,8 @@
   <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix@2.0.1/dist/chartjs-chart-matrix.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-treemap@2.3.1/dist/chartjs-chart-treemap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gridjs/dist/gridjs.umd.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridjs/dist/theme/mermaid.min.css" />
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     .glass-card {
@@ -56,6 +58,76 @@
     }
     .answers-scroll-area::-webkit-scrollbar-thumb:hover {
       background: rgba(100, 116, 139, 0.9);
+    }
+
+    /* Grid.js Custom Styling (Compact & Theme cohérent BiMaestro) */
+    .gridjs-container {
+      font-size: 11px !important;
+      color: #1e293b !important;
+      width: 100% !important;
+    }
+    .gridjs-wrapper {
+      border: 1px solid #e2e8f0 !important;
+      border-radius: 8px !important;
+      box-shadow: none !important;
+    }
+    .gridjs-table {
+      width: 100% !important;
+      border-collapse: collapse !important;
+    }
+    .gridjs-th {
+      background-color: #f1f5f9 !important;
+      color: #334155 !important;
+      font-weight: 700 !important;
+      padding: 6px 10px !important;
+      border: 1px solid #e2e8f0 !important;
+      font-size: 11px !important;
+      white-space: nowrap !important;
+    }
+    .gridjs-th-content {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 4px !important;
+    }
+    .gridjs-td {
+      padding: 5px 10px !important;
+      border: 1px solid #f1f5f9 !important;
+      font-size: 11px !important;
+      line-height: 1.4 !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+    }
+    .gridjs-tr:hover td {
+      background-color: rgba(239, 246, 255, 0.6) !important;
+    }
+    .gridjs-footer {
+      background-color: #ffffff !important;
+      border: none !important;
+      padding: 6px 4px 0 4px !important;
+      font-size: 10.5px !important;
+      color: #64748b !important;
+      box-shadow: none !important;
+    }
+    .gridjs-pagination .gridjs-pages button {
+      padding: 2px 8px !important;
+      font-size: 10.5px !important;
+      font-weight: 700 !important;
+      border-radius: 4px !important;
+      border: 1px solid #cbd5e1 !important;
+      background-color: #ffffff !important;
+      color: #334155 !important;
+      margin: 0 1px !important;
+      cursor: pointer !important;
+      transition: all 0.15s !important;
+    }
+    .gridjs-pagination .gridjs-pages button:hover {
+      background-color: #f1f5f9 !important;
+    }
+    .gridjs-pagination .gridjs-pages button.gridjs-currentPage {
+      background-color: #1e40af !important;
+      color: #ffffff !important;
+      border-color: #1e40af !important;
     }
 
     .step-answers-card {
@@ -396,6 +468,9 @@
                 <i data-lucide="info" class="w-3.5 h-3.5"></i>Gouvernance</button>
             </div>
             <div class="flex items-center gap-1 shrink-0 self-start sm:self-auto">
+              <button type="button" onclick="openAddSchemaModal()" class="px-2.5 h-6 sm:h-7 rounded-md bg-blue-800 hover:bg-blue-700 text-white text-xs font-bold transition shadow-xs flex items-center gap-1 hover:scale-105 active:scale-95 cursor-pointer" title="Créer un nouveau tableau (schéma personnalisé)">
+                <span>+</span> Créer un tableau
+              </button>
               <button type="button" onclick="prevStep()" class="px-2 h-6 sm:h-7 rounded-md bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-sm font-bold transition shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 cursor-pointer" title="Précédent">Préc.</button>
               <button type="button" onclick="nextStep()" class="px-2 h-6 sm:h-7 rounded-md bg-blue-800 hover:bg-blue-800 text-white text-sm font-bold transition shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 cursor-pointer" title="Suivant">Suiv.</button>
             </div>
@@ -743,8 +818,10 @@
                 class="px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition">ui</button>
               <button type="button" data-view="uml" onclick="toggleSchemaView('uml')"
                 class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">uml</button>
-              <button type="button" data-view="prompt" onclick="toggleSchemaView('prompt')"
-                class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">&lt;&gt;</button>
+              <button type="button" data-view="erd" onclick="toggleSchemaView('erd')"
+                class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">erd</button>
+              <button type="button" data-view="data" onclick="toggleSchemaView('data')"
+                class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">data</button>
             </div>
             <div id="schema-svg-view" class="w-full flex-1 flex flex-col items-center justify-between overflow-hidden pt-6">
               <div id="schema-mermaid-diagram" class="w-full flex-1 flex items-center justify-center overflow-auto p-1 text-slate-800">
@@ -768,7 +845,7 @@
             </div>
             <div id="schema-prompt-view" class="hidden w-full flex-1 flex flex-col min-h-0 relative overflow-hidden pt-6">
               <div class="flex items-center justify-between pb-1 shrink-0">
-                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Prompt IA : Diagramme ER (&lt;&gt;)</span>
+                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Prompt IA : Diagramme ERD (erd)</span>
                 <div class="flex items-center gap-1.5">
                   <button type="button" id="schema-prompt-copy-btn" onclick="copySchemaPrompt()" title="Copier le prompt IA" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
                     ⧉
@@ -776,6 +853,32 @@
                 </div>
               </div>
               <textarea id="schema-prompt-code" readonly spellcheck="false" class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-3 font-mono text-[11px] leading-relaxed whitespace-pre resize-none focus:outline-hidden border border-slate-700 select-text"></textarea>
+            </div>
+            <!-- Vue Data (Tableau Grid.js dynamique, pagination 15/15, drill-down & custom generator) -->
+            <div id="schema-data-view" class="hidden w-full flex-1 flex flex-col min-h-0 relative overflow-hidden pt-6">
+              <!-- Barre d'outils supérieure du tableau -->
+              <div class="flex items-center justify-between gap-2 pb-1.5 shrink-0 border-b border-slate-200">
+                <div class="flex items-center gap-1.5 min-w-0">
+                  <button type="button" id="schema-data-back-btn" onclick="drillBackToMainTable()" class="hidden px-2 py-0.5 rounded bg-blue-100 hover:bg-blue-200 text-blue-800 font-bold text-[10.5px] cursor-pointer transition shadow-2xs flex items-center gap-1 shrink-0">
+                    <span>←</span> <span>Table principale</span>
+                  </button>
+                  <span id="schema-data-breadcrumb" class="text-xs font-bold text-slate-800 truncate"></span>
+                  <span id="schema-data-filter-badge" class="hidden px-1.5 py-0.2 rounded text-[9.5px] font-mono bg-emerald-100 text-emerald-800 border border-emerald-300 shrink-0"></span>
+                </div>
+                <div class="flex items-center gap-1.5 shrink-0">
+                  <button type="button" onclick="openDataGeneratorModal()" class="w-6 h-6 rounded border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 flex items-center justify-center transition text-xs shadow-2xs cursor-pointer" title="Paramètres du générateur de données (regex-genex / distributions)">
+                    ✏️
+                  </button>
+                  <button type="button" onclick="regenerateActiveDataTable()" class="px-2 py-0.5 rounded border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 text-[10px] font-bold transition shadow-2xs cursor-pointer" title="Regénérer les données aléatoires de cette table">
+                    🎲 Tirer
+                  </button>
+                </div>
+              </div>
+
+              <!-- Conteneur Grid.js du tableau de données -->
+              <div id="schema-data-table-wrapper" class="flex-1 min-h-0 w-full overflow-auto bg-white rounded-lg border border-slate-200 shadow-2xs mt-1 p-1">
+                <!-- Instance Grid.js injectée ici -->
+              </div>
             </div>
           </div>
         </div>
@@ -2035,6 +2138,104 @@
     </div>
   </div>
 
+  
+  <!-- ================= MODALE GÉNÉRATEUR DE DONNÉES DYNAMIQUE (Étape 2) ================= -->
+  <div id="data-generator-modal" class="fixed inset-0 z-50 hidden bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-1 sm:p-2">
+    <div class="bg-white w-[98vw] max-w-4xl h-[92vh] max-h-[92vh] rounded-xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      <div class="px-4 py-3 bg-white border-b border-slate-200 flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-2.5">
+          <span class="w-1 h-6 rounded-full bg-blue-800 shrink-0"></span>
+          <div>
+            <h3 class="text-xs md:text-sm font-bold tracking-tight text-slate-900">Paramètres du Générateur de Données (Regex-Genex & Distributions)</h3>
+            <p class="text-[10.5px] text-slate-500 font-normal">Ajustez les règles, plages numériques, dates et distributions pour chaque champ déduit de l'UML</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeDataGeneratorModal()" class="w-7 h-7 rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center transition text-sm font-bold cursor-pointer" title="Fermer (Échap)">✕</button>
+      </div>
+
+      <div class="px-4 py-2 bg-slate-50 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shrink-0">
+        <div class="flex items-center gap-2">
+          <label for="data-gen-table-select" class="text-xs font-bold text-slate-700 whitespace-nowrap">Table active :</label>
+          <select id="data-gen-table-select" onchange="onDataGenTableSelectChange(this.value)" class="text-xs font-semibold bg-white border border-slate-300 rounded-lg px-2.5 py-1 text-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-800 shadow-2xs"></select>
+        </div>
+        <div class="flex items-center gap-2">
+          <label for="data-gen-count-input" class="text-xs font-semibold text-slate-600 whitespace-nowrap">Lignes à générer :</label>
+          <input type="number" id="data-gen-count-input" min="1" max="500" value="15" onchange="onDataGenRowCountChange(this.value)" class="w-16 px-2 py-0.5 border border-slate-300 rounded text-xs text-center font-bold" />
+        </div>
+      </div>
+
+      <div id="data-gen-fields-container" class="flex-1 min-h-0 overflow-y-auto p-4 space-y-3 bg-slate-100/50"></div>
+
+      <div class="px-4 py-2.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between shrink-0 text-xs">
+        <button type="button" onclick="restoreDataGenDefaults()" class="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-semibold transition shadow-xs cursor-pointer flex items-center gap-1" title="Rétablir les règles par défaut déduites de l'UML">
+          <span>↻</span> Restaurer
+        </button>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="closeDataGeneratorModal()" class="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-semibold transition shadow-xs cursor-pointer">
+            Fermer
+          </button>
+          <button type="button" onclick="regenerateAllDataTables()" class="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-blue-50 text-blue-900 font-bold transition shadow-xs cursor-pointer flex items-center gap-1">
+            <span>⚡</span> Regénérer tout
+          </button>
+          <button type="button" onclick="regenerateActiveDataTable()" class="px-4 py-1.5 rounded-lg bg-blue-800 hover:bg-blue-700 text-white font-bold transition shadow-sm cursor-pointer flex items-center gap-1.5">
+            <span>🎲</span> Regénérer
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODALE CRÉER UN NOUVEAU TABLEAU (Étape 2) ================= -->
+  <div id="add-schema-modal" class="fixed inset-0 z-50 hidden bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-1 sm:p-2">
+    <div class="bg-white w-[98vw] max-w-4xl h-[92vh] max-h-[92vh] rounded-xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      <div class="px-4 py-3 bg-white border-b border-slate-200 flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-2.5">
+          <span class="w-1 h-6 rounded-full bg-blue-800 shrink-0"></span>
+          <div>
+            <h3 class="text-xs md:text-sm font-bold tracking-tight text-slate-900">Créer un nouveau tableau (Modèle personnalisé)</h3>
+            <p class="text-[10.5px] text-slate-500 font-normal">Définissez un nouveau schéma relationnel Mermaid ERD et activez-le dans le simulateur</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeAddSchemaModal()" class="w-7 h-7 rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center transition text-sm font-bold cursor-pointer" title="Fermer (Échap)">✕</button>
+      </div>
+
+      <div class="p-4 space-y-3 flex-1 min-h-0 overflow-y-auto flex flex-col">
+        <div>
+          <label for="custom-schema-title" class="block font-bold text-slate-700 text-[11px] mb-0.5">Titre du tableau <span class="text-red-500">*</span></label>
+          <input type="text" id="custom-schema-title" placeholder="Ex: Suivi Lignes de Réparation Modules" class="w-full px-2.5 py-1.5 text-xs bg-white rounded-lg border border-slate-300 focus:outline-none focus:ring-1 focus:ring-blue-800" />
+        </div>
+
+        <div>
+          <label for="custom-schema-desc" class="block font-bold text-slate-700 text-[11px] mb-0.5">Description fonctionnelle</label>
+          <input type="text" id="custom-schema-desc" placeholder="Ex: Découpage modulaire avec suivi de charge par banc de test" class="w-full px-2.5 py-1.5 text-xs bg-white rounded-lg border border-slate-300 focus:outline-none focus:ring-1 focus:ring-blue-800" />
+        </div>
+
+        <div class="flex-1 min-h-0 flex flex-col">
+          <div class="flex items-center justify-between mb-1 shrink-0">
+            <label for="custom-schema-code" class="font-bold text-slate-700 text-[11px]">Schéma relationnel Mermaid ERD <span class="text-red-500">*</span></label>
+            <button type="button" onclick="copyAiPromptForCustomSchema()" class="text-[10px] text-blue-800 hover:underline font-semibold cursor-pointer flex items-center gap-1">
+              <span>⧉</span> <span id="custom-schema-copy-ai-label">Copier le prompt IA</span>
+            </button>
+          </div>
+          <textarea id="custom-schema-code" spellcheck="false" class="w-full flex-1 min-h-[220px] p-2.5 bg-slate-900 text-slate-100 font-mono text-[11px] leading-relaxed rounded-lg border border-slate-700 focus:outline-none focus:ring-1 focus:ring-blue-500 resize-none whitespace-pre"></textarea>
+          <div id="custom-schema-error" class="hidden mt-1 p-2 bg-red-50 border border-red-200 text-red-700 text-[11px] rounded-lg font-mono flex items-start gap-1.5 shrink-0">
+            <span class="font-bold">⚠️</span>
+            <span id="custom-schema-error-text" class="flex-1"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="px-4 py-2.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between shrink-0 text-xs">
+        <button type="button" onclick="closeAddSchemaModal()" class="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-semibold transition shadow-xs cursor-pointer">
+          Annuler
+        </button>
+        <button type="button" id="custom-schema-submit-btn" onclick="submitCustomSchema()" class="px-4 py-1.5 rounded-lg bg-blue-800 hover:bg-blue-700 text-white font-bold transition shadow-sm cursor-pointer flex items-center gap-1.5">
+          Sauvegarder et activer
+        </button>
+      </div>
+    </div>
+  </div>
+
   </main>
 
   <script>
@@ -2251,6 +2452,8 @@
         closeMethodologyModal();
         closePromptTemplateModal();
         closeAddVisualModal();
+        closeDataGeneratorModal();
+        closeAddSchemaModal();
       }
     });
 
@@ -6658,11 +6861,11 @@ ${uml2B}
 
     MDT_MAINTENANCE_REQUEST ["Demande de Maintenance Moteur"] {
         string ID_DEMANDE PK "D-2026-000123"
-        string DEMANDEUR "Air France (AFR)"
+        enum DEMANDEUR "*Air France (AFR) | Lufthansa (DLH) | Delta Air Lines (DAL) | EasyJet (EZY) | Air China (CCA) | Emirates (UAE) | Singapore Airlines (SIA)"
         date DATE_DEMANDE "2026-03-01"
-        string PROGRAMME_MOTEUR "LEAP / CFM56"
-        string ENGINE_TYPE "LEAP-1A26"
-        string NIVEAU_URGENCE_GLOBAL "Haute (AOG)"
+        enum PROGRAMME_MOTEUR "*LEAP | CFM56 | GE90"
+        enum ENGINE_TYPE "*LEAP-1A26 | CFM56-7B | CFM56-5B | LEAP-1B | GE90-115B"
+        enum NIVEAU_URGENCE_GLOBAL "*Haute (AOG) | Moyenne | Basse"
         string COMMENTAIRE_GLOBAL "Dépose suite FOD"
         int INTERVENTION_COUNT "3"
         float URGENCY_WEIGHT "3.0"
@@ -6672,20 +6875,20 @@ ${uml2B}
         string ID_PERIOD PK "2026-W10"
         date START_DATE "2026-03-02"
         date END_DATE "2026-03-08"
-        boolean IS_WORKING_DAY "true"
+        boolean IS_WORKING_DAY "*true | false"
     }
     CONTRACT_SLA ["Contrat SLA Client"] {
         string ID_CONTRAT PK "CTR-AFR-01"
-        string DEMANDEUR "Air France (AFR)"
+        enum DEMANDEUR "*Air France (AFR) | Lufthansa (DLH) | Delta Air Lines (DAL) | EasyJet (EZY) | Air China (CCA) | Emirates (UAE) | Singapore Airlines (SIA)"
         float SLA_CIBLE_JOURS "18.0 j"
         float PENALITE_JOUR_EUR "2500 EUR"
     }
     MDT_INTERVENTION ["Intervention d'Atelier"] {
         string ID_INTERVENTION PK "I-2026-000123-01"
         string ID_DEMANDE FK "D-2026-000123"
-        string TYPE_REPARATION "T-AUBTUR"
+        enum TYPE_REPARATION "*T-AUBTUR | T-INSCND | T-MAJLOU | T-BANESS | T-EQUROT | T-COMHOT | T-REVCAR | T-FODREP"
         string PRECISION_AUTRE "Usinage aubes HP"
-        string SHOP_ASSIGNE "S-MON"
+        enum SHOP_ASSIGNE "*S-MON | S-VIL | S-CHL | S-BRU | S-SQY | S-GEN | S-BDX | S-TLS | S-LGG | S-CRE"
         string DONNEES_TECHNIQUES "DOC-NDT-2026-442"
         float INTERVENTION_TAT "32.5 h"
     }`,
@@ -6700,10 +6903,10 @@ ${uml2B}
     MDT_INTERVENTION ["Intervention d'Atelier"] {
         string ID_DEMANDE PK "D-2026-000123"
         string ID_INTERVENTION PK "I-2026-000123-01"
-        string TYPE_REPARATION "T-AUBTUR"
+        enum TYPE_REPARATION "*T-AUBTUR | T-INSCND | T-MAJLOU | T-BANESS | T-EQUROT | T-COMHOT | T-REVCAR | T-FODREP"
         string PRECISION_AUTRE "Re-frettage specifique"
-        string STATION_ASSIGNEE FK "S-MON-01"
-        string SHOP_ASSIGNE FK "S-MON"
+        enum STATION_ASSIGNEE FK "*S-MON-01 | S-MON-02 | S-MON-03 | S-VIL-01 | S-VIL-02 | S-CHL-01 | S-TLS-01"
+        enum SHOP_ASSIGNE FK "*S-MON | S-VIL | S-CHL | S-BRU | S-SQY | S-GEN | S-BDX | S-TLS | S-LGG | S-CRE"
         string DONNEES_TECHNIQUES "DOC-NDT-2026-442"
         float ESTIMATED_REPAIR_DURATION "18.5 h"
         float SHOP_QUEUE_TIME "12.0 h"
@@ -6711,26 +6914,26 @@ ${uml2B}
     }
     STATION ["Station de Réparation"] {
         string ID_STATION PK "S-MON-01"
-        string SHOP_ASSIGNE FK "S-MON"
+        enum SHOP_ASSIGNE FK "*S-MON | S-VIL | S-CHL | S-BRU | S-SQY | S-GEN | S-BDX | S-TLS | S-LGG | S-CRE"
         string NOM_STATION "Usinage Aubes HP Tour CN"
-        string TYPE_REPARATION "T-AUBTUR"
+        enum TYPE_REPARATION "*T-AUBTUR | T-INSCND | T-MAJLOU | T-BANESS | T-EQUROT | T-COMHOT | T-REVCAR | T-FODREP"
         float SEUIL_SATURATION "85.0 %"
     }
     SHOP ["Atelier (Shop)"] {
-        string SHOP_ASSIGNE PK "S-MON"
+        enum SHOP_ASSIGNE PK "*S-MON | S-VIL | S-CHL | S-BRU | S-SQY | S-GEN | S-BDX | S-TLS | S-LGG | S-CRE"
         string NOM_ATELIER "Montereau"
         int NB_STATIONS "6"
         float CAPACITE_HEBDO "1450.0 h"
     }
     MDT_MAINTENANCE_REQUEST ["Demande de Maintenance Moteur"] {
         string ID_DEMANDE PK "D-2026-000123"
-        string DEMANDEUR "Air France (AFR)"
-        string ENGINE_TYPE "LEAP-1A26"
-        string NIVEAU_URGENCE_GLOBAL "Haute (AOG)"
+        enum DEMANDEUR "*Air France (AFR) | Lufthansa (DLH) | Delta Air Lines (DAL) | EasyJet (EZY) | Air China (CCA) | Emirates (UAE) | Singapore Airlines (SIA)"
+        enum ENGINE_TYPE "*LEAP-1A26 | CFM56-7B | CFM56-5B | LEAP-1B | GE90-115B"
+        enum NIVEAU_URGENCE_GLOBAL "*Haute (AOG) | Moyenne | Basse"
     }
     DUREE_STANDARDS ["Durées Standards"] {
-        string ENGINE_TYPE PK "LEAP-1A26"
-        string TYPE_REPARATION PK "T-AUBTUR"
+        enum ENGINE_TYPE PK "*LEAP-1A26 | CFM56-7B | CFM56-5B | LEAP-1B | GE90-115B"
+        enum TYPE_REPARATION PK "*T-AUBTUR | T-INSCND | T-MAJLOU | T-BANESS | T-EQUROT | T-COMHOT | T-REVCAR | T-FODREP"
         float DUREE_STANDARD_H "18.5 h"
     }
     TIMEPROFILE ["Profil Temporel"] {
@@ -7015,6 +7218,43 @@ xychart-beta
       showToast('↻ Modèle Mermaid <b>' + (g === 'B' ? '2.B' : '2.A') + '</b> réinitialisé');
     }
 
+    const ERD_GENERIC_PROMPT = `Génère un nouveau diagramme ERD Mermaid à partir du diagramme original ENTRÉE et selon la SORTIE.
+
+ENTRÉE
+[Diagramme Mermaid ERD actif]
+
+SORTIE
+**Type :** Type de données (ex: \`string\`, \`int\`, \`float\`, \`date\`, \`boolean\` ou \`enum\`). Mettre \`*\` devant si obligatoire à la création (ex: \`*string\`, \`*enum\`).
+**Nom :** Nom court et explicite de l'attribut (ex: \`DEMANDEUR\`, \`ENGINE_TYPE\`).
+**Contraintes :** \`PK\`, \`FK\`, \`UK\` si applicable.
+**Commentaire :** Exemple concret si texte libre, ou liste des valeurs possibles séparées par un tube \`|\` pour le type \`enum\` ou \`boolean\`. Mettre \`*\` sur la valeur par défaut (ex: \`"*true | false"\` ou \`"*Air France (AFR) | Lufthansa (DLH) | Delta Air Lines (DAL)"\`).
+**Relations :** Cardinalités Mermaid standard avec libellé débutant par un verbe à l'infinitif.`;
+
+    function updateSchemaPromptView(granularity) {
+      const g = granularity || selections[2] || 'A';
+      const promptEl = document.getElementById('schema-prompt-code');
+      if (promptEl) {
+        const activeUml = getMermaidSchema(g);
+        promptEl.value = ERD_GENERIC_PROMPT.replace('[Diagramme Mermaid ERD actif]', activeUml);
+      }
+    }
+
+    function copySchemaPrompt() {
+      const promptEl = document.getElementById('schema-prompt-code');
+      const btn = document.getElementById('schema-prompt-copy-btn');
+      const text = promptEl ? promptEl.value : ERD_GENERIC_PROMPT;
+      copyTextToClipboard(text).then(() => {
+        if (btn) {
+          btn.innerHTML = '<span>✅</span>';
+          btn.classList.add('text-emerald-400');
+          setTimeout(() => {
+            btn.innerHTML = '⧉';
+            btn.classList.remove('text-emerald-400');
+          }, 1500);
+        }
+      });
+    }
+
     function updateMermaidCode(granularity) {
       const g = granularity || selections[2] || 'A';
       const codeEl = document.getElementById('schema-mermaid-code');
@@ -7086,53 +7326,1067 @@ xychart-beta
       }
     }
 
-    const ERD_GENERIC_PROMPT = `Génère un diagramme ERD Mermaid :
+    // ===== Moteur de Données, Parseur Mermaid ERD & Vue "data" (Étape 2) =====
+    let customSchemas = [];
+    try {
+      const savedSchemas = localStorage.getItem('maestro_custom_schemas');
+      if (savedSchemas) customSchemas = JSON.parse(savedSchemas);
+      if (!Array.isArray(customSchemas)) customSchemas = [];
+    } catch (e) {
+      customSchemas = [];
+    }
 
-**Type :** Type avec \`*\` devant si une valeur est obligatoire à la création.
-**Nom :** Nom court.
-**Contraintes :** \`PK\`, \`FK\`, \`UK\` si applicable.
-**Commentaire :** Exemple concret si texte libre, ou liste des valeurs possibles. Mettre \`*\` sur celle par défaut (ex: \`"*true | false"\` ou \`*DATE_NOW\`).
-**Relations :** Cardinalités Mermaid standard avec libellé débutant par un verbe à l'infinitif.`;
+    function saveCustomSchemas() {
+      try {
+        localStorage.setItem('maestro_custom_schemas', JSON.stringify(customSchemas));
+      } catch (e) {}
+    }
 
-    function updateSchemaPromptView() {
-      const promptEl = document.getElementById('schema-prompt-code');
-      if (promptEl) {
-        promptEl.value = ERD_GENERIC_PROMPT;
+    // État du tableau de données de l'Étape 2
+    let schemaDataState = {
+      activeTable: null,
+      parentContext: null, // { table: string, filterField: string, filterValue: any }
+      page: 1,
+      pageSize: 20,
+      sortField: null,
+      sortAsc: true,
+      colOrder: [],
+      colWidths: {}
+    };
+
+    // PRNG (Mulberry32) pour des données déterministes et stables par seed
+    function createPRNG(seed) {
+      let s = seed >>> 0;
+      return function() {
+        s = (s + 0x6D2B79F5) >>> 0;
+        let t = Math.imul(s ^ (s >>> 15), 1 | s);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+
+    // Parseur de diagramme Mermaid ERD
+    function parseMermaidErd(umlText) {
+      const lines = (umlText || '').split('\n');
+      const entities = {};
+      const relationships = [];
+      let currentEntity = null;
+
+      const relRegex = /^\s*([A-Za-z0-9_]+)\s*(\|\||\|o|o\||o\{|\}o|\}\{|\{\|)\s*--\s*(\|\||\|o|o\||o\{|\}o|\}\{|\{\|)\s*([A-Za-z0-9_]+)\s*:\s*"?([^"\n\r]*)"?/;
+      const entityHeaderRegex = /^\s*([A-Za-z0-9_]+)(?:\s*\["([^"]*)"\])?\s*\{/;
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line || line.startsWith('%%') || line.startsWith('erDiagram')) continue;
+
+        const relMatch = line.match(relRegex);
+        if (relMatch) {
+          const [, ent1, card1, card2, ent2, label] = relMatch;
+          const is1toN = (card2 === 'o{' || card2 === '}{' || card2 === '{|' || (card1 === '||' && card2.includes('{')) || label.includes('1:N') || label.includes('1 vers N') || label.includes('1 → N'));
+          relationships.push({
+            from: ent1,
+            to: ent2,
+            card1,
+            card2,
+            is1toN,
+            label: label || ''
+          });
+          continue;
+        }
+
+        const entMatch = line.match(entityHeaderRegex);
+        if (entMatch) {
+          const entName = entMatch[1];
+          const entLabel = entMatch[2] || entName;
+          currentEntity = {
+            name: entName,
+            label: entLabel,
+            fields: []
+          };
+          entities[entName] = currentEntity;
+          continue;
+        }
+
+        if (line.startsWith('\x7D')) {
+          currentEntity = null;
+          continue;
+        }
+
+        if (currentEntity) {
+          // Extraction du champ : type, name, contrainte optionnelle, commentaire entre guillemets
+          // Ex : string ID_DEMANDE PK "D-2026-000123"
+          // Ex : string DEMANDEUR "Air France (AFR)"
+          const fieldRegex = /^([A-Za-z0-9_*]+)\s+([A-Za-z0-9_]+)(?:\s+(PK|FK|UK))?(?:\s+"([^"]*)")?/;
+          const fMatch = line.match(fieldRegex);
+          if (fMatch) {
+            let [, rawType, name, constraint, comment] = fMatch;
+            const isMandatory = rawType.startsWith('*');
+            const type = rawType.replace(/^\*/, '').toLowerCase();
+            currentEntity.fields.push({
+              name,
+              type,
+              isMandatory,
+              constraint: constraint || '',
+              comment: comment || ''
+            });
+          }
+        }
+      }
+
+      // Déduction de la table principale :
+      // 1. Première entité déclarée ou entité source de 1-N la plus connectée
+      const entityNames = Object.keys(entities);
+      let mainTable = entityNames[0] || 'TABLE_1';
+
+      if (entityNames.includes('MDT_MAINTENANCE_REQUEST') && selections[2] === 'A') {
+        mainTable = 'MDT_MAINTENANCE_REQUEST';
+      } else if (entityNames.includes('MDT_INTERVENTION') && selections[2] === 'B') {
+        mainTable = 'MDT_INTERVENTION';
+      }
+
+      return { entities, relationships, mainTable };
+    }
+
+    // Déduction des règles de génération par défaut depuis l'UML
+    function getDefaultFieldStrategy(field, tableName, parsedErd) {
+      const type = (field.type || '').toLowerCase();
+      const name = field.name || '';
+      const comment = field.comment || '';
+
+      // 1. Booléen
+      if (type === 'boolean' || type === 'bool' || comment.includes('true | false') || comment.includes('false | true')) {
+        return {
+          generator: 'boolean',
+          truePct: 75
+        };
+      }
+
+      // 2. Type enum ou liste de choix avec | (regex genex / distribution de choix)
+      if (type === 'enum' || comment.includes('|')) {
+        let rawVals = [];
+        if (comment.includes('|')) {
+          rawVals = comment.split('|').map(v => v.replace(/^\*/, '').trim()).filter(Boolean);
+        } else if (comment) {
+          rawVals = [comment.replace(/^\*/, '').trim()];
+        } else {
+          rawVals = [`${name}_1`, `${name}_2`, `${name}_3`];
+        }
+
+        if (rawVals.length > 0) {
+          const equalPct = Math.round(100 / rawVals.length);
+          const values = rawVals.map((val, idx) => ({
+            value: val,
+            pct: idx === rawVals.length - 1 ? (100 - equalPct * (rawVals.length - 1)) : equalPct
+          }));
+          return {
+            generator: 'enum',
+            values
+          };
+        }
+      }
+
+      // 3. Date / Timestamp
+      if (type.includes('date') || type.includes('time')) {
+        let baseDateStr = '2026-03-01';
+        const dateMatch = comment.match(/\d{4}-\d{2}-\d{2}/);
+        if (dateMatch) baseDateStr = dateMatch[0];
+        const baseDate = new Date(baseDateStr);
+        const startDate = new Date(baseDate.getTime() - 20 * 86400000).toISOString().slice(0, 10);
+        const endDate = new Date(baseDate.getTime() + 40 * 86400000).toISOString().slice(0, 10);
+        return {
+          generator: 'date',
+          startDate,
+          endDate
+        };
+      }
+
+      // 4. Numérique (float, int, number)
+      if (type.includes('float') || type.includes('int') || type.includes('num') || type.includes('double')) {
+        const numMatch = comment.match(/-?\d+(?:\.\d+)?/);
+        let numVal = numMatch ? parseFloat(numMatch[0]) : 10;
+        if (isNaN(numVal)) numVal = 10;
+        const isFloat = type.includes('float') || type.includes('double') || (comment.includes('.') && !type.includes('int'));
+        const minVal = parseFloat((numVal * 0.5).toFixed(1));
+        const maxVal = parseFloat((numVal * 1.5).toFixed(1));
+        const suffix = comment.replace(/-?\d+(?:\.\d+)?/, '').trim();
+        return {
+          generator: isFloat ? 'float' : 'integer',
+          min: minVal,
+          max: maxVal,
+          mean: numVal,
+          suffix: suffix ? ` ${suffix}` : ''
+        };
+      }
+
+      // 5. String / Codes (regex-genex pattern avec incrément)
+      let prefix = '';
+      let numDigits = 4;
+      let startNum = 1;
+      let suffix = '';
+
+      const dashIdx = comment.lastIndexOf('-');
+      if (dashIdx !== -1) {
+        prefix = comment.substring(0, dashIdx + 1);
+        const endPart = comment.substring(dashIdx + 1);
+        const endDigitsMatch = endPart.match(/^(\d+)(.*)$/);
+        if (endDigitsMatch) {
+          numDigits = endDigitsMatch[1].length;
+          startNum = parseInt(endDigitsMatch[1], 10) || 1;
+          suffix = endDigitsMatch[2] || '';
+        } else {
+          prefix = comment;
+          numDigits = 3;
+        }
+      } else {
+        prefix = comment ? `${comment} ` : `${name}_`;
+        numDigits = 2;
+      }
+
+      return {
+        generator: 'regex_genex',
+        prefix,
+        startNum,
+        numDigits,
+        suffix,
+        sample: comment || name
+      };
+    }
+
+    // Récupération ou initialisation de la stratégie d'une table
+    function getTableDataStrategy(granularity, tableName, parsedErd) {
+      const storageKey = `maestro_datagen_strat_${granularity}_${tableName}`;
+      try {
+        const raw = localStorage.getItem(storageKey);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && parsed.fields) return parsed;
+        }
+      } catch (e) {}
+
+      // Construction par défaut
+      const ent = parsedErd.entities[tableName];
+      if (!ent) return { rowCount: 15, fields: {} };
+
+      const fieldsStrat = {};
+      ent.fields.forEach(f => {
+        fieldsStrat[f.name] = getDefaultFieldStrategy(f, tableName, parsedErd);
+      });
+
+      return {
+        rowCount: 15,
+        fields: fieldsStrat
+      };
+    }
+
+    function saveTableDataStrategy(granularity, tableName, strat) {
+      const storageKey = `maestro_datagen_strat_${granularity}_${tableName}`;
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(strat));
+      } catch (e) {}
+    }
+
+    // Génération effective des données pour toutes les tables d'un modèle ERD
+    function generateModelDataset(granularity, parsedErd, seed = 12345) {
+      const rng = createPRNG(seed);
+      const dataset = {};
+
+      const tableNames = Object.keys(parsedErd.entities);
+
+      // Générer d'abord les tables indépendantes puis la table principale
+      tableNames.forEach(tName => {
+        const ent = parsedErd.entities[tName];
+        const strat = getTableDataStrategy(granularity, tName, parsedErd);
+        const rowCount = strat.rowCount || 20;
+        const rows = [];
+
+        for (let r = 0; r < rowCount; r++) {
+          const row = {};
+          ent.fields.forEach(f => {
+            const fStrat = strat.fields[f.name] || getDefaultFieldStrategy(f, tName, parsedErd);
+            row[f.name] = generateFieldValue(fStrat, r, rng);
+          });
+          rows.push(row);
+        }
+        dataset[tName] = rows;
+      });
+
+      // Synchroniser les FKs pour garantir la consistance relationnelle
+      parsedErd.relationships.forEach(rel => {
+        const { from, to, is1toN } = rel;
+        const fromRows = dataset[from] || [];
+        const toRows = dataset[to] || [];
+        if (!fromRows.length || !toRows.length) return;
+
+        if (is1toN) {
+          // `from` (1) -> `to` (N). Trouver la FK dans `to` correspondant à la PK de `from`
+          const fromEnt = parsedErd.entities[from];
+          const toEnt = parsedErd.entities[to];
+          if (!fromEnt || !toEnt) return;
+
+          const pkField = fromEnt.fields.find(f => f.constraint === 'PK');
+          if (pkField) {
+            const fkInTo = toEnt.fields.find(f => f.name === pkField.name || (f.constraint === 'FK' && f.name.includes(pkField.name)));
+            if (fkInTo) {
+              toRows.forEach((row, idx) => {
+                const parentRow = fromRows[idx % fromRows.length];
+                row[fkInTo.name] = parentRow[pkField.name];
+              });
+            }
+          }
+        } else {
+          // Relation N-1 : `from` (N) -> `to` (1). La FK est dans `from`
+          const fromEnt = parsedErd.entities[from];
+          const toEnt = parsedErd.entities[to];
+          if (!fromEnt || !toEnt) return;
+
+          const pkInTo = toEnt.fields.find(f => f.constraint === 'PK');
+          if (pkInTo) {
+            const fkInFrom = fromEnt.fields.find(f => f.name === pkInTo.name || (f.constraint === 'FK' && f.name.includes(pkInTo.name)));
+            if (fkInFrom) {
+              fromRows.forEach((row, idx) => {
+                const targetRow = toRows[idx % toRows.length];
+                row[fkInFrom.name] = targetRow[pkInTo.name];
+              });
+            }
+          }
+        }
+      });
+
+      return dataset;
+    }
+
+    function generateFieldValue(strat, rowIdx, rng) {
+      if (!strat) return `Val_${rowIdx + 1}`;
+
+      switch (strat.generator) {
+        case 'boolean':
+          return (rng() * 100) < (strat.truePct || 50) ? 'true' : 'false';
+
+        case 'enum': {
+          const vals = strat.values || [{ value: 'Val1', pct: 100 }];
+          const roll = rng() * 100;
+          let acc = 0;
+          for (let i = 0; i < vals.length; i++) {
+            acc += (vals[i].pct || 0);
+            if (roll <= acc || i === vals.length - 1) {
+              return vals[i].value;
+            }
+          }
+          return vals[0].value;
+        }
+
+        case 'date': {
+          const startMs = new Date(strat.startDate || '2026-02-01').getTime();
+          const endMs = new Date(strat.endDate || '2026-04-15').getTime();
+          const range = Math.max(1, endMs - startMs);
+          const randMs = startMs + rng() * range;
+          return new Date(randMs).toISOString().slice(0, 10);
+        }
+
+        case 'float': {
+          const min = strat.min !== undefined ? strat.min : 5.0;
+          const max = strat.max !== undefined ? strat.max : 25.0;
+          const val = min + (rng() * (max - min));
+          const rounded = (Math.round(val * 10) / 10).toFixed(1);
+          return `${rounded}${strat.suffix || ''}`;
+        }
+
+        case 'integer': {
+          const min = strat.min !== undefined ? strat.min : 1;
+          const max = strat.max !== undefined ? strat.max : 20;
+          const val = Math.round(min + (rng() * (max - min)));
+          return `${val}${strat.suffix || ''}`;
+        }
+
+        case 'regex_genex': {
+          const prefix = strat.prefix !== undefined ? strat.prefix : 'ID-';
+          const digits = strat.numDigits || 3;
+          const startNum = strat.startNum || 1;
+          const currentNum = startNum + rowIdx;
+          const padded = String(currentNum).padStart(digits, '0');
+          return `${prefix}${padded}${strat.suffix || ''}`;
+        }
+
+        default:
+          return strat.sample || `Item-${rowIdx + 1}`;
       }
     }
 
-    function copySchemaPrompt() {
-      const promptEl = document.getElementById('schema-prompt-code');
-      const btn = document.getElementById('schema-prompt-copy-btn');
-      const text = promptEl ? promptEl.value : ERD_GENERIC_PROMPT;
-      copyTextToClipboard(text).then(() => {
-        if (btn) {
-          btn.textContent = '✓';
-          btn.classList.add('text-emerald-400');
-          setTimeout(() => {
-            btn.textContent = '⧉';
-            btn.classList.remove('text-emerald-400');
-          }, 1500);
+    // Cache mémoire des données générées
+    let currentModelDataset = null;
+    let currentModelParsedErd = null;
+    let currentModelGranularity = null;
+
+    function getOrGenerateCurrentDataset(granularity, force = false) {
+      const g = granularity || selections[2] || 'A';
+      if (!force && currentModelDataset && currentModelGranularity === g && currentModelParsedErd) {
+        return { parsedErd: currentModelParsedErd, dataset: currentModelDataset };
+      }
+
+      const umlCode = getMermaidSchema(g);
+      const parsedErd = parseMermaidErd(umlCode);
+      const dataset = generateModelDataset(g, parsedErd, 98765);
+
+      currentModelGranularity = g;
+      currentModelParsedErd = parsedErd;
+      currentModelDataset = dataset;
+
+      return { parsedErd, dataset };
+    }
+
+    // Instance globale Grid.js pour l'Étape 2
+    let currentStep2Grid = null;
+
+    // Affichage dynamique de la vue "data" propulsée par Grid.js
+    function renderStep2DataView(resetPage = false) {
+      const g = selections[2] || 'A';
+      const { parsedErd, dataset } = getOrGenerateCurrentDataset(g);
+
+      if (resetPage || !schemaDataState.activeTable || !parsedErd.entities[schemaDataState.activeTable]) {
+        schemaDataState.activeTable = parsedErd.mainTable;
+        schemaDataState.parentContext = null;
+        schemaDataState.page = 1;
+      }
+
+      const activeTableName = schemaDataState.activeTable;
+      const activeEntity = parsedErd.entities[activeTableName];
+      if (!activeEntity) return;
+
+      // Barre d'outils et breadcrumb
+      const breadcrumbEl = document.getElementById('schema-data-breadcrumb');
+      const backBtn = document.getElementById('schema-data-back-btn');
+      const filterBadge = document.getElementById('schema-data-filter-badge');
+
+      if (breadcrumbEl) {
+        breadcrumbEl.textContent = `${activeTableName} (${activeEntity.label || activeTableName})`;
+      }
+
+      if (backBtn && filterBadge) {
+        if (schemaDataState.parentContext) {
+          backBtn.classList.remove('hidden');
+          filterBadge.classList.remove('hidden');
+          filterBadge.textContent = `Filtre : ${schemaDataState.parentContext.filterField} = ${schemaDataState.parentContext.filterValue}`;
+        } else {
+          backBtn.classList.add('hidden');
+          filterBadge.classList.add('hidden');
+        }
+      }
+
+      // Filtrer les données si drill-down actif
+      let rawRows = (dataset[activeTableName] || []).slice();
+      if (schemaDataState.parentContext) {
+        const { filterField, filterValue } = schemaDataState.parentContext;
+        rawRows = rawRows.filter(r => String(r[filterField]) === String(filterValue));
+      }
+
+      // Construction des colonnes Grid.js
+      const gridColumns = [];
+
+      // 1. Colonnes des attributs propres de l'entité
+      activeEntity.fields.forEach(f => {
+        const badgeConstraint = f.constraint ? ` <span class="px-1 py-0.2 rounded text-[8.5px] font-mono ${f.constraint === 'PK' ? 'bg-amber-100 text-amber-900 border border-amber-300' : 'bg-blue-100 text-blue-900 border border-blue-300'}">${f.constraint}</span>` : '';
+        gridColumns.push({
+          id: f.name,
+          name: gridjs.html(`<span class="font-bold text-slate-700">${f.name}</span>${badgeConstraint}`),
+          sort: true,
+          formatter: (cell) => {
+            const val = (cell !== undefined && cell !== null) ? String(cell) : '';
+            return gridjs.html(`<span class="text-slate-800" title="${val}">${val}</span>`);
+          }
+        });
+      });
+
+      // 2. Colonnes relationnelles déduites du schéma Mermaid
+      // - Relations N-1 : première colonne avec nom / libellé
+      // - Relations 1-N : compteur cliquable pour drill-down
+      const pkField = activeEntity.fields.find(f => f.constraint === 'PK') || activeEntity.fields[0];
+
+      parsedErd.relationships.forEach(rel => {
+        if (rel.from === activeTableName) {
+          const targetEnt = parsedErd.entities[rel.to];
+          if (!targetEnt) return;
+
+          if (rel.is1toN) {
+            // 1-N : badge cliquable drill-down vers la table fille
+            gridColumns.push({
+              id: `__rel_1n_${rel.to}`,
+              name: gridjs.html(`<span class="font-bold text-emerald-800">Détail ${targetEnt.label || rel.to}</span>`),
+              sort: false,
+              formatter: (_, row) => {
+                const pkVal = row.cells[0]?.data;
+                const targetRows = dataset[rel.to] || [];
+                const count = targetRows.filter(tr => String(tr[pkField.name]) === String(pkVal)).length;
+                return gridjs.html(`
+                  <button type="button" onclick="drillDownToSubTable('${rel.to}', '${pkField.name}', '${pkVal}')" class="px-1.5 py-0.5 rounded bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold border border-emerald-200 text-[10px] cursor-pointer transition inline-flex items-center gap-1 shadow-2xs">
+                    <span>${count}</span> <span>${rel.to.toLowerCase()} ↗</span>
+                  </button>
+                `);
+              }
+            });
+          } else {
+            // N-1 : affichage d'un libellé significatif (NOM ou 1er non-PK/FK)
+            const nomField = targetEnt.fields.find(f => f.name.toUpperCase().includes('NOM')) ||
+                             targetEnt.fields.find(f => f.constraint !== 'PK' && f.constraint !== 'FK') ||
+                             targetEnt.fields[0];
+            if (nomField) {
+              gridColumns.push({
+                id: `__rel_n1_${rel.to}_${nomField.name}`,
+                name: gridjs.html(`<span class="font-bold text-blue-900">${rel.to} [${nomField.name}]</span>`),
+                sort: true,
+                formatter: (cell) => gridjs.html(`<span class="font-medium text-blue-900">${cell || '-'}</span>`)
+              });
+            }
+          }
+        } else if (rel.to === activeTableName && !rel.is1toN) {
+          const parentEnt = parsedErd.entities[rel.from];
+          if (parentEnt) {
+            const nomField = parentEnt.fields.find(f => f.name.toUpperCase().includes('NOM')) ||
+                             parentEnt.fields.find(f => f.constraint !== 'PK' && f.constraint !== 'FK') ||
+                             parentEnt.fields[0];
+            if (nomField) {
+              gridColumns.push({
+                id: `__rel_n1_${rel.from}_${nomField.name}`,
+                name: gridjs.html(`<span class="font-bold text-blue-900">${rel.from} [${nomField.name}]</span>`),
+                sort: true,
+                formatter: (cell) => gridjs.html(`<span class="font-medium text-blue-900">${cell || '-'}</span>`)
+              });
+            }
+          }
+        }
+      });
+
+      // Construction des lignes de données au format d'objets pour Grid.js
+      const gridData = rawRows.map((row, rIdx) => {
+        const rowObj = {};
+        // Remplir les attributs propres
+        activeEntity.fields.forEach(f => {
+          rowObj[f.name] = row[f.name] !== undefined ? row[f.name] : '';
+        });
+
+        // Remplir les colonnes associées
+        parsedErd.relationships.forEach(rel => {
+          if (rel.from === activeTableName) {
+            if (rel.is1toN) {
+              rowObj[`__rel_1n_${rel.to}`] = row[pkField.name];
+            } else {
+              const targetEnt = parsedErd.entities[rel.to];
+              if (targetEnt) {
+                const nomField = targetEnt.fields.find(f => f.name.toUpperCase().includes('NOM')) ||
+                                 targetEnt.fields.find(f => f.constraint !== 'PK' && f.constraint !== 'FK') ||
+                                 targetEnt.fields[0];
+                if (nomField) {
+                  const targetRows = dataset[rel.to] || [];
+                  const pkInTarget = targetEnt.fields.find(f => f.constraint === 'PK');
+                  let displayVal = '-';
+                  if (pkInTarget && row[pkInTarget.name] !== undefined) {
+                    const matched = targetRows.find(tr => String(tr[pkInTarget.name]) === String(row[pkInTarget.name]));
+                    if (matched && matched[nomField.name] !== undefined) displayVal = matched[nomField.name];
+                  } else if (targetRows.length > 0) {
+                    const matched = targetRows[rIdx % targetRows.length];
+                    if (matched && matched[nomField.name] !== undefined) displayVal = matched[nomField.name];
+                  }
+                  rowObj[`__rel_n1_${rel.to}_${nomField.name}`] = displayVal;
+                }
+              }
+            }
+          } else if (rel.to === activeTableName && !rel.is1toN) {
+            const parentEnt = parsedErd.entities[rel.from];
+            if (parentEnt) {
+              const nomField = parentEnt.fields.find(f => f.name.toUpperCase().includes('NOM')) ||
+                               parentEnt.fields.find(f => f.constraint !== 'PK' && f.constraint !== 'FK') ||
+                               parentEnt.fields[0];
+              if (nomField) {
+                const parentRows = dataset[rel.from] || [];
+                const pkInParent = parentEnt.fields.find(f => f.constraint === 'PK');
+                let displayVal = '-';
+                if (pkInParent && row[pkInParent.name] !== undefined) {
+                  const matched = parentRows.find(tr => String(tr[pkInParent.name]) === String(row[pkInParent.name]));
+                  if (matched && matched[nomField.name] !== undefined) displayVal = matched[nomField.name];
+                } else if (parentRows.length > 0) {
+                  const matched = parentRows[rIdx % parentRows.length];
+                  if (matched && matched[nomField.name] !== undefined) displayVal = matched[nomField.name];
+                }
+                rowObj[`__rel_n1_${rel.from}_${nomField.name}`] = displayVal;
+              }
+            }
+          }
+        });
+
+        return rowObj;
+      });
+
+      // Conteneur DOM
+      const wrapper = document.getElementById('schema-data-table-wrapper');
+      if (!wrapper) return;
+      wrapper.innerHTML = '';
+
+      // Destruction de l'ancienne instance Grid.js si existante
+      if (currentStep2Grid) {
+        try {
+          currentStep2Grid.destroy();
+        } catch (e) {}
+        currentStep2Grid = null;
+      }
+
+      // Initialisation du tableau Grid.js
+      currentStep2Grid = new gridjs.Grid({
+        columns: gridColumns,
+        data: gridData,
+        sort: true,
+        resizable: true,
+        pagination: {
+          limit: 15,
+          summary: true
+        },
+        language: {
+          pagination: {
+            previous: 'Préc.',
+            next: 'Suiv.',
+            navigate: (page, pages) => `Page ${page} sur ${pages}`,
+            page: (page) => `Page ${page}`,
+            showing: 'Affichage de',
+            of: 'sur',
+            to: 'à',
+            results: 'enregistrements (15 par page)'
+          },
+          loading: 'Chargement des données...',
+          noRecordsFound: 'Aucun enregistrement disponible',
+          error: 'Erreur de chargement'
+        }
+      });
+
+      currentStep2Grid.render(wrapper);
+    }
+
+    function drillDownToSubTable(subTable, filterField, filterValue) {
+      schemaDataState.parentContext = {
+        table: schemaDataState.activeTable,
+        filterField,
+        filterValue
+      };
+      schemaDataState.activeTable = subTable;
+      schemaDataState.page = 1;
+      renderStep2DataView();
+    }
+
+    function drillBackToMainTable() {
+      if (schemaDataState.parentContext) {
+        schemaDataState.activeTable = schemaDataState.parentContext.table;
+        schemaDataState.parentContext = null;
+        schemaDataState.page = 1;
+        renderStep2DataView();
+      }
+    }
+
+    // ===== Modale Paramètres du Générateur de Données =====
+    let activeDataGenTable = null;
+
+    function openDataGeneratorModal() {
+      const g = selections[2] || 'A';
+      const { parsedErd } = getOrGenerateCurrentDataset(g);
+      const modal = document.getElementById('data-generator-modal');
+      const tableSelect = document.getElementById('data-gen-table-select');
+      if (!modal || !tableSelect) return;
+
+      tableSelect.innerHTML = '';
+      Object.keys(parsedErd.entities).forEach(tName => {
+        const ent = parsedErd.entities[tName];
+        const opt = document.createElement('option');
+        opt.value = tName;
+        opt.textContent = `${tName} (${ent.label || tName})`;
+        tableSelect.appendChild(opt);
+      });
+
+      activeDataGenTable = schemaDataState.activeTable || parsedErd.mainTable;
+      tableSelect.value = activeDataGenTable;
+
+      renderDataGenFieldsForm();
+      modal.classList.remove('hidden');
+    }
+
+    function closeDataGeneratorModal() {
+      const modal = document.getElementById('data-generator-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function onDataGenTableSelectChange(tableName) {
+      activeDataGenTable = tableName;
+      renderDataGenFieldsForm();
+    }
+
+    function onDataGenRowCountChange(val) {
+      const count = parseInt(val, 10);
+      if (isNaN(count) || count < 1) return;
+      const g = selections[2] || 'A';
+      const { parsedErd } = getOrGenerateCurrentDataset(g);
+      const strat = getTableDataStrategy(g, activeDataGenTable, parsedErd);
+      strat.rowCount = Math.min(500, count);
+      saveTableDataStrategy(g, activeDataGenTable, strat);
+    }
+
+    function renderDataGenFieldsForm() {
+      const g = selections[2] || 'A';
+      const { parsedErd } = getOrGenerateCurrentDataset(g);
+      const container = document.getElementById('data-gen-fields-container');
+      const countInput = document.getElementById('data-gen-count-input');
+      if (!container) return;
+
+      const ent = parsedErd.entities[activeDataGenTable];
+      if (!ent) return;
+
+      const strat = getTableDataStrategy(g, activeDataGenTable, parsedErd);
+      if (countInput) countInput.value = strat.rowCount || 20;
+
+      let html = '';
+      ent.fields.forEach(f => {
+        const fStrat = strat.fields[f.name] || getDefaultFieldStrategy(f, activeDataGenTable, parsedErd);
+        const badgeConstraint = f.constraint ? `<span class="px-1 py-0.2 rounded text-[8.5px] font-mono ${f.constraint === 'PK' ? 'bg-amber-100 text-amber-900 border border-amber-300' : 'bg-blue-100 text-blue-900 border border-blue-300'}">${f.constraint}</span>` : '';
+
+        html += `<div class="p-2.5 rounded-lg border border-slate-200 bg-white shadow-2xs space-y-1.5">
+          <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-1">
+            <div class="flex items-center gap-1.5">
+              <span class="font-bold text-slate-800 text-[11px] font-mono">${f.name}</span>
+              ${badgeConstraint}
+              <span class="text-[9.5px] text-slate-500 font-mono">(${f.type})</span>
+            </div>
+            <span class="text-[9.5px] text-slate-400 italic truncate max-w-[200px]" title="${f.comment || ''}">UML : "${f.comment || '-'}"</span>
+          </div>
+          <div class="pt-1">`;
+
+        if (fStrat.generator === 'float' || fStrat.generator === 'integer') {
+          html += `<div class="grid grid-cols-1 sm:grid-cols-4 gap-2 items-center">
+            <div>
+              <label class="block text-[9.5px] text-slate-500 font-semibold">Min :</label>
+              <input type="number" step="${fStrat.generator === 'float' ? '0.1' : '1'}" value="${fStrat.min}" onchange="updateFieldStratNumber('${f.name}', 'min', this.value)" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
+            </div>
+            <div>
+              <label class="block text-[9.5px] text-slate-500 font-semibold">Max :</label>
+              <input type="number" step="${fStrat.generator === 'float' ? '0.1' : '1'}" value="${fStrat.max}" onchange="updateFieldStratNumber('${f.name}', 'max', this.value)" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
+            </div>
+            <div>
+              <label class="block text-[9.5px] text-slate-500 font-semibold">Moyenne / Cible :</label>
+              <input type="number" step="${fStrat.generator === 'float' ? '0.1' : '1'}" value="${fStrat.mean}" onchange="updateFieldStratNumber('${f.name}', 'mean', this.value)" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
+            </div>
+            <div>
+              <label class="block text-[9.5px] text-slate-500 font-semibold">Suffixe :</label>
+              <input type="text" value="${fStrat.suffix || ''}" onchange="updateFieldStratSuffix('${f.name}', this.value)" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" placeholder="ex: j, h, %" />
+            </div>
+          </div>`;
+        } else if (fStrat.generator === 'date') {
+          html += `<div class="grid grid-cols-1 sm:grid-cols-2 gap-2 items-center">
+            <div>
+              <label class="block text-[9.5px] text-slate-500 font-semibold">Date Début (intervalle) :</label>
+              <input type="date" value="${fStrat.startDate}" onchange="updateFieldStratDate('${f.name}', 'startDate', this.value)" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
+            </div>
+            <div>
+              <label class="block text-[9.5px] text-slate-500 font-semibold">Date Fin (intervalle) :</label>
+              <input type="date" value="${fStrat.endDate}" onchange="updateFieldStratDate('${f.name}', 'endDate', this.value)" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
+            </div>
+          </div>`;
+        } else if (fStrat.generator === 'boolean') {
+          html += `<div class="flex items-center gap-3">
+            <label class="text-[10px] text-slate-600 font-semibold">Répartition % True (vs False) :</label>
+            <input type="range" min="0" max="100" value="${fStrat.truePct}" oninput="updateFieldStratBool('${f.name}', this.value)" class="w-36 cursor-pointer" />
+            <span id="bool-val-${f.name}" class="font-bold text-blue-800 text-[11px]">${fStrat.truePct}% true (${100 - fStrat.truePct}% false)</span>
+          </div>`;
+        } else if (fStrat.generator === 'enum') {
+          html += `<div class="space-y-1">
+            <label class="block text-[9.5px] text-slate-500 font-semibold">Distribution des valeurs (% somme 100) :</label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-1.5">`;
+          (fStrat.values || []).forEach((item, vIdx) => {
+            html += `<div class="flex items-center gap-1 bg-slate-50 p-1 rounded border border-slate-200">
+              <span class="text-[10px] text-slate-700 truncate flex-1" title="${item.value}">${item.value}</span>
+              <input type="number" min="0" max="100" value="${item.pct}" onchange="updateFieldStratEnum('${f.name}', ${vIdx}, this.value)" class="w-12 px-1 py-0.2 border border-slate-300 rounded text-[10px] text-center font-bold" />
+              <span class="text-[9px] text-slate-500">%</span>
+            </div>`;
+          });
+          html += `</div></div>`;
+        } else {
+          // regex-genex / code
+          html += `<div class="grid grid-cols-1 sm:grid-cols-4 gap-2 items-center">
+            <div>
+              <label class="block text-[9.5px] text-slate-500 font-semibold">Préfixe fixe :</label>
+              <input type="text" value="${fStrat.prefix || ''}" onchange="updateFieldStratRegex('${f.name}', 'prefix', this.value)" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
+            </div>
+            <div>
+              <label class="block text-[9.5px] text-slate-500 font-semibold">Début compteur :</label>
+              <input type="number" min="0" value="${fStrat.startNum || 1}" onchange="updateFieldStratRegex('${f.name}', 'startNum', this.value)" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
+            </div>
+            <div>
+              <label class="block text-[9.5px] text-slate-500 font-semibold">Nb chiffres (padding) :</label>
+              <input type="number" min="1" max="10" value="${fStrat.numDigits || 3}" onchange="updateFieldStratRegex('${f.name}', 'numDigits', this.value)" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
+            </div>
+            <div>
+              <label class="block text-[9.5px] text-slate-500 font-semibold">Suffixe :</label>
+              <input type="text" value="${fStrat.suffix || ''}" onchange="updateFieldStratRegex('${f.name}', 'suffix', this.value)" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
+            </div>
+          </div>`;
+        }
+
+        html += `</div></div>`;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function updateFieldStratNumber(fieldName, key, val) {
+      const g = selections[2] || 'A';
+      const { parsedErd } = getOrGenerateCurrentDataset(g);
+      const strat = getTableDataStrategy(g, activeDataGenTable, parsedErd);
+      if (strat.fields[fieldName]) {
+        strat.fields[fieldName][key] = parseFloat(val);
+        saveTableDataStrategy(g, activeDataGenTable, strat);
+      }
+    }
+
+    function updateFieldStratSuffix(fieldName, val) {
+      const g = selections[2] || 'A';
+      const { parsedErd } = getOrGenerateCurrentDataset(g);
+      const strat = getTableDataStrategy(g, activeDataGenTable, parsedErd);
+      if (strat.fields[fieldName]) {
+        strat.fields[fieldName].suffix = val ? (val.startsWith(' ') ? val : ` ${val}`) : '';
+        saveTableDataStrategy(g, activeDataGenTable, strat);
+      }
+    }
+
+    function updateFieldStratDate(fieldName, key, val) {
+      const g = selections[2] || 'A';
+      const { parsedErd } = getOrGenerateCurrentDataset(g);
+      const strat = getTableDataStrategy(g, activeDataGenTable, parsedErd);
+      if (strat.fields[fieldName]) {
+        strat.fields[fieldName][key] = val;
+        saveTableDataStrategy(g, activeDataGenTable, strat);
+      }
+    }
+
+    function updateFieldStratBool(fieldName, val) {
+      const pct = parseInt(val, 10);
+      const g = selections[2] || 'A';
+      const { parsedErd } = getOrGenerateCurrentDataset(g);
+      const strat = getTableDataStrategy(g, activeDataGenTable, parsedErd);
+      if (strat.fields[fieldName]) {
+        strat.fields[fieldName].truePct = pct;
+        saveTableDataStrategy(g, activeDataGenTable, strat);
+      }
+      const label = document.getElementById(`bool-val-${fieldName}`);
+      if (label) label.textContent = `${pct}% true (${100 - pct}% false)`;
+    }
+
+    function updateFieldStratEnum(fieldName, idx, val) {
+      const pct = parseInt(val, 10);
+      const g = selections[2] || 'A';
+      const { parsedErd } = getOrGenerateCurrentDataset(g);
+      const strat = getTableDataStrategy(g, activeDataGenTable, parsedErd);
+      if (strat.fields[fieldName] && strat.fields[fieldName].values[idx]) {
+        strat.fields[fieldName].values[idx].pct = pct;
+        saveTableDataStrategy(g, activeDataGenTable, strat);
+      }
+    }
+
+    function updateFieldStratRegex(fieldName, key, val) {
+      const g = selections[2] || 'A';
+      const { parsedErd } = getOrGenerateCurrentDataset(g);
+      const strat = getTableDataStrategy(g, activeDataGenTable, parsedErd);
+      if (strat.fields[fieldName]) {
+        strat.fields[fieldName][key] = (key === 'startNum' || key === 'numDigits') ? parseInt(val, 10) : val;
+        saveTableDataStrategy(g, activeDataGenTable, strat);
+      }
+    }
+
+    function restoreDataGenDefaults() {
+      const g = selections[2] || 'A';
+      const { parsedErd } = getOrGenerateCurrentDataset(g);
+      Object.keys(parsedErd.entities).forEach(tName => {
+        const storageKey = `maestro_datagen_strat_${g}_${tName}`;
+        try { localStorage.removeItem(storageKey); } catch (e) {}
+      });
+      renderDataGenFieldsForm();
+      showToast('↻ Stratégies de génération réinitialisées selon l\'UML');
+    }
+
+    function regenerateActiveDataTable() {
+      const g = selections[2] || 'A';
+      const { parsedErd } = getOrGenerateCurrentDataset(g);
+      const randSeed = Math.floor(Math.random() * 1000000) + 1;
+      const newDataset = generateModelDataset(g, parsedErd, randSeed);
+      currentModelDataset[activeDataGenTable] = newDataset[activeDataGenTable];
+      renderStep2DataView();
+      showToast(`🎲 Table <b>${activeDataGenTable}</b> regénérée`);
+    }
+
+    function regenerateAllDataTables() {
+      const g = selections[2] || 'A';
+      const randSeed = Math.floor(Math.random() * 1000000) + 1;
+      const umlCode = getMermaidSchema(g);
+      const parsedErd = parseMermaidErd(umlCode);
+      currentModelDataset = generateModelDataset(g, parsedErd, randSeed);
+      currentModelParsedErd = parsedErd;
+      currentModelGranularity = g;
+      renderStep2DataView(true);
+      showToast('⚡ Toutes les tables du modèle ont été regénérées');
+    }
+
+    // ===== Modale Création d'un Nouveau Tableau (Étape 2) =====
+    function openAddSchemaModal() {
+      const modal = document.getElementById('add-schema-modal');
+      const titleInput = document.getElementById('custom-schema-title');
+      const descInput = document.getElementById('custom-schema-desc');
+      const codeInput = document.getElementById('custom-schema-code');
+      const errorDiv = document.getElementById('custom-schema-error');
+      if (!modal) return;
+
+      if (titleInput) titleInput.value = '';
+      if (descInput) descInput.value = '';
+      if (codeInput) codeInput.value = `erDiagram\n    TABLE_PRINCIPALE ||--o{ TABLE_SECONDAIRE : "1 vers N"\n    TABLE_PRINCIPALE {\n        string ID_CODE PK "C-2026-001"\n        string NOM_ELEMENT "Module Principal"\n        float QUANTITE "12.0"\n    }\n    TABLE_SECONDAIRE {\n        string ID_SOUS_ELEMENT PK "S-001"\n        string ID_CODE FK "C-2026-001"\n        string DESIGNATION "Pièce associée"\n    }`;
+      if (errorDiv) errorDiv.classList.add('hidden');
+
+      modal.classList.remove('hidden');
+      if (titleInput) titleInput.focus();
+    }
+
+    function closeAddSchemaModal() {
+      const modal = document.getElementById('add-schema-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function copyAiPromptForCustomSchema() {
+      const g = selections[2] || 'A';
+      const promptText = generateErdPrompt(g);
+      const labelEl = document.getElementById('custom-schema-copy-ai-label');
+      copyTextToClipboard(promptText).then(() => {
+        if (labelEl) {
+          const orig = labelEl.textContent;
+          labelEl.textContent = 'Prompt ERD copié !';
+          setTimeout(() => labelEl.textContent = orig, 1800);
         }
       });
     }
 
+    function submitCustomSchema() {
+      const titleInput = document.getElementById('custom-schema-title');
+      const descInput = document.getElementById('custom-schema-desc');
+      const codeInput = document.getElementById('custom-schema-code');
+      const errorDiv = document.getElementById('custom-schema-error');
+      const errorText = document.getElementById('custom-schema-error-text');
+
+      const title = titleInput ? titleInput.value.trim() : '';
+      const desc = descInput ? descInput.value.trim() : '';
+      let code = codeInput ? codeInput.value.trim() : '';
+
+      const showError = (msg) => {
+        if (errorDiv && errorText) {
+          errorText.textContent = msg;
+          errorDiv.classList.remove('hidden');
+        }
+      };
+
+      if (!title) {
+        showError("Veuillez saisir un titre pour le tableau.");
+        if (titleInput) titleInput.focus();
+        return;
+      }
+      if (!code) {
+        showError("Veuillez fournir le schéma relationnel Mermaid ERD.");
+        if (codeInput) codeInput.focus();
+        return;
+      }
+
+      code = code.replace(/^```(?:mermaid)?\s*\n?/i, '').replace(/\n?\s*```$/i, '').trim();
+
+      const parsed = parseMermaidErd(code);
+      if (Object.keys(parsed.entities).length === 0) {
+        showError("Le code Mermaid ne contient aucune entité valide ({ ... }).");
+        return;
+      }
+
+      const newId = 'custom_' + Date.now();
+      const newCustomSchema = {
+        id: newId,
+        title: title,
+        desc: desc || 'Schéma relationnel personnalisé',
+        code: code,
+        createdAt: Date.now()
+      };
+
+      customSchemas.push(newCustomSchema);
+      saveCustomSchemas();
+      saveMermaidSchema(newId, code);
+
+      renderCustomSchemaOptions();
+      selectGranularity(newId);
+      closeAddSchemaModal();
+      showToast(`✅ Nouveau tableau <b>${title}</b> créé et activé`);
+    }
+
+    function renderCustomSchemaOptions() {
+      const answersContainer = document.getElementById('step-2-answers');
+      if (!answersContainer) return;
+
+      document.querySelectorAll('.custom-schema-card').forEach(el => el.remove());
+
+      customSchemas.forEach(cs => {
+        const card = document.createElement('div');
+        card.id = `opt-2-${cs.id}`;
+        card.className = `custom-schema-card option-card glass-card p-3 rounded-xl border border-slate-200 cursor-pointer flex items-center justify-between gap-3 ${selections[2] === cs.id ? 'active' : ''}`;
+        card.onclick = () => selectGranularity(cs.id);
+
+        card.innerHTML = `
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between gap-1 mb-1">
+              <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[9.5px] font-bold bg-indigo-100 text-indigo-800">Personnalisé</span>
+              <button type="button" onclick="event.stopPropagation(); deleteCustomSchema('${cs.id}')" class="text-slate-400 hover:text-red-600 text-xs px-1" title="Supprimer ce tableau">✕</button>
+            </div>
+            <div class="text-xs md:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+              ${cs.title}
+            </div>
+            <p class="text-[11px] text-slate-600 mt-1 leading-snug">
+              ${cs.desc}
+            </p>
+          </div>
+          <div class="w-16 h-16 bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex items-center justify-center shrink-0 text-xl font-bold text-indigo-700">
+            📊
+          </div>
+        `;
+        answersContainer.appendChild(card);
+      });
+    }
+
+    function deleteCustomSchema(id) {
+      if (!confirm("Voulez-vous vraiment supprimer ce tableau personnalisé ?")) return;
+      customSchemas = customSchemas.filter(cs => cs.id !== id);
+      saveCustomSchemas();
+      try {
+        localStorage.removeItem(MERMAID_SCHEMA_STORAGE_KEY_PREFIX + id);
+      } catch (e) {}
+
+      if (selections[2] === id) {
+        selectGranularity('A');
+      } else {
+        renderCustomSchemaOptions();
+      }
+      showToast('🗑️ Tableau personnalisé supprimé');
+    }
+
+    // Gestion du basculement entre les vues ui, uml, erd, data
     function toggleSchemaView(view) {
       const svgView = document.getElementById('schema-svg-view');
       const mermaidView = document.getElementById('schema-mermaid-view');
       const promptView = document.getElementById('schema-prompt-view');
+      const dataView = document.getElementById('schema-data-view');
 
-      // Normalisation des vues : 'ui' (visuel svg), 'uml' (code mermaid), 'prompt' (<>)
+      // Normalisation des vues : 'ui', 'uml', 'erd', 'data'
       let targetMode = 'ui';
       if (view === 'uml' || view === 'mermaid') targetMode = 'uml';
-      else if (view === 'prompt' || view === '<>' || view === 'ai' || view === 'md') targetMode = 'prompt';
+      else if (view === 'erd' || view === 'prompt' || view === '<>' || view === 'ai' || view === 'md') targetMode = 'erd';
+      else if (view === 'data' || view === 'table') targetMode = 'data';
       else targetMode = 'ui';
 
       schemaViewMode = targetMode;
 
       if (svgView) svgView.classList.toggle('hidden', targetMode !== 'ui');
       if (mermaidView) mermaidView.classList.toggle('hidden', targetMode !== 'uml');
-      if (promptView) promptView.classList.toggle('hidden', targetMode !== 'prompt');
+      if (promptView) promptView.classList.toggle('hidden', targetMode !== 'erd');
+      if (dataView) dataView.classList.toggle('hidden', targetMode !== 'data');
 
       updateToggleButtons('schema-toggle', targetMode);
 
@@ -7140,14 +8394,20 @@ xychart-beta
         renderMermaidVisual(selections[2] || 'A');
       } else if (targetMode === 'uml') {
         updateMermaidCode(selections[2] || 'A');
-      } else if (targetMode === 'prompt') {
-        updateSchemaPromptView();
+      } else if (targetMode === 'erd') {
+        updateSchemaPromptView(selections[2] || 'A');
+      } else if (targetMode === 'data') {
+        renderStep2DataView();
       }
     }
 
     function drawSchema(granularity) {
       renderMermaidVisual(granularity);
       updateMermaidCode(granularity);
+      updateSchemaPromptView(granularity);
+      if (schemaViewMode === 'data') {
+        renderStep2DataView(true);
+      }
       const canvas = document.getElementById('schemaCanvas');
       if (!canvas || !canvas.getContext) return;
       const ctx = canvas.getContext('2d');
@@ -7958,6 +9218,7 @@ xychart-beta
       } catch (e) {}
 
       switchStep(startStep);
+      renderCustomSchemaOptions();
       drawSchema('A');
       buildNavDropdowns();
       updateCompatibilities();
