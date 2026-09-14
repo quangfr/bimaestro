@@ -401,10 +401,12 @@ Le modèle relie les MDTs et les Planning Levels aux Key Figures de calcul suiva
 
 > **Question de cadrage :** Quels visuels utiliser pour piloter les délais des demandes de maintenance (MDT_MAINTENANCE_REQUEST) et les engagements clients ?  
 > **En-tête de l'interface :** Étape 4 : Sélectionner les visuels pour le Délai (TAT)  
-> **Rendu Chart.js & Modes de Vue (Étape 4) :** Les cartes d'options disposent d'un panneau à droite piloté par un sélecteur à 3 modes :
+> **Rendu Chart.js & Modes de Vue (Étape 4) :** Les cartes d'options disposent d'un panneau à droite piloté par un sélecteur à 5 modes :
 > - **`ui` :** Vue graphique Chart.js interactive avec infobulles et étiquettes de données (`chartjs-plugin-datalabels`).
-> - **`js` :** Bloc de code copiable (`⧉`) contenant la configuration complète de l'objet Chart.js (`type`, `data`, `options`, `plugins`) utilisé pour créer le graphique.
-> - **`<>` :** Descriptif structuré technique et autoporteur en Markdown aligné sur l'interface et les possibilités natives de SAP-IBP et SAC (titre, composant SAC, modèle MDT IBP, axes X/Y, dimensions, mesures et Key Figures, règles et seuils d'alerte) avec bouton de copie rapide pour injection directe dans un prompt IA.
+> - **`config` :** Configuration JSON Chart.js éditable en temps réel avec répercussion instantanée sur le rendu graphique `ui` et persistance automatique.
+> - **`chartjs` :** Prompt IA permettant de générer une configuration Chart.js à partir des entrées calculées et des schémas ERD.
+> - **`visuels` :** Prompt IA structuré formulant 3 idées de visuels compatibles SAP-IBP / SAC.
+> - **`sap` :** Descriptif structuré technique et autoporteur en Markdown aligné sur l'interface et les possibilités natives de SAP-IBP et SAC (titre, composant SAC, modèle MDT IBP, axes X/Y, dimensions, mesures et Key Figures, règles et seuils d'alerte) avec bouton de copie rapide pour injection directe dans un prompt IA.
 
 ### Les 9 Graphiques Disponibles pour le Délai :
 - **4.A : TAT Médian & Bornes (P5-P95)**  
@@ -598,10 +600,12 @@ xychart-beta
 
 > **Question de cadrage :** Quels visuels choisir pour repérer les goulots d'intervention et la surcharge des ateliers (`S-XXX`) ?  
 > **En-tête de l'interface :** Étape 6 : Sélectionner les visuels pour la Saturation des Interventions en Atelier  
-> **Rendu Chart.js & Modes de Vue (Étape 6) :** Les cartes d'options disposent d'un panneau à droite piloté par un sélecteur à 3 modes :
+> **Rendu Chart.js & Modes de Vue (Étape 6) :** Les cartes d'options disposent d'un panneau à droite piloté par un sélecteur à 5 modes :
 > - **`ui` :** Vue graphique Chart.js interactive (dont Treemap 6.H avec drill-down au clic Moteurs ➔ Réparations et Heatmap 6.F par semaine).
-> - **`js` :** Bloc de code copiable (`⧉`) contenant la configuration complète de l'objet Chart.js (`type`, `data`, `options`, `plugins`) utilisé pour créer le graphique.
-> - **`<>` :** Descriptif technique structuré et autoporteur en Markdown aligné sur l'interface et les possibilités natives de SAP-IBP et SAC (titre, composant SAC, modèle MDT IBP, dimensions, mesures et Key Figures, filtres, règles et seuils d'alerte) avec bouton copier.
+> - **`config` :** Configuration JSON Chart.js éditable en temps réel avec répercussion instantanée sur le rendu graphique `ui` et persistance automatique.
+> - **`chartjs` :** Prompt IA permettant de générer une configuration Chart.js à partir des entrées calculées et des schémas ERD.
+> - **`visuels` :** Prompt IA structuré de génération de 3 idées de visuels SAP-IBP / SAC.
+> - **`sap` :** Descriptif technique structuré et autoporteur en Markdown aligné sur l'interface et les possibilités natives de SAP-IBP et SAC (titre, composant SAC, modèle MDT IBP, dimensions, mesures et Key Figures, filtres, règles et seuils d'alerte) avec bouton copier.
 
 ### Les 9 Graphiques de Saturation :
 - **6.A : Taux de Retard par Shop**  
@@ -851,8 +855,7 @@ Afin d'offrir une flexibilité maximale aux utilisateurs, experts métiers, arch
 
 2. **Panneaux Graphiques (Étapes 4 et 6) :**
    - Bouton `ui` : affiche le rendu canvas Chart.js interactif (rendu responsive haute performance).
-   - Bouton `config` : présente la configuration JSON de l'objet Chart.js (`copyChartConfigJson(step)`).
-   - Bouton `js` : expose le bloc de code JavaScript complet et copiable (`copyChartJsCode(step)`).
+   - Bouton `config` : présente la configuration JSON éditable de l'objet Chart.js avec synchronisation en direct sur la vue `ui` et persistance (`copyChartConfigJson(step)`).
    - Bouton `chartjs` : affiche le prompt IA permettant de générer une configuration Chart.js à partir des entrées calculées et des schémas 2.A/2.B (`copyChartJsPrompt(step)`).
    - Bouton `visuels` : expose le prompt IA structuré de génération de 3 idées de visuels SAP-IBP / SAC basé sur les étapes 1, 2, 3/5 et 4/6 (`copyVisuelsPrompt(step)`).
    - Bouton `sap` : affiche le prompt IA de transposition pas à pas vers SAP-IBP / SAC (`copyChartSapPrompt(step)`).

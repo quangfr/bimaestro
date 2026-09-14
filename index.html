@@ -676,13 +676,8 @@
                   A. Macro : Consolidation Demande
                 </div>
                 <p class="text-[11px] text-slate-600 mt-1 leading-snug">
-                  <strong>1 ligne = 1 demande globale de maintenance moteur.</strong> Simple MDT en-tête de dossier consolidant le délai total du moteur (TAT global) et le statut d'avancement.
+                  Vision globale par dossier de visite moteur pour le pilotage S&amp;OP, le respect des engagements contractuels (SLA clients) et le suivi du délai global (TAT Wing to Wing).
                 </p>
-                <div class="text-[10px] text-slate-500 mt-1 space-y-0.5">
-                  <div><span class="text-blue-800 font-semibold">Granularité :</span> <code>ID_DEMANDE + ENGINE_TYPE + DEMANDEUR + TIMEPROFILE</code>.</div>
-                  <div><span class="text-emerald-700 font-semibold">Attributs clés :</span> <code>DATE_DEMANDE, PROGRAMME_MOTEUR, NIVEAU_URGENCE_GLOBAL, COMMENTAIRE_GLOBAL</code>.</div>
-                  <div><span class="text-purple-700 font-semibold">Key Figures :</span> <code>Intervention Count, Urgency Weight, Total Engine TAT</code>.</div>
-                </div>
               </div>
               <div id="opt-2-A-illust" class="w-16 h-16 bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex items-center justify-center shrink-0">
                 <svg class="w-full h-full" viewBox="0 0 60 60">
@@ -715,14 +710,8 @@
                   B. Atelier : Lignes d'Intervention
                 </div>
                 <p class="text-[11px] text-slate-600 mt-1 leading-snug">
-                  <strong>1 ligne = 1 intervention unitaire sur atelier / poste.</strong> Compound MDT portant les types de réparation, les ateliers assignés (shops) et les gammes opératoires.
+                  Suivi détaillé par opération unitaire pour l'ordonnancement en atelier, l'équilibrage de charge sur les postes de travail et le contrôle des temps de gamme et files d'attente.
                 </p>
-                <div class="text-[10px] text-slate-500 mt-1 space-y-0.5">
-                  <div><span class="text-emerald-700 font-semibold">Granularité :</span> <code>ID_DEMANDE + ID_INTERVENTION + SHOP_ASSIGNE + TIMEPROFILE</code>.</div>
-                  <div><span class="text-blue-800 font-semibold">Règle Ateliers :</span> 8 types de réparation (2-3 modèles moteurs chacun), chaque shop gère 2-4 types.</div>
-                  <div><span class="text-indigo-700 font-semibold">Attributs clés :</span> <code>TYPE_REPARATION (T-XXXXXX), SHOP_ASSIGNE (S-XXX), DONNEES_TECHNIQUES</code>.</div>
-                  <div><span class="text-amber-700 font-semibold">Key Figures :</span> <code>Estimated Repair Duration, Shop Queue Time, Intervention TAT</code>.</div>
-                </div>
               </div>
               <div id="opt-2-B-illust" class="w-16 h-16 bg-white rounded-lg p-1.5 border border-slate-200 shadow-sm flex items-center justify-center shrink-0">
                 <svg class="w-full h-full" viewBox="0 0 60 60">
@@ -1158,8 +1147,7 @@
                 <div class="flex items-center gap-2 min-w-0">
                   <div id="step-4-chart-toggle" class="flex items-center rounded-lg border border-slate-200 bg-white shadow-xs overflow-hidden">
                     <button type="button" data-view="chart" onclick="toggleChartMode(4, 'chart')" title="Vue Graphique (ui)" class="px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition">ui</button>
-                    <button type="button" data-view="config" onclick="toggleChartMode(4, 'config')" title="Configuration JSON Chart.js (config)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">config</button>
-                    <button type="button" data-view="js" onclick="toggleChartMode(4, 'js')" title="Code JavaScript Chart.js (js)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">js</button>
+                    <button type="button" data-view="config" onclick="toggleChartMode(4, 'config')" title="Configuration JSON Chart.js éditable (config)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">config</button>
                     <button type="button" data-view="chartjs" onclick="toggleChartMode(4, 'chartjs')" title="Prompt IA génération Chart.js (chartjs)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">chartjs</button>
                     <button type="button" data-view="visuels" onclick="toggleChartMode(4, 'visuels')" title="Prompt IA suggestions de visuels SAP-IBP / SAC (visuels)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">visuels</button>
                     <button type="button" data-view="sap" onclick="toggleChartMode(4, 'sap')" title="Prompt IA SAP-IBP / SAC (sap)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">sap</button>
@@ -1180,25 +1168,18 @@
                   <canvas id="step-4-canvas" style="display: block; width: 100%; height: 100%;"></canvas>
                 </div>
               </div>
-              <!-- Vue Configuration JSON Chart.js (config) -->
-              <div id="step-4-config-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
+              <!-- Vue Configuration JSON Chart.js éditable (config) -->
+              <div id="step-4-config-view" class="hidden w-full flex-1 flex flex-col min-h-0 relative overflow-hidden my-1">
                 <div class="flex items-center justify-between pb-1 shrink-0">
-                  <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Configuration Chart.js (config)</span>
-                  <button type="button" id="step-4-config-copy-btn" onclick="copyChartConfigJson(4)" title="Copier la configuration Chart.js complète" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
-                    ⧉
-                  </button>
+                  <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Configuration Chart.js éditable (config)</span>
+                  <div class="flex items-center gap-1.5">
+                    <span id="step-4-config-saved-msg" class="text-[9.5px] text-emerald-600 font-semibold hidden">✓ Enregistré</span>
+                    <button type="button" id="step-4-config-copy-btn" onclick="copyChartConfigJson(4)" title="Copier la configuration Chart.js complète" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
+                      ⧉
+                    </button>
+                  </div>
                 </div>
-                <pre class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-2.5 overflow-x-auto overflow-y-auto text-[11px] leading-relaxed whitespace-pre-wrap select-all font-mono"><code id="step-4-config-code"></code></pre>
-              </div>
-              <!-- Vue Code Source JavaScript Chart.js (js) -->
-              <div id="step-4-js-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
-                <div class="flex items-center justify-between pb-1 shrink-0">
-                  <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Code JavaScript Chart.js (js)</span>
-                  <button type="button" id="step-4-js-copy-btn" onclick="copyChartJsCode(4)" title="Copier le code JavaScript" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
-                    ⧉
-                  </button>
-                </div>
-                <pre class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-2.5 overflow-x-auto overflow-y-auto text-[11px] leading-relaxed whitespace-pre-wrap select-all font-mono"><code id="step-4-js-code"></code></pre>
+                <textarea id="step-4-config-code" oninput="onChartConfigChange(4, this.value)" spellcheck="false" class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-3 font-mono text-[11px] leading-relaxed whitespace-pre resize-none focus:outline-hidden focus:ring-1 focus:ring-blue-700 border border-slate-700"></textarea>
               </div>
               <!-- Vue Prompt IA Génération Chart.js (chartjs) -->
               <div id="step-4-chartjs-prompt-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
@@ -1608,8 +1589,7 @@
                 <div class="flex items-center gap-2 min-w-0">
                   <div id="step-6-chart-toggle" class="flex items-center rounded-lg border border-slate-200 bg-white shadow-xs overflow-hidden">
                     <button type="button" data-view="chart" onclick="toggleChartMode(6, 'chart')" title="Vue Graphique (ui)" class="px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition">ui</button>
-                    <button type="button" data-view="config" onclick="toggleChartMode(6, 'config')" title="Configuration JSON Chart.js (config)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">config</button>
-                    <button type="button" data-view="js" onclick="toggleChartMode(6, 'js')" title="Code JavaScript Chart.js (js)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">js</button>
+                    <button type="button" data-view="config" onclick="toggleChartMode(6, 'config')" title="Configuration JSON Chart.js éditable (config)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">config</button>
                     <button type="button" data-view="chartjs" onclick="toggleChartMode(6, 'chartjs')" title="Prompt IA génération Chart.js (chartjs)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">chartjs</button>
                     <button type="button" data-view="visuels" onclick="toggleChartMode(6, 'visuels')" title="Prompt IA suggestions de visuels SAP-IBP / SAC (visuels)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">visuels</button>
                     <button type="button" data-view="sap" onclick="toggleChartMode(6, 'sap')" title="Prompt IA SAP-IBP / SAC (sap)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">sap</button>
@@ -1633,25 +1613,18 @@
                   <canvas id="step-6-canvas" style="display: block; width: 100%; height: 100%;"></canvas>
                 </div>
               </div>
-              <!-- Vue Configuration JSON Chart.js (config) -->
-              <div id="step-6-config-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
+              <!-- Vue Configuration JSON Chart.js éditable (config) -->
+              <div id="step-6-config-view" class="hidden w-full flex-1 flex flex-col min-h-0 relative overflow-hidden my-1">
                 <div class="flex items-center justify-between pb-1 shrink-0">
-                  <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Configuration Chart.js (config)</span>
-                  <button type="button" id="step-6-config-copy-btn" onclick="copyChartConfigJson(6)" title="Copier la configuration Chart.js complète" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
-                    ⧉
-                  </button>
+                  <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Configuration Chart.js éditable (config)</span>
+                  <div class="flex items-center gap-1.5">
+                    <span id="step-6-config-saved-msg" class="text-[9.5px] text-emerald-600 font-semibold hidden">✓ Enregistré</span>
+                    <button type="button" id="step-6-config-copy-btn" onclick="copyChartConfigJson(6)" title="Copier la configuration Chart.js complète" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
+                      ⧉
+                    </button>
+                  </div>
                 </div>
-                <pre class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-2.5 overflow-x-auto overflow-y-auto text-[11px] leading-relaxed whitespace-pre-wrap select-all font-mono"><code id="step-6-config-code"></code></pre>
-              </div>
-              <!-- Vue Code Source JavaScript Chart.js (js) -->
-              <div id="step-6-js-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
-                <div class="flex items-center justify-between pb-1 shrink-0">
-                  <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Code JavaScript Chart.js (js)</span>
-                  <button type="button" id="step-6-js-copy-btn" onclick="copyChartJsCode(6)" title="Copier le code JavaScript" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
-                    ⧉
-                  </button>
-                </div>
-                <pre class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-2.5 overflow-x-auto overflow-y-auto text-[11px] leading-relaxed whitespace-pre-wrap select-all font-mono"><code id="step-6-js-code"></code></pre>
+                <textarea id="step-6-config-code" oninput="onChartConfigChange(6, this.value)" spellcheck="false" class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-3 font-mono text-[11px] leading-relaxed whitespace-pre resize-none focus:outline-hidden focus:ring-1 focus:ring-blue-700 border border-slate-700"></textarea>
               </div>
               <!-- Vue Prompt IA Génération Chart.js (chartjs) -->
               <div id="step-6-chartjs-prompt-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
@@ -1796,15 +1769,18 @@
                 <div id="mock-chart-q4-container" class="flex-1 relative overflow-hidden">
                   <canvas id="mock-chart-q4-canvas"></canvas>
                 </div>
-                <!-- Vue Configuration Chart.js (config) -->
+                <!-- Vue Configuration Chart.js éditable (config) -->
                 <div id="mock-chart-q4-config-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-0.5">
                   <div class="flex items-center justify-between pb-1 shrink-0">
-                    <span class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">Configuration Chart.js (config)</span>
-                    <button type="button" id="mock-chart-q4-config-copy-btn" onclick="copyDashboardCardConfig(4)" title="Copier la configuration Chart.js" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
-                      ⧉
-                    </button>
+                    <span class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">Configuration Chart.js éditable (config)</span>
+                    <div class="flex items-center gap-1.5">
+                      <span id="mock-chart-q4-config-saved-msg" class="text-[8.5px] text-emerald-600 font-semibold hidden">✓ Enregistré</span>
+                      <button type="button" id="mock-chart-q4-config-copy-btn" onclick="copyDashboardCardConfig(4)" title="Copier la configuration Chart.js" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
+                        ⧉
+                      </button>
+                    </div>
                   </div>
-                  <pre class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-2 overflow-x-auto overflow-y-auto text-[10.5px] leading-relaxed whitespace-pre-wrap select-all font-mono"><code id="mock-chart-q4-config-code"></code></pre>
+                  <textarea id="mock-chart-q4-config-code" oninput="onDashboardConfigChange(4, this.value)" spellcheck="false" class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-2 font-mono text-[10.5px] leading-relaxed whitespace-pre resize-none focus:outline-hidden focus:ring-1 focus:ring-blue-700 border border-slate-700"></textarea>
                 </div>
                 <!-- Vue Transposition SAP-IBP / SAC (sap) -->
                 <div id="mock-chart-q4-sap-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-0.5">
@@ -1828,7 +1804,7 @@
                     </h3>
                     <div id="mock-chart-q6-toggle" class="flex items-center rounded border border-slate-200 bg-white shadow-2xs overflow-hidden shrink-0">
                       <button type="button" data-view="ui" onclick="toggleDashboardCardMode(6, 'ui')" title="Vue Graphique (ui)" class="px-1.5 py-0.5 text-[8.5px] font-bold bg-blue-800 text-white transition">ui</button>
-                      <button type="button" data-view="config" onclick="toggleDashboardCardMode(6, 'config')" title="Configuration JSON Chart.js (config)" class="px-1.5 py-0.5 text-[8.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">config</button>
+                      <button type="button" data-view="config" onclick="toggleDashboardCardMode(6, 'config')" title="Configuration JSON Chart.js éditable (config)" class="px-1.5 py-0.5 text-[8.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">config</button>
                       <button type="button" data-view="sap" onclick="toggleDashboardCardMode(6, 'sap')" title="Prompt Transposition SAP-IBP / SAC (sap)" class="px-1.5 py-0.5 text-[8.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">sap</button>
                     </div>
                   </div>
@@ -1838,15 +1814,18 @@
                 <div id="mock-chart-q6-container" class="flex-1 relative overflow-hidden">
                   <canvas id="mock-chart-q6-canvas"></canvas>
                 </div>
-                <!-- Vue Configuration Chart.js (config) -->
+                <!-- Vue Configuration Chart.js éditable (config) -->
                 <div id="mock-chart-q6-config-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-0.5">
                   <div class="flex items-center justify-between pb-1 shrink-0">
-                    <span class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">Configuration Chart.js (config)</span>
-                    <button type="button" id="mock-chart-q6-config-copy-btn" onclick="copyDashboardCardConfig(6)" title="Copier la configuration Chart.js" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
-                      ⧉
-                    </button>
+                    <span class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">Configuration Chart.js éditable (config)</span>
+                    <div class="flex items-center gap-1.5">
+                      <span id="mock-chart-q6-config-saved-msg" class="text-[8.5px] text-emerald-600 font-semibold hidden">✓ Enregistré</span>
+                      <button type="button" id="mock-chart-q6-config-copy-btn" onclick="copyDashboardCardConfig(6)" title="Copier la configuration Chart.js" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
+                        ⧉
+                      </button>
+                    </div>
                   </div>
-                  <pre class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-2 overflow-x-auto overflow-y-auto text-[10.5px] leading-relaxed whitespace-pre-wrap select-all font-mono"><code id="mock-chart-q6-config-code"></code></pre>
+                  <textarea id="mock-chart-q6-config-code" oninput="onDashboardConfigChange(6, this.value)" spellcheck="false" class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-2 font-mono text-[10.5px] leading-relaxed whitespace-pre resize-none focus:outline-hidden focus:ring-1 focus:ring-blue-700 border border-slate-700"></textarea>
                 </div>
                 <!-- Vue Transposition SAP-IBP / SAC (sap) -->
                 <div id="mock-chart-q6-sap-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-0.5">
@@ -5239,11 +5218,11 @@ const STEP_BUILDERS = {
 ENTRÉES
 {optBody}
 
-Modèles Relationnels ERD (2.A et 2.B) :
---- Modèle 2.A (Consolidation Demande) ---
+Modèles Relationnels ERD :
+--- Modèle (Consolidation Demande) ---
 {uml2A}
 
---- Modèle 2.B (Lignes d'Intervention) ---
+--- Modèle (Lignes d'Intervention) ---
 {uml2B}`;
 
     const VISUELS_PROMPT_TEMPLATE_STORAGE_KEY = 'maestro_visuels_prompt_template';
@@ -5323,7 +5302,7 @@ ENTRÉES
 
       let entries = [];
       entries.push(`--- Objectif Métier (Étape 1) ---\n${q1Text}`);
-      entries.push(`--- Modèles Relationnels ERD (Étapes 2.A et 2.B) ---\nModèle 2.A (Consolidation Demande) :\n\`\`\`mermaid\n${uml2A}\n\`\`\`\n\nModèle 2.B (Lignes d'Intervention) :\n\`\`\`mermaid\n${uml2B}\n\`\`\``);
+      entries.push(`--- Modèles Relationnels ERD ---\nModèle (Consolidation Demande) :\n\`\`\`mermaid\n${uml2A}\n\`\`\`\n\nModèle (Lignes d'Intervention) :\n\`\`\`mermaid\n${uml2B}\n\`\`\``);
 
       if (step === 3 || step === 5) {
         const opt = selections[step] || 'B';
@@ -5526,7 +5505,7 @@ ENTRÉES
     }
 
     function generateChartJsPrompt(step, opt) {
-      // Prompt basé sur les ENTRÉES (table de calculs & modèles ERD 2.A/2.B)
+      // Prompt basé sur les ENTRÉES (table de calculs & modèles ERD)
       const sourceStep = (step === 6) ? 5 : 3;
       let promptText = (typeof generateTableAiPrompt === 'function')
         ? generateTableAiPrompt(sourceStep)
@@ -5571,12 +5550,12 @@ ${jsCode}
 \`\`\`
 
 ENTRÉES :
---- Modèle 2.A (Consolidation Demande) ---
+--- Modèle (Consolidation Demande) ---
 \`\`\`mermaid
 ${uml2A}
 \`\`\`
 
---- Modèle 2.B (Lignes d'Intervention) ---
+--- Modèle (Lignes d'Intervention) ---
 \`\`\`mermaid
 ${uml2B}
 \`\`\``;
@@ -5598,37 +5577,56 @@ ${uml2B}
       renderChartAiView(step);
     }
 
+    function onChartConfigChange(step, val) {
+      const opt = selections[step];
+      const savedMsg = document.getElementById(`step-${step}-config-saved-msg`);
+      try {
+        const parsed = JSON.parse(val);
+        const key = getChartStorageKey(step, opt);
+        localStorage.setItem(key, val);
+        const canvas = document.getElementById('step-' + step + '-canvas');
+        if (canvas) {
+          renderChartInto(canvas, parsed);
+        }
+        if (savedMsg) {
+          savedMsg.textContent = '✓ Enregistré';
+          savedMsg.className = 'text-[9.5px] text-emerald-600 font-semibold inline';
+          clearTimeout(window[`_savedTimer_${step}`]);
+          window[`_savedTimer_${step}`] = setTimeout(() => {
+            savedMsg.className = 'text-[9.5px] text-emerald-600 font-semibold hidden';
+          }, 2000);
+        }
+      } catch (err) {
+        if (savedMsg) {
+          savedMsg.textContent = '⚠ JSON invalide';
+          savedMsg.className = 'text-[9.5px] text-rose-600 font-semibold inline';
+        }
+      }
+    }
+
     function renderChartConfigView(step) {
-      const codeEl = document.getElementById('step-' + step + '-config-code') || document.getElementById('step-' + step + '-js-code');
+      const codeEl = document.getElementById('step-' + step + '-config-code');
       if (!codeEl) return;
       const cfg = getActiveChartConfig(step);
       let text = '// Aucune configuration disponible';
       if (cfg) {
         text = JSON.stringify(cfg, null, 2);
       }
-      codeEl.textContent = text;
+      if (codeEl.tagName.toLowerCase() === 'textarea') {
+        codeEl.value = text;
+      } else {
+        codeEl.textContent = text;
+      }
     }
 
     function renderChartDataJsView(step) {
       renderChartConfigView(step);
     }
 
-    function renderChartJsCodeView(step) {
-      const codeEl = document.getElementById('step-' + step + '-js-code');
-      if (!codeEl) return;
-      codeEl.textContent = getChartJsSourceCode(step, selections[step]);
-    }
-
-    function renderChartJsPromptView(step) {
-      const codeEl = document.getElementById('step-' + step + '-chartjs-prompt-code');
-      if (!codeEl) return;
-      codeEl.textContent = generateChartJsPrompt(step, selections[step]);
-    }
-
     function copyChartConfigJson(step) {
-      const codeEl = document.getElementById('step-' + step + '-config-code') || document.getElementById('step-' + step + '-js-code');
-      const text = codeEl ? codeEl.textContent : '';
-      const btn = document.getElementById('step-' + step + '-config-copy-btn') || document.getElementById('step-' + step + '-js-copy-btn');
+      const codeEl = document.getElementById('step-' + step + '-config-code');
+      const text = codeEl ? (codeEl.value !== undefined ? codeEl.value : codeEl.textContent) : '';
+      const btn = document.getElementById('step-' + step + '-config-copy-btn');
       copyTextToClipboard(text).then(() => {
         if (btn) {
           btn.textContent = '✓';
@@ -5752,7 +5750,6 @@ ${uml2B}
 
       const chartView = document.getElementById('step-' + step + '-chart-view');
       const configView = document.getElementById('step-' + step + '-config-view');
-      const jsView = document.getElementById('step-' + step + '-js-view');
       const chartjsPromptView = document.getElementById('step-' + step + '-chartjs-prompt-view');
       const visuelsView = document.getElementById('step-' + step + '-visuels-view');
       const sapView = document.getElementById('step-' + step + '-sap-view') || document.getElementById('step-' + step + '-ai-view');
@@ -5770,15 +5767,12 @@ ${uml2B}
 
       if (chartView) chartView.classList.toggle('hidden', targetMode !== 'chart');
       if (configView) configView.classList.toggle('hidden', targetMode !== 'config');
-      if (jsView) jsView.classList.toggle('hidden', targetMode !== 'js');
       if (chartjsPromptView) chartjsPromptView.classList.toggle('hidden', targetMode !== 'chartjs');
       if (visuelsView) visuelsView.classList.toggle('hidden', targetMode !== 'visuels');
       if (sapView) sapView.classList.toggle('hidden', targetMode !== 'sap');
 
       if (targetMode === 'config') {
         renderChartConfigView(step);
-      } else if (targetMode === 'js') {
-        renderChartJsCodeView(step);
       } else if (targetMode === 'chartjs') {
         renderChartJsPromptView(step);
       } else if (targetMode === 'visuels') {
@@ -6057,8 +6051,8 @@ ${uml2B}
       const opt = selections[step];
       const key = getChartStorageKey(step, opt);
       localStorage.removeItem(key);
-      if (chartViewMode[step] === 'js' || chartViewMode[step] === 'code') {
-        renderChartDataJsView(step);
+      if (chartViewMode[step] === 'config') {
+        renderChartConfigView(step);
       }
       renderStepChart(step);
     }
@@ -6097,11 +6091,9 @@ ${uml2B}
         }
       }
 
-      // Synchroniser la vue ouverte (config, js, chartjs, visuels, sap)
+      // Synchroniser la vue ouverte (config, chartjs, visuels, sap)
       if (chartViewMode[step] === 'config') {
         renderChartConfigView(step);
-      } else if (chartViewMode[step] === 'js' || chartViewMode[step] === 'code') {
-        renderChartJsCodeView(step);
       } else if (chartViewMode[step] === 'chartjs') {
         renderChartJsPromptView(step);
       } else if (chartViewMode[step] === 'visuels') {
@@ -6145,16 +6137,57 @@ ${uml2B}
       }
     }
 
+    function onDashboardConfigChange(step, val) {
+      const opt = selections[step];
+      const savedMsg = document.getElementById(`mock-chart-q${step}-config-saved-msg`);
+      try {
+        const parsed = JSON.parse(val);
+        const key = getDashboardChartStorageKey(step, opt);
+        localStorage.setItem(key, val);
+        const canvas = document.getElementById('mock-chart-q' + step + '-canvas');
+        if (canvas) {
+          renderChartInto(canvas, parsed);
+        }
+        if (savedMsg) {
+          savedMsg.textContent = '✓ Enregistré';
+          savedMsg.className = 'text-[8.5px] text-emerald-600 font-semibold inline';
+          clearTimeout(window[`_dashSavedTimer_${step}`]);
+          window[`_dashSavedTimer_${step}`] = setTimeout(() => {
+            savedMsg.className = 'text-[8.5px] text-emerald-600 font-semibold hidden';
+          }, 2000);
+        }
+      } catch (err) {
+        if (savedMsg) {
+          savedMsg.textContent = '⚠ JSON invalide';
+          savedMsg.className = 'text-[8.5px] text-rose-600 font-semibold inline';
+        }
+      }
+    }
+
+    function getDashboardChartStorageKey(step, opt) {
+      return `maestro_dash_custom_chart_${step}_${opt}`;
+    }
+
     function renderDashboardCardConfig(step) {
       const codeEl = document.getElementById('mock-chart-q' + step + '-config-code');
       if (!codeEl) return;
       const opt = selections[step];
-      const spec = buildStepChartSpec(step, opt, getFilterMultiplier());
+      const key = getDashboardChartStorageKey(step, opt);
+      const saved = localStorage.getItem(key);
       let text = '// Aucune configuration disponible';
-      if (spec && spec.config) {
-        text = JSON.stringify(spec.config, null, 2);
+      if (saved) {
+        text = saved;
+      } else {
+        const spec = buildStepChartSpec(step, opt, getFilterMultiplier());
+        if (spec && spec.config) {
+          text = JSON.stringify(spec.config, null, 2);
+        }
       }
-      codeEl.textContent = text;
+      if (codeEl.tagName && codeEl.tagName.toLowerCase() === 'textarea') {
+        codeEl.value = text;
+      } else {
+        codeEl.textContent = text;
+      }
     }
 
     function renderDashboardCardSap(step) {
@@ -6166,7 +6199,7 @@ ${uml2B}
 
     function copyDashboardCardConfig(step) {
       const codeEl = document.getElementById('mock-chart-q' + step + '-config-code');
-      const text = codeEl ? codeEl.textContent : '';
+      const text = codeEl ? (codeEl.value !== undefined ? codeEl.value : codeEl.textContent) : '';
       const btn = document.getElementById('mock-chart-q' + step + '-config-copy-btn');
       copyTextToClipboard(text).then(() => {
         if (btn) {
@@ -6199,9 +6232,21 @@ ${uml2B}
     function renderDashboardChart(step) {
       const opt = selections[step];
       if (!opt) return;
+      const canvas = document.getElementById('mock-chart-q' + step + '-canvas');
+      if (!canvas) return;
+      const key = getDashboardChartStorageKey(step, opt);
+      const saved = localStorage.getItem(key);
+      if (saved) {
+        try {
+          const cfg = JSON.parse(saved);
+          renderChartInto(canvas, cfg);
+          return;
+        } catch (e) {
+          console.warn('Erreur lecture config dashboard sauvegardée:', e);
+        }
+      }
       const spec = buildStepChartSpec(step, opt, getFilterMultiplier());
       if (!spec) return;
-      const canvas = document.getElementById('mock-chart-q' + step + '-canvas');
       renderChartInto(canvas, spec.config);
     }
 
