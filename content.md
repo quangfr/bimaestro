@@ -104,6 +104,7 @@ Les fondations du modèle de données reposent sur deux structures maîtres : l'
 - **🔑 Clé Primaire (PK) :** `ID_DEMANDE` (ex. `D-2026-000123`, `D-2026-000124`)
 - **🏷️ Attributs de Gestion :**
   - `DEMANDEUR` : Compagnie cliente donneuse d'ordre (ex. `Air France (AFR)`, `Lufthansa (DLH)`, `Delta Air Lines (DAL)`).
+  - `DEMANDEUR_NAME` : Code court normalisé de la compagnie (`Enum`, ex. `EZY`, `AFR`, `ACH`, `RYA`).
   - `DATE_DEMANDE` : Horodatage / date d'émission de la demande (`Date / Timestamp`, ex. `2026-03-01`).
   - `PROGRAMME_MOTEUR` : Famille technologique de motorisation (ex. `CFM56`, `LEAP`, `GE90`).
   - `ENGINE_TYPE` : Modèle et variante exacte de propulseur (ex. `CFM56-5B`, `CFM56-7B`, `LEAP-1A26`, `LEAP-1B`).
@@ -115,8 +116,8 @@ Les fondations du modèle de données reposent sur deux structures maîtres : l'
 - **🔑 Clés Composites (PK) :** `ID_DEMANDE` + `ID_INTERVENTION` (ex. `D-2026-000123` + `I-2026-000123-01`, `I-2026-000123-02`)
 - **🏷️ Attributs Opérationnels :**
   - `TYPE_REPARATION` : Famille ou type de révision (`Enum` : `T-INSCND`, `T-AUBTUR`, `T-MAJLOU`, `T-BANESS`, `T-EQUROT`, `T-COMHOT`, `T-REVCAR`, `T-FODREP`).
-  - `PRECISION_AUTRE` : Précision technique documentée si le type est qualifié en `"Autre"` (`Enum` : `*Usinage aubes HP`, `Re-frettage spécifique`, `CND Ultra-sons`, `Traitement thermique`, `Équilibrage basse vitesse`).
-  - `SHOP_ASSIGNE` : Atelier industriel pressenti (`Enum` : `S-MON`, `S-VIL`, `S-CHL`, `S-BRU`, `S-SQY`, `S-GEN`, `S-BDX`, `S-TLS`, `S-LGG`, `S-CRE`).
+  - `PRECISION_AUTRE` : Précision technique documentée si le type est qualifié en `"Autre"` (`Enum` : `*Re-frettage spécifique`, `Usinage aubes HP`, `CND Ultra-sons`, `Traitement thermique`, `Équilibrage dynamique`).
+  - `SHOP_NAME` : Atelier industriel pressenti (`Enum` : `S-MON`, `S-VIL`, `S-CHL`, `S-BRU`, `S-SQY`, `S-GEN`, `S-BDX`, `S-TLS`, `S-LGG`, `S-CRE`).
   - `DONNEES_TECHNIQUES` : Référence technique, manuel de révision OEM ou URL du rapport d'inspection / CND.
 
 ---
@@ -132,7 +133,7 @@ Le panneau latéral droit de l'Étape 2 propose un sélecteur à 4 vues :
   - **Pagination intégrée :** Affichage strict de 15 lignes par page avec pagination numérique et résumé (`[Préc.] [1] [2]... [Suiv.]`).
   - **Redimensionnement des colonnes :** Support du redimensionnement interactif Grid.js (`resizable: true`).
   - **Jointures & Drill-down :**
-    - Pour les relations $N-1$ : affichage d'une colonne unique portant la valeur du premier champ contenant `NOM` ou le libellé du premier champ non PK/FK de la table liée (les autres colonnes de la table liée ne sont pas affichées pour alléger la vue).
+    - Pour les relations $N-1$ : affichage d'une colonne unique portant la valeur du premier champ dont le nom contient `NOM` ou se termine par `_NAME` (ex. `STATION_NAME`, `SHOP_NAME`) ou le libellé du premier champ non PK/FK de la table liée (les autres colonnes de la table liée ne sont pas affichées pour alléger la vue).
     - Pour les relations $1-N$ : affichage d'un badge cliquable indiquant le nombre d'enregistrements liés (ex. `X interventions ↗`) ouvrant la vue filtrée de la table enfant avec fil d'Ariane de retour (`← Table principale`).
   - **Générateur de Données Déduit Dynamiquement (✎) :** Modale de paramétrage avec sélection de la table et ajustement des règles de génération :
     - *Nombres :* min, max, moyenne (valeur par défaut issue de l'UML $\pm 50\%$).
@@ -165,6 +166,7 @@ Le modèle propose deux perspectives décisionnelles complémentaires selon le n
 | **`MDT_MAINTENANCE_REQUEST`** | | **Fait / MDT Central** | **1 ligne = 1 demande globale de maintenance moteur** | `D-2026-000123` |
 | ↳ `ID_DEMANDE` | `String` (`D-YYYY-XXXXXX`)| **PK** (1:1) | Identifiant unique de la demande | `"D-2026-000123"` |
 | ↳ `DEMANDEUR` | `String` (Code/Nom Client)| Attribut client | Compagnie aérienne propriétaire ou opératrice | `"Air France (AFR)"` |
+| ↳ `DEMANDEUR_NAME` | `String` (`Enum`) | Code client | Code court normalisé de la compagnie donneuse d'ordre (`*EZY`, `AFR`, `ACH`, `RYA`) | `"EZY"` |
 | ↳ `DATE_DEMANDE` | `Date` (`YYYY-MM-DD`) | Attribut temporel | Date d'émission de la demande d'intervention | `"2026-03-01"` |
 | ↳ `PROGRAMME_MOTEUR` | `String` (`Enum`) | Famille moteur | Famille technologique globale de motorisation | `"LEAP"` / `"CFM56"` |
 | ↳ `ENGINE_TYPE` | `String` (Modèle exact) | Clé technique | Variante précise de moteur d'aéronef | `"LEAP-1A26"` |
@@ -183,6 +185,7 @@ erDiagram
     MDT_MAINTENANCE_REQUEST ["Demande de Maintenance Moteur"] {
         string ID_DEMANDE PK "D-2026-000123"
         enum DEMANDEUR "*Air France (AFR) | Lufthansa (DLH) | Delta Air Lines (DAL) | EasyJet (EZY) | Air China (CCA) | Emirates (UAE) | Singapore Airlines (SIA)"
+        enum DEMANDEUR_NAME "*EZY | AFR | ACH | RYA"
         date DATE_DEMANDE "2026-03-01"
         enum PROGRAMME_MOTEUR "*LEAP | CFM56 | GE90"
         enum ENGINE_TYPE "*LEAP-1A26 | CFM56-7B | CFM56-5B | LEAP-1B | GE90-115B"
@@ -208,8 +211,8 @@ erDiagram
         string ID_INTERVENTION PK "I-2026-000123-01"
         string ID_DEMANDE FK "D-2026-000123"
         enum TYPE_REPARATION "*T-AUBTUR | T-INSCND | T-MAJLOU | T-BANESS | T-EQUROT | T-COMHOT | T-REVCAR | T-FODREP"
-        enum PRECISION_AUTRE "*Usinage aubes HP | Re-frettage spécifique | CND Ultra-sons | Traitement thermique | Équilibrage basse vitesse"
-        enum SHOP_ASSIGNE "*S-MON | S-VIL | S-CHL | S-BRU | S-SQY | S-GEN | S-BDX | S-TLS | S-LGG | S-CRE"
+        enum PRECISION_AUTRE "*Re-frettage spécifique | Usinage aubes HP | CND Ultra-sons | Traitement thermique | Équilibrage dynamique"
+        enum SHOP_NAME "*S-MON | S-VIL | S-CHL | S-BRU | S-SQY | S-GEN | S-BDX | S-TLS | S-LGG | S-CRE"
         string DONNEES_TECHNIQUES "DOC-NDT-2026-442"
         float INTERVENTION_TAT "32.5 h"
     }
@@ -218,9 +221,9 @@ erDiagram
 ---
 
 #### 🎯 Option 2.B : Atelier — Lignes d'Intervention (Granularité Fine)
-- **Granularité :** 1 ligne = 1 intervention unitaire sur une **station de réparation** (`STATION_ASSIGNEE`) située dans un **shop** (`SHOP_ASSIGNE`).
+- **Granularité :** 1 ligne = 1 intervention unitaire sur une **station de réparation** (`STATION_NAME`) située dans un **shop** (`SHOP_NAME`).
 - **👥 Personas Cibles :** `SHPL`, `FTM`, `NTPL`, `EOWN`, `DGOV`.
-- **🧩 Dimensions Clés :** `ID_DEMANDE` + `ID_INTERVENTION` + `STATION_ASSIGNEE` (`S-XXX-YY`) + `SHOP_ASSIGNE` (`S-XXX`) + `TIMEPROFILE` (Semaine ou Jour).
+- **🧩 Dimensions Clés :** `ID_DEMANDE` + `ID_INTERVENTION` + `STATION_NAME` (`S-XXX-YY`) + `SHOP_NAME` (`S-XXX`) + `TIMEPROFILE` (Semaine ou Jour).
 - **📊 Usage SAP IBP & Métier :**
   - Stockage des dates réelles de démarrage, d'attente et de clôture de chaque opération unitaire.
   - Ordonnancement fin par station (`S-XXX-YY`) et équilibrage de charge au sein de chaque shop (`S-XXX`).
@@ -235,21 +238,19 @@ erDiagram
 | ↳ `ID_INTERVENTION` | `String` (`I-YYYY-XXXXXX-ZZ`)| **PK composite** (2/2)| Numéro d'opération unitaire dans le dossier | `"I-2026-000123-01"` |
 | ↳ `TYPE_REPARATION` | `String` (`Enum`) | Type de réparation | Gamme technique parmi les 8 types (`T-XXXXXX`) | `"T-AUBTUR"` |
 | ↳ `PRECISION_AUTRE` | `String` | Précision technique | Détail obligatoire si `TYPE_REPARATION` = "Autre" | `""` (ou `"Re-frettage spécifique"`) |
-| ↳ `STATION_ASSIGNEE` | `String` (`Enum`) | **FK vers STATION** | Station de réparation assignée (`S-XXX-YY`, 3-10 par shop) | `"S-MON-01"` |
-| ↳ `SHOP_ASSIGNE` | `String` (`Enum`) | **FK vers SHOP** | Shop industriel de rattachement (`S-XXX`, 10 sites) | `"S-MON"` |
+| ↳ `STATION_NAME` | `String` (`Enum`) | **FK vers STATION** | Station de réparation assignée (`S-XXX-YY`, 3-10 par shop) | `"S-MON-01"` |
+| ↳ `SHOP_NAME` | `String` (`Enum`) | **FK vers SHOP** | Shop industriel de rattachement (`S-XXX`, 10 sites) | `"S-MON"` |
 | ↳ `DONNEES_TECHNIQUES`| `String` (Lien / Réf) | Spécification Part-145| Référence ou URL du rapport d'inspection / procédure OEM | `"DOC-NDT-2026-442"` |
 | ↳ `ESTIMATED_REPAIR_DURATION` | `Float` (Heures) | **Key Figure** théorique| Durée standard de gamme estimée selon le type de réparation | `18.5` heures |
 | ↳ `SHOP_QUEUE_TIME` | `Float` (Heures) | **Key Figure** dynamique| Temps d'attente file calculé selon la charge station et shop | `12.0` heures |
 | ↳ `INTERVENTION_TAT` | `Float` (Heures) | **Key Figure** totale | Somme attente + durée traitement + transits éventuels | `32.5` heures |
 | **`STATION`** | | **Dimension Postes** | **3 à 10 stations de réparation par shop (`S-XXX-YY`)** | `S-MON-01` |
-| ↳ `ID_STATION` | `String` (`S-XXX-YY`) | **PK unique** | Identifiant de la station (`XXX` = shop, `YY` = numéro station) | `"S-MON-01"` |
-| ↳ `SHOP_ASSIGNE` | `String` (`S-XXX`) | **FK vers SHOP** | Shop parent hébergeant la station | `"S-MON"` |
-| ↳ `NOM_STATION` | `String` (`Enum`) | Libellé équipement | Nom de la baie, banc ou machine de la station (`*Usinage Aubes HP Tour CN`, `Frettage Manches & Carters`, `CND Ultra-sons`, ...) | `"Usinage Aubes HP Tour CN"` |
+| ↳ `STATION_NAME` | `String` (`Enum`) | **PK unique** | Identifiant de la station (`XXX` = shop, `YY` = numéro station) | `"S-MON-01"` |
+| ↳ `SHOP_NAME` | `String` (`S-XXX`) | **FK vers SHOP** | Shop parent hébergeant la station | `"S-MON"` |
+| ↳ `SEUIL_SATURATION` | `Float` (%) | Seuil critique | Seuil de saturation au-delà duquel la station est considérée en surcharge | `85.0` |
 | ↳ `TYPE_REPARATION` | `String` (`Enum`) | Spécialité | Type d'intervention opéré sur la station | `"T-AUBTUR"` |
-| ↳ `SEUIL_SATURATION` | `Float` (%) | Paramètre critique | Seuil d'alerte de saturation capacitaire | `85.0` % |
 | **`SHOP`** | | **Dimension Sites** | **10 ateliers industriels SAE (`S-XXX`)** | `S-MON` |
-| ↳ `SHOP_ASSIGNE` | `String` (`S-XXX`) | **PK unique** | Code trigramme du shop | `"S-MON"` |
-| ↳ `NOM_ATELIER` | `String` (`Enum`) | Libellé site | Implantation géographique du centre MRO (`*Montereau`, `Villaroche`, `Châtellerault`, `Bruxelles`, `Toulouse`, ...) | `"Montereau"` |
+| ↳ `SHOP_NAME` | `String` (`Enum`) | **PK unique** | Code trigramme du site SAE (`S-XXX`, 10 sites) | `"S-MON"` |
 | ↳ `NB_STATIONS` | `Integer` | Nombre de postes | Volume de stations hébergées (3 à 10 stations) | `6` |
 | ↳ `CAPACITE_HEBDO` | `Float` (Heures) | Capacité nominale | Heures d'ouverture réseau disponibles par semaine | `1450.0` heures |
 
@@ -286,29 +287,28 @@ erDiagram
         string ID_INTERVENTION PK "I-2026-000123-01"
         enum TYPE_REPARATION "*T-AUBTUR | T-INSCND | T-MAJLOU | T-BANESS | T-EQUROT | T-COMHOT | T-REVCAR | T-FODREP"
         enum PRECISION_AUTRE "*Re-frettage spécifique | Usinage aubes HP | CND Ultra-sons | Traitement thermique | Équilibrage dynamique"
-        enum STATION_ASSIGNEE FK "*S-MON-01 | S-MON-02 | S-MON-03 | S-VIL-01 | S-VIL-02 | S-CHL-01 | S-TLS-01"
-        enum SHOP_ASSIGNE FK "*S-MON | S-VIL | S-CHL | S-BRU | S-SQY | S-GEN | S-BDX | S-TLS | S-LGG | S-CRE"
+        enum STATION_NAME FK "*S-MON-01 | S-MON-02 | S-MON-03 | S-VIL-01 | S-VIL-02 | S-CHL-01 | S-TLS-01"
+        enum SHOP_NAME FK "*S-MON | S-VIL | S-CHL | S-BRU | S-SQY | S-GEN | S-BDX | S-TLS | S-LGG | S-CRE"
         string DONNEES_TECHNIQUES "DOC-NDT-2026-442"
         float ESTIMATED_REPAIR_DURATION "18.5 h"
         float SHOP_QUEUE_TIME "12.0 h"
         float INTERVENTION_TAT "32.5 h"
     }
     STATION ["Station de Réparation"] {
-        string ID_STATION PK "S-MON-01"
-        enum SHOP_ASSIGNE FK "*S-MON | S-VIL | S-CHL | S-BRU | S-SQY | S-GEN | S-BDX | S-TLS | S-LGG | S-CRE"
-        enum NOM_STATION "*Usinage Aubes HP Tour CN | Frettage Manches & Carters | CND Ultra-sons | Équilibrage Basse Vitesse | Montage Final Baie"
+        enum STATION_NAME PK "*S-MON-01 | S-MON-02 | S-MON-03 | S-VIL-01 | S-VIL-02 | S-CHL-01 | S-TLS-01"
+        enum SHOP_NAME FK "*S-MON | S-VIL | S-CHL | S-BRU | S-SQY | S-GEN | S-BDX | S-TLS | S-LGG | S-CRE"
         enum TYPE_REPARATION "*T-AUBTUR | T-INSCND | T-MAJLOU | T-BANESS | T-EQUROT | T-COMHOT | T-REVCAR | T-FODREP"
         float SEUIL_SATURATION "85.0 %"
     }
     SHOP ["Atelier (Shop)"] {
-        enum SHOP_ASSIGNE PK "*S-MON | S-VIL | S-CHL | S-BRU | S-SQY | S-GEN | S-BDX | S-TLS | S-LGG | S-CRE"
-        enum NOM_ATELIER "*Montereau | Villaroche | Châtellerault | Bruxelles | Toulouse | Saint-Quentin | Gennevilliers | Bordeaux | Liège | Le Creusot"
+        enum SHOP_NAME PK "*S-MON | S-VIL | S-CHL | S-BRU | S-SQY | S-GEN | S-BDX | S-TLS | S-LGG | S-CRE"
         int NB_STATIONS "6"
         float CAPACITE_HEBDO "1450.0 h"
     }
     MDT_MAINTENANCE_REQUEST ["Demande de Maintenance Moteur"] {
         string ID_DEMANDE PK "D-2026-000123"
         enum DEMANDEUR "*Air France (AFR) | Lufthansa (DLH) | Delta Air Lines (DAL) | EasyJet (EZY) | Air China (CCA) | Emirates (UAE) | Singapore Airlines (SIA)"
+        enum DEMANDEUR_NAME "*EZY | AFR | ACH | RYA"
         enum ENGINE_TYPE "*LEAP-1A26 | CFM56-7B | CFM56-5B | LEAP-1B | GE90-115B"
         enum NIVEAU_URGENCE_GLOBAL "*Haute (AOG) | Moyenne | Basse"
     }
@@ -345,7 +345,7 @@ Le modèle relie les MDTs et les Planning Levels aux Key Figures de calcul suiva
    - *Définition :* Durée standard théorique estimée pour le `TYPE_REPARATION` et l'`ENGINE_TYPE` retenus.
    - *Source :* Barème méthode constructeur issu de la table de référence dimensionnelle.
 2. **`Shop Queue Time`** :
-   - *Définition :* Temps d'attente estimé dans le `SHOP_ASSIGNE`, calculé en fonction de la charge instantanée et de l'engorgement de l'atelier face au seuil critique (85%).
+   - *Définition :* Temps d'attente estimé dans le `SHOP_NAME`, calculé en fonction de la charge instantanée et de l'engorgement de l'atelier face au seuil critique (85%).
    - *Formule :* `Shop_Queue_Time = f(Taux_Occupation_Shop, Seuil_Saturation)`.
 3. **`Intervention TAT`** :
    - *Définition :* Turn Around Time unitaire de l'opération d'atelier.
@@ -405,7 +405,7 @@ Le modèle relie les MDTs et les Planning Levels aux Key Figures de calcul suiva
 
 #### Extrait B : Lignes d'Intervention (MDT_INTERVENTION) × S&OP (3.A D-SOP)
 ```text
-| ID_DEMANDE     | ID_INTERVENTION  | TYPE_REPARATION | SHOP_ASSIGNE | ESTIMATED_REPAIR_DURATION | SHOP_QUEUE_TIME | INTERVENTION_TAT |
+| ID_DEMANDE     | ID_INTERVENTION  | TYPE_REPARATION | SHOP_NAME | ESTIMATED_REPAIR_DURATION | SHOP_QUEUE_TIME | INTERVENTION_TAT |
 | :------------- | :--------------- | :-------------- | :----------- | :------------------------ | :-------------- | :--------------- |
 | D-2026-000123  | I-2026-000123-01 | T-INSCND        | S-MON        | 18.5 h                    | + 12.0 h        | 30.5 h           |
 | D-2026-000123  | I-2026-000123-02 | T-AUBTUR        | S-MON        | 28.0 h                    | + 8.5 h         | 36.5 h           |
@@ -604,7 +604,7 @@ xychart-beta
 
 #### Extrait A : Lignes d'Intervention (MDT_INTERVENTION) × Capacité S&OP par Shop (5.A C-SOP)
 ```text
-| SHOP_ASSIGNE | TYPE_REPARATION | INTERVENTIONS_PLANIFIEES | CAPACITE_ALLOUEE | TENSION_PREVISIONNELLE  |
+| SHOP_NAME | TYPE_REPARATION | INTERVENTIONS_PLANIFIEES | CAPACITE_ALLOUEE | TENSION_PREVISIONNELLE  |
 | :----------- | :-------------- | :----------------------- | :--------------- | :---------------------- |
 | S-MON        | T-AUBTUR        | 68 interventions         | 72 slots max     | 94.4 % (Tendu)          |
 | S-VIL        | T-MAJLOU        | 42 interventions         | 48 slots max     | 87.5 % (OK)             |
@@ -614,7 +614,7 @@ xychart-beta
 
 #### Extrait B : Lignes d'Intervention (MDT_INTERVENTION) × Projection Statistique / WIP en Shop (5.B C-STA)
 ```text
-| SHOP_ASSIGNE | TYPE_REPARATION | INTERVENTIONS_WIP | POSTES_STATION_TAMPON | TAUX_OCCUPATION |
+| SHOP_NAME | TYPE_REPARATION | INTERVENTIONS_WIP | POSTES_STATION_TAMPON | TAUX_OCCUPATION |
 | :----------- | :-------------- | :---------------- | :-------------------- | :-------------- |
 | S-MON        | T-AUBTUR        | 22 en cours       | USI-04, CND-02        | 91.7 % ⚠️       |
 | S-VIL        | T-EQUROT        | 11 en cours       | EQU-01, USI-01        | 68.8 %          |
@@ -640,13 +640,13 @@ xychart-beta
 - **6.A : Taux de Retard par Shop**  
   *Description métier :* Pourcentage d'interventions en retard par atelier MRO face au seuil contractuel de tolérance de 10%.  
   *Personas cibles :* SHPL & NTPL.  
-  *Analytics SAC / IBP :* Column / Bar Chart avec Seuil de Tolérance (10%) | Axes : X = `SHOP_ASSIGNE` (`S-XXX`) • Y = `% INTERVENTION_DELAY_RATE` | Dimensions : `SHOP_ASSIGNE` (S-MON, S-VIL, S-CHL, S-BRU, S-TLS, S-SQY, S-GEN, S-BDX, S-LGG, S-CRE) | Mesures : `INTERVENTION_DELAY_RATE` (%), `SEUIL_RETARD_TOLERANCE` (10%), `TOTAL_INTERVENTIONS_COUNT`.  
+  *Analytics SAC / IBP :* Column / Bar Chart avec Seuil de Tolérance (10%) | Axes : X = `SHOP_NAME` (`S-XXX`) • Y = `% INTERVENTION_DELAY_RATE` | Dimensions : `SHOP_NAME` (S-MON, S-VIL, S-CHL, S-BRU, S-TLS, S-SQY, S-GEN, S-BDX, S-LGG, S-CRE) | Mesures : `INTERVENTION_DELAY_RATE` (%), `SEUIL_RETARD_TOLERANCE` (10%), `TOTAL_INTERVENTIONS_COUNT`.  
   *Rendu :* Barres de taux de retard par atelier face à la ligne de seuil de tolérance (10%), avec coloration d'alerte (rouge si ≥ 15%, ambre si ≥ 10%).  
   *Badges personas & usages :* `SHPL`, `NTPL`, `DGOV`.
 - **6.B : Retards par Type & Shop**  
   *Description métier :* Part des interventions subissant un aléa ou décalage imprévu selon la spécialité technique et l'atelier.  
   *Personas cibles :* FTM & DMMG.  
-  *Analytics SAC / IBP :* Clustered Column Chart (Comparatif Types d'Intervention) | Axes : X = `TYPE_REPARATION` (`T-XXXXXX`) • Y = `% UNPLANNED_DELAY_RATE` | Dimensions : `TYPE_REPARATION` (T-INSCND, T-AUBTUR, T-BANESS, T-EQUROT), `SHOP_ASSIGNE` (S-MON, S-VIL, S-BRU) | Mesures : `DELAYED_INTERVENTIONS_PCT`, `AVG_SLIPPAGE_HOURS`.  
+  *Analytics SAC / IBP :* Clustered Column Chart (Comparatif Types d'Intervention) | Axes : X = `TYPE_REPARATION` (`T-XXXXXX`) • Y = `% UNPLANNED_DELAY_RATE` | Dimensions : `TYPE_REPARATION` (T-INSCND, T-AUBTUR, T-BANESS, T-EQUROT), `SHOP_NAME` (S-MON, S-VIL, S-BRU) | Mesures : `DELAYED_INTERVENTIONS_PCT`, `AVG_SLIPPAGE_HOURS`.  
   *Rendu :* Barres groupées par type d'intervention et atelier avec pourcentages affichés par défaut.  
   *Badges personas & usages :* `FTM`, `DMMG`, `SHPL`, `DGOV`.
 - **6.C : Routes de Transfert Inter-Shops**  
@@ -658,19 +658,19 @@ xychart-beta
 - **6.D : Décomposition du Délai par Shop**  
   *Description métier :* Décomposition du temps de cycle moyen en heures par atelier : attente file/pièces, usinage effectif et transit.  
   *Personas cibles :* SHPL & Continuous Improvement.  
-  *Analytics SAC / IBP :* Horizontal Stacked Bar Chart (Délai Moyen Décomposé) | Axes : X = Heures Moyennes de Traitement (h) • Y = `SHOP_ASSIGNE` (`S-XXX`) | Dimensions : `SHOP_ASSIGNE` (10 shops SAE), `STATUT_TEMPS` (Attente File/Pièces, Réparation Effective, Transfert Logistique) | Mesures : `AVG_QUEUE_HOURS`, `AVG_REPAIR_HOURS`, `AVG_TRANSIT_HOURS`, `TOTAL_INTERVENTION_HOURS`.  
+  *Analytics SAC / IBP :* Horizontal Stacked Bar Chart (Délai Moyen Décomposé) | Axes : X = Heures Moyennes de Traitement (h) • Y = `SHOP_NAME` (`S-XXX`) | Dimensions : `SHOP_NAME` (10 shops SAE), `STATUT_TEMPS` (Attente File/Pièces, Réparation Effective, Transfert Logistique) | Mesures : `AVG_QUEUE_HOURS`, `AVG_REPAIR_HOURS`, `AVG_TRANSIT_HOURS`, `TOTAL_INTERVENTION_HOURS`.  
   *Rendu :* Barres horizontales empilées décomposant pour chaque shop le délai moyen en attente file/pièces (ambre), usinage/réparation effectif (bleu) et transit logistique (violet).  
   *Badges personas & usages :* `SHPL`, `DMMG`, `DGOV`.
 - **6.E : Taux de Charge par Station**  
   *Description métier :* Taux d'occupation de chaque banc et machine de réparation face au seuil d'engorgement critique de 85%.  
   *Personas cibles :* SHPL & NTPL.  
-  *Analytics SAC / IBP :* Horizontal Bar Chart avec Threshold Line (Seuil de Saturation 85%) | Axes : X = `TAUX_OCCUPATION_STATION` (%) • Y = `ID_STATION` (`S-XXX-YY`) | Dimensions : `ID_STATION` (S-MON-01 à S-CRE-03, 3 à 10 stations par shop), `SHOP_ASSIGNE` (`S-XXX`) | Mesures : `TAUX_OCCUPATION_STATION` (%), `SEUIL_SATURATION_CRITIQUE` (85%).  
+  *Analytics SAC / IBP :* Horizontal Bar Chart avec Threshold Line (Seuil de Saturation 85%) | Axes : X = `TAUX_OCCUPATION_STATION` (%) • Y = `STATION_NAME` (`S-XXX-YY`) | Dimensions : `STATION_NAME` (S-MON-01 à S-CRE-03, 3 à 10 stations par shop), `SHOP_NAME` (`S-XXX`) | Mesures : `TAUX_OCCUPATION_STATION` (%), `SEUIL_SATURATION_CRITIQUE` (85%).  
   *Rendu :* Barres horizontales de charge par station face à la ligne rouge critique des 85%, isolant les machines et baies goulots.  
   *Badges personas & usages :* `SHPL`, `NTPL`.
 - **6.F : Heatmap d'Occupation des Stations**  
   *Description métier :* Intensité hebdomadaire de charge de chaque poste de travail sur les semaines S34 à S42 pour cibler les goulots.  
   *Personas cibles :* SHPL & Continuous Improvement.  
-  *Analytics SAC / IBP :* Heatmap Matrix SAC (Saturation Stations Shop) | Axes : X = Semaines Calendaires (S34 à S42) • Y = Stations de Réparation du Shop (`S-MON-YY`) | Dimensions : `SHOP_ASSIGNE` (S-MON), `ID_STATION` (S-MON-01 à S-MON-06), `SEMAINE_CALENDAIRE` (S34..S42) | Mesures : `WORKLOAD_TENSION_RATE` (%), `SEUIL_SATURATION_CRITIQUE` (85%).  
+  *Analytics SAC / IBP :* Heatmap Matrix SAC (Saturation Stations Shop) | Axes : X = Semaines Calendaires (S34 à S42) • Y = Stations de Réparation du Shop (`S-MON-YY`) | Dimensions : `SHOP_NAME` (S-MON), `STATION_NAME` (S-MON-01 à S-MON-06), `SEMAINE_CALENDAIRE` (S34..S42) | Mesures : `WORKLOAD_TENSION_RATE` (%), `SEUIL_SATURATION_CRITIQUE` (85%).  
   *Rendu :* Matrice thermique croisant les stations du shop (en Y) et les semaines calendaires S34 à S42 (en X) avec code couleur de saturation (rouge ≥ 90%, ambre ≥ 85%).  
   *Badges personas & usages :* `SHPL`, `NTPL`, `DMMG`.
 - **6.G : Entrées vs Sorties (WIP)**  
