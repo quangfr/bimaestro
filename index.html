@@ -7962,16 +7962,13 @@ SORTIE
       // 4. Numérique (float, int, number)
       if (type.includes('float') || type.includes('int') || type.includes('num') || type.includes('double')) {
         const numMatch = comment.match(/-?\d+(?:\.\d+)?/);
-        let numVal = numMatch ? parseFloat(numMatch[0]) : 10;
-        if (isNaN(numVal)) numVal = 10;
+        let numVal = numMatch ? parseFloat(numMatch[0]) : NaN;
+        const guessedSuffix = numMatch ? comment.replace(/-?\d+(?:\.\d+)?/, '').trim() : '';
+        if (isNaN(numVal)) numVal = Math.round(20 + Math.random() * 60); // nombre invalide → moyenne aléatoire 20-80
         const isFloat = type.includes('float') || type.includes('double') || (comment.includes('.') && !type.includes('int'));
-        const minVal = parseFloat((numVal * 0.5).toFixed(1));
-        const maxVal = parseFloat((numVal * 1.5).toFixed(1));
-        const suffix = comment.replace(/-?\d+(?:\.\d+)?/, '').trim();
+        const suffix = guessedSuffix || '';
         return {
           generator: isFloat ? 'float' : 'integer',
-          min: minVal,
-          max: maxVal,
           mean: numVal,
           suffix: suffix ? ` ${suffix}` : ''
         };
@@ -8167,8 +8164,9 @@ SORTIE
             const rounded = (Math.round(num * 10) / 10).toFixed(1);
             return `${rounded}${strat.suffix || ''}`;
           }
-          const min = strat.min !== undefined ? strat.min : 5.0;
-          const max = strat.max !== undefined ? strat.max : 25.0;
+          const fmean = strat.mean !== undefined ? strat.mean : 20.0;
+          const min = strat.min !== undefined ? strat.min : parseFloat((fmean * 0.5).toFixed(1));
+          const max = strat.max !== undefined ? strat.max : parseFloat((fmean * 1.5).toFixed(1));
           const val = min + (rng() * (max - min));
           const rounded = (Math.round(val * 10) / 10).toFixed(1);
           return `${rounded}${strat.suffix || ''}`;
@@ -8180,8 +8178,9 @@ SORTIE
             const num = (typeof evaluated === 'number' && !isNaN(evaluated)) ? Math.round(evaluated) : 100;
             return `${num}${strat.suffix || ''}`;
           }
-          const min = strat.min !== undefined ? strat.min : 1;
-          const max = strat.max !== undefined ? strat.max : 20;
+          const imean = strat.mean !== undefined ? strat.mean : 20;
+          const min = strat.min !== undefined ? strat.min : Math.round(imean * 0.5);
+          const max = strat.max !== undefined ? strat.max : Math.round(imean * 1.5);
           const val = Math.round(min + (rng() * (max - min)));
           return `${val}${strat.suffix || ''}`;
         }
@@ -8554,18 +8553,21 @@ SORTIE
               ${isFormulaMode ? `<span id="datagen-formula-err-${f.name}" class="text-[9.5px] font-mono text-red-600 font-semibold truncate max-w-[320px]"></span>` : ''}
             </div>`;
           if (!isFormulaMode) {
+            const baseMeanN = fStrat.mean !== undefined ? fStrat.mean : 20;
+            const autoMin = fStrat.generator === 'float' ? parseFloat((baseMeanN * 0.5).toFixed(1)) : Math.round(baseMeanN * 0.5);
+            const autoMax = fStrat.generator === 'float' ? parseFloat((baseMeanN * 1.5).toFixed(1)) : Math.round(baseMeanN * 1.5);
             html += `<div class="grid grid-cols-1 sm:grid-cols-4 gap-2 items-center">
               <div>
                 <label class="block text-[9.5px] text-slate-500 font-semibold">Min :</label>
-                <input type="number" step="${fStrat.generator === 'float' ? '0.1' : '1'}" value="${fStrat.min}" onchange="updateFieldStratNumber('${f.name}', 'min', this.value)" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
+                <input type="number" step="${fStrat.generator === 'float' ? '0.1' : '1'}" value="${fStrat.min !== undefined ? fStrat.min : ''}" placeholder="${autoMin}" title="Vide : règle ±50 % (borne basse automatique)" onchange="updateFieldStratNumber('${f.name}', 'min', this.value)" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
               </div>
               <div>
                 <label class="block text-[9.5px] text-slate-500 font-semibold">Max :</label>
-                <input type="number" step="${fStrat.generator === 'float' ? '0.1' : '1'}" value="${fStrat.max}" onchange="updateFieldStratNumber('${f.name}', 'max', this.value)" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
+                <input type="number" step="${fStrat.generator === 'float' ? '0.1' : '1'}" value="${fStrat.max !== undefined ? fStrat.max : ''}" placeholder="${autoMax}" title="Vide : règle ±50 % (borne haute automatique)" onchange="updateFieldStratNumber('${f.name}', 'max', this.value)" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
               </div>
               <div>
                 <label class="block text-[9.5px] text-slate-500 font-semibold">Moyenne / Cible :</label>
-                <input type="number" step="${fStrat.generator === 'float' ? '0.1' : '1'}" value="${fStrat.mean}" onchange="updateFieldStratNumber('${f.name}', 'mean', this.value)" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
+                <input type="number" step="${fStrat.generator === 'float' ? '0.1' : '1'}" value="${fStrat.mean !== undefined ? fStrat.mean : ''}" onchange="updateFieldStratNumber('${f.name}', 'mean', this.value)" placeholder="${fStrat.mean !== undefined ? '' : '20'}" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
               </div>
               <div>
                 <label class="block text-[9.5px] text-slate-500 font-semibold">Suffixe :</label>
@@ -8713,7 +8715,11 @@ SORTIE
       const { parsedErd } = getOrGenerateCurrentDataset(g);
       const strat = getTableDataStrategy(g, activeDataGenTable, parsedErd);
       if (strat.fields[fieldName]) {
-        strat.fields[fieldName][key] = parseFloat(val);
+        if (val === '' || val === null || val === undefined) {
+          delete strat.fields[fieldName][key];
+        } else {
+          strat.fields[fieldName][key] = parseFloat(val);
+        }
         saveTableDataStrategy(g, activeDataGenTable, strat);
       }
     }
@@ -9528,10 +9534,6 @@ SORTIE
       } catch (e) {}
       return {
         mode: 'distrib',
-        min: 5.0,
-        max: 35.0,
-        mean: 20.0,
-        suffix: (step === 3 ? ' h' : ' %'),
         formula: ''
       };
     }
@@ -9700,18 +9702,21 @@ SORTIE
               ${isFormulaMode ? `<span id="mesure-formula-err-${f.name}" class="text-[9.5px] font-mono text-red-600 font-semibold truncate max-w-[320px]"></span>` : ''}
             </div>`;
           if (!isFormulaMode) {
+            const baseMeanM = fStrat.mean !== undefined ? fStrat.mean : 20;
+            const passMin = fStrat.generator === 'float' ? parseFloat((baseMeanM * 0.5).toFixed(1)) : Math.round(baseMeanM * 0.5);
+            const passMax = fStrat.generator === 'float' ? parseFloat((baseMeanM * 1.5).toFixed(1)) : Math.round(baseMeanM * 1.5);
             html += `<div class="grid grid-cols-1 sm:grid-cols-4 gap-2 items-center">
               <div>
                 <label class="block text-[9.5px] text-slate-500 font-semibold">Min :</label>
-                <input type="number" step="${fStrat.generator === 'float' ? '0.1' : '1'}" value="${fStrat.min}" onchange="updateMesureStratNumber('${f.name}', 'min', this.value)" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
+                <input type="number" step="${fStrat.generator === 'float' ? '0.1' : '1'}" value="${fStrat.min !== undefined ? fStrat.min : ''}" placeholder="${passMin}" title="Vide : règle ±50 % (borne basse automatique)" onchange="updateMesureStratNumber('${f.name}', 'min', this.value)" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
               </div>
               <div>
                 <label class="block text-[9.5px] text-slate-500 font-semibold">Max :</label>
-                <input type="number" step="${fStrat.generator === 'float' ? '0.1' : '1'}" value="${fStrat.max}" onchange="updateMesureStratNumber('${f.name}', 'max', this.value)" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
+                <input type="number" step="${fStrat.generator === 'float' ? '0.1' : '1'}" value="${fStrat.max !== undefined ? fStrat.max : ''}" placeholder="${passMax}" title="Vide : règle ±50 % (borne haute automatique)" onchange="updateMesureStratNumber('${f.name}', 'max', this.value)" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
               </div>
               <div>
                 <label class="block text-[9.5px] text-slate-500 font-semibold">Moyenne / Cible :</label>
-                <input type="number" step="${fStrat.generator === 'float' ? '0.1' : '1'}" value="${fStrat.mean}" onchange="updateMesureStratNumber('${f.name}', 'mean', this.value)" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
+                <input type="number" step="${fStrat.generator === 'float' ? '0.1' : '1'}" value="${fStrat.mean !== undefined ? fStrat.mean : ''}" onchange="updateMesureStratNumber('${f.name}', 'mean', this.value)" placeholder="${fStrat.mean !== undefined ? '' : '20'}" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
               </div>
               <div>
                 <label class="block text-[9.5px] text-slate-500 font-semibold">Suffixe :</label>
@@ -9871,19 +9876,19 @@ SORTIE
       const parsed = parseMermaidErd(umlCode);
       const strat = getStepTableDataStrategy(step, activeMesureModalTable, parsed);
       if (strat.fields[fieldName]) {
-        const num = parseFloat(val);
-        strat.fields[fieldName][key] = isNaN(num) ? 0 : num;
-        if (key === 'mean') {
-          strat.fields[fieldName].min = parseFloat((num * 0.5).toFixed(1));
-          strat.fields[fieldName].max = parseFloat((num * 1.5).toFixed(1));
-          renderMesureFieldsForm();
+        if (val === '' || val === null || val === undefined) {
+          delete strat.fields[fieldName][key];
+        } else {
+          const num = parseFloat(val);
+          strat.fields[fieldName][key] = isNaN(num) ? undefined : num;
         }
         saveStepTableDataStrategy(step, activeMesureModalTable, strat);
+        // Synchroniser également avec l'ancien modèle getStepMeasureConfig
         const oldCfg = getStepMeasureConfig(step, fieldName);
-        oldCfg[key] = strat.fields[fieldName][key];
-        if (key === 'mean') {
-          oldCfg.min = strat.fields[fieldName].min;
-          oldCfg.max = strat.fields[fieldName].max;
+        if (strat.fields[fieldName][key] === undefined) {
+          delete oldCfg[key];
+        } else {
+          oldCfg[key] = strat.fields[fieldName][key];
         }
         saveStepMeasureConfig(step, fieldName, oldCfg);
       }
@@ -10300,8 +10305,6 @@ SORTIE
 
       saveStepMeasureConfig(step, name, {
         mode: formula ? 'formula' : 'distrib',
-        min: 10,
-        max: 50,
         mean: 25,
         suffix: unit ? (unit.startsWith(' ') ? unit : ' ' + unit) : '',
         formula
@@ -10366,7 +10369,9 @@ SORTIE
               const strat = getDefaultFieldStrategy(colField, tableName, parsed);
               val = generateFieldValue(strat, rIdx, createPRNG(98765 + rIdx));
             } else {
-              val = (cfg.mean || 20.0) + (cfg.suffix || '');
+              const fbStrat = colField ? getDefaultFieldStrategy(colField, tableName, parsed) : null;
+              const fbMean = (cfg.mean !== undefined) ? cfg.mean : (fbStrat ? fbStrat.mean : 20.0);
+              val = (fbMean === undefined ? 20.0 : fbMean) + (cfg.suffix || (fbStrat ? fbStrat.suffix : '') || '');
             }
           }
           rowArr.push(String(val !== undefined && val !== null ? val : ''));
@@ -10483,7 +10488,9 @@ SORTIE
               const strat = getDefaultFieldStrategy(colField, tableName, parsed);
               val = generateFieldValue(strat, rIdx, createPRNG(98765 + rIdx));
             } else {
-              val = (cfg.mean || 85.0) + (cfg.suffix || '');
+              const fbStrat = colField ? getDefaultFieldStrategy(colField, tableName, parsed) : null;
+              const fbMean = (cfg.mean !== undefined) ? cfg.mean : (fbStrat ? fbStrat.mean : 85.0);
+              val = (fbMean === undefined ? 85.0 : fbMean) + (cfg.suffix || (fbStrat ? fbStrat.suffix : '') || '');
             }
           }
           rowArr.push(String(val !== undefined && val !== null ? val : ''));
