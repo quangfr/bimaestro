@@ -362,9 +362,11 @@ Le modèle relie les MDTs et les Planning Levels aux Key Figures de calcul suiva
 > **Question de cadrage :** Quel niveau de complexité mathématique et d'hypothèse adopter ?  
 > **En-tête de l'interface :** Étape 3 : Calcul du Délai (TAT)
 
-> **Rendu Tableau & Modes de Vue (Étape 3) :** Le panneau latéral droit dispose d'un sélecteur à deux modes :
-> - **`ui` :** Vue tableau dynamique avec les données calculées et la note d'explication de la méthode.
-> - **`<>` :** Prompt IA standardisé et personnalisable (modale `✎`, copie `⧉`) pour proposer une visualisation pertinente basée sur les entrées dans un code bloc au format contenu sans le { } de l'objet js de ChartJS avec un minimum de données d'exemples et les diagrammes relationnels ERD 2.A et 2.B.
+> **Rendu Tableau & Modes de Vue (Étape 3) :** Le panneau latéral droit dispose d'un sélecteur à 4 modes :
+> - **`data` :** Vue tableau interactive propulsée par Grid.js (tri multi-colonnes, pagination 15/15 avec résumé, redimensionnement) et bouton d'édition des mesures `✎` (`#mesure-generator-modal`, interface unifiée avec le générateur de données, support de tous les types de champs, mode distribution ou formule compact avec autocomplétion des opérateurs et champs, tooltip d'aide Excel-like et validation syntaxique instantanée).
+> - **`uml` :** Modèle relationnel UML ciblé affichant uniquement les tables et champs intervenant dans le calcul du TAT, avec commandes de zoom/pan (+, −, ↺) et mode éditeur en cas de mesure personnalisée (`+ Mesure`).
+> - **`chartjs` :** Prompt IA standardisé et personnalisable (bouton template `✎` visible sur ce mode, copie `⧉`) pour proposer une visualisation pertinente basée sur les entrées dans un code bloc au format contenu sans le { } de l'objet js de ChartJS.
+> - **`visuels` :** Prompt IA structuré formulant 3 idées de visuels compatibles SAP-IBP / SAC.
 
 ### Les 4 Méthodes de Calcul du TAT :
 1. **Option 3.A : S&OP (D-SOP)**
@@ -569,9 +571,11 @@ xychart-beta
 > **Question de cadrage :** Sur quelle base dimensionner et projeter la capacité des interventions d'atelier sur chaque shop (`S-XXX`) ?  
 > **En-tête de l'interface :** Étape 5 : Choisir la méthode d'évaluation de la Capacité d'Intervention en Atelier
 
-> **Rendu Tableau & Modes de Vue (Étape 5) :** Le panneau latéral droit dispose d'un sélecteur à deux modes :
-> - **`ui` :** Vue tableau dynamique avec les capacités calculées et la note d'explication de la méthode.
-> - **`<>` :** Prompt IA standardisé et personnalisable (modale `✎`, copie `⧉`) formulant des propositions de visualisations comparatives à partir de l'option active et des diagrammes relationnels ERD 2.A et 2.B.
+> **Rendu Tableau & Modes de Vue (Étape 5) :** Le panneau latéral droit dispose d'un sélecteur à 4 modes :
+> - **`data` :** Vue tableau interactive propulsée par Grid.js (tri multi-colonnes, pagination 15/15 avec résumé, redimensionnement) et bouton d'édition des mesures `✎` (`#mesure-generator-modal`, interface unifiée avec le générateur de données, support de tous les types de champs, mode distribution ou formule compact avec autocomplétion des opérateurs et champs, tooltip d'aide Excel-like et validation syntaxique instantanée).
+> - **`uml` :** Modèle relationnel UML ciblé affichant uniquement les tables et champs intervenant dans l'évaluation de la Capacité, avec commandes de zoom/pan (+, −, ↺) et mode éditeur en cas de mesure personnalisée (`+ Mesure`).
+> - **`chartjs` :** Prompt IA standardisé et personnalisable (bouton template `✎` visible sur ce mode, copie `⧉`) formulant des propositions de visualisations comparatives à partir de l'option active et des diagrammes relationnels ERD 2.A et 2.B.
+> - **`visuels` :** Prompt IA structuré formulant 3 idées de visuels compatibles SAP-IBP / SAC.
 
 ### Les 4 Méthodes d'Évaluation de la Capacité :
 1. **Option 5.A : Capacité S&OP (C-SOP)**
@@ -786,13 +790,13 @@ xychart-beta
 
 ### Profils Décisionnels Personas SAE & Recommandations Dérivées :
 Selon l'option sélectionnée en Étape 1, le dashboard projette un profil persona dédié :
-- **🔧 EOWN · Processus RTI & Jalons Moteurs/Modules :** Modèle opérationnel sur `MDT_MAINTENANCE_REQUEST` traçant les jalons du processus **RTI (Return to Operation)** en temps réel dans SAP IBP, détection des dérives sur modules MM/SM, priorisation d'atelier et maîtrise des coûts (IBP to Cost Tracker).
-- **✈️ CSPM · Engagements Contractuels & Removal Plan (PERF) :** Modèle tabulaire reliant le removal plan client (PERF) aux faits d'induction SAP IBP, suivi des dates de Shop Visit et simulation de scénarios pour garantir le Customer Service Level.
-- **🌐 NTPL · Équilibrage Réseau 12-36 mois & Slots :** Modèle consolidant la charge/capacité multi-ateliers across all shops, adhérence **MPS vs S&OP** et arbitrage des slots réacteurs / modules (MM, SM) pour éliminer les lost slots.
-- **💰 FINC · Volumes IBP, Mix & Coûts SV :** Rapprochement des volumes consolidés et du mix moteurs/modules avec les coûts réels de Shop Visit (IBP to Cost Tracker), pénalités contractuelles de retard chiffrées en jours ouvrés.
-- **🏭 SHPL · Ordonnancement Atelier & Aléas Court Terme :** Modèle d'atelier réactif absorbant les aléas quotidiens (pannes machines, retards amont, absences), séquencement des flux moteurs et modules (MM, SM, isolés ou sous-traités) pour maximiser la MPS Adherence.
-- **📊 DMMG & FTM · Prévisions Demande & Workscopes (Walk) :** Consolidation multi-sources de la demande Shop Visit (Monthly Demand Review), intégration des workscopes techniques dans Walk, analyse de variance début/fin de SV et alimentation S&OP/MTP.
-- **🏛️ DGOV · Qualité des Données & Fiabilité des Modèles :** Modèle d'audit et gouvernance sur `MDT_MAINTENANCE_REQUEST` assurant la complétude des saisies d'atelier (MES), le benchmark statistique des méthodes de calcul de TAT et de capacité face aux données effectives constatées sur le terrain, avec certification du degré de certitude et auditabilité Part-145.
+- **EOWN · Processus RTI & Jalons Moteurs/Modules :** Modèle opérationnel sur `MDT_MAINTENANCE_REQUEST` traçant les jalons du processus **RTI (Return to Operation)** en temps réel dans SAP IBP, détection des dérives sur modules MM/SM, priorisation d'atelier et maîtrise des coûts (IBP to Cost Tracker).
+- **CSPM · Engagements Contractuels & Removal Plan (PERF) :** Modèle tabulaire reliant le removal plan client (PERF) aux faits d'induction SAP IBP, suivi des dates de Shop Visit et simulation de scénarios pour garantir le Customer Service Level.
+- **NTPL · Équilibrage Réseau 12-36 mois & Slots :** Modèle consolidant la charge/capacité multi-ateliers across all shops, adhérence **MPS vs S&OP** et arbitrage des slots réacteurs / modules (MM, SM) pour éliminer les lost slots.
+- **FINC · Volumes IBP, Mix & Coûts SV :** Rapprochement des volumes consolidés et du mix moteurs/modules avec les coûts réels de Shop Visit (IBP to Cost Tracker), pénalités contractuelles de retard chiffrées en jours ouvrés.
+- **SHPL · Ordonnancement Atelier & Aléas Court Terme :** Modèle d'atelier réactif absorbant les aléas quotidiens (pannes machines, retards amont, absences), séquencement des flux moteurs et modules (MM, SM, isolés ou sous-traités) pour maximiser la MPS Adherence.
+- **DMMG & FTM · Prévisions Demande & Workscopes (Walk) :** Consolidation multi-sources de la demande Shop Visit (Monthly Demand Review), intégration des workscopes techniques dans Walk, analyse de variance début/fin de SV et alimentation S&OP/MTP.
+- **DGOV · Qualité des Données & Fiabilité des Modèles :** Modèle d'audit et gouvernance sur `MDT_MAINTENANCE_REQUEST` assurant la complétude des saisies d'atelier (MES), le benchmark statistique des méthodes de calcul de TAT et de capacité face aux données effectives constatées sur le terrain, avec certification du degré de certitude et auditabilité Part-145.
 
 ### Fonctionnalités Clés du Slide Décisionnel :
 1. **Dropdowns Interactifs Synchronisés (`#select-q1` à `#select-q6`) :**
