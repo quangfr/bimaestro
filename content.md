@@ -91,7 +91,7 @@ Le projet MAESTRO s'articule autour des acteurs décisionnels de la maintenance 
 
 > **Question de cadrage :** Quelles tables et niveaux de granularité permettent le calcul du Turn Around Time (TAT) et la planification d'atelier ?  
 > **En-tête de l'interface :** Étape 2 : Modèle de Données  
-> **Bouton d'affichage :** En haut à gauche du panel de droite, le bouton `schema-toggle` bascule entre le rendu visuel Mermaid SVG (`ui`), l'éditeur code Mermaid interactif (`uml`) et le prompt IA de génération ERD (`erd`), rigoureusement synchronisés avec les diagrammes `erDiagram` et définitions ci-dessous.
+> **Bouton d'affichage :** En haut à gauche du panel de droite, le bouton `schema-toggle` bascule entre le rendu visuel Mermaid SVG (`ui`), l'éditeur code Mermaid interactif (`uml`), le prompt IA de génération ERD (`erd`) et la vue de données (`data`), rigoureusement synchronisés avec les diagrammes `erDiagram` et définitions ci-dessous. Le crayon `✎` du générateur de données est disponible en haut à droite dans les vues `ui`, `uml` et `erd`.
 
 ---
 
@@ -139,7 +139,7 @@ Le panneau latéral droit de l'Étape 2 propose un sélecteur à 4 vues :
     - *Dates :* intervalle de date début / fin avec tirage aléatoire uniforme.
     - *Booléens & Enums :* distribution en pourcentages éditables (somme à 100%) ; par défaut répartition équitable, la valeur préfixée `*` (valeur par défaut UML) se voyant appliquer un double poids de répartition.
     - *Regex / Codes :* incrémentation automatique des chiffres après le dernier tiret `-` (ex. `D-2026-000123`).
-    - *Type par champ :* sélecteur de type par champ (string, int, float, date, boolean, enum) re-dérivant immédiatement les tirages (distribution, formules, regex) sans régénération ; le type ou le commentaire modifié est écrit dans l'UML par le bouton `Sauvegarder`.
+    - *Type par champ :* sélecteur de type par champ (string, int, float, date, boolean, enum) — les possibilités de saisie (min/max/moyenne, intervalle de dates, répartition %, préfixe/padding, valeurs d'énumération éditables) s'adaptent immédiatement au type choisi, sans régénération ; le type ou le commentaire modifié est écrit dans l'UML par le bouton `Sauvegarder`.
     - *Actions (barre harmonisée avec l'éditeur de mesures) :* `Sauvegarder` (écrit types/commentaires dans l'UML, sans régénérer), `Regénérer` la table active, `Restaurer` (schéma Mermaid et données d'origine, tenant compte des modèles personnalisés) ; réglage du nombre de lignes à la volée.
 - **Bouton `+ Créer un tableau` :** Présent dans l'en-tête de l'Étape 2, ouvre une modale permettant d'ajouter des schémas de données personnalisés (Titre, Description, code Mermaid ERD, prompt IA pour générer le diagramme), persistés en `localStorage` et intégrés dynamiquement dans la liste des options d'Étape 2.
 
@@ -364,7 +364,7 @@ Le modèle relie les MDTs et les Planning Levels aux Key Figures de calcul suiva
 > **En-tête de l'interface :** Étape 3 : Calcul du Délai (TAT)
 
 > **Rendu Tableau & Modes de Vue (Étape 3) :** Le panneau latéral droit dispose d'un sélecteur à 4 modes :
-> - **`data` :** Vue tableau interactive propulsée par Grid.js (tri multi-colonnes, pagination 15/15 avec résumé, redimensionnement).
+> - **`data` :** Vue tableau interactive propulsée par Grid.js (tri multi-colonnes, pagination 15/15 avec résumé, redimensionnement) avec crayon `✎` d'édition des mesures à droite de `+ Mesure`.
 > - **`uml` :** Modèle relationnel UML ciblé affichant uniquement les tables et champs intervenant dans le calcul du TAT, avec commandes de zoom/pan (+, −, ↺), crayon `✎` d'édition des mesures (`#mesure-generator-modal`, interface unifiée avec le générateur de données, support de tous les types de champs, mode distribution ou formule compact avec autocomplétion des opérateurs et champs, descriptifs UML des champs et opérateurs dans le dropdown et validation syntaxique instantanée) et mode éditeur en cas de mesure personnalisée (`+ Mesure`).
 > - **`chartjs` :** Prompt IA standardisé et personnalisable (bouton template `✎` visible sur ce mode, copie `⧉`) pour proposer une visualisation pertinente basée sur les entrées dans un code bloc au format contenu sans le { } de l'objet js de ChartJS.
 > - **`visuels` :** Prompt IA structuré formulant 3 idées de visuels compatibles SAP-IBP / SAC.
@@ -573,7 +573,7 @@ xychart-beta
 > **En-tête de l'interface :** Étape 5 : Choisir la méthode d'évaluation de la Capacité d'Intervention en Atelier
 
 > **Rendu Tableau & Modes de Vue (Étape 5) :** Le panneau latéral droit dispose d'un sélecteur à 4 modes :
-> - **`data` :** Vue tableau interactive propulsée par Grid.js (tri multi-colonnes, pagination 15/15 avec résumé, redimensionnement).
+> - **`data` :** Vue tableau interactive propulsée par Grid.js (tri multi-colonnes, pagination 15/15 avec résumé, redimensionnement) avec crayon `✎` d'édition des mesures à droite de `+ Mesure`.
 > - **`uml` :** Modèle relationnel UML ciblé affichant uniquement les tables et champs intervenant dans l'évaluation de la Capacité, avec commandes de zoom/pan (+, −, ↺), crayon `✎` d'édition des mesures (`#mesure-generator-modal`, interface unifiée avec le générateur de données, support de tous les types de champs, mode distribution ou formule compact avec autocomplétion des opérateurs et champs, descriptifs UML des champs et opérateurs dans le dropdown et validation syntaxique instantanée) et mode éditeur en cas de mesure personnalisée (`+ Mesure`).
 > - **`chartjs` :** Prompt IA standardisé et personnalisable (bouton template `✎` visible sur ce mode, copie `⧉`) formulant des propositions de visualisations comparatives à partir de l'option active et des diagrammes relationnels ERD 2.A et 2.B.
 > - **`visuels` :** Prompt IA structuré formulant 3 idées de visuels compatibles SAP-IBP / SAC.

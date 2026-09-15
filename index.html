@@ -704,6 +704,9 @@
                 class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">data</button>
             </div>
             <div id="schema-svg-view" class="w-full flex-1 flex flex-col items-center justify-between overflow-hidden pt-6 relative">
+              <button type="button" onclick="openDataGeneratorModal()" title="Éditer les types de champs et les règles du générateur de données" class="absolute top-0 right-0 z-10 p-1 text-slate-500 hover:text-slate-800 hover:bg-slate-200 bg-white/70 rounded transition cursor-pointer text-xs leading-none">
+                ✎
+              </button>
               <div id="schema-mermaid-diagram" class="w-full flex-1 flex items-center justify-center overflow-hidden p-1 text-slate-800 cursor-grab active:cursor-grabbing select-none">
                 <!-- Mermaid ERD Diagram rendered dynamically here -->
               </div>
@@ -737,6 +740,9 @@
               <div class="flex items-center justify-between pb-1 shrink-0">
                 <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Prompt IA : Diagramme ERD (erd)</span>
                 <div class="flex items-center gap-1.5">
+                  <button type="button" onclick="openDataGeneratorModal()" title="Éditer les types de champs et les règles du générateur de données" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
+                    ✎
+                  </button>
                   <button type="button" id="schema-prompt-copy-btn" onclick="copySchemaPrompt()" title="Copier le prompt IA" class="p-1 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded transition cursor-pointer text-xs leading-none">
                     ⧉
                   </button>
@@ -789,9 +795,9 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 flex-1 min-h-0 overflow-hidden" style="grid-template-rows: minmax(0, 1fr);">
-          <!-- Moitié Gauche : Sélection des 4 méthodes TAT -->
-          <div id="step-3-answers" class="answers-scroll-area lg:col-span-6 flex flex-col justify-start space-y-2 h-full max-h-full min-h-0 overflow-y-auto overflow-x-hidden pr-1.5">
+        <div class="grid grid-cols-1 lg:grid-cols-8 gap-3 flex-1 min-h-0 overflow-hidden" style="grid-template-rows: minmax(0, 1fr);">
+          <!-- Partie Gauche (3/8) : Sélection des 4 méthodes TAT -->
+          <div id="step-3-answers" class="answers-scroll-area lg:col-span-3 flex flex-col justify-start space-y-2 h-full max-h-full min-h-0 overflow-y-auto overflow-x-hidden pr-1.5">
             <!-- 3A -->
             <div onclick="selectOption(3, 'A')" id="opt-3-A"
               class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex items-center justify-between gap-3">
@@ -875,7 +881,7 @@
 
           <!-- Moitié Droite : Extrait Illustré de la Table de Données Calculée (Dépend de Q2 & Q3) -->
           <div id="step-3-table-panel"
-            class="lg:col-span-6 bg-white rounded-xl p-2.5 border border-slate-200 flex flex-col justify-between h-full max-h-full min-h-0 overflow-hidden shadow-sm relative">
+            class="lg:col-span-5 bg-white rounded-xl p-2.5 border border-slate-200 flex flex-col justify-between h-full max-h-full min-h-0 overflow-hidden shadow-sm relative">
             <span id="step3-table-title" class="hidden"></span>
             <span id="step3-combo-badge" class="hidden"></span>
 
@@ -892,6 +898,9 @@
               <div class="flex items-center gap-1.5 shrink-0">
                 <button type="button" onclick="openAddCustomMeasureModal(3)" class="px-2.5 h-6 sm:h-7 rounded-md bg-blue-800 hover:bg-blue-700 text-white text-xs font-bold transition shadow-xs flex items-center gap-1 hover:scale-105 active:scale-95 cursor-pointer" title="Ajouter une mesure personnalisée avec UML éditable">
                   <span>+</span> <span>Mesure</span>
+                </button>
+                <button id="step-3-mesure-edit-btn" type="button" onclick="openMesureGeneratorModal(3)" title="Éditer les types de champs et les règles des mesures" class="hidden w-6 h-6 sm:w-7 sm:h-7 rounded-md border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 flex items-center justify-center transition text-xs shadow-2xs cursor-pointer">
+                  ✎
                 </button>
                 <button id="step-3-prompt-template-btn" type="button" onclick="openPromptTemplateModal(3)" title="Éditer le template de prompt (<>)" class="hidden w-6 h-6 sm:w-7 sm:h-7 rounded-md border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 flex items-center justify-center transition text-xs shadow-2xs cursor-pointer">
                   ✎
@@ -1224,9 +1233,9 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 flex-1 min-h-0 overflow-hidden" style="grid-template-rows: minmax(0, 1fr);">
-          <!-- Moitié Gauche : Sélection des 4 méthodes de Capacité -->
-          <div id="step-5-answers" class="answers-scroll-area lg:col-span-6 flex flex-col justify-start space-y-2 h-full max-h-full min-h-0 overflow-y-auto overflow-x-hidden pr-1.5">
+        <div class="grid grid-cols-1 lg:grid-cols-8 gap-3 flex-1 min-h-0 overflow-hidden" style="grid-template-rows: minmax(0, 1fr);">
+          <!-- Partie Gauche (3/8) : Sélection des 4 méthodes de Capacité -->
+          <div id="step-5-answers" class="answers-scroll-area lg:col-span-3 flex flex-col justify-start space-y-2 h-full max-h-full min-h-0 overflow-y-auto overflow-x-hidden pr-1.5">
             <!-- 5A -->
             <div onclick="selectOption(5, 'A')" id="opt-5-A"
               class="option-card glass-card p-2.5 rounded-xl border border-slate-200 cursor-pointer flex items-center justify-between gap-3">
@@ -1310,7 +1319,7 @@
 
           <!-- Moitié Droite : Extrait Illustré du Bilan de Capacité (Dépend de Q2 & Q5) -->
           <div id="step-5-table-panel"
-            class="lg:col-span-6 bg-white rounded-xl p-2.5 border border-slate-200 flex flex-col justify-between h-full max-h-full min-h-0 overflow-hidden shadow-sm relative">
+            class="lg:col-span-5 bg-white rounded-xl p-2.5 border border-slate-200 flex flex-col justify-between h-full max-h-full min-h-0 overflow-hidden shadow-sm relative">
             <span id="step5-table-title" class="hidden"></span>
             <span id="step5-combo-badge" class="hidden"></span>
 
@@ -1327,6 +1336,9 @@
               <div class="flex items-center gap-1.5 shrink-0">
                 <button type="button" onclick="openAddCustomMeasureModal(5)" class="px-2.5 h-6 sm:h-7 rounded-md bg-blue-800 hover:bg-blue-700 text-white text-xs font-bold transition shadow-xs flex items-center gap-1 hover:scale-105 active:scale-95 cursor-pointer" title="Ajouter une mesure personnalisée avec UML éditable">
                   <span>+</span> <span>Mesure</span>
+                </button>
+                <button id="step-5-mesure-edit-btn" type="button" onclick="openMesureGeneratorModal(5)" title="Éditer les types de champs et les règles des mesures" class="hidden w-6 h-6 sm:w-7 sm:h-7 rounded-md border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 flex items-center justify-center transition text-xs shadow-2xs cursor-pointer">
+                  ✎
                 </button>
                 <button id="step-5-prompt-template-btn" type="button" onclick="openPromptTemplateModal(5)" title="Éditer le template de prompt (<>)" class="hidden w-6 h-6 sm:w-7 sm:h-7 rounded-md border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 flex items-center justify-center transition text-xs shadow-2xs cursor-pointer">
                   ✎
@@ -5655,6 +5667,9 @@ ENTRÉES
       const promptTplBtn = document.getElementById(`step-${step}-prompt-template-btn`);
       if (promptTplBtn) promptTplBtn.classList.toggle('hidden', targetMode !== 'ai');
 
+      const mesureEditBtn = document.getElementById(`step-${step}-mesure-edit-btn`);
+      if (mesureEditBtn) mesureEditBtn.classList.toggle('hidden', targetMode !== 'data');
+
       if (targetMode === 'ai') {
         renderTableAiView(step);
       } else if (targetMode === 'visuels') {
@@ -5912,52 +5927,6 @@ ${uml2B}
 
     function copyChartAi(step) {
       copyChartSapPrompt(step);
-    }
-
-    function copyOptionCard(step, opt, ev) {
-      if (ev) {
-        ev.stopPropagation();
-        ev.preventDefault();
-      }
-      const bodyEl = document.getElementById(`opt-${step}-${opt}-body`);
-      if (!bodyEl) return;
-      const clone = bodyEl.cloneNode(true);
-      clone.querySelectorAll('.opt-copy-btn').forEach(b => b.remove());
-      const text = clone.innerText.trim();
-      
-      const btn = ev ? ev.currentTarget : document.querySelector(`#opt-${step}-${opt}-body .opt-copy-btn`);
-      copyTextToClipboard(text).then(() => {
-        if (btn) {
-          const orig = btn.textContent;
-          btn.textContent = '✓';
-          btn.classList.add('text-emerald-600');
-          setTimeout(() => {
-            btn.textContent = orig;
-            btn.classList.remove('text-emerald-600');
-          }, 1500);
-        }
-      });
-    }
-
-    function initOptionCopyButtons() {
-      [3, 4, 5, 6].forEach(step => {
-        ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'].forEach(opt => {
-          const bodyEl = document.getElementById(`opt-${step}-${opt}-body`);
-          if (!bodyEl || bodyEl.querySelector('.opt-copy-btn')) return;
-          
-          const titleEl = bodyEl.querySelector('.ans-title') || bodyEl.firstElementChild;
-          if (titleEl) {
-            titleEl.classList.add('flex', 'items-center', 'justify-between', 'gap-1.5', 'w-full');
-            const copyBtn = document.createElement('button');
-            copyBtn.type = 'button';
-            copyBtn.className = 'opt-copy-btn p-1 text-slate-400 hover:text-blue-800 hover:bg-slate-100 rounded transition cursor-pointer text-xs leading-none shrink-0 ml-auto';
-            copyBtn.title = 'Copier le contenu de cette option';
-            copyBtn.textContent = '⧉';
-            copyBtn.onclick = (e) => copyOptionCard(step, opt, e);
-            titleEl.appendChild(copyBtn);
-          }
-        });
-      });
     }
 
     function toggleChartMode(step, mode) {
@@ -8633,11 +8602,12 @@ SORTIE
           </div>`;
         } else if (fStrat.generator === 'enum') {
           html += `<div class="space-y-1">
-            <label class="block text-[9.5px] text-slate-500 font-semibold">Distribution des valeurs (% somme 100) :</label>
+            <label class="block text-[9.5px] text-slate-500 font-semibold">Valeurs &amp; distribution (% somme 100) :</label>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-1.5">`;
           (fStrat.values || []).forEach((item, vIdx) => {
             html += `<div class="flex items-center gap-1 bg-slate-50 p-1 rounded border border-slate-200">
-              <span class="text-[10px] text-slate-700 truncate flex-1" title="${escapeHtml(item.value)}"><span class="${item.isDefault ? 'font-black text-amber-600' : 'text-slate-300'}">*</span>${escapeHtml(item.value)}</span>
+              <span class="${item.isDefault ? 'text-amber-500 font-black' : 'text-slate-300'}" title="Valeur par défaut (double poids)">*</span>
+              <input type="text" value="${escapeHtml(item.value)}" onchange="updateFieldStratEnumValue('${f.name}', ${vIdx}, this.value)" class="flex-1 min-w-0 px-1 py-0.2 border border-slate-200 rounded text-[10px] font-mono ${item.isDefault ? 'font-bold text-amber-700' : 'text-slate-700'}" />
               <input type="number" min="0" max="100" value="${item.pct}" onchange="updateFieldStratEnum('${f.name}', ${vIdx}, this.value)" class="w-12 px-1 py-0.2 border border-slate-300 rounded text-[10px] text-center font-bold" />
               <span class="text-[9px] text-slate-500">%</span>
             </div>`;
@@ -8704,16 +8674,19 @@ SORTIE
       const f = ent.fields.find(x => x.name === fieldName);
       if (!f) return;
       const prev = strat.fields[fieldName] || {};
-      const modifiedField = { ...f, type: newType };
-      if (newType === 'enum' && !(modifiedField.comment || '').includes('|')) {
-        const seed = (f.comment || '').trim() || 'Valeur 1';
-        modifiedField.comment = `*${seed} | Valeur 2`;
+      const modifiedField = { ...f, type: newType, comment: f.comment || '' };
+      if (newType === 'enum') {
+        if (!(modifiedField.comment || '').includes('|')) {
+          const seed = (f.comment || '').trim() || 'Valeur 1';
+          modifiedField.comment = `*${seed} | Valeur 2`;
+        }
+      } else {
+        modifiedField.comment = (f.comment || '').replace(/\s*\|.*/g, '').trim();
       }
       const def = getDefaultFieldStrategy(modifiedField, activeDataGenTable, parsedErd);
       strat.fields[fieldName] = { ...def, type: newType, mode: prev.mode || 'distrib', formula: prev.formula || '' };
       saveTableDataStrategy(g, activeDataGenTable, strat);
       renderDataGenFieldsForm();
-      showToast(`✎ Type du champ <b>${fieldName}</b> : ${newType} (Sauvegarder pour l'écrire dans l'UML)`);
     }
 
     function updateFieldStratFormula(fieldName, formula, save = true) {
@@ -8787,6 +8760,16 @@ SORTIE
       const strat = getTableDataStrategy(g, activeDataGenTable, parsedErd);
       if (strat.fields[fieldName] && strat.fields[fieldName].values[idx]) {
         strat.fields[fieldName].values[idx].pct = pct;
+        saveTableDataStrategy(g, activeDataGenTable, strat);
+      }
+    }
+
+    function updateFieldStratEnumValue(fieldName, idx, val) {
+      const g = selections[2] || 'A';
+      const { parsedErd } = getOrGenerateCurrentDataset(g);
+      const strat = getTableDataStrategy(g, activeDataGenTable, parsedErd);
+      if (strat.fields[fieldName] && strat.fields[fieldName].values[idx]) {
+        strat.fields[fieldName].values[idx].value = val;
         saveTableDataStrategy(g, activeDataGenTable, strat);
       }
     }
@@ -9767,11 +9750,12 @@ SORTIE
           </div>`;
         } else if (fStrat.generator === 'enum') {
           html += `<div class="space-y-1">
-            <label class="block text-[9.5px] text-slate-500 font-semibold">Distribution des valeurs (% somme 100) :</label>
+            <label class="block text-[9.5px] text-slate-500 font-semibold">Valeurs &amp; distribution (% somme 100) :</label>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-1.5">`;
           (fStrat.values || []).forEach((item, vIdx) => {
             html += `<div class="flex items-center gap-1 bg-slate-50 p-1 rounded border border-slate-200">
-              <span class="text-[10px] text-slate-700 truncate flex-1" title="${escapeHtml(item.value)}"><span class="${item.isDefault ? 'font-black text-amber-600' : 'text-slate-300'}">*</span>${escapeHtml(item.value)}</span>
+              <span class="${item.isDefault ? 'text-amber-500 font-black' : 'text-slate-300'}" title="Valeur par défaut (double poids)">*</span>
+              <input type="text" value="${escapeHtml(item.value)}" onchange="updateMesureStratEnumValue('${f.name}', ${vIdx}, this.value)" class="flex-1 min-w-0 px-1 py-0.2 border border-slate-200 rounded text-[10px] font-mono ${item.isDefault ? 'font-bold text-amber-700' : 'text-slate-700'}" />
               <input type="number" min="0" max="100" value="${item.pct}" onchange="updateMesureStratEnum('${f.name}', ${vIdx}, this.value)" class="w-12 px-1 py-0.2 border border-slate-300 rounded text-[10px] text-center font-bold" />
               <span class="text-[9px] text-slate-500">%</span>
             </div>`;
@@ -9844,16 +9828,19 @@ SORTIE
       const f = ent.fields.find(x => x.name === fieldName);
       if (!f) return;
       const prev = strat.fields[fieldName] || {};
-      const modifiedField = { ...f, type: newType };
-      if (newType === 'enum' && !(modifiedField.comment || '').includes('|')) {
-        const seed = (f.comment || '').trim() || 'Valeur 1';
-        modifiedField.comment = `*${seed} | Valeur 2`;
+      const modifiedField = { ...f, type: newType, comment: f.comment || '' };
+      if (newType === 'enum') {
+        if (!(modifiedField.comment || '').includes('|')) {
+          const seed = (f.comment || '').trim() || 'Valeur 1';
+          modifiedField.comment = `*${seed} | Valeur 2`;
+        }
+      } else {
+        modifiedField.comment = (f.comment || '').replace(/\s*\|.*/g, '').trim();
       }
       const def = getDefaultFieldStrategy(modifiedField, activeMesureModalTable, parsed);
       strat.fields[fieldName] = { ...def, type: newType, mode: prev.mode || 'distrib', formula: prev.formula || '' };
       saveStepTableDataStrategy(step, activeMesureModalTable, strat);
       renderMesureFieldsForm();
-      showToast(`✎ Type du champ <b>${fieldName}</b> : ${newType} (Sauvegarder pour l'écrire dans l'UML)`);
     }
 
     function updateMesureStratFormula(fieldName, formula, save = true) {
@@ -9953,6 +9940,17 @@ SORTIE
       const strat = getStepTableDataStrategy(step, activeMesureModalTable, parsed);
       if (strat.fields[fieldName] && strat.fields[fieldName].values[idx]) {
         strat.fields[fieldName].values[idx].pct = pct;
+        saveStepTableDataStrategy(step, activeMesureModalTable, strat);
+      }
+    }
+
+    function updateMesureStratEnumValue(fieldName, idx, val) {
+      const step = activeMesureModalStep;
+      const umlCode = getStepUmlCode(step);
+      const parsed = parseMermaidErd(umlCode);
+      const strat = getStepTableDataStrategy(step, activeMesureModalTable, parsed);
+      if (strat.fields[fieldName] && strat.fields[fieldName].values[idx]) {
+        strat.fields[fieldName].values[idx].value = val;
         saveStepTableDataStrategy(step, activeMesureModalTable, strat);
       }
     }
@@ -10654,7 +10652,6 @@ SORTIE
     window.addEventListener('load', () => {
       if (window.lucide && window.lucide.createIcons) window.lucide.createIcons();
       initMarkdownViewer();
-      initOptionCopyButtons();
 
       let startStep = 0;
       try {
