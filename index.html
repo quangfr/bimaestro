@@ -717,7 +717,11 @@
             <div id="schema-mermaid-view" class="hidden w-full flex-1 flex flex-col min-h-0 relative overflow-hidden pt-6">
               <div class="flex items-center justify-between pb-1 shrink-0">
                 <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Modèle Mermaid ERD (uml)</span>
-                <div class="flex items-center gap-1.5">
+                <span id="schema-mermaid-err" class="hidden flex-1 min-w-0 truncate text-[9.5px] font-mono font-semibold" title=""></span>
+                <div class="flex items-center gap-1.5 shrink-0">
+                  <button type="button" onclick="openDataGeneratorModal()" title="Éditer les types de champs et les règles du générateur de données" class="p-1 text-slate-500 hover:text-slate-800 hover:bg-slate-200 rounded transition cursor-pointer text-xs leading-none">
+                    ✎
+                  </button>
                   <span id="schema-mermaid-saved-msg" class="text-[9.5px] text-emerald-600 font-semibold hidden">✓ Enregistré</span>
                   <button type="button" id="schema-copy-btn" onclick="copyMermaidSchema()" title="Copier le code Mermaid" class="p-1 text-slate-500 hover:text-slate-800 hover:bg-slate-200 rounded transition cursor-pointer text-xs leading-none">
                     ⧉
@@ -752,8 +756,8 @@
                   <span id="schema-data-filter-badge" class="hidden px-1.5 py-0.2 rounded text-[9.5px] font-mono bg-emerald-100 text-emerald-800 border border-emerald-300 shrink-0"></span>
                 </div>
                 <div class="flex items-center gap-1.5 shrink-0">
-                  <button type="button" onclick="openDataGeneratorModal()" class="w-6 h-6 rounded border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 flex items-center justify-center transition text-xs shadow-2xs cursor-pointer" title="Paramètres du générateur de données (regex-genex / distributions)">
-                    ✏️
+                  <button type="button" onclick="openDataGeneratorModal()" class="w-6 h-6 rounded border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 flex items-center justify-center transition text-xs shadow-2xs cursor-pointer" title="Paramètres du générateur de données (types, regex-genex / distributions)">
+                    ✎
                   </button>
                 </div>
               </div>
@@ -889,9 +893,6 @@
                 <button type="button" onclick="openAddCustomMeasureModal(3)" class="px-2.5 h-6 sm:h-7 rounded-md bg-blue-800 hover:bg-blue-700 text-white text-xs font-bold transition shadow-xs flex items-center gap-1 hover:scale-105 active:scale-95 cursor-pointer" title="Ajouter une mesure personnalisée avec UML éditable">
                   <span>+</span> <span>Mesure</span>
                 </button>
-                <button id="step-3-mesure-edit-btn" type="button" onclick="openMesureGeneratorModal(3)" class="w-6 h-6 sm:w-7 sm:h-7 rounded-md border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 flex items-center justify-center transition text-xs shadow-2xs cursor-pointer" title="Éditer la formule de calcul SAP IBP des mesures">
-                  ✎
-                </button>
                 <button id="step-3-prompt-template-btn" type="button" onclick="openPromptTemplateModal(3)" title="Éditer le template de prompt (<>)" class="hidden w-6 h-6 sm:w-7 sm:h-7 rounded-md border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 flex items-center justify-center transition text-xs shadow-2xs cursor-pointer">
                   ✎
                 </button>
@@ -913,6 +914,9 @@
                 <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Modèle UML — Tables &amp; Champs du calcul</span>
                 <div class="flex items-center gap-1.5">
                   <span id="step-3-uml-editable-badge" class="hidden text-[9px] font-mono px-1 py-0.2 rounded bg-indigo-100 text-indigo-800 border border-indigo-200">Éditable</span>
+                  <button type="button" onclick="openMesureGeneratorModal(3)" title="Éditer les types de champs et les règles des mesures" class="p-1 text-slate-500 hover:text-slate-800 hover:bg-slate-200 rounded transition cursor-pointer text-xs leading-none">
+                    ✎
+                  </button>
                   <button type="button" onclick="copyStepUml(3)" title="Copier le code Mermaid UML" class="p-1 text-slate-400 hover:text-slate-800 rounded transition cursor-pointer text-xs leading-none">⧉</button>
                 </div>
               </div>
@@ -1324,9 +1328,6 @@
                 <button type="button" onclick="openAddCustomMeasureModal(5)" class="px-2.5 h-6 sm:h-7 rounded-md bg-blue-800 hover:bg-blue-700 text-white text-xs font-bold transition shadow-xs flex items-center gap-1 hover:scale-105 active:scale-95 cursor-pointer" title="Ajouter une mesure personnalisée avec UML éditable">
                   <span>+</span> <span>Mesure</span>
                 </button>
-                <button id="step-5-mesure-edit-btn" type="button" onclick="openMesureGeneratorModal(5)" class="w-6 h-6 sm:w-7 sm:h-7 rounded-md border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 flex items-center justify-center transition text-xs shadow-2xs cursor-pointer" title="Éditer la formule de calcul SAP IBP des mesures">
-                  ✎
-                </button>
                 <button id="step-5-prompt-template-btn" type="button" onclick="openPromptTemplateModal(5)" title="Éditer le template de prompt (<>)" class="hidden w-6 h-6 sm:w-7 sm:h-7 rounded-md border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 flex items-center justify-center transition text-xs shadow-2xs cursor-pointer">
                   ✎
                 </button>
@@ -1348,6 +1349,9 @@
                 <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Modèle UML — Tables &amp; Champs de Capacité</span>
                 <div class="flex items-center gap-1.5">
                   <span id="step-5-uml-editable-badge" class="hidden text-[9px] font-mono px-1 py-0.2 rounded bg-indigo-100 text-indigo-800 border border-indigo-200">Éditable</span>
+                  <button type="button" onclick="openMesureGeneratorModal(5)" title="Éditer les types de champs et les règles des mesures" class="p-1 text-slate-500 hover:text-slate-800 hover:bg-slate-200 rounded transition cursor-pointer text-xs leading-none">
+                    ✎
+                  </button>
                   <button type="button" onclick="copyStepUml(5)" title="Copier le code Mermaid UML" class="p-1 text-slate-400 hover:text-slate-800 rounded transition cursor-pointer text-xs leading-none">⧉</button>
                 </div>
               </div>
@@ -2042,20 +2046,17 @@
       <div id="data-gen-fields-container" class="flex-1 min-h-0 overflow-y-auto p-4 space-y-3 bg-slate-100/50"></div>
 
       <div class="px-4 py-2.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between shrink-0 text-xs">
-        <button type="button" onclick="restoreDataGenDefaults()" class="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-semibold transition shadow-xs cursor-pointer flex items-center gap-1" title="Rétablir les règles par défaut déduites de l'UML">
-          Restaurer
-        </button>
         <div class="flex items-center gap-2">
-          <button type="button" onclick="closeDataGeneratorModal()" class="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-semibold transition shadow-xs cursor-pointer">
-            Fermer
-          </button>
-          <button type="button" onclick="regenerateAllDataTables()" class="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-blue-50 text-blue-900 font-bold transition shadow-xs cursor-pointer flex items-center gap-1">
-            Regénérer tout
+          <button type="button" onclick="saveDataGenToUml()" class="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-blue-50 text-blue-900 font-bold transition shadow-xs cursor-pointer flex items-center gap-1" title="Enregistrer les types et distributions dans l'UML du modèle courant">
+            Sauvegarder
           </button>
           <button type="button" onclick="regenerateActiveDataTable()" class="px-4 py-1.5 rounded-lg bg-blue-800 hover:bg-blue-700 text-white font-bold transition shadow-sm cursor-pointer flex items-center gap-1.5">
             Regénérer
           </button>
         </div>
+        <button type="button" onclick="restoreDataGenSchemaAndData()" class="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-semibold transition shadow-xs cursor-pointer flex items-center gap-1" title="Rétablir le diagramme et les données initiaux">
+          Restaurer
+        </button>
       </div>
     </div>
   </div>
@@ -2143,29 +2144,28 @@
       <div id="mesure-fields-container" class="flex-1 min-h-0 overflow-y-auto p-4 space-y-3 bg-slate-100/50"></div>
 
       <!-- Pied de la modale -->
-      <div class="px-4 py-2.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between shrink-0 text-xs">
-        <button type="button" onclick="restoreMesureDefaults()" class="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-semibold transition shadow-xs cursor-pointer flex items-center gap-1" title="Rétablir les règles par défaut déduites de l'UML">
-          Restaurer
-        </button>
+<div class="px-4 py-2.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between shrink-0 text-xs">
         <div class="flex items-center gap-2">
-          <button type="button" onclick="closeMesureGeneratorModal()" class="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-semibold transition shadow-xs cursor-pointer">
-            Fermer
-          </button>
-          <button type="button" onclick="applyAllMesuresToUmlComment()" class="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-blue-50 text-blue-800 font-bold transition shadow-xs cursor-pointer flex items-center gap-1" title="Écrire les formules et distributions en commentaires de l'UML">
-            Enregistrer dans l'UML
+          <button type="button" onclick="saveMesuresToUml()" class="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-blue-50 text-blue-900 font-bold transition shadow-xs cursor-pointer flex items-center gap-1" title="Enregistrer types, formules et distributions dans l'UML de l'Étape">
+            Sauvegarder
           </button>
           <button type="button" onclick="regenerateTableMeasures()" class="px-4 py-1.5 rounded-lg bg-blue-800 hover:bg-blue-700 text-white font-bold transition shadow-sm cursor-pointer flex items-center gap-1.5">
             Regénérer
           </button>
         </div>
+        <button type="button" onclick="restoreMesureModal()" class="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-semibold transition shadow-xs cursor-pointer flex items-center gap-1" title="Rétablir le diagramme et les mesures initiaux">
+          Restaurer
+        </button>
+      </div>
+    </div>
+  </div>
       </div>
 
     </div>
   </div>
 
-  <!-- Global Formula Autocomplete Dropdown & Operator Tooltip -->
-  <div id="global-formula-autocomplete" class="hidden fixed z-[9999] bg-white border border-slate-300 rounded-lg shadow-xl text-xs max-h-56 overflow-y-auto w-64 divide-y divide-slate-100 font-mono"></div>
-  <div id="global-formula-tooltip" class="hidden fixed z-[9999] bg-slate-900 text-white text-[11px] rounded-lg shadow-xl px-3 py-2 max-w-sm pointer-events-none transition-opacity duration-150"></div>
+  <!-- Global Formula Autocomplete Dropdown -->
+  <div id="global-formula-autocomplete" class="hidden fixed z-[9999] bg-white border border-slate-300 rounded-lg shadow-xl text-xs max-h-56 overflow-y-auto w-[420px] divide-y divide-slate-100 font-mono"></div>
 
   <!-- ================= MODALE AJOUTER UNE MESURE PERSONNALISÉE (Étapes 3 & 5) ================= -->
   <div id="add-custom-measure-modal" class="fixed inset-0 z-50 hidden bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-1 sm:p-2">
@@ -5655,9 +5655,6 @@ ENTRÉES
       const promptTplBtn = document.getElementById(`step-${step}-prompt-template-btn`);
       if (promptTplBtn) promptTplBtn.classList.toggle('hidden', targetMode !== 'ai');
 
-      const mesureEditBtn = document.getElementById(`step-${step}-mesure-edit-btn`);
-      if (mesureEditBtn) mesureEditBtn.classList.toggle('hidden', targetMode !== 'data');
-
       if (targetMode === 'ai') {
         renderTableAiView(step);
       } else if (targetMode === 'visuels') {
@@ -6909,7 +6906,7 @@ ${uml2B}
         string ID_INTERVENTION PK "I-2026-000123-01"
         string ID_DEMANDE FK "D-2026-000123"
         enum TYPE_REPARATION "*T-AUBTUR | T-INSCND | T-MAJLOU | T-BANESS | T-EQUROT | T-COMHOT | T-REVCAR | T-FODREP"
-        string PRECISION_AUTRE "Usinage aubes HP"
+        enum PRECISION_AUTRE "*Usinage aubes HP | Re-frettage spécifique | CND Ultra-sons | Traitement thermique | Équilibrage basse vitesse"
         enum SHOP_ASSIGNE "*S-MON | S-VIL | S-CHL | S-BRU | S-SQY | S-GEN | S-BDX | S-TLS | S-LGG | S-CRE"
         string DONNEES_TECHNIQUES "DOC-NDT-2026-442"
         float INTERVENTION_TAT "32.5 h"
@@ -6926,7 +6923,7 @@ ${uml2B}
         string ID_DEMANDE PK "D-2026-000123"
         string ID_INTERVENTION PK "I-2026-000123-01"
         enum TYPE_REPARATION "*T-AUBTUR | T-INSCND | T-MAJLOU | T-BANESS | T-EQUROT | T-COMHOT | T-REVCAR | T-FODREP"
-        string PRECISION_AUTRE "Re-frettage specifique"
+        enum PRECISION_AUTRE "*Re-frettage spécifique | Usinage aubes HP | CND Ultra-sons | Traitement thermique | Équilibrage dynamique"
         enum STATION_ASSIGNEE FK "*S-MON-01 | S-MON-02 | S-MON-03 | S-VIL-01 | S-VIL-02 | S-CHL-01 | S-TLS-01"
         enum SHOP_ASSIGNE FK "*S-MON | S-VIL | S-CHL | S-BRU | S-SQY | S-GEN | S-BDX | S-TLS | S-LGG | S-CRE"
         string DONNEES_TECHNIQUES "DOC-NDT-2026-442"
@@ -6937,13 +6934,13 @@ ${uml2B}
     STATION ["Station de Réparation"] {
         string ID_STATION PK "S-MON-01"
         enum SHOP_ASSIGNE FK "*S-MON | S-VIL | S-CHL | S-BRU | S-SQY | S-GEN | S-BDX | S-TLS | S-LGG | S-CRE"
-        string NOM_STATION "Usinage Aubes HP Tour CN"
+        enum NOM_STATION "*Usinage Aubes HP Tour CN | Frettage Manches & Carters | CND Ultra-sons | Équilibrage Basse Vitesse | Montage Final Baie"
         enum TYPE_REPARATION "*T-AUBTUR | T-INSCND | T-MAJLOU | T-BANESS | T-EQUROT | T-COMHOT | T-REVCAR | T-FODREP"
         float SEUIL_SATURATION "85.0 %"
     }
     SHOP ["Atelier (Shop)"] {
         enum SHOP_ASSIGNE PK "*S-MON | S-VIL | S-CHL | S-BRU | S-SQY | S-GEN | S-BDX | S-TLS | S-LGG | S-CRE"
-        string NOM_ATELIER "Montereau"
+        enum NOM_ATELIER "*Montereau | Villaroche | Châtellerault | Bruxelles | Toulouse | Saint-Quentin | Gennevilliers | Bordeaux | Liège | Le Creusot"
         int NB_STATIONS "6"
         float CAPACITE_HEBDO "1450.0 h"
     }
@@ -7293,7 +7290,7 @@ xychart-beta
     STATION ||--o{ MDT_INTERVENTION : "1 station -> N interventions (1:N)"
     STATION {
         string ID_STATION PK "S-MON-01"
-        string NOM_STATION "Usinage Aubes HP Tour CN"
+        enum NOM_STATION "*Usinage Aubes HP Tour CN | Frettage Manches & Carters | CND Ultra-sons | Équilibrage Basse Vitesse"
         float SEUIL_SATURATION "85.0 %"
     }
     MDT_INTERVENTION {
@@ -7308,7 +7305,7 @@ xychart-beta
         string ID_INTERVENTION PK "I-2026-000123-01"
         string ID_DEMANDE FK "D-2026-000123"
         enum TYPE_REPARATION "*T-AUBTUR | T-INSCND | T-MAJLOU"
-        string PRECISION_AUTRE "CND Ultra-sons"
+        enum PRECISION_AUTRE "*CND Ultra-sons | Re-frettage spécifique | Usinage aubes HP"
         float ALEA_TECH "1.5 h"
         float INTERVENTION_TAT "32.0 h"
     }`
@@ -7327,7 +7324,7 @@ xychart-beta
     STATION ||--o{ MDT_INTERVENTION : "1 station -> N interventions (1:N)"
     STATION {
         string ID_STATION PK "S-MON-01"
-        string NOM_STATION "Usinage Aubes HP Tour CN"
+        enum NOM_STATION "*Usinage Aubes HP Tour CN | Frettage Manches & Carters | CND Ultra-sons"
         int POSTES_STATION_TAMPON "4"
     }
     MDT_INTERVENTION {
@@ -7419,17 +7416,23 @@ xychart-beta
       const code = (getStepUmlCode(step) || '').trim();
       const isCustom = typeof opt === 'string' && opt.startsWith('custom_m_');
 
+      // Validation front de la syntaxe Mermaid ERD avant appel à la librairie
+      const vResult = validateMermaidErdSyntax(code);
+      if (typeof mermaid === 'undefined') {
+        container.innerHTML = '<div class="text-xs text-slate-400 p-4">⏳ Chargement de Mermaid...</div>';
+        return;
+      }
+      if (vResult.errors.length > 0) {
+        container.innerHTML = buildUmlErrorHtml(vResult);
+        return;
+      }
+
       if (badge) badge.classList.toggle('hidden', !isCustom);
       if (editor) {
         editor.classList.toggle('hidden', !isCustom);
         if (isCustom && editor.value !== code) {
           editor.value = code;
         }
-      }
-
-      if (typeof mermaid === 'undefined') {
-        container.innerHTML = '<div class="text-xs text-slate-400 p-4">⏳ Chargement de Mermaid...</div>';
-        return;
       }
 
       try {
@@ -7527,20 +7530,51 @@ xychart-beta
         clearTimeout(window._schemaSavedTimer);
         window._schemaSavedTimer = setTimeout(() => msg.classList.add('hidden'), 1500);
       }
+
+      // Validation front immédiate : blocage du rendu en cas de mauvaise syntaxe
+      const vResult = validateMermaidErdSyntax(val);
+      updateSchemaMermaidErrorBadge(vResult);
       clearTimeout(window._schemaRenderTimer);
+      if (vResult.errors.length > 0) {
+        const container = document.getElementById('schema-mermaid-diagram');
+        if (container) container.innerHTML = buildUmlErrorHtml(vResult);
+        return;
+      }
+
       window._schemaRenderTimer = setTimeout(() => {
         renderMermaidVisual(g);
+        // La modification de l'UML régénère le jeu de données (vue "data")
+        currentModelDataset = null;
+        currentModelParsedErd = null;
+        currentModelGranularity = null;
+        if (schemaViewMode === 'data') {
+          try { renderStep2DataView(true); } catch (e) { console.warn('Régénération data échouée après édition UML :', e); }
+        }
       }, 300);
     }
 
     function resetMermaidSchema() {
       const g = selections[2] || 'A';
-      try {
-        localStorage.removeItem(MERMAID_SCHEMA_STORAGE_KEY_PREFIX + g);
-      } catch (e) {}
-      const defaultCode = SCHEMA_MERMAID[g] || SCHEMA_MERMAID.A;
+      let defaultCode;
+      if (g.startsWith('custom_')) {
+        const cs = (customSchemas || []).find(c => c.id === g);
+        defaultCode = cs ? cs.code : SCHEMA_MERMAID.A;
+        saveMermaidSchema(g, defaultCode);
+      } else {
+        try {
+          localStorage.removeItem(MERMAID_SCHEMA_STORAGE_KEY_PREFIX + g);
+        } catch (e) {}
+        defaultCode = SCHEMA_MERMAID[g] || SCHEMA_MERMAID.A;
+      }
       updateMermaidCode(g);
+      updateSchemaMermaidErrorBadge(validateMermaidErdSyntax(defaultCode));
       renderMermaidVisual(g);
+      currentModelDataset = null;
+      currentModelParsedErd = null;
+      currentModelGranularity = null;
+      if (schemaViewMode === 'data') {
+        try { renderStep2DataView(true); } catch (e) {}
+      }
       const msg = document.getElementById('schema-mermaid-saved-msg');
       if (msg) {
         msg.textContent = '✓ Réinitialisé';
@@ -7551,7 +7585,7 @@ xychart-beta
           msg.classList.add('hidden');
         }, 1500);
       }
-      showToast('↻ Modèle Mermaid <b>' + (g === 'B' ? '2.B' : '2.A') + '</b> réinitialisé');
+      showToast('↻ Modèle <b>' + (g.startsWith('custom_') ? 'Personnalisé' : (g === 'B' ? '2.B' : '2.A')) + '</b> réinitialisé');
     }
 
     const ERD_GENERIC_PROMPT = `Génère un nouveau diagramme ERD Mermaid à partir du diagramme original ENTRÉE et selon la SORTIE.
@@ -7616,6 +7650,101 @@ SORTIE
       });
     }
 
+    // Validation front-end de la syntaxe Mermaid ERD (bloque le rendu avant la librairie)
+    const ERD_ALLOWED_TYPES = ['string', 'int', 'integer', 'float', 'double', 'number', 'boolean', 'bool', 'date', 'datetime', 'time', 'enum'];
+
+    function validateMermaidErdSyntax(umlText) {
+      const errors = [];
+      const warnings = [];
+      const lines = (umlText || '').split('\n');
+      let braceDepth = 0;
+      let currentEntity = null;
+
+      const relRegex = /^\s*([A-Za-z0-9_]+)\s*(\|\||\|o|o\||o\{|\}o|\}\{|\{\|)\s*--\s*(\|\||\|o|o\||o\{|\}o|\}\{|\{\|)\s*([A-Za-z0-9_]+)\s*(?::\s*"?([^"\n\r]*)"?)?\s*$/;
+      const entHeaderRegex = /^\s*([A-Za-z0-9_]+)(?:\s*\["([^"]*)"\])?\s*\{\s*$/;
+      const closeRegex = /^\s*\}\s*$/;
+      const fieldRegex = /^\s*(\*?[A-Za-z_][A-Za-z0-9_]*)\s+([A-Za-z0-9_]+)(?:\s+(PK|FK|UK))?(?:\s+"([^"]*)")?\s*$/;
+
+      for (let i = 0; i < lines.length; i++) {
+        const raw = lines[i];
+        const line = raw.trim();
+        const lineNo = i + 1;
+        if (!line || line.startsWith('%%')) continue;
+        if (line === 'erDiagram') continue;
+
+        if (braceDepth > 0 && !line.startsWith('}')) {
+          const fMatch = line.match(fieldRegex);
+          if (!fMatch) {
+            errors.push({ line: lineNo, motif: line, message: 'Champ mal formé — attendu : <type> <NOM> [PK|FK|UK] "commentaire"' });
+            continue;
+          }
+          const fieldType = fMatch[1].replace(/^\*/, '').toLowerCase();
+          if (ERD_ALLOWED_TYPES.indexOf(fieldType) === -1) {
+            warnings.push({ line: lineNo, motif: line, message: `Type de champ « ${fMatch[1]} » non standard` });
+          }
+          continue;
+        }
+
+        const closeMatch = line.match(closeRegex);
+        if (closeMatch) {
+          if (braceDepth <= 0) {
+            errors.push({ line: lineNo, motif: line, message: 'Accolade fermante } sans bloc { correspondant' });
+          } else {
+            braceDepth--;
+            currentEntity = null;
+          }
+          continue;
+        }
+
+        if (line.match(relRegex)) continue;
+
+        const entMatch = line.match(entHeaderRegex);
+        if (entMatch) {
+          if ((raw.match(/"/g) || []).length % 2 !== 0) {
+            errors.push({ line: lineNo, motif: line, message: 'Guillemet non fermé dans le libellé de l\'entité' });
+            continue;
+          }
+          braceDepth++;
+          currentEntity = entMatch[1];
+          continue;
+        }
+
+        errors.push({ line: lineNo, motif: line, message: 'Syntaxe inconnue (attendu : relation, entité { ... }, champ ou accolade fermante }' });
+      }
+
+      if (braceDepth > 0) {
+        errors.push({ line: lines.length, motif: '}', message: `Accolade ouvrante { non refermée (${braceDepth} bloc(s) entité à clôturer)` });
+      }
+
+      return { errors, warnings };
+    }
+
+    function buildUmlErrorHtml(result) {
+      const msgs = [];
+      (result.errors || []).forEach(e => msgs.push(`Ligne ${e.line} : ${e.message}<br><span class="text-red-500 opacity-70">» ${escapeHtml(e.motif)}</span>`));
+      (result.warnings || []).forEach(w => msgs.push(`Avertissement Ligne ${w.line} : ${w.message}<br><span class="text-amber-600 opacity-70">» ${escapeHtml(w.motif)}</span>`));
+      return `<div class="p-3 text-red-600 text-xs font-mono bg-red-50 rounded border border-red-200 max-w-full overflow-auto">⚠️ Syntaxe bloquée par validation front (avant Mermaid) :<br><pre class="mt-1 whitespace-pre-wrap">${msgs.join('<br>') || 'Erreur inconnue'}</pre></div>`;
+    }
+
+    function updateSchemaMermaidErrorBadge(result) {
+      const badge = document.getElementById('schema-mermaid-err');
+      if (!badge) return;
+      const msgs = [];
+      (result.errors || []).forEach(e => msgs.push(`L.${e.line} : ${e.message}`));
+      (result.warnings || []).forEach(w => msgs.push(`Avert. L.${w.line} : ${w.message}`));
+      if (msgs.length) {
+        badge.textContent = msgs.slice(0, 2).join(' • ') + (msgs.length > 2 ? ` (+${msgs.length - 2})` : '');
+        badge.title = msgs.join('\n');
+        badge.classList.remove('hidden');
+        badge.classList.toggle('text-red-600', (result.errors || []).length > 0);
+        badge.classList.toggle('text-amber-600', (result.errors || []).length === 0 && (result.warnings || []).length > 0);
+      } else {
+        badge.textContent = '';
+        badge.title = '';
+        badge.classList.add('hidden');
+      }
+    }
+
     function renderMermaidVisual(granularity) {
       const g = granularity || selections[2] || 'A';
       const container = document.getElementById('schema-mermaid-diagram');
@@ -7624,6 +7753,14 @@ SORTIE
 
       if (typeof mermaid === 'undefined') {
         container.innerHTML = '<div class="text-xs text-slate-400 p-4">⏳ Chargement de Mermaid...</div>';
+        return;
+      }
+
+      // Blocage de la mauvaise syntaxe en amont de la librairie Mermaid
+      const vResult = validateMermaidErdSyntax(code);
+      updateSchemaMermaidErrorBadge(vResult);
+      if (vResult.errors.length > 0) {
+        container.innerHTML = buildUmlErrorHtml(vResult);
         return;
       }
 
@@ -7812,19 +7949,27 @@ SORTIE
       if (type === 'enum' || comment.includes('|')) {
         let rawVals = [];
         if (comment.includes('|')) {
-          rawVals = comment.split('|').map(v => v.replace(/^\*/, '').trim()).filter(Boolean);
+          rawVals = comment.split('|').map(v => v.trim()).filter(Boolean);
         } else if (comment) {
-          rawVals = [comment.replace(/^\*/, '').trim()];
+          rawVals = [comment.trim()];
         } else {
           rawVals = [`${name}_1`, `${name}_2`, `${name}_3`];
         }
 
         if (rawVals.length > 0) {
-          const equalPct = Math.round(100 / rawVals.length);
-          const values = rawVals.map((val, idx) => ({
-            value: val,
-            pct: idx === rawVals.length - 1 ? (100 - equalPct * (rawVals.length - 1)) : equalPct
+          // La valeur préfixée '*' dans l'UML est la valeur par défaut : double poids de répartition.
+          const cleaned = rawVals.map(v => ({
+            value: v.replace(/^\*/, ''),
+            isDefault: v.startsWith('*')
           }));
+          const totalWeight = cleaned.reduce((s, c) => s + (c.isDefault ? 2 : 1), 0);
+          let accPct = 0;
+          const values = cleaned.map((c, idx) => {
+            const basePct = Math.round(((c.isDefault ? 2 : 1) * 100) / totalWeight);
+            accPct += basePct;
+            const pct = (idx === cleaned.length - 1) ? (basePct + Math.max(0, 100 - accPct)) : basePct;
+            return { value: c.value, pct, isDefault: c.isDefault };
+          });
           return {
             generator: 'enum',
             values
@@ -7906,7 +8051,25 @@ SORTIE
         const raw = localStorage.getItem(storageKey);
         if (raw) {
           const parsed = JSON.parse(raw);
-          if (parsed && parsed.fields) return parsed;
+          if (parsed && parsed.fields) {
+            // Si la nature d'un champ a changé dans l'UML (ex. string -> enum), on ré-applique la stratégie déduite.
+            // On ne touche pas aux champs dont le type a été modifié explicitement dans la modale (stratégie .type).
+            const ent = parsedErd.entities[tableName];
+            if (ent) {
+              ent.fields.forEach(f => {
+                const s = parsed.fields[f.name];
+                if (!s) {
+                  parsed.fields[f.name] = getDefaultFieldStrategy(f, tableName, parsedErd);
+                } else {
+                  const ideal = getDefaultFieldStrategy(f, tableName, parsedErd);
+                  if (s.generator !== 'formula' && ideal.generator !== s.generator && !s.type) {
+                    parsed.fields[f.name] = ideal;
+                  }
+                }
+              });
+            }
+            return parsed;
+          }
         }
       } catch (e) {}
 
@@ -8405,7 +8568,9 @@ SORTIE
             <div class="flex items-center gap-1.5">
               <span class="font-bold text-slate-800 text-[11px] font-mono">${f.name}</span>
               ${badgeConstraint}
-              <span class="text-[9.5px] text-slate-500 font-mono">(${f.type})</span>
+              <select onchange="updateFieldStratType('${f.name}', this.value)" title="Type de donnée (enregistrable dans l'UML)" class="text-[9.5px] font-mono font-semibold bg-white border border-slate-300 rounded px-1 py-0.5 text-slate-700 cursor-pointer shadow-2xs">
+                ${['string', 'int', 'float', 'date', 'boolean', 'enum'].map(t => `<option value="${t}"${(fStrat.type || f.type) === t ? ' selected' : ''}>${t}</option>`).join('')}
+              </select>
             </div>
             <span class="text-[9.5px] text-slate-400 italic truncate max-w-[200px]" title="${f.comment || ''}">UML : "${f.comment || '-'}"</span>
           </div>
@@ -8472,7 +8637,7 @@ SORTIE
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-1.5">`;
           (fStrat.values || []).forEach((item, vIdx) => {
             html += `<div class="flex items-center gap-1 bg-slate-50 p-1 rounded border border-slate-200">
-              <span class="text-[10px] text-slate-700 truncate flex-1" title="${item.value}">${item.value}</span>
+              <span class="text-[10px] text-slate-700 truncate flex-1" title="${escapeHtml(item.value)}"><span class="${item.isDefault ? 'font-black text-amber-600' : 'text-slate-300'}">*</span>${escapeHtml(item.value)}</span>
               <input type="number" min="0" max="100" value="${item.pct}" onchange="updateFieldStratEnum('${f.name}', ${vIdx}, this.value)" class="w-12 px-1 py-0.2 border border-slate-300 rounded text-[10px] text-center font-bold" />
               <span class="text-[9px] text-slate-500">%</span>
             </div>`;
@@ -8507,7 +8672,7 @@ SORTIE
 
       // Initialiser la validation des formules existantes et brancher l'autocomplete
       const allModelFields = [];
-      Object.values(parsedErd.entities).forEach(e => e.fields.forEach(fld => allModelFields.push(fld.name)));
+      Object.values(parsedErd.entities).forEach(e => e.fields.forEach(fld => allModelFields.push({ name: fld.name, comment: fld.comment })));
 
       ent.fields.forEach(f => {
         const fStrat = strat.fields[f.name];
@@ -8528,6 +8693,27 @@ SORTIE
         saveTableDataStrategy(g, activeDataGenTable, strat);
         renderDataGenFieldsForm();
       }
+    }
+
+    function updateFieldStratType(fieldName, newType) {
+      const g = selections[2] || 'A';
+      const { parsedErd } = getOrGenerateCurrentDataset(g);
+      const ent = parsedErd.entities[activeDataGenTable];
+      if (!ent) return;
+      const strat = getTableDataStrategy(g, activeDataGenTable, parsedErd);
+      const f = ent.fields.find(x => x.name === fieldName);
+      if (!f) return;
+      const prev = strat.fields[fieldName] || {};
+      const modifiedField = { ...f, type: newType };
+      if (newType === 'enum' && !(modifiedField.comment || '').includes('|')) {
+        const seed = (f.comment || '').trim() || 'Valeur 1';
+        modifiedField.comment = `*${seed} | Valeur 2`;
+      }
+      const def = getDefaultFieldStrategy(modifiedField, activeDataGenTable, parsedErd);
+      strat.fields[fieldName] = { ...def, type: newType, mode: prev.mode || 'distrib', formula: prev.formula || '' };
+      saveTableDataStrategy(g, activeDataGenTable, strat);
+      renderDataGenFieldsForm();
+      showToast(`✎ Type du champ <b>${fieldName}</b> : ${newType} (Sauvegarder pour l'écrire dans l'UML)`);
     }
 
     function updateFieldStratFormula(fieldName, formula, save = true) {
@@ -8646,6 +8832,62 @@ SORTIE
       currentModelGranularity = g;
       renderStep2DataView(true);
       showToast('⚡ Toutes les tables du modèle ont été regénérées');
+    }
+
+    function saveDataGenToUml() {
+      const g = selections[2] || 'A';
+      let updatedUml = getMermaidSchema(g);
+      const parsed = parseMermaidErd(updatedUml);
+      let totalUpdated = 0;
+
+      Object.keys(parsed.entities).forEach(tName => {
+        const strat = getTableDataStrategy(g, tName, parsed);
+        const ent = parsed.entities[tName];
+        if (!ent) return;
+
+        ent.fields.forEach(f => {
+          const fStrat = strat.fields[f.name];
+          if (!fStrat) return;
+          const opts = {};
+          if (fStrat.type && fStrat.type !== f.type) opts.type = fStrat.type;
+          if (fStrat.type === 'enum' && fStrat.values && fStrat.values.length) {
+            opts.comment = fStrat.values.map(v => (v.isDefault ? '*' : '') + v.value).join(' | ');
+          }
+          if (opts.type || opts.comment !== undefined) {
+            const before = updatedUml;
+            updatedUml = setUmlFieldAttributes(updatedUml, tName, f.name, opts);
+            if (updatedUml !== before) totalUpdated++;
+          }
+        });
+      });
+
+      if (totalUpdated > 0) {
+        saveMermaidSchema(g, updatedUml);
+        currentModelDataset = null;
+        currentModelParsedErd = null;
+        currentModelGranularity = null;
+        renderMermaidVisual(g);
+        if (schemaViewMode === 'data') {
+          try { renderStep2DataView(true); } catch (e) { console.warn('Régénération data échouée après sauvegarde UML :', e); }
+        }
+        renderDataGenFieldsForm();
+        showToast(`📝 ${totalUpdated} champ(s) enregistré(s) dans l'UML du modèle <b>${g}</b>`);
+      } else {
+        showToast('⚠️ Aucune modification de type à enregistrer dans l\'UML');
+      }
+    }
+
+    function restoreDataGenSchemaAndData() {
+      const g = selections[2] || 'A';
+      const { parsedErd } = getOrGenerateCurrentDataset(g);
+      Object.keys(parsedErd.entities).forEach(tName => {
+        const storageKey = `maestro_datagen_strat_${g}_${tName}`;
+        try { localStorage.removeItem(storageKey); } catch (e) {}
+      });
+      // Réinitialiser le diagramme (custom-aware) et régénérer les données
+      resetMermaidSchema();
+      renderDataGenFieldsForm();
+      showToast('↻ Diagramme et données réinitialisés (modèle ' + g + ')');
     }
 
     // ===== Modale Création d'un Nouveau Tableau (Étape 2) =====
@@ -8819,6 +9061,8 @@ SORTIE
         renderMermaidVisual(selections[2] || 'A');
       } else if (targetMode === 'uml') {
         updateMermaidCode(selections[2] || 'A');
+        const g = selections[2] || 'A';
+        updateSchemaMermaidErrorBadge(validateMermaidErdSyntax(getMermaidSchema(g)));
       } else if (targetMode === 'erd') {
         updateSchemaPromptView(selections[2] || 'A');
       } else if (targetMode === 'data') {
@@ -9330,7 +9574,25 @@ SORTIE
         const raw = localStorage.getItem(storageKey);
         if (raw) {
           const parsed = JSON.parse(raw);
-          if (parsed && parsed.fields) return parsed;
+          if (parsed && parsed.fields) {
+            // Si la nature d'un champ a changé dans l'UML (ex. string -> enum), on ré-applique la stratégie déduite.
+            // On ne touche pas aux champs dont le type a été modifié explicitement dans la modale (stratégie .type).
+            const ent = parsedErd.entities[tableName];
+            if (ent) {
+              ent.fields.forEach(f => {
+                const s = parsed.fields[f.name];
+                if (!s) {
+                  parsed.fields[f.name] = getDefaultFieldStrategy(f, tableName, parsedErd);
+                } else {
+                  const ideal = getDefaultFieldStrategy(f, tableName, parsedErd);
+                  if (s.generator !== 'formula' && ideal.generator !== s.generator && !s.type) {
+                    parsed.fields[f.name] = ideal;
+                  }
+                }
+              });
+            }
+            return parsed;
+          }
         }
       } catch (e) {}
 
@@ -9411,7 +9673,6 @@ SORTIE
       const modal = document.getElementById('mesure-generator-modal');
       if (modal) modal.classList.add('hidden');
       hideFormulaAutocomplete();
-      hideFormulaTooltip();
     }
 
     function onMesureTableSelectChange(tableName) {
@@ -9441,7 +9702,9 @@ SORTIE
             <div class="flex items-center gap-1.5">
               <span class="font-bold text-slate-800 text-[11px] font-mono">${f.name}</span>
               ${badgeConstraint}
-              <span class="text-[9.5px] text-slate-500 font-mono">(${f.type})</span>
+              <select onchange="updateMesureStratType('${f.name}', this.value)" title="Type de donnée (enregistrable dans l'UML)" class="text-[9.5px] font-mono font-semibold bg-white border border-slate-300 rounded px-1 py-0.5 text-slate-700 cursor-pointer shadow-2xs">
+                ${['string', 'int', 'float', 'date', 'boolean', 'enum'].map(t => `<option value="${t}"${(fStrat.type || f.type) === t ? ' selected' : ''}>${t}</option>`).join('')}
+              </select>
             </div>
             <span class="text-[9.5px] text-slate-400 italic truncate max-w-[200px]" title="${f.comment || ''}">UML : "${f.comment || '-'}"</span>
           </div>
@@ -9508,7 +9771,7 @@ SORTIE
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-1.5">`;
           (fStrat.values || []).forEach((item, vIdx) => {
             html += `<div class="flex items-center gap-1 bg-slate-50 p-1 rounded border border-slate-200">
-              <span class="text-[10px] text-slate-700 truncate flex-1" title="${item.value}">${item.value}</span>
+              <span class="text-[10px] text-slate-700 truncate flex-1" title="${escapeHtml(item.value)}"><span class="${item.isDefault ? 'font-black text-amber-600' : 'text-slate-300'}">*</span>${escapeHtml(item.value)}</span>
               <input type="number" min="0" max="100" value="${item.pct}" onchange="updateMesureStratEnum('${f.name}', ${vIdx}, this.value)" class="w-12 px-1 py-0.2 border border-slate-300 rounded text-[10px] text-center font-bold" />
               <span class="text-[9px] text-slate-500">%</span>
             </div>`;
@@ -9543,7 +9806,7 @@ SORTIE
 
       // Initialiser la validation des formules existantes et brancher l'autocomplete
       const allModelFields = [];
-      Object.values(parsed.entities).forEach(e => e.fields.forEach(fld => allModelFields.push(fld.name)));
+      Object.values(parsed.entities).forEach(e => e.fields.forEach(fld => allModelFields.push({ name: fld.name, comment: fld.comment })));
 
       ent.fields.forEach(f => {
         const fStrat = strat.fields[f.name];
@@ -9569,6 +9832,28 @@ SORTIE
         saveStepMeasureConfig(step, fieldName, oldCfg);
         renderMesureFieldsForm();
       }
+    }
+
+    function updateMesureStratType(fieldName, newType) {
+      const step = activeMesureModalStep;
+      const umlCode = getStepUmlCode(step);
+      const parsed = parseMermaidErd(umlCode);
+      const ent = parsed.entities[activeMesureModalTable];
+      if (!ent) return;
+      const strat = getStepTableDataStrategy(step, activeMesureModalTable, parsed);
+      const f = ent.fields.find(x => x.name === fieldName);
+      if (!f) return;
+      const prev = strat.fields[fieldName] || {};
+      const modifiedField = { ...f, type: newType };
+      if (newType === 'enum' && !(modifiedField.comment || '').includes('|')) {
+        const seed = (f.comment || '').trim() || 'Valeur 1';
+        modifiedField.comment = `*${seed} | Valeur 2`;
+      }
+      const def = getDefaultFieldStrategy(modifiedField, activeMesureModalTable, parsed);
+      strat.fields[fieldName] = { ...def, type: newType, mode: prev.mode || 'distrib', formula: prev.formula || '' };
+      saveStepTableDataStrategy(step, activeMesureModalTable, strat);
+      renderMesureFieldsForm();
+      showToast(`✎ Type du champ <b>${fieldName}</b> : ${newType} (Sauvegarder pour l'écrire dans l'UML)`);
     }
 
     function updateMesureStratFormula(fieldName, formula, save = true) {
@@ -9683,23 +9968,54 @@ SORTIE
       }
     }
 
-    function restoreMesureDefaults() {
+    function setUmlFieldAttributes(uml, entityName, fieldName, opts = {}) {
+      const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const entRe = new RegExp('^\\s*' + esc(entityName) + '(?:\\s*\\[[^\\]]*\\])?\\s*\\{([\\s\\S]*?)^\\s*\\}', 'm');
+      const m = entRe.exec(uml);
+      if (!m) return uml;
+      const inner = m[1];
+      const fieldRe = new RegExp('^(\\s*)(\\*?[A-Za-z_][A-Za-z0-9_]*)(\\s+)(' + esc(fieldName) + ')((?:\\s+(?:PK|FK|UK))?)(?:\\s*"[^"]*")?([ \\t]*)$', 'm');
+      if (!fieldRe.test(inner)) return uml;
+      const newInner = inner.replace(fieldRe, (mm, sp, oldT, sep, nm, cons, tr) => {
+        const typeToken = opts.type ? opts.type : oldT;
+        let commentPart = '';
+        if (opts.comment !== undefined) {
+          commentPart = opts.comment ? ' "' + opts.comment + '"' : '';
+        } else {
+          const existing = mm.match(/(\s*"[^"]*")\s*$/);
+          if (existing) commentPart = existing[1];
+        }
+        return sp + typeToken + sep + nm + (cons || '') + commentPart + tr;
+      });
+      const innerStart = m.index + m[0].indexOf(inner);
+      return uml.slice(0, innerStart) + newInner + uml.slice(innerStart + inner.length);
+    }
+
+    function restoreMesureModal() {
       const step = activeMesureModalStep;
+      const opt = selections[step] || 'B';
       const umlCode = getStepUmlCode(step);
       const parsed = parseMermaidErd(umlCode);
       Object.keys(parsed.entities).forEach(tName => {
         const storageKey = `maestro_measure_strat_${step}_${tName}`;
         try { localStorage.removeItem(storageKey); } catch (e) {}
       });
+      if ((typeof opt === 'string' && opt.startsWith('custom_m_'))) {
+        // Mesure personnalisée : l'UML sauvegardé (cm.uml) est l'état de référence ; seules les règles sont réinitialisées.
+      } else {
+        try { localStorage.removeItem(`maestro_step_uml_${step}_${opt}`); } catch (e) {}
+      }
       renderMesureFieldsForm();
-      showToast('↻ Règles des mesures réinitialisées selon l\'UML');
+      renderStepUml(step);
+      if (step === 3) renderStep3TablePreview();
+      else if (step === 5) renderStep5TablePreview();
+      showToast('↻ Diagramme et règles des mesures réinitialisés (Étape ' + step + ')');
     }
 
-    function applyAllMesuresToUmlComment() {
+    function saveMesuresToUml() {
       const step = activeMesureModalStep;
-      const umlCode = getStepUmlCode(step);
-      const parsed = parseMermaidErd(umlCode);
-      let updatedUml = umlCode;
+      let updatedUml = getStepUmlCode(step);
+      const parsed = parseMermaidErd(updatedUml);
       let totalUpdated = 0;
 
       Object.keys(parsed.entities).forEach(tName => {
@@ -9710,20 +10026,20 @@ SORTIE
         ent.fields.forEach(f => {
           const fStrat = strat.fields[f.name];
           if (!fStrat) return;
-
-          let targetComment = '';
+          const opts = {};
+          if (fStrat.type && fStrat.type !== f.type) opts.type = fStrat.type;
+          const hasNumericCtrl = (fStrat.generator === 'float' || fStrat.generator === 'integer');
           if (fStrat.mode === 'formula' && fStrat.formula) {
-            targetComment = fStrat.formula;
-          } else if (fStrat.generator === 'float' || fStrat.generator === 'integer') {
-            targetComment = `${fStrat.mean}${fStrat.suffix || ''}`;
+            opts.comment = fStrat.formula;
+          } else if (hasNumericCtrl) {
+            opts.comment = `${fStrat.mean}${fStrat.suffix || ''}`;
+          } else if (fStrat.generator === 'enum' && fStrat.values && fStrat.values.length) {
+            opts.comment = fStrat.values.map(v => (v.isDefault ? '*' : '') + v.value).join(' | ');
           }
-
-          if (targetComment) {
-            const fieldRegex = new RegExp('^(\\s*[A-Za-z0-9_*]+\\s+' + f.name + '\\b[^"]*)(?:"[^"]*")?(.*)$', 'm');
-            if (fieldRegex.test(updatedUml)) {
-              updatedUml = updatedUml.replace(fieldRegex, `$1"${targetComment}"$2`);
-              totalUpdated++;
-            }
+          if (opts.type || opts.comment !== undefined) {
+            const before = updatedUml;
+            updatedUml = setUmlFieldAttributes(updatedUml, tName, f.name, opts);
+            if (updatedUml !== before) totalUpdated++;
           }
         });
       });
@@ -9731,9 +10047,9 @@ SORTIE
       if (totalUpdated > 0) {
         saveStepUmlCode(step, updatedUml);
         renderStepUml(step);
-        showToast(`📝 ${totalUpdated} mesure(s) enregistrée(s) dans l'UML de l'Étape ${step}`);
+        showToast(`📝 ${totalUpdated} champ(s) enregistré(s) dans l'UML de l'Étape ${step}`);
       } else {
-        showToast('⚠️ Aucune modification de mesure à enregistrer dans l\'UML');
+        showToast('⚠️ Aucune modification à enregistrer dans l\'UML');
       }
     }
 
@@ -9767,36 +10083,29 @@ SORTIE
       if (!inputEl || inputEl._hasFormulaAutocomplete) return;
       inputEl._hasFormulaAutocomplete = true;
 
+      // Normalisation des champs disponibles : string -> { name, comment }
+      const fields = availableFields.map(f => {
+        if (f && typeof f === 'object') return { name: String(f.name || ''), comment: f.comment || '' };
+        return { name: String(f || ''), comment: '' };
+      });
+
       inputEl.addEventListener('input', (e) => {
-        handleFormulaInputEvent(inputEl, availableFields);
+        handleFormulaInputEvent(inputEl, fields);
       });
 
       inputEl.addEventListener('keydown', (e) => {
         handleFormulaKeydownEvent(e, inputEl);
       });
 
-      inputEl.addEventListener('click', () => {
-        updateFormulaTooltipAtCursor(inputEl);
-      });
-
-      inputEl.addEventListener('keyup', (e) => {
-        if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Home' || e.key === 'End') {
-          updateFormulaTooltipAtCursor(inputEl);
-        }
-      });
-
       inputEl.addEventListener('blur', () => {
         // Laisser le temps à un clic sur le dropdown d'être capturé
         setTimeout(() => {
           hideFormulaAutocomplete();
-          hideFormulaTooltip();
         }, 220);
       });
     }
 
     function handleFormulaInputEvent(inputEl, availableFields) {
-      updateFormulaTooltipAtCursor(inputEl);
-
       const cursorPos = inputEl.selectionStart || 0;
       const textBefore = inputEl.value.substring(0, cursorPos);
       const match = textBefore.match(/([A-Za-z0-9_]+)$/);
@@ -9812,13 +10121,20 @@ SORTIE
         return;
       }
 
+      // Si le mot tapé correspond exactement à un champ présenté, on ne rouvre pas
+      // le dropdown : l'utilisateur peut continuer sa saisie dans la formule.
+      if (availableFields.some(f => f.name.toUpperCase() === query)) {
+        hideFormulaAutocomplete();
+        return;
+      }
+
       const operatorMatches = FORMULA_OPERATORS
         .filter(op => op.name.toUpperCase().startsWith(query))
         .map(op => ({ type: 'op', label: op.name, insert: op.insert, desc: op.desc, body: op.body }));
 
       const fieldMatches = availableFields
-        .filter(f => f.toUpperCase().startsWith(query))
-        .map(f => ({ type: 'field', label: f, insert: f, desc: `Champ (${f})`, body: 'Attribut du modèle UML ERD' }));
+        .filter(f => f.name.toUpperCase().startsWith(query))
+        .map(f => ({ type: 'field', label: f.name, insert: f.name, desc: f.comment || 'Champ du modèle UML ERD', body: 'Attribut du modèle UML ERD' }));
 
       const suggestions = [...operatorMatches, ...fieldMatches];
       if (suggestions.length === 0) {
@@ -9839,17 +10155,17 @@ SORTIE
 
       const rect = inputEl.getBoundingClientRect();
       drop.style.top = `${rect.bottom + window.scrollY + 4}px`;
-      drop.style.left = `${rect.left + window.scrollX}px`;
+      drop.style.left = `${Math.max(8, rect.left + window.scrollX)}px`;
 
       let html = '';
       suggestions.forEach((s, idx) => {
         const isOp = s.type === 'op';
-        html += `<div class="px-3 py-1.5 cursor-pointer flex items-center justify-between gap-2 hover:bg-blue-50 transition autocomplete-item ${idx === 0 ? 'bg-blue-50 text-blue-900 font-bold' : 'text-slate-700'}" data-index="${idx}" onmousedown="selectFormulaAutocompleteItem(${idx}, '${matchedWord}')">
-          <div class="flex items-center gap-1.5 truncate">
-            <span class="px-1 py-0.2 rounded text-[8px] font-bold ${isOp ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'}">${isOp ? 'OP' : 'FLD'}</span>
-            <span class="font-mono text-xs">${s.label}</span>
+        html += `<div class="px-3 py-1.5 cursor-pointer flex items-start justify-between gap-2 hover:bg-blue-50 transition autocomplete-item ${idx === 0 ? 'bg-blue-50 text-blue-900 font-bold' : 'text-slate-700'}" data-index="${idx}" onmousedown="selectFormulaAutocompleteItem(${idx}, '${matchedWord}')">
+          <div class="flex items-start gap-1.5 min-w-0 flex-1">
+            <span class="px-1 py-0.2 rounded text-[8px] font-bold shrink-0 ${isOp ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'}">${isOp ? 'OP' : 'FLD'}</span>
+            <span class="font-mono text-xs break-words whitespace-normal flex-1 min-w-0">${escapeHtml(s.label)}</span>
           </div>
-          <span class="text-[9.5px] text-slate-400 italic truncate max-w-[120px]">${s.desc}</span>
+          <span class="text-[9.5px] text-slate-400 italic break-words whitespace-normal text-right max-w-[200px] shrink-0">${escapeHtml(s.desc)}</span>
         </div>`;
       });
 
@@ -9884,7 +10200,6 @@ SORTIE
       input.dispatchEvent(new Event('input', { bubbles: true }));
 
       hideFormulaAutocomplete();
-      updateFormulaTooltipAtCursor(input);
     }
 
     function handleFormulaKeydownEvent(e, inputEl) {
@@ -9918,67 +10233,12 @@ SORTIE
       const items = drop.querySelectorAll('.autocomplete-item');
       items.forEach((it, idx) => {
         if (idx === activeAutocompleteIndex) {
-          it.className = 'px-3 py-1.5 cursor-pointer flex items-center justify-between gap-2 bg-blue-100 text-blue-900 font-bold autocomplete-item';
+          it.className = 'px-3 py-1.5 cursor-pointer flex items-start justify-between gap-2 bg-blue-100 text-blue-900 font-bold autocomplete-item';
           it.scrollIntoView({ block: 'nearest' });
         } else {
-          it.className = 'px-3 py-1.5 cursor-pointer flex items-center justify-between gap-2 hover:bg-blue-50 text-slate-700 transition autocomplete-item';
+          it.className = 'px-3 py-1.5 cursor-pointer flex items-start justify-between gap-2 hover:bg-blue-50 text-slate-700 transition autocomplete-item';
         }
       });
-    }
-
-    // Gestion du Tooltip explicatif quand le curseur est à l'intérieur d'un opérateur
-    function updateFormulaTooltipAtCursor(inputEl) {
-      const tooltip = document.getElementById('global-formula-tooltip');
-      if (!tooltip) return;
-
-      const pos = inputEl.selectionStart || 0;
-      const val = inputEl.value;
-
-      // Détecter si le curseur se trouve dans un appel d'opérateur fonctionnel (ex: SUM(...), IF(...))
-      const opNames = FORMULA_OPERATORS.map(o => o.name).join('|');
-      const regex = new RegExp(`\\b(${opNames})\\s*\\(`, 'gi');
-      let match;
-      let activeOperator = null;
-
-      while ((match = regex.exec(val)) !== null) {
-        const fnStart = match.index;
-        const parenStart = fnStart + match[0].length;
-        // Trouver la parenthèse fermante correspondante
-        let depth = 1;
-        let parenEnd = -1;
-        for (let i = parenStart; i < val.length; i++) {
-          if (val[i] === '(') depth++;
-          else if (val[i] === ')') {
-            depth--;
-            if (depth === 0) { parenEnd = i; break; }
-          }
-        }
-        if (parenEnd === -1) parenEnd = val.length;
-
-        if (pos >= parenStart && pos <= parenEnd) {
-          const foundName = match[1].toUpperCase();
-          activeOperator = FORMULA_OPERATORS.find(o => o.name === foundName);
-          break;
-        }
-      }
-
-      if (activeOperator) {
-        const rect = inputEl.getBoundingClientRect();
-        tooltip.innerHTML = `
-          <div class="font-bold text-amber-300 font-mono text-xs mb-0.5">${escapeHtml(activeOperator.desc)}</div>
-          <div class="text-[10px] text-slate-200 leading-snug">${escapeHtml(activeOperator.body)}</div>
-        `;
-        tooltip.style.top = `${rect.top + window.scrollY - 44}px`;
-        tooltip.style.left = `${rect.left + window.scrollX}px`;
-        tooltip.classList.remove('hidden');
-      } else {
-        hideFormulaTooltip();
-      }
-    }
-
-    function hideFormulaTooltip() {
-      const tooltip = document.getElementById('global-formula-tooltip');
-      if (tooltip) tooltip.classList.add('hidden');
     }
 
     // Modal Création d'une mesure personnalisée (+ Mesure)

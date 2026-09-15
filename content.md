@@ -115,7 +115,7 @@ Les fondations du modèle de données reposent sur deux structures maîtres : l'
 - **🔑 Clés Composites (PK) :** `ID_DEMANDE` + `ID_INTERVENTION` (ex. `D-2026-000123` + `I-2026-000123-01`, `I-2026-000123-02`)
 - **🏷️ Attributs Opérationnels :**
   - `TYPE_REPARATION` : Famille ou type de révision (`Enum` : `T-INSCND`, `T-AUBTUR`, `T-MAJLOU`, `T-BANESS`, `T-EQUROT`, `T-COMHOT`, `T-REVCAR`, `T-FODREP`).
-  - `PRECISION_AUTRE` : Précision textuelle documentée si le type est qualifié en `"Autre"`.
+  - `PRECISION_AUTRE` : Précision technique documentée si le type est qualifié en `"Autre"` (`Enum` : `*Usinage aubes HP`, `Re-frettage spécifique`, `CND Ultra-sons`, `Traitement thermique`, `Équilibrage basse vitesse`).
   - `SHOP_ASSIGNE` : Atelier industriel pressenti (`Enum` : `S-MON`, `S-VIL`, `S-CHL`, `S-BRU`, `S-SQY`, `S-GEN`, `S-BDX`, `S-TLS`, `S-LGG`, `S-CRE`).
   - `DONNEES_TECHNIQUES` : Référence technique, manuel de révision OEM ou URL du rapport d'inspection / CND.
 
@@ -134,12 +134,13 @@ Le panneau latéral droit de l'Étape 2 propose un sélecteur à 4 vues :
   - **Jointures & Drill-down :**
     - Pour les relations $N-1$ : affichage d'une colonne unique portant la valeur du premier champ contenant `NOM` ou le libellé du premier champ non PK/FK de la table liée (les autres colonnes de la table liée ne sont pas affichées pour alléger la vue).
     - Pour les relations $1-N$ : affichage d'un badge cliquable indiquant le nombre d'enregistrements liés (ex. `X interventions ↗`) ouvrant la vue filtrée de la table enfant avec fil d'Ariane de retour (`← Table principale`).
-  - **Générateur de Données Déduit Dynamiquement (✏️) :** Modale de paramétrage avec sélection de la table et ajustement des règles de génération :
+  - **Générateur de Données Déduit Dynamiquement (✎) :** Modale de paramétrage avec sélection de la table et ajustement des règles de génération :
     - *Nombres :* min, max, moyenne (valeur par défaut issue de l'UML $\pm 50\%$).
     - *Dates :* intervalle de date début / fin avec tirage aléatoire uniforme.
-    - *Booléens & Enums :* distribution en pourcentages éditables (somme à 100%).
+    - *Booléens & Enums :* distribution en pourcentages éditables (somme à 100%) ; par défaut répartition équitable, la valeur préfixée `*` (valeur par défaut UML) se voyant appliquer un double poids de répartition.
     - *Regex / Codes :* incrémentation automatique des chiffres après le dernier tiret `-` (ex. `D-2026-000123`).
-    - *Actions :* Restaurer (règles UML), Regénérer la table active, Regénérer tout le jeu de données, réglage du nombre de lignes.
+    - *Type par champ :* sélecteur de type par champ (string, int, float, date, boolean, enum) re-dérivant immédiatement les tirages (distribution, formules, regex) sans régénération ; le type ou le commentaire modifié est écrit dans l'UML par le bouton `Sauvegarder`.
+    - *Actions (barre harmonisée avec l'éditeur de mesures) :* `Sauvegarder` (écrit types/commentaires dans l'UML, sans régénérer), `Regénérer` la table active, `Restaurer` (schéma Mermaid et données d'origine, tenant compte des modèles personnalisés) ; réglage du nombre de lignes à la volée.
 - **Bouton `+ Créer un tableau` :** Présent dans l'en-tête de l'Étape 2, ouvre une modale permettant d'ajouter des schémas de données personnalisés (Titre, Description, code Mermaid ERD, prompt IA pour générer le diagramme), persistés en `localStorage` et intégrés dynamiquement dans la liste des options d'Étape 2.
 
 Le modèle propose deux perspectives décisionnelles complémentaires selon le niveau de détail souhaité :
@@ -207,7 +208,7 @@ erDiagram
         string ID_INTERVENTION PK "I-2026-000123-01"
         string ID_DEMANDE FK "D-2026-000123"
         enum TYPE_REPARATION "*T-AUBTUR | T-INSCND | T-MAJLOU | T-BANESS | T-EQUROT | T-COMHOT | T-REVCAR | T-FODREP"
-        string PRECISION_AUTRE "Usinage aubes HP"
+        enum PRECISION_AUTRE "*Usinage aubes HP | Re-frettage spécifique | CND Ultra-sons | Traitement thermique | Équilibrage basse vitesse"
         enum SHOP_ASSIGNE "*S-MON | S-VIL | S-CHL | S-BRU | S-SQY | S-GEN | S-BDX | S-TLS | S-LGG | S-CRE"
         string DONNEES_TECHNIQUES "DOC-NDT-2026-442"
         float INTERVENTION_TAT "32.5 h"
@@ -243,12 +244,12 @@ erDiagram
 | **`STATION`** | | **Dimension Postes** | **3 à 10 stations de réparation par shop (`S-XXX-YY`)** | `S-MON-01` |
 | ↳ `ID_STATION` | `String` (`S-XXX-YY`) | **PK unique** | Identifiant de la station (`XXX` = shop, `YY` = numéro station) | `"S-MON-01"` |
 | ↳ `SHOP_ASSIGNE` | `String` (`S-XXX`) | **FK vers SHOP** | Shop parent hébergeant la station | `"S-MON"` |
-| ↳ `NOM_STATION` | `String` | Libellé équipement | Nom de la baie, banc ou machine de la station | `"Usinage Aubes HP Tour CN"` |
+| ↳ `NOM_STATION` | `String` (`Enum`) | Libellé équipement | Nom de la baie, banc ou machine de la station (`*Usinage Aubes HP Tour CN`, `Frettage Manches & Carters`, `CND Ultra-sons`, ...) | `"Usinage Aubes HP Tour CN"` |
 | ↳ `TYPE_REPARATION` | `String` (`Enum`) | Spécialité | Type d'intervention opéré sur la station | `"T-AUBTUR"` |
 | ↳ `SEUIL_SATURATION` | `Float` (%) | Paramètre critique | Seuil d'alerte de saturation capacitaire | `85.0` % |
 | **`SHOP`** | | **Dimension Sites** | **10 ateliers industriels SAE (`S-XXX`)** | `S-MON` |
 | ↳ `SHOP_ASSIGNE` | `String` (`S-XXX`) | **PK unique** | Code trigramme du shop | `"S-MON"` |
-| ↳ `NOM_ATELIER` | `String` | Libellé site | Implantation géographique du centre MRO | `"Montereau"` |
+| ↳ `NOM_ATELIER` | `String` (`Enum`) | Libellé site | Implantation géographique du centre MRO (`*Montereau`, `Villaroche`, `Châtellerault`, `Bruxelles`, `Toulouse`, ...) | `"Montereau"` |
 | ↳ `NB_STATIONS` | `Integer` | Nombre de postes | Volume de stations hébergées (3 à 10 stations) | `6` |
 | ↳ `CAPACITE_HEBDO` | `Float` (Heures) | Capacité nominale | Heures d'ouverture réseau disponibles par semaine | `1450.0` heures |
 
@@ -284,7 +285,7 @@ erDiagram
         string ID_DEMANDE PK "D-2026-000123"
         string ID_INTERVENTION PK "I-2026-000123-01"
         enum TYPE_REPARATION "*T-AUBTUR | T-INSCND | T-MAJLOU | T-BANESS | T-EQUROT | T-COMHOT | T-REVCAR | T-FODREP"
-        string PRECISION_AUTRE "Re-frettage specifique"
+        enum PRECISION_AUTRE "*Re-frettage spécifique | Usinage aubes HP | CND Ultra-sons | Traitement thermique | Équilibrage dynamique"
         enum STATION_ASSIGNEE FK "*S-MON-01 | S-MON-02 | S-MON-03 | S-VIL-01 | S-VIL-02 | S-CHL-01 | S-TLS-01"
         enum SHOP_ASSIGNE FK "*S-MON | S-VIL | S-CHL | S-BRU | S-SQY | S-GEN | S-BDX | S-TLS | S-LGG | S-CRE"
         string DONNEES_TECHNIQUES "DOC-NDT-2026-442"
@@ -295,13 +296,13 @@ erDiagram
     STATION ["Station de Réparation"] {
         string ID_STATION PK "S-MON-01"
         enum SHOP_ASSIGNE FK "*S-MON | S-VIL | S-CHL | S-BRU | S-SQY | S-GEN | S-BDX | S-TLS | S-LGG | S-CRE"
-        string NOM_STATION "Usinage Aubes HP Tour CN"
+        enum NOM_STATION "*Usinage Aubes HP Tour CN | Frettage Manches & Carters | CND Ultra-sons | Équilibrage Basse Vitesse | Montage Final Baie"
         enum TYPE_REPARATION "*T-AUBTUR | T-INSCND | T-MAJLOU | T-BANESS | T-EQUROT | T-COMHOT | T-REVCAR | T-FODREP"
         float SEUIL_SATURATION "85.0 %"
     }
     SHOP ["Atelier (Shop)"] {
         enum SHOP_ASSIGNE PK "*S-MON | S-VIL | S-CHL | S-BRU | S-SQY | S-GEN | S-BDX | S-TLS | S-LGG | S-CRE"
-        string NOM_ATELIER "Montereau"
+        enum NOM_ATELIER "*Montereau | Villaroche | Châtellerault | Bruxelles | Toulouse | Saint-Quentin | Gennevilliers | Bordeaux | Liège | Le Creusot"
         int NB_STATIONS "6"
         float CAPACITE_HEBDO "1450.0 h"
     }
@@ -363,8 +364,8 @@ Le modèle relie les MDTs et les Planning Levels aux Key Figures de calcul suiva
 > **En-tête de l'interface :** Étape 3 : Calcul du Délai (TAT)
 
 > **Rendu Tableau & Modes de Vue (Étape 3) :** Le panneau latéral droit dispose d'un sélecteur à 4 modes :
-> - **`data` :** Vue tableau interactive propulsée par Grid.js (tri multi-colonnes, pagination 15/15 avec résumé, redimensionnement) et bouton d'édition des mesures `✎` (`#mesure-generator-modal`, interface unifiée avec le générateur de données, support de tous les types de champs, mode distribution ou formule compact avec autocomplétion des opérateurs et champs, tooltip d'aide Excel-like et validation syntaxique instantanée).
-> - **`uml` :** Modèle relationnel UML ciblé affichant uniquement les tables et champs intervenant dans le calcul du TAT, avec commandes de zoom/pan (+, −, ↺) et mode éditeur en cas de mesure personnalisée (`+ Mesure`).
+> - **`data` :** Vue tableau interactive propulsée par Grid.js (tri multi-colonnes, pagination 15/15 avec résumé, redimensionnement).
+> - **`uml` :** Modèle relationnel UML ciblé affichant uniquement les tables et champs intervenant dans le calcul du TAT, avec commandes de zoom/pan (+, −, ↺), crayon `✎` d'édition des mesures (`#mesure-generator-modal`, interface unifiée avec le générateur de données, support de tous les types de champs, mode distribution ou formule compact avec autocomplétion des opérateurs et champs, descriptifs UML des champs et opérateurs dans le dropdown et validation syntaxique instantanée) et mode éditeur en cas de mesure personnalisée (`+ Mesure`).
 > - **`chartjs` :** Prompt IA standardisé et personnalisable (bouton template `✎` visible sur ce mode, copie `⧉`) pour proposer une visualisation pertinente basée sur les entrées dans un code bloc au format contenu sans le { } de l'objet js de ChartJS.
 > - **`visuels` :** Prompt IA structuré formulant 3 idées de visuels compatibles SAP-IBP / SAC.
 
@@ -572,8 +573,8 @@ xychart-beta
 > **En-tête de l'interface :** Étape 5 : Choisir la méthode d'évaluation de la Capacité d'Intervention en Atelier
 
 > **Rendu Tableau & Modes de Vue (Étape 5) :** Le panneau latéral droit dispose d'un sélecteur à 4 modes :
-> - **`data` :** Vue tableau interactive propulsée par Grid.js (tri multi-colonnes, pagination 15/15 avec résumé, redimensionnement) et bouton d'édition des mesures `✎` (`#mesure-generator-modal`, interface unifiée avec le générateur de données, support de tous les types de champs, mode distribution ou formule compact avec autocomplétion des opérateurs et champs, tooltip d'aide Excel-like et validation syntaxique instantanée).
-> - **`uml` :** Modèle relationnel UML ciblé affichant uniquement les tables et champs intervenant dans l'évaluation de la Capacité, avec commandes de zoom/pan (+, −, ↺) et mode éditeur en cas de mesure personnalisée (`+ Mesure`).
+> - **`data` :** Vue tableau interactive propulsée par Grid.js (tri multi-colonnes, pagination 15/15 avec résumé, redimensionnement).
+> - **`uml` :** Modèle relationnel UML ciblé affichant uniquement les tables et champs intervenant dans l'évaluation de la Capacité, avec commandes de zoom/pan (+, −, ↺), crayon `✎` d'édition des mesures (`#mesure-generator-modal`, interface unifiée avec le générateur de données, support de tous les types de champs, mode distribution ou formule compact avec autocomplétion des opérateurs et champs, descriptifs UML des champs et opérateurs dans le dropdown et validation syntaxique instantanée) et mode éditeur en cas de mesure personnalisée (`+ Mesure`).
 > - **`chartjs` :** Prompt IA standardisé et personnalisable (bouton template `✎` visible sur ce mode, copie `⧉`) formulant des propositions de visualisations comparatives à partir de l'option active et des diagrammes relationnels ERD 2.A et 2.B.
 > - **`visuels` :** Prompt IA structuré formulant 3 idées de visuels compatibles SAP-IBP / SAC.
 
