@@ -62,7 +62,7 @@
 
     /* Grid.js Custom Styling (Compact & Theme cohérent BiMaestro) */
     .gridjs-container {
-      font-size: 11px !important;
+      font-size: 13px !important;
       color: #1e293b !important;
       width: 100% !important;
     }
@@ -81,7 +81,7 @@
       font-weight: 700 !important;
       padding: 6px 10px !important;
       border: 1px solid #e2e8f0 !important;
-      font-size: 11px !important;
+      font-size: 13px !important;
       white-space: nowrap !important;
     }
     .gridjs-th-content {
@@ -92,7 +92,7 @@
     .gridjs-td {
       padding: 5px 10px !important;
       border: 1px solid #f1f5f9 !important;
-      font-size: 11px !important;
+      font-size: 13px !important;
       line-height: 1.4 !important;
       white-space: nowrap !important;
       overflow: hidden !important;
@@ -694,14 +694,14 @@
             class="lg:col-span-8 bg-slate-50/80 rounded-xl p-2 border border-slate-200 shadow-sm flex flex-col items-stretch justify-between h-full max-h-full min-h-0 overflow-hidden w-full min-w-0 relative">
             <div id="schema-toggle"
               class="absolute top-1.5 left-1.5 z-10 flex items-start rounded-lg border border-slate-200 bg-white shadow-sm overflow-hidden">
-              <button type="button" data-view="ui" onclick="toggleSchemaView('ui')"
-                class="px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition">ui</button>
+              <button type="button" data-view="data" onclick="toggleSchemaView('data')"
+                class="px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition">data</button>
+              <button type="button" data-view="mermaid" onclick="toggleSchemaView('mermaid')"
+                class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">mermaid</button>
               <button type="button" data-view="uml" onclick="toggleSchemaView('uml')"
                 class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">uml</button>
-              <button type="button" data-view="erd" onclick="toggleSchemaView('erd')"
-                class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">erd</button>
-              <button type="button" data-view="data" onclick="toggleSchemaView('data')"
-                class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">data</button>
+              <button type="button" data-view="&lt;&gt;uml" onclick="toggleSchemaView('&lt;&gt;uml')"
+                class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">&lt;&gt;uml</button>
             </div>
             <div id="schema-svg-view" class="w-full flex-1 flex flex-col items-center justify-between overflow-hidden pt-6 relative">
               <button type="button" onclick="openDataGeneratorModal()" title="Éditer les types de champs et les règles du générateur de données" class="absolute top-0 right-0 z-10 p-1 text-slate-500 hover:text-slate-800 hover:bg-slate-200 bg-white/70 rounded transition cursor-pointer text-xs leading-none">
@@ -755,8 +755,8 @@
               <!-- Barre d'outils supérieure du tableau -->
               <div class="flex items-center justify-between gap-2 pb-1.5 shrink-0 border-b border-slate-200">
                 <div class="flex items-center gap-1.5 min-w-0">
-                  <button type="button" id="schema-data-back-btn" onclick="drillBackToMainTable()" class="hidden px-2 py-0.5 rounded bg-blue-100 hover:bg-blue-200 text-blue-800 font-bold text-[10.5px] cursor-pointer transition shadow-2xs flex items-center gap-1 shrink-0">
-                    <span>←</span> <span>Table principale</span>
+                  <button type="button" id="schema-data-back-btn" onclick="drillBackToMainTable()" class="hidden px-2 py-0.5 rounded bg-blue-100 hover:bg-blue-200 text-blue-800 font-bold text-[10.5px] cursor-pointer transition shadow-2xs flex items-center gap-1 shrink-0" title="Retour à la table principale">
+                    <span>←</span>
                   </button>
                   <span id="schema-data-breadcrumb" class="text-xs font-bold text-slate-800 truncate"></span>
                   <span id="schema-data-filter-badge" class="hidden px-1.5 py-0.2 rounded text-[9.5px] font-mono bg-emerald-100 text-emerald-800 border border-emerald-300 shrink-0"></span>
@@ -890,9 +890,9 @@
               <div class="flex items-center gap-2 min-w-0">
                 <div id="step-3-toggle" class="flex items-center rounded-lg border border-slate-200 bg-white shadow-xs overflow-hidden">
                   <button type="button" data-view="data" onclick="toggleTableMode(3, 'data')" title="Vue Tableau Grid.js (data)" class="px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition">data</button>
-                  <button type="button" data-view="uml" onclick="toggleTableMode(3, 'uml')" title="Diagramme UML des tables et champs de calcul (uml)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">uml</button>
-                  <button type="button" data-view="ai" onclick="toggleTableMode(3, 'ai')" title="Prompt IA pour propositions visuelles (chartjs)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">chartjs</button>
-                  <button type="button" data-view="visuels" onclick="toggleTableMode(3, 'visuels')" title="Prompt IA suggestions de visuels SAP-IBP / SAC (visuels)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">visuels</button>
+                  <button type="button" data-view="uml" onclick="toggleTableMode(3, 'uml')" title="Code source Mermaid ERD éditable (uml)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">uml</button>
+                  <button type="button" data-view="mermaid" onclick="toggleTableMode(3, 'mermaid')" title="Rendu visuel du schéma Mermaid (mermaid)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">mermaid</button>
+                  <button type="button" data-view="visuels" onclick="toggleTableMode(3, 'visuels')" title="Prompt IA suggestions de visuels SAP-IBP / SAC (visuels)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">&lt;&gt;visuels</button>
                 </div>
               </div>
               <div class="flex items-center gap-1.5 shrink-0">
@@ -917,10 +917,10 @@
 
             </div>
 
-            <!-- Vue Schéma UML ciblé de calcul (uml) -->
-            <div id="step-3-uml-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1 relative">
+            <!-- Vue Rendu Visuel Mermaid (mermaid) -->
+            <div id="step-3-mermaid-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1 relative">
               <div class="flex items-center justify-between pb-1 shrink-0">
-                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Modèle UML — Tables &amp; Champs du calcul</span>
+                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Rendu Visuel Mermaid — Tables &amp; Champs du calcul (mermaid)</span>
                 <div class="flex items-center gap-1.5">
                   <span id="step-3-uml-editable-badge" class="hidden text-[9px] font-mono px-1 py-0.2 rounded bg-indigo-100 text-indigo-800 border border-indigo-200">Éditable</span>
                   <button type="button" onclick="openMesureGeneratorModal(3)" title="Éditer les types de champs et les règles des mesures" class="p-1 text-slate-500 hover:text-slate-800 hover:bg-slate-200 rounded transition cursor-pointer text-xs leading-none">
@@ -931,7 +931,6 @@
               </div>
               <div id="step-3-mermaid-wrapper" class="flex-1 min-h-0 w-full bg-slate-50/50 rounded-lg border border-slate-200 flex flex-col relative overflow-hidden">
                 <div id="step-3-mermaid-diagram" class="w-full flex-1 flex items-center justify-center overflow-hidden p-1 text-slate-800 cursor-grab active:cursor-grabbing select-none"></div>
-                <textarea id="step-3-mermaid-editor" oninput="onStepUmlChange(3, this.value)" spellcheck="false" class="hidden w-full h-32 bg-slate-900 text-slate-100 font-mono text-[10.5px] p-2 border-t border-slate-700 resize-none"></textarea>
                 <!-- Boutons de zoom discrets en bas à gauche -->
                 <div class="absolute bottom-2 left-2 z-10 flex items-center gap-1 bg-white/90 backdrop-blur-xs border border-slate-200 rounded-md p-0.5 shadow-xs">
                   <button type="button" onclick="zoomUmlDiagram('step-3-mermaid-diagram', 1.2)" class="w-5 h-5 rounded bg-white hover:bg-slate-100 text-slate-700 font-bold text-xs flex items-center justify-center transition cursor-pointer shadow-2xs" title="Zoom avant (+)">+</button>
@@ -939,6 +938,20 @@
                   <button type="button" onclick="resetUmlZoom('step-3-mermaid-diagram')" class="w-5 h-5 rounded bg-white hover:bg-slate-100 text-slate-500 font-bold text-[10px] flex items-center justify-center transition cursor-pointer shadow-2xs" title="Réinitialiser zoom (100%)">↺</button>
                 </div>
               </div>
+            </div>
+
+            <!-- Vue Code Source Mermaid ERD éditable (uml) -->
+            <div id="step-3-uml-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1 relative">
+              <div class="flex items-center justify-between pb-1 shrink-0">
+                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Code Source Mermaid ERD (uml)</span>
+                <div class="flex items-center gap-1.5">
+                  <span id="step-3-uml-saved-msg" class="text-[9.5px] text-emerald-600 font-semibold hidden">✓ Enregistré</span>
+                  <button type="button" onclick="copyStepUml(3)" title="Copier le code Mermaid UML" class="p-1 text-slate-500 hover:text-slate-800 hover:bg-slate-200 rounded transition cursor-pointer text-xs leading-none">
+                    ⧉
+                  </button>
+                </div>
+              </div>
+              <textarea id="step-3-uml-code" oninput="onStepUmlChange(3, this.value)" spellcheck="false" class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-3 font-mono text-[11px] leading-relaxed whitespace-pre resize-none focus:outline-hidden focus:ring-1 focus:ring-blue-700 border border-slate-700 select-text"></textarea>
             </div>
 
             <!-- Vue Spécification Prompt IA (chartjs) -->
@@ -1144,11 +1157,12 @@
               <div class="flex items-center justify-between gap-2 shrink-0 pb-1.5 border-b border-slate-200">
                 <div class="flex items-center gap-2 min-w-0">
                   <div id="step-4-chart-toggle" class="flex items-center rounded-lg border border-slate-200 bg-white shadow-xs overflow-hidden">
-                    <button type="button" data-view="chart" onclick="toggleChartMode(4, 'chart')" title="Vue Graphique (ui)" class="px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition">ui</button>
-                    <button type="button" data-view="config" onclick="toggleChartMode(4, 'config')" title="Configuration JSON Chart.js éditable (config)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">config</button>
-                    <button type="button" data-view="chartjs" onclick="toggleChartMode(4, 'chartjs')" title="Prompt IA génération Chart.js (chartjs)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">chartjs</button>
-                    <button type="button" data-view="visuels" onclick="toggleChartMode(4, 'visuels')" title="Prompt IA suggestions de visuels SAP-IBP / SAC (visuels)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">visuels</button>
-                    <button type="button" data-view="sap" onclick="toggleChartMode(4, 'sap')" title="Prompt IA SAP-IBP / SAC (sap)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">sap</button>
+                    <button type="button" data-view="data" onclick="toggleChartMode(4, 'data')" title="Vue Tableau statique des données du graphique (data)" class="px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition">data</button>
+                    <button type="button" data-view="graph" onclick="toggleChartMode(4, 'graph')" title="Vue Graphique (graph)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">graph</button>
+                    <button type="button" data-view="js" onclick="toggleChartMode(4, 'js')" title="Configuration JSON Chart.js éditable (js)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">js</button>
+                    <button type="button" data-view="&lt;&gt;js" onclick="toggleChartMode(4, '&lt;&gt;js')" title="Prompt IA génération Chart.js (&lt;&gt;js)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">&lt;&gt;js</button>
+                    <button type="button" data-view="visuels" onclick="toggleChartMode(4, '&lt;&gt;visuels')" title="Prompt IA suggestions de visuels SAP-IBP / SAC (&lt;&gt;visuels)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">&lt;&gt;visuels</button>
+                    <button type="button" data-view="sap" onclick="toggleChartMode(4, '&lt;&gt;sap')" title="Prompt IA SAP-IBP / SAC (&lt;&gt;sap)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">&lt;&gt;sap</button>
                   </div>
                 </div>
                 <div class="flex items-center gap-1.5 shrink-0">
@@ -1160,7 +1174,22 @@
                   </button>
                 </div>
               </div>
-              <!-- Vue Graphique (par défaut) -->
+              <!-- Vue Données Statiques du Graphique (data) -->
+              <div id="step-4-data-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
+                <div class="flex items-center justify-between pb-1 shrink-0">
+                  <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Données du Graphique (Tableau Statique)</span>
+                  <div class="flex items-center gap-1.5">
+                    <button type="button" onclick="openGraphDataGeneratorModal(4)" title="Éditer les données du graphique (moyenne, dispersion, valeurs)" class="p-1 text-slate-500 hover:text-slate-800 hover:bg-slate-200 rounded transition cursor-pointer text-xs leading-none">
+                      ✎
+                    </button>
+                    <button type="button" onclick="resetGraphData(4)" title="Réinitialiser les données par défaut du graphique" class="p-1 text-slate-500 hover:text-slate-800 hover:bg-slate-200 rounded transition cursor-pointer text-xs leading-none">
+                      ↻
+                    </button>
+                  </div>
+                </div>
+                <div id="step-4-data-table-container" class="flex-1 w-full min-h-0 overflow-y-auto"></div>
+              </div>
+              <!-- Vue Graphique (graph) -->
               <div id="step-4-chart-view" class="flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden">
                 <div id="step-4-chart-box" class="flex-1 w-full min-h-0 relative overflow-hidden my-1">
                   <canvas id="step-4-canvas" style="display: block; width: 100%; height: 100%;"></canvas>
@@ -1328,9 +1357,9 @@
               <div class="flex items-center gap-2 min-w-0">
                 <div id="step-5-toggle" class="flex items-center rounded-lg border border-slate-200 bg-white shadow-xs overflow-hidden">
                   <button type="button" data-view="data" onclick="toggleTableMode(5, 'data')" title="Vue Tableau Grid.js (data)" class="px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition">data</button>
-                  <button type="button" data-view="uml" onclick="toggleTableMode(5, 'uml')" title="Diagramme UML des tables et champs de calcul (uml)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">uml</button>
-                  <button type="button" data-view="ai" onclick="toggleTableMode(5, 'ai')" title="Prompt IA pour propositions visuelles (chartjs)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">chartjs</button>
-                  <button type="button" data-view="visuels" onclick="toggleTableMode(5, 'visuels')" title="Prompt IA suggestions de visuels SAP-IBP / SAC (visuels)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">visuels</button>
+                  <button type="button" data-view="uml" onclick="toggleTableMode(5, 'uml')" title="Code source Mermaid ERD éditable (uml)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">uml</button>
+                  <button type="button" data-view="mermaid" onclick="toggleTableMode(5, 'mermaid')" title="Rendu visuel du schéma Mermaid (mermaid)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">mermaid</button>
+                  <button type="button" data-view="visuels" onclick="toggleTableMode(5, 'visuels')" title="Prompt IA suggestions de visuels SAP-IBP / SAC (visuels)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">&lt;&gt;visuels</button>
                 </div>
               </div>
               <div class="flex items-center gap-1.5 shrink-0">
@@ -1355,10 +1384,10 @@
 
             </div>
 
-            <!-- Vue Schéma UML ciblé de calcul (uml) -->
-            <div id="step-5-uml-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1 relative">
+            <!-- Vue Rendu Visuel Mermaid (mermaid) -->
+            <div id="step-5-mermaid-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1 relative">
               <div class="flex items-center justify-between pb-1 shrink-0">
-                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Modèle UML — Tables &amp; Champs de Capacité</span>
+                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Rendu Visuel Mermaid — Tables &amp; Champs de Capacité (mermaid)</span>
                 <div class="flex items-center gap-1.5">
                   <span id="step-5-uml-editable-badge" class="hidden text-[9px] font-mono px-1 py-0.2 rounded bg-indigo-100 text-indigo-800 border border-indigo-200">Éditable</span>
                   <button type="button" onclick="openMesureGeneratorModal(5)" title="Éditer les types de champs et les règles des mesures" class="p-1 text-slate-500 hover:text-slate-800 hover:bg-slate-200 rounded transition cursor-pointer text-xs leading-none">
@@ -1369,7 +1398,6 @@
               </div>
               <div id="step-5-mermaid-wrapper" class="flex-1 min-h-0 w-full bg-slate-50/50 rounded-lg border border-slate-200 flex flex-col relative overflow-hidden">
                 <div id="step-5-mermaid-diagram" class="w-full flex-1 flex items-center justify-center overflow-hidden p-1 text-slate-800 cursor-grab active:cursor-grabbing select-none"></div>
-                <textarea id="step-5-mermaid-editor" oninput="onStepUmlChange(5, this.value)" spellcheck="false" class="hidden w-full h-32 bg-slate-900 text-slate-100 font-mono text-[10.5px] p-2 border-t border-slate-700 resize-none"></textarea>
                 <!-- Boutons de zoom discrets en bas à gauche -->
                 <div class="absolute bottom-2 left-2 z-10 flex items-center gap-1 bg-white/90 backdrop-blur-xs border border-slate-200 rounded-md p-0.5 shadow-xs">
                   <button type="button" onclick="zoomUmlDiagram('step-5-mermaid-diagram', 1.2)" class="w-5 h-5 rounded bg-white hover:bg-slate-100 text-slate-700 font-bold text-xs flex items-center justify-center transition cursor-pointer shadow-2xs" title="Zoom avant (+)">+</button>
@@ -1377,6 +1405,20 @@
                   <button type="button" onclick="resetUmlZoom('step-5-mermaid-diagram')" class="w-5 h-5 rounded bg-white hover:bg-slate-100 text-slate-500 font-bold text-[10px] flex items-center justify-center transition cursor-pointer shadow-2xs" title="Réinitialiser zoom (100%)">↺</button>
                 </div>
               </div>
+            </div>
+
+            <!-- Vue Code Source Mermaid ERD éditable (uml) -->
+            <div id="step-5-uml-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1 relative">
+              <div class="flex items-center justify-between pb-1 shrink-0">
+                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Code Source Mermaid ERD (uml)</span>
+                <div class="flex items-center gap-1.5">
+                  <span id="step-5-uml-saved-msg" class="text-[9.5px] text-emerald-600 font-semibold hidden">✓ Enregistré</span>
+                  <button type="button" onclick="copyStepUml(5)" title="Copier le code Mermaid UML" class="p-1 text-slate-500 hover:text-slate-800 hover:bg-slate-200 rounded transition cursor-pointer text-xs leading-none">
+                    ⧉
+                  </button>
+                </div>
+              </div>
+              <textarea id="step-5-uml-code" oninput="onStepUmlChange(5, this.value)" spellcheck="false" class="flex-1 min-h-0 w-full max-w-full text-left bg-slate-900 text-slate-100 rounded-lg p-3 font-mono text-[11px] leading-relaxed whitespace-pre resize-none focus:outline-hidden focus:ring-1 focus:ring-blue-700 border border-slate-700 select-text"></textarea>
             </div>
 
             <!-- Vue Spécification Prompt IA (chartjs) -->
@@ -1582,11 +1624,12 @@
               <div class="flex items-center justify-between gap-2 shrink-0 pb-1.5 border-b border-slate-200">
                 <div class="flex items-center gap-2 min-w-0">
                   <div id="step-6-chart-toggle" class="flex items-center rounded-lg border border-slate-200 bg-white shadow-xs overflow-hidden">
-                    <button type="button" data-view="chart" onclick="toggleChartMode(6, 'chart')" title="Vue Graphique (ui)" class="px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition">ui</button>
-                    <button type="button" data-view="config" onclick="toggleChartMode(6, 'config')" title="Configuration JSON Chart.js éditable (config)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">config</button>
-                    <button type="button" data-view="chartjs" onclick="toggleChartMode(6, 'chartjs')" title="Prompt IA génération Chart.js (chartjs)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">chartjs</button>
-                    <button type="button" data-view="visuels" onclick="toggleChartMode(6, 'visuels')" title="Prompt IA suggestions de visuels SAP-IBP / SAC (visuels)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">visuels</button>
-                    <button type="button" data-view="sap" onclick="toggleChartMode(6, 'sap')" title="Prompt IA SAP-IBP / SAC (sap)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">sap</button>
+                    <button type="button" data-view="data" onclick="toggleChartMode(6, 'data')" title="Vue Tableau statique des données du graphique (data)" class="px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition">data</button>
+                    <button type="button" data-view="graph" onclick="toggleChartMode(6, 'graph')" title="Vue Graphique (graph)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">graph</button>
+                    <button type="button" data-view="js" onclick="toggleChartMode(6, 'js')" title="Configuration JSON Chart.js éditable (js)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">js</button>
+                    <button type="button" data-view="&lt;&gt;js" onclick="toggleChartMode(6, '&lt;&gt;js')" title="Prompt IA génération Chart.js (&lt;&gt;js)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">&lt;&gt;js</button>
+                    <button type="button" data-view="visuels" onclick="toggleChartMode(6, '&lt;&gt;visuels')" title="Prompt IA suggestions de visuels SAP-IBP / SAC (&lt;&gt;visuels)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">&lt;&gt;visuels</button>
+                    <button type="button" data-view="sap" onclick="toggleChartMode(6, '&lt;&gt;sap')" title="Prompt IA SAP-IBP / SAC (&lt;&gt;sap)" class="px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition">&lt;&gt;sap</button>
                   </div>
                   <button id="step-6-treemap-reset" type="button" onclick="resetTreemapDrill()" class="hidden text-[9.5px] font-bold text-blue-800 bg-blue-50 hover:bg-blue-100 border border-blue-200 px-2 py-0.5 rounded cursor-pointer transition shadow-2xs shrink-0">
                     ◀ Revenir aux Moteurs
@@ -1601,7 +1644,22 @@
                   </button>
                 </div>
               </div>
-              <!-- Vue Graphique (par défaut) -->
+              <!-- Vue Données Statiques du Graphique (data) -->
+              <div id="step-6-data-view" class="hidden flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden my-1">
+                <div class="flex items-center justify-between pb-1 shrink-0">
+                  <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Données du Graphique (Tableau Statique)</span>
+                  <div class="flex items-center gap-1.5">
+                    <button type="button" onclick="openGraphDataGeneratorModal(6)" title="Éditer les données du graphique (moyenne, dispersion, valeurs)" class="p-1 text-slate-500 hover:text-slate-800 hover:bg-slate-200 rounded transition cursor-pointer text-xs leading-none">
+                      ✎
+                    </button>
+                    <button type="button" onclick="resetGraphData(6)" title="Réinitialiser les données par défaut du graphique" class="p-1 text-slate-500 hover:text-slate-800 hover:bg-slate-200 rounded transition cursor-pointer text-xs leading-none">
+                      ↻
+                    </button>
+                  </div>
+                </div>
+                <div id="step-6-data-table-container" class="flex-1 w-full min-h-0 overflow-y-auto"></div>
+              </div>
+              <!-- Vue Graphique (graph) -->
               <div id="step-6-chart-view" class="flex-1 w-full min-h-0 flex flex-col justify-between overflow-hidden">
                 <div id="step-6-chart-box" class="flex-1 w-full min-h-0 relative overflow-hidden my-1">
                   <canvas id="step-6-canvas" style="display: block; width: 100%; height: 100%;"></canvas>
@@ -2171,8 +2229,51 @@
       </div>
     </div>
   </div>
+
+  <!-- ================= MODALE GÉNÉRATEUR DE DONNÉES DE GRAPHIQUE (Étapes 4 & 6) ================= -->
+  <div id="graph-data-generator-modal" class="fixed inset-0 z-50 hidden bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-1 sm:p-2">
+    <div class="bg-white w-[98vw] max-w-4xl h-[92vh] max-h-[92vh] rounded-xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- En-tête de la modale -->
+      <div class="px-4 py-3 bg-white border-b border-slate-200 flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-2.5">
+          <span class="w-1 h-6 rounded-full bg-blue-800 shrink-0"></span>
+          <div>
+            <h3 id="graph-data-modal-title" class="text-xs md:text-sm font-bold tracking-tight text-slate-900">Générateur de Données Graphique (Graph Data Generator)</h3>
+            <p id="graph-data-modal-subtitle" class="text-[10.5px] text-slate-500 font-normal">Ajustez la moyenne et la dispersion (écart) pour piloter dynamiquement les séries de données du graphique</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeGraphDataGeneratorModal()" class="w-7 h-7 rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center transition text-sm font-bold cursor-pointer" title="Fermer (Échap)">✕</button>
       </div>
 
+      <!-- Barre d'information sur la série sélectionnée -->
+      <div class="px-4 py-2 bg-slate-50 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shrink-0">
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-bold text-slate-700" id="graph-data-target-label">Option active : 4.A</span>
+        </div>
+        <div class="text-[11px] text-slate-500 font-mono flex items-center gap-1.5">
+          <span class="px-1.5 py-0.5 rounded bg-blue-50 text-blue-800 border border-blue-200 font-semibold text-[10px]" id="graph-data-step-badge">Étape 4</span>
+          <span class="text-slate-400">Pilote le rendu graphique et le tableau data</span>
+        </div>
+      </div>
+
+      <!-- Corps scrollable des séries du graphique -->
+      <div id="graph-data-fields-container" class="flex-1 min-h-0 overflow-y-auto p-4 space-y-3 bg-slate-100/50"></div>
+
+      <!-- Pied de la modale avec barre d'actions harmonisée Sauvegarder / Regénérer / Restaurer -->
+      <div class="px-4 py-2.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between shrink-0 text-xs">
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="saveGraphDataFromModal()" class="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-blue-50 text-blue-900 font-bold transition shadow-xs cursor-pointer flex items-center gap-1" title="Appliquer et enregistrer les paramètres de données du graphique">
+            Sauvegarder
+          </button>
+          <button type="button" onclick="regenerateGraphDataFromModal()" class="px-4 py-1.5 rounded-lg bg-blue-800 hover:bg-blue-700 text-white font-bold transition shadow-sm cursor-pointer flex items-center gap-1.5" title="Regénérer de nouvelles valeurs aléatoires selon moyenne et écart">
+            Regénérer
+          </button>
+        </div>
+        <button type="button" onclick="restoreGraphDataModal()" class="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-semibold transition shadow-xs cursor-pointer flex items-center gap-1" title="Rétablir les données d'origine du graphique">
+          Restaurer
+        </button>
+      </div>
     </div>
   </div>
 
@@ -2838,9 +2939,11 @@
 
       if (q === 1 || q === 2 || q === 3) {
         renderStep3TablePreview();
+        renderStepUml(3);
       }
       if (q === 1 || q === 2 || q === 5) {
         renderStep5TablePreview();
+        renderStepUml(5);
       }
       if (q === 2) {
         drawSchema(opt);
@@ -5091,8 +5194,8 @@ const STEP_BUILDERS = {
 
     // ===== Gestionnaire du Mode Éditeur Visuel Chart.js Dynamique (Étapes 4 & 6) =====
     const chartViewMode = {
-      4: (function() { try { return localStorage.getItem('maestro_switch_chart_4') || 'chart'; } catch(e) { return 'chart'; } })(),
-      6: (function() { try { return localStorage.getItem('maestro_switch_chart_6') || 'chart'; } catch(e) { return 'chart'; } })()
+      4: (function() { try { const s = localStorage.getItem('maestro_switch_chart_4'); if (s === 'chart' || s === 'ui') return 'graph'; if (s === 'config') return 'js'; if (s === 'chartjs') return '<>js'; return s || 'graph'; } catch(e) { return 'graph'; } })(),
+      6: (function() { try { const s = localStorage.getItem('maestro_switch_chart_6'); if (s === 'chart' || s === 'ui') return 'graph'; if (s === 'config') return 'js'; if (s === 'chartjs') return '<>js'; return s || 'graph'; } catch(e) { return 'graph'; } })()
     };
     const editingChartConfig = { 4: null, 6: null };
 
@@ -5574,8 +5677,8 @@ ENTRÉES
     }
 
     const tablePanelViewMode = {
-      3: (function() { try { const s = localStorage.getItem('maestro_switch_table_3'); return (s === 'ui' ? 'data' : (s || 'data')); } catch(e) { return 'data'; } })(),
-      5: (function() { try { const s = localStorage.getItem('maestro_switch_table_5'); return (s === 'ui' ? 'data' : (s || 'data')); } catch(e) { return 'data'; } })()
+      3: (function() { try { const s = localStorage.getItem('maestro_switch_table_3'); const m = (s === 'ui' ? 'data' : (s || 'data')); return (m === 'uml' ? 'mermaid' : m); } catch(e) { return 'data'; } })(),
+      5: (function() { try { const s = localStorage.getItem('maestro_switch_table_5'); const m = (s === 'ui' ? 'data' : (s || 'data')); return (m === 'uml' ? 'mermaid' : m); } catch(e) { return 'data'; } })()
     };
 
     function generateTableAiPrompt(step) {
@@ -5633,9 +5736,9 @@ ENTRÉES
 
     function toggleTableMode(step, mode) {
       let targetMode = 'data';
-      if (mode === 'visuels') targetMode = 'visuels';
-      else if (mode === 'ai' || mode === 'chartjs' || mode === '<>') targetMode = 'ai';
-      else if (mode === 'uml' || mode === 'mermaid' || mode === 'erd') targetMode = 'uml';
+      if (mode === 'visuels' || mode === '<>visuels') targetMode = 'visuels';
+      else if (mode === 'mermaid') targetMode = 'mermaid';
+      else if (mode === 'uml' || mode === 'erd' || mode === '<>uml') targetMode = 'uml';
       else targetMode = 'data';
 
       tablePanelViewMode[step] = targetMode;
@@ -5645,6 +5748,7 @@ ENTRÉES
 
       const uiView = document.getElementById(`step-${step}-ui-view`);
       const umlView = document.getElementById(`step-${step}-uml-view`);
+      const mermaidView = document.getElementById(`step-${step}-mermaid-view`);
       const aiView = document.getElementById(`step-${step}-ai-view`);
       const visuelsView = document.getElementById(`step-${step}-visuels-view`);
       const toggleContainer = document.getElementById(`step-${step}-toggle`);
@@ -5661,6 +5765,7 @@ ENTRÉES
 
       if (uiView) uiView.classList.toggle('hidden', targetMode !== 'data');
       if (umlView) umlView.classList.toggle('hidden', targetMode !== 'uml');
+      if (mermaidView) mermaidView.classList.toggle('hidden', targetMode !== 'mermaid');
       if (aiView) aiView.classList.toggle('hidden', targetMode !== 'ai');
       if (visuelsView) visuelsView.classList.toggle('hidden', targetMode !== 'visuels');
 
@@ -5674,12 +5779,25 @@ ENTRÉES
         renderTableAiView(step);
       } else if (targetMode === 'visuels') {
         renderVisuelsPromptView(step);
-      } else if (targetMode === 'uml') {
+      } else if (targetMode === 'mermaid') {
         renderStepUml(step);
+      } else if (targetMode === 'uml') {
+        updateStepUmlCodeEditor(step);
       } else {
         if (step === 3) renderStep3TablePreview();
         else if (step === 5) renderStep5TablePreview();
       }
+    }
+
+    function updateStepUmlCodeEditor(step) {
+      const codeArea = document.getElementById(`step-${step}-uml-code`);
+      if (!codeArea) return;
+      const code = (getStepUmlCode(step) || '').trim();
+      if (codeArea.value !== code) codeArea.value = code;
+      const badge = document.getElementById(`step-${step}-uml-editable-badge`);
+      const opt = selections[step] || 'B';
+      const isCustom = typeof opt === 'string' && opt.startsWith('custom_m_');
+      if (badge) badge.classList.toggle('hidden', !isCustom);
     }
 
     function getPromptTemplate() {
@@ -5929,16 +6047,303 @@ ${uml2B}
       copyChartSapPrompt(step);
     }
 
+    // ===== Gestionnaire des données statiques du graphique (Vue data & Graph Data Generator) =====
+    let activeGraphDataStep = 4;
+    const currentStep4ChartGrid = null;
+    const currentStep6ChartGrid = null;
+    window._chartGrids = { 4: null, 6: null };
+
+    function getGraphDataStorageKey(step, opt) {
+      return `maestro_graph_data_${step}_${opt}`;
+    }
+
+    function getGraphDataOverride(step, opt) {
+      try {
+        const raw = localStorage.getItem(getGraphDataStorageKey(step, opt));
+        if (raw) return JSON.parse(raw);
+      } catch (e) {}
+      return null;
+    }
+
+    function saveGraphDataOverride(step, opt, dataObj) {
+      try {
+        localStorage.setItem(getGraphDataStorageKey(step, opt), JSON.stringify(dataObj));
+      } catch (e) {}
+    }
+
+    function resetGraphData(step) {
+      const opt = selections[step];
+      try {
+        localStorage.removeItem(getGraphDataStorageKey(step, opt));
+      } catch (e) {}
+      renderChartDataView(step);
+      renderStepChart(step);
+      showToast(`↻ Données du graphique réinitialisées (Option ${step}.${opt})`);
+    }
+
+    function getEffectiveChartConfig(step) {
+      const opt = selections[step];
+      const spec = buildStepChartSpec(step, opt, 1);
+      if (!spec || !spec.config) return null;
+      let cfg = JSON.parse(JSON.stringify(spec.config, (k, v) => typeof v === 'function' ? undefined : v));
+      const override = getGraphDataOverride(step, opt);
+      if (override && override.datasets && cfg.data && Array.isArray(cfg.data.datasets)) {
+        override.datasets.forEach((ods, dsIdx) => {
+          if (cfg.data.datasets[dsIdx] && Array.isArray(ods.data)) {
+            cfg.data.datasets[dsIdx].data = ods.data.slice();
+          }
+        });
+      }
+      return cfg;
+    }
+
+    function renderChartDataView(step) {
+      const container = document.getElementById(`step-${step}-data-table-container`);
+      if (!container) return;
+      const opt = selections[step];
+      const cfg = getEffectiveChartConfig(step);
+      if (!cfg || !cfg.data) {
+        container.innerHTML = '<p class="text-slate-400 italic p-3 text-xs">Données non disponibles pour ce graphique.</p>';
+        return;
+      }
+
+      const labels = Array.isArray(cfg.data.labels) ? cfg.data.labels : [];
+      const datasets = Array.isArray(cfg.data.datasets) ? cfg.data.datasets : [];
+      if (!labels.length && !datasets.length) {
+        container.innerHTML = '<p class="text-slate-400 italic p-3 text-xs">Aucune série de données dans ce graphique.</p>';
+        return;
+      }
+
+      const gridColumns = [
+        {
+          id: '__label',
+          name: 'Catégorie / Axe X',
+          width: '180px',
+          formatter: (cell) => gridjs.html(`<span class="font-bold text-slate-700">${escapeHtml(cell)}</span>`)
+        }
+      ];
+
+      datasets.forEach((ds, dsIdx) => {
+        const dsName = ds.label || `Série ${dsIdx + 1}`;
+        const baseW = Math.max(140, (dsName.length * 9) + 40);
+        gridColumns.push({
+          id: `__ds_${dsIdx}`,
+          name: dsName,
+          width: `${baseW}px`,
+          formatter: (cell) => gridjs.html(`<span class="font-mono font-semibold text-blue-900">${escapeHtml(cell)}</span>`)
+        });
+      });
+
+      const gridRows = labels.map((label, rIdx) => {
+        const row = [String(label)];
+        datasets.forEach(ds => {
+          const val = (Array.isArray(ds.data) && ds.data[rIdx] !== undefined) ? ds.data[rIdx] : '-';
+          row.push(String(val));
+        });
+        return row;
+      });
+
+      container.innerHTML = '';
+      if (window._chartGrids[step]) {
+        try { window._chartGrids[step].destroy(); } catch (e) {}
+        window._chartGrids[step] = null;
+      }
+
+      window._chartGrids[step] = new gridjs.Grid({
+        columns: gridColumns,
+        data: gridRows,
+        sort: true,
+        resizable: true,
+        pagination: {
+          limit: 10,
+          summary: true
+        },
+        language: {
+          pagination: {
+            previous: 'Préc.',
+            next: 'Suiv.',
+            navigate: (page, pages) => `Page ${page} sur ${pages}`,
+            page: (page) => `Page ${page}`,
+            showing: 'Affichage de',
+            of: 'sur',
+            to: 'à',
+            results: 'enregistrements (10 par page)'
+          },
+          loading: 'Chargement des données...',
+          noRecordsFound: 'Aucune donnée disponible',
+          error: 'Erreur de chargement'
+        }
+      });
+      window._chartGrids[step].render(container);
+    }
+
+    function openGraphDataGeneratorModal(step) {
+      activeGraphDataStep = step;
+      const opt = selections[step];
+      const modal = document.getElementById('graph-data-generator-modal');
+      const badge = document.getElementById('graph-data-step-badge');
+      const targetLabel = document.getElementById('graph-data-target-label');
+      if (!modal) return;
+
+      if (badge) badge.textContent = `Étape ${step}`;
+      if (targetLabel) targetLabel.textContent = `Option active : ${step}.${opt}`;
+
+      renderGraphDataFieldsForm();
+      modal.classList.remove('hidden');
+    }
+
+    function closeGraphDataGeneratorModal() {
+      const modal = document.getElementById('graph-data-generator-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function renderGraphDataFieldsForm() {
+      const step = activeGraphDataStep;
+      const opt = selections[step];
+      const container = document.getElementById('graph-data-fields-container');
+      if (!container) return;
+
+      const spec = buildStepChartSpec(step, opt, 1);
+      if (!spec || !spec.config || !spec.config.data) {
+        container.innerHTML = '<p class="text-slate-400 italic p-3 text-xs">Aucune série éditable disponible.</p>';
+        return;
+      }
+
+      const cfg = getEffectiveChartConfig(step);
+      const labels = cfg.data.labels || [];
+      const datasets = cfg.data.datasets || [];
+
+      let html = '';
+      datasets.forEach((ds, dsIdx) => {
+        const rawValues = (Array.isArray(ds.data) ? ds.data : []).map(v => typeof v === 'number' ? v : parseFloat(v) || 0);
+        const count = rawValues.length || 1;
+        const currentSum = rawValues.reduce((a, b) => a + b, 0);
+        const currentMean = Math.round((currentSum / count) * 10) / 10;
+        const variance = rawValues.reduce((a, b) => a + Math.pow(b - currentMean, 2), 0) / count;
+        const currentStd = Math.round(Math.sqrt(variance) * 10) / 10;
+        const minVal = rawValues.length ? Math.min(...rawValues) : 0;
+        const maxVal = rawValues.length ? Math.max(...rawValues) : 0;
+
+        html += `<div class="p-3 rounded-lg border border-slate-200 bg-white shadow-2xs space-y-2.5">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-1.5">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full" style="background-color: ${ds.backgroundColor || ds.borderColor || '#3b82f6'}"></span>
+              <span class="font-bold text-slate-800 text-xs">${escapeHtml(ds.label || `Série ${dsIdx + 1}`)}</span>
+              <span class="text-[10px] text-slate-400 font-mono">(${count} points)</span>
+            </div>
+            <span class="text-[10px] font-mono text-slate-500">Min: ${minVal} • Max: ${maxVal}</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 items-center">
+            <div>
+              <label class="block text-[9.5px] text-slate-500 font-semibold mb-0.5">Moyenne cible (Moy) :</label>
+              <input type="number" step="0.1" id="graph-gen-mean-${dsIdx}" value="${currentMean}" class="w-full px-2 py-1 border border-slate-300 rounded text-xs font-mono font-bold text-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-800" />
+            </div>
+            <div>
+              <label class="block text-[9.5px] text-slate-500 font-semibold mb-0.5">Écart / Dispersion (± Écart-type) :</label>
+              <input type="number" step="0.1" min="0" id="graph-gen-std-${dsIdx}" value="${currentStd}" class="w-full px-2 py-1 border border-slate-300 rounded text-xs font-mono font-bold text-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-800" />
+            </div>
+            <div class="sm:col-span-2">
+              <label class="block text-[9.5px] text-slate-500 font-semibold mb-0.5">Aperçu direct des valeurs :</label>
+              <input type="text" id="graph-gen-vals-${dsIdx}" value="${rawValues.join(', ')}" class="w-full px-2 py-1 border border-slate-300 rounded text-[11px] font-mono text-slate-700 focus:outline-none focus:ring-1 focus:ring-blue-800 truncate" title="Valeurs directes séparées par virgule" />
+            </div>
+          </div>
+        </div>`;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function saveGraphDataFromModal() {
+      const step = activeGraphDataStep;
+      const opt = selections[step];
+      const cfg = getEffectiveChartConfig(step);
+      if (!cfg || !cfg.data || !Array.isArray(cfg.data.datasets)) return;
+
+      const overrideDatasets = [];
+      cfg.data.datasets.forEach((ds, dsIdx) => {
+        const valInput = document.getElementById(`graph-gen-vals-${dsIdx}`);
+        let vals = [];
+        if (valInput && valInput.value.trim()) {
+          vals = valInput.value.split(',').map(s => {
+            const n = parseFloat(s.trim());
+            return isNaN(n) ? 0 : Math.round(n * 10) / 10;
+          });
+        } else {
+          vals = ds.data ? ds.data.slice() : [];
+        }
+        overrideDatasets.push({
+          label: ds.label,
+          data: vals
+        });
+      });
+
+      saveGraphDataOverride(step, opt, { datasets: overrideDatasets });
+      closeGraphDataGeneratorModal();
+      renderChartDataView(step);
+      renderStepChart(step);
+      showToast(`💾 Données du graphique enregistrées (Étape ${step}.${opt})`);
+    }
+
+    function regenerateGraphDataFromModal() {
+      const step = activeGraphDataStep;
+      const opt = selections[step];
+      const cfg = getEffectiveChartConfig(step);
+      if (!cfg || !cfg.data || !Array.isArray(cfg.data.datasets)) return;
+
+      const labels = cfg.data.labels || [];
+      const count = labels.length || 6;
+      const rng = createPRNG(Date.now() % 1000000);
+
+      cfg.data.datasets.forEach((ds, dsIdx) => {
+        const meanInput = document.getElementById(`graph-gen-mean-${dsIdx}`);
+        const stdInput = document.getElementById(`graph-gen-std-${dsIdx}`);
+        const valsInput = document.getElementById(`graph-gen-vals-${dsIdx}`);
+        const mean = meanInput ? (parseFloat(meanInput.value) || 20) : 20;
+        const std = stdInput ? (parseFloat(stdInput.value) || Math.max(1, mean * 0.2)) : Math.max(1, mean * 0.2);
+
+        const newVals = [];
+        for (let i = 0; i < count; i++) {
+          // Box-Muller normal approximation using mulberry32 PRNG
+          const u1 = Math.max(0.0001, rng());
+          const u2 = rng();
+          const z = Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
+          const generated = Math.round(Math.max(0, mean + z * std) * 10) / 10;
+          newVals.push(generated);
+        }
+        if (valsInput) valsInput.value = newVals.join(', ');
+      });
+      showToast(`🎲 Nouvelles valeurs générées avec moyenne et dispersion`);
+    }
+
+    function restoreGraphDataModal() {
+      const step = activeGraphDataStep;
+      const opt = selections[step];
+      try {
+        localStorage.removeItem(getGraphDataStorageKey(step, opt));
+      } catch (e) {}
+      renderGraphDataFieldsForm();
+      renderChartDataView(step);
+      renderStepChart(step);
+      showToast(`↻ Données d'origine rétablies (Étape ${step}.${opt})`);
+    }
+
     function toggleChartMode(step, mode) {
-      // Normaliser le mode
+      // Normaliser le mode (data | graph | js | <>js | visuels | sap)
       let targetMode = mode;
-      if (mode === 'ui') targetMode = 'chart';
+      if (mode === 'ui' || mode === 'chart') targetMode = 'graph';
       if (mode === 'ai') targetMode = 'sap';
+      if (mode === '<>js' || mode === 'chartjs') targetMode = '<>js';
+      if (mode === 'js' || mode === 'config') targetMode = 'js';
+      if (mode === '<>visuels') targetMode = 'visuels';
+      if (mode === '<>sap') targetMode = 'sap';
+      if (mode === 'data') targetMode = 'data';
       chartViewMode[step] = targetMode;
       try {
         localStorage.setItem('maestro_switch_chart_' + step, targetMode);
       } catch (e) {}
 
+      const dataView = document.getElementById('step-' + step + '-data-view');
       const chartView = document.getElementById('step-' + step + '-chart-view');
       const configView = document.getElementById('step-' + step + '-config-view');
       const chartjsPromptView = document.getElementById('step-' + step + '-chartjs-prompt-view');
@@ -5949,22 +6354,25 @@ ${uml2B}
       if (toggleContainer) {
         toggleContainer.querySelectorAll('button[data-view]').forEach(btn => {
           const v = btn.dataset.view;
-          const isActive = (v === targetMode) || (v === 'chart' && targetMode === 'chart');
+          const isActive = (v === targetMode) || (v === 'chart' && targetMode === 'graph');
           btn.className = isActive
             ? 'px-2 py-0.5 text-[9.5px] font-bold bg-blue-800 text-white transition'
             : 'px-2 py-0.5 text-[9.5px] font-bold bg-white text-slate-600 hover:bg-slate-50 transition';
         });
       }
 
-      if (chartView) chartView.classList.toggle('hidden', targetMode !== 'chart');
-      if (configView) configView.classList.toggle('hidden', targetMode !== 'config');
-      if (chartjsPromptView) chartjsPromptView.classList.toggle('hidden', targetMode !== 'chartjs');
+      if (dataView) dataView.classList.toggle('hidden', targetMode !== 'data');
+      if (chartView) chartView.classList.toggle('hidden', targetMode !== 'graph');
+      if (configView) configView.classList.toggle('hidden', targetMode !== 'js');
+      if (chartjsPromptView) chartjsPromptView.classList.toggle('hidden', targetMode !== '<>js');
       if (visuelsView) visuelsView.classList.toggle('hidden', targetMode !== 'visuels');
       if (sapView) sapView.classList.toggle('hidden', targetMode !== 'sap');
 
-      if (targetMode === 'config') {
+      if (targetMode === 'data') {
+        renderChartDataView(step);
+      } else if (targetMode === 'js') {
         renderChartConfigView(step);
-      } else if (targetMode === 'chartjs') {
+      } else if (targetMode === '<>js') {
         renderChartJsPromptView(step);
       } else if (targetMode === 'visuels') {
         renderVisuelsPromptView(step);
@@ -6269,8 +6677,8 @@ ${uml2B}
         }
       }
 
-      // Vérifier si un code personnalisé existe dans localStorage pour cette option
-      let activeConfig = spec.config;
+      // Vérifier si un code personnalisé existe dans localStorage pour cette option, sinon utiliser la config pilotée par les données data
+      let activeConfig = getEffectiveChartConfig(step) || spec.config;
       const key = getChartStorageKey(step, opt);
       const savedCode = localStorage.getItem(key);
       if (savedCode) {
@@ -6278,14 +6686,16 @@ ${uml2B}
           activeConfig = JSON.parse(savedCode);
         } catch (e) {
           console.warn('Erreur chargement code customisé:', e);
-          activeConfig = spec.config;
+          activeConfig = getEffectiveChartConfig(step) || spec.config;
         }
       }
 
-      // Synchroniser la vue ouverte (config, chartjs, visuels, sap)
-      if (chartViewMode[step] === 'config') {
+      // Synchroniser la vue ouverte (data, js, <>js, visuels, sap)
+      if (chartViewMode[step] === 'data') {
+        renderChartDataView(step);
+      } else if (chartViewMode[step] === 'js' || chartViewMode[step] === 'config') {
         renderChartConfigView(step);
-      } else if (chartViewMode[step] === 'chartjs') {
+      } else if (chartViewMode[step] === '<>js' || chartViewMode[step] === 'chartjs') {
         renderChartJsPromptView(step);
       } else if (chartViewMode[step] === 'visuels') {
         renderVisuelsPromptView(step);
@@ -6849,7 +7259,6 @@ ${uml2B}
 
     MDT_MAINTENANCE_REQUEST ["Demande de Maintenance Moteur"] {
         string ID_DEMANDE PK "D-2026-000123"
-        enum DEMANDEUR "*Air France (AFR) | Lufthansa (DLH) | Delta Air Lines (DAL) | EasyJet (EZY) | Air China (CCA) | Emirates (UAE) | Singapore Airlines (SIA)"
         enum DEMANDEUR_NAME "*EZY | AFR | ACH | RYA"
         date DATE_DEMANDE "2026-03-01"
         enum PROGRAMME_MOTEUR "*LEAP | CFM56 | GE90"
@@ -6868,7 +7277,6 @@ ${uml2B}
     }
     CONTRACT_SLA ["Contrat SLA Client"] {
         string ID_CONTRAT PK "CTR-AFR-01"
-        enum DEMANDEUR "*Air France (AFR) | Lufthansa (DLH) | Delta Air Lines (DAL) | EasyJet (EZY) | Air China (CCA) | Emirates (UAE) | Singapore Airlines (SIA)"
         float SLA_CIBLE_JOURS "18.0 j"
         float PENALITE_JOUR_EUR "2500 EUR"
     }
@@ -6890,7 +7298,7 @@ ${uml2B}
     DUREE_STANDARDS ||--o{ MDT_INTERVENTION : "1 standard → N interventions (1:N)"
 
     MDT_INTERVENTION ["Intervention d'Atelier"] {
-        string ID_DEMANDE PK "D-2026-000123"
+        enum ID_DEMANDE FK "*D-2026-000123 | D-2026-000124 | D-2026-000125"
         string ID_INTERVENTION PK "I-2026-000123-01"
         enum TYPE_REPARATION "*T-AUBTUR | T-INSCND | T-MAJLOU | T-BANESS | T-EQUROT | T-COMHOT | T-REVCAR | T-FODREP"
         enum PRECISION_AUTRE "*Re-frettage spécifique | Usinage aubes HP | CND Ultra-sons | Traitement thermique | Équilibrage dynamique"
@@ -6914,7 +7322,6 @@ ${uml2B}
     }
     MDT_MAINTENANCE_REQUEST ["Demande de Maintenance Moteur"] {
         string ID_DEMANDE PK "D-2026-000123"
-        enum DEMANDEUR "*Air France (AFR) | Lufthansa (DLH) | Delta Air Lines (DAL) | EasyJet (EZY) | Air China (CCA) | Emirates (UAE) | Singapore Airlines (SIA)"
         enum DEMANDEUR_NAME "*EZY | AFR | ACH | RYA"
         enum ENGINE_TYPE "*LEAP-1A26 | CFM56-7B | CFM56-5B | LEAP-1B | GE90-115B"
         enum NIVEAU_URGENCE_GLOBAL "*Haute (AOG) | Moyenne | Basse"
@@ -7238,6 +7645,25 @@ xychart-beta
     const STEP_UML_SCHEMAS = {
       3: {
         'A': `erDiagram
+    MDT_MAINTENANCE_REQUEST ||--o{ MDT_INTERVENTION : "1 demande -> N interventions (1:N)"
+    CONTRACT_SLA ||--o{ MDT_MAINTENANCE_REQUEST : "1 contrat -> N demandes (1:N)"
+    TIMEPROFILE ||--o{ MDT_INTERVENTION : "1 période -> N interventions (1:N)"
+    MDT_MAINTENANCE_REQUEST {
+        string ID_DEMANDE PK "D-2026-000123"
+        enum DEMANDEUR_NAME "*EZY | AFR | ACH | RYA"
+        date DATE_DEMANDE "2026-03-01"
+        enum PROGRAMME_MOTEUR "*LEAP | CFM56 | GE90"
+        float TOTAL_ENGINE_TAT "21.5 j"
+    }
+    CONTRACT_SLA {
+        string ID_CONTRAT PK "CTR-AFR-01"
+        float SLA_CIBLE_JOURS "18.0 j"
+        float PENALITE_JOUR_EUR "2500 EUR"
+    }
+    TIMEPROFILE {
+        string ID_PERIOD PK "2026-W10"
+        boolean IS_WORKING_DAY "*true | false"
+    }
     MDT_INTERVENTION {
         string ID_INTERVENTION PK "I-2026-000123-01"
         string ID_DEMANDE FK "D-2026-000123"
@@ -7247,6 +7673,23 @@ xychart-beta
         float INTERVENTION_TAT "30.5 h"
     }`,
         'B': `erDiagram
+    MDT_MAINTENANCE_REQUEST ||--o{ MDT_INTERVENTION : "1 demande -> N interventions (1:N)"
+    DUREE_STANDARDS ||--o{ MDT_INTERVENTION : "1 standard -> N interventions (1:N)"
+    ENGINE_FLEET ||--o{ MDT_MAINTENANCE_REQUEST : "1 type flotte -> N demandes (1:N)"
+    MDT_MAINTENANCE_REQUEST {
+        string ID_DEMANDE PK "D-2026-000123"
+        enum ENGINE_TYPE FK "*LEAP-1A26 | CFM56-7B | CFM56-5B | LEAP-1B | GE90-115B"
+        float TOTAL_ENGINE_TAT "21.5 j"
+    }
+    ENGINE_FLEET {
+        enum ENGINE_TYPE PK "*LEAP-1A26 | CFM56-7B | CFM56-5B | LEAP-1B | GE90-115B"
+        float FACTEUR_DISPERSION "1.35"
+    }
+    DUREE_STANDARDS {
+        enum ENGINE_TYPE PK "*LEAP-1A26 | CFM56-7B | CFM56-5B"
+        enum TYPE_REPARATION PK "*T-AUBTUR | T-INSCND | T-MAJLOU"
+        float DUREE_STANDARD_H "18.5 h"
+    }
     MDT_INTERVENTION {
         string ID_INTERVENTION PK "I-2026-000123-01"
         string ID_DEMANDE FK "D-2026-000123"
@@ -7256,10 +7699,22 @@ xychart-beta
         float INTERVENTION_TAT "30.5 h"
     }`,
         'C': `erDiagram
+    MDT_MAINTENANCE_REQUEST ||--o{ MDT_INTERVENTION : "1 demande -> N interventions (1:N)"
     STATION ||--o{ MDT_INTERVENTION : "1 station -> N interventions (1:N)"
+    SHOP ||--o{ STATION : "1 shop -> N stations (1:N)"
+    SHOP {
+        enum SHOP_NAME PK "*S-MON | S-VIL | S-CHL | S-BRU"
+        int NB_STATIONS "6"
+        float CAPACITE_HEBDO "1450.0 h"
+    }
     STATION {
         enum STATION_NAME PK "*S-MON-01 | S-MON-02"
+        enum SHOP_NAME FK "*S-MON | S-VIL | S-CHL | S-BRU"
         float SEUIL_SATURATION "85.0 %"
+    }
+    MDT_MAINTENANCE_REQUEST {
+        string ID_DEMANDE PK "D-2026-000123"
+        enum NIVEAU_URGENCE_GLOBAL "*Haute (AOG) | Moyenne | Basse"
     }
     MDT_INTERVENTION {
         string ID_INTERVENTION PK "I-2026-000123-01"
@@ -7269,6 +7724,21 @@ xychart-beta
         float INTERVENTION_TAT "30.5 h"
     }`,
         'D': `erDiagram
+    MDT_MAINTENANCE_REQUEST ||--o{ MDT_INTERVENTION : "1 demande -> N interventions (1:N)"
+    COMPOSANT_CRITIQUE ||--o{ MDT_INTERVENTION : "1 pièce -> N interventions (1:N)"
+    CONTROLE_CND ||--o{ MDT_INTERVENTION : "1 protocole -> N interventions (1:N)"
+    COMPOSANT_CRITIQUE {
+        enum REF_PIECE PK "*AUB-HP-01 | DISQ-BP-02 | CRTT-03"
+        float USURE_PREDICTIVE_PCT "76.5 %"
+    }
+    CONTROLE_CND {
+        enum TYPE_CND PK "*US-01 | RX-02 | MAG-03"
+        float TAUX_ALEA_CND "4.2 %"
+    }
+    MDT_MAINTENANCE_REQUEST {
+        string ID_DEMANDE PK "D-2026-000123"
+        string COMMENTAIRE_GLOBAL "Dépose suite FOD"
+    }
     MDT_INTERVENTION {
         string ID_INTERVENTION PK "I-2026-000123-01"
         string ID_DEMANDE FK "D-2026-000123"
@@ -7280,6 +7750,22 @@ xychart-beta
       },
       5: {
         'A': `erDiagram
+    SHOP ||--o{ MDT_INTERVENTION : "1 shop -> N interventions (1:N)"
+    CALENDRIER_OUVERTURE ||--o{ SHOP : "1 calendrier -> N shops (1:N)"
+    BAIE_MAINTENANCE ||--o{ SHOP : "1 atelier -> N baies (1:N)"
+    CALENDRIER_OUVERTURE {
+        string ID_SAISON PK "2026-S1"
+        int HEURES_OUVRABLES_MOIS "360 h"
+    }
+    BAIE_MAINTENANCE {
+        string ID_BAIE PK "B-MON-01"
+        int CAPACITE_NOMINALE_H "160 h"
+    }
+    SHOP {
+        enum SHOP_NAME PK "*S-MON | S-VIL | S-BRU"
+        int NB_STATIONS "6"
+        float CAPACITE_HEBDO "1450.0 h"
+    }
     MDT_INTERVENTION {
         string ID_INTERVENTION PK "I-2026-000123-01"
         enum SHOP_NAME FK "*S-MON | S-VIL | S-BRU"
@@ -7290,8 +7776,19 @@ xychart-beta
     }`,
         'B': `erDiagram
     STATION ||--o{ MDT_INTERVENTION : "1 station -> N interventions (1:N)"
+    SHOP ||--o{ STATION : "1 shop -> N stations (1:N)"
+    FLUX_ENCOURS ||--o{ STATION : "1 flux -> N stations (1:N)"
+    FLUX_ENCOURS {
+        string ID_FLUX PK "FLX-WIP-MON"
+        float CADENCE_SORTIE_J "2.4 u/j"
+    }
+    SHOP {
+        enum SHOP_NAME PK "*S-MON | S-VIL | S-BRU"
+        int NB_STATIONS "6"
+    }
     STATION {
         enum STATION_NAME PK "*S-MON-01 | S-MON-02 | S-MON-03"
+        enum SHOP_NAME FK "*S-MON | S-VIL | S-BRU"
         int POSTES_STATION_TAMPON "4"
     }
     MDT_INTERVENTION {
@@ -7302,6 +7799,22 @@ xychart-beta
         float TAUX_OCCUPATION "91.7 %"
     }`,
         'C': `erDiagram
+    SHOP ||--o{ MDT_INTERVENTION : "1 shop -> N interventions (1:N)"
+    STOCK_PIECES ||--o{ MDT_INTERVENTION : "1 référence -> N interventions (1:N)"
+    FOURNISSEUR_LOGISTIQUE ||--o{ STOCK_PIECES : "1 fournisseur -> N stocks (1:N)"
+    FOURNISSEUR_LOGISTIQUE {
+        string ID_FOURNISSEUR PK "FRN-SAFRAN-01"
+        float TAUX_SERVICE_OTIF "92.4 %"
+    }
+    STOCK_PIECES {
+        string ID_KIT_REPARATION PK "KIT-LLP-LEAP"
+        int PIECES_DISPONIBLES "14"
+        int SEUIL_ALERTE_RUPTURE "5"
+    }
+    SHOP {
+        enum SHOP_NAME PK "*S-MON | S-VIL | S-BRU"
+        int NB_STATIONS "6"
+    }
     MDT_INTERVENTION {
         string ID_INTERVENTION PK "I-2026-000123-01"
         enum SHOP_NAME FK "*S-MON | S-VIL | S-BRU"
@@ -7311,6 +7824,21 @@ xychart-beta
         float TAUX_BLOCAGE_ATELIER "36.4 %"
     }`,
         'D': `erDiagram
+    SHOP ||--o{ MDT_INTERVENTION : "1 shop -> N interventions (1:N)"
+    EQUIPEMENT_CRITIQUE ||--o{ SHOP : "1 équipement -> N shops (1:N)"
+    REBUT_STATISTIQUE ||--o{ MDT_INTERVENTION : "1 modèle rebut -> N interventions (1:N)"
+    EQUIPEMENT_CRITIQUE {
+        string ID_BANC_TEST PK "BANC-TEST-MON-01"
+        float DISPONIBILITE_MACHINE "98.5 %"
+    }
+    REBUT_STATISTIQUE {
+        enum TYPE_REPARATION PK "*T-AUBTUR | T-COMHOT"
+        float TAUX_REBUT_MOYEN "3.1 %"
+    }
+    SHOP {
+        enum SHOP_NAME PK "*S-MON | S-VIL | S-BRU"
+        int NB_STATIONS "6"
+    }
     MDT_INTERVENTION {
         string ID_INTERVENTION PK "I-2026-000123-01"
         enum SHOP_NAME FK "*S-MON | S-VIL | S-BRU"
@@ -7376,12 +7904,16 @@ xychart-beta
     function renderStepUml(step) {
       const opt = selections[step] || 'B';
       const container = document.getElementById(`step-${step}-mermaid-diagram`);
-      const editor = document.getElementById(`step-${step}-mermaid-editor`);
+      const codeArea = document.getElementById(`step-${step}-uml-code`);
       const badge = document.getElementById(`step-${step}-uml-editable-badge`);
       if (!container) return;
 
       const code = (getStepUmlCode(step) || '').trim();
       const isCustom = typeof opt === 'string' && opt.startsWith('custom_m_');
+
+      if (codeArea && codeArea.value !== code) {
+        codeArea.value = code;
+      }
 
       // Validation front de la syntaxe Mermaid ERD avant appel à la librairie
       const vResult = validateMermaidErdSyntax(code);
@@ -7395,12 +7927,6 @@ xychart-beta
       }
 
       if (badge) badge.classList.toggle('hidden', !isCustom);
-      if (editor) {
-        editor.classList.toggle('hidden', !isCustom);
-        if (isCustom && editor.value !== code) {
-          editor.value = code;
-        }
-      }
 
       try {
         if (!window._mermaidInitialized) {
@@ -7437,6 +7963,12 @@ xychart-beta
 
     function onStepUmlChange(step, val) {
       saveStepUmlCode(step, val);
+      const savedMsg = document.getElementById(`step-${step}-uml-saved-msg`);
+      if (savedMsg) {
+        savedMsg.classList.remove('hidden');
+        clearTimeout(window['_stepUmlSaved_' + step]);
+        window['_stepUmlSaved_' + step] = setTimeout(() => savedMsg.classList.add('hidden'), 1500);
+      }
       // Validation des formules du modèle
       const parsed = parseMermaidErd(val);
       const availableFieldNames = [];
@@ -7784,14 +8316,17 @@ SORTIE
       } catch (e) {}
     }
 
-    // Mode actif pour le panneau de l'Étape 2 (ui, uml, erd, data)
-    let schemaViewMode = (function() {
-      try {
-        return localStorage.getItem('maestro_switch_schema') || 'ui';
-      } catch (e) {
-        return 'ui';
-      }
-    })();
+// Mode actif pour le panneau de l'Étape 2 (data, mermaid, uml, <>uml)
+let schemaViewMode = (function() {
+  try {
+    const s = localStorage.getItem('maestro_switch_schema');
+    if (s === 'ui') return 'mermaid';
+    if (s === 'erd') return '<>uml';
+    return s || 'data';
+  } catch (e) {
+    return 'data';
+  }
+})();
 
     // État du tableau de données de l'Étape 2
     let schemaDataState = {
@@ -8272,9 +8807,11 @@ SORTIE
       // 1. Colonnes des attributs propres de l'entité
       activeEntity.fields.forEach(f => {
         const badgeConstraint = f.constraint ? ` <span class="px-1 py-0.2 rounded text-[8.5px] font-mono ${f.constraint === 'PK' ? 'bg-amber-100 text-amber-900 border border-amber-300' : 'bg-blue-100 text-blue-900 border border-blue-300'}">${f.constraint}</span>` : '';
+        const baseWidth = Math.max(140, (f.name.length * 9) + (f.constraint ? 55 : 30));
         gridColumns.push({
           id: f.name,
           name: gridjs.html(`<span class="font-bold text-slate-700">${f.name}</span>${badgeConstraint}`),
+          width: `${baseWidth}px`,
           sort: true,
           formatter: (cell) => {
             const val = (cell !== undefined && cell !== null) ? String(cell) : '';
@@ -8304,8 +8841,8 @@ SORTIE
                 const targetRows = dataset[rel.to] || [];
                 const count = targetRows.filter(tr => String(tr[pkField.name]) === String(pkVal)).length;
                 return gridjs.html(`
-                  <button type="button" onclick="drillDownToSubTable('${rel.to}', '${pkField.name}', '${pkVal}')" class="px-1.5 py-0.5 rounded bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold border border-emerald-200 text-[10px] cursor-pointer transition inline-flex items-center gap-1 shadow-2xs">
-                    <span>${count}</span> <span>${rel.to.toLowerCase()} ↗</span>
+                  <button type="button" onclick="drillDownToSubTable('${rel.to}', '${pkField.name}', '${pkVal}')" class="px-1.5 py-0.5 rounded bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold border border-emerald-200 text-[10px] cursor-pointer transition inline-flex items-center gap-1 shadow-2xs" title="Voir les détails (${rel.to})">
+                    <span>${count} ↗</span>
                   </button>
                 `);
               }
@@ -8422,7 +8959,7 @@ SORTIE
         sort: true,
         resizable: true,
         pagination: {
-          limit: 15,
+          limit: 10,
           summary: true
         },
         language: {
@@ -8434,7 +8971,7 @@ SORTIE
             showing: 'Affichage de',
             of: 'sur',
             to: 'à',
-            results: 'enregistrements (15 par page)'
+            results: 'enregistrements (10 par page)'
           },
           loading: 'Chargement des données...',
           noRecordsFound: 'Aucun enregistrement disponible',
@@ -8614,25 +9151,31 @@ SORTIE
           });
           html += `</div></div>`;
         } else {
-          // regex-genex / code
-          html += `<div class="grid grid-cols-1 sm:grid-cols-4 gap-2 items-center">
-            <div>
-              <label class="block text-[9.5px] text-slate-500 font-semibold">Préfixe fixe :</label>
-              <input type="text" value="${fStrat.prefix || ''}" onchange="updateFieldStratRegex('${f.name}', 'prefix', this.value)" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
-            </div>
-            <div>
-              <label class="block text-[9.5px] text-slate-500 font-semibold">Début compteur :</label>
-              <input type="number" min="0" value="${fStrat.startNum || 1}" onchange="updateFieldStratRegex('${f.name}', 'startNum', this.value)" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
-            </div>
-            <div>
-              <label class="block text-[9.5px] text-slate-500 font-semibold">Nb chiffres (padding) :</label>
-              <input type="number" min="1" max="10" value="${fStrat.numDigits || 3}" onchange="updateFieldStratRegex('${f.name}', 'numDigits', this.value)" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
-            </div>
-            <div>
-              <label class="block text-[9.5px] text-slate-500 font-semibold">Suffixe :</label>
-              <input type="text" value="${fStrat.suffix || ''}" onchange="updateFieldStratRegex('${f.name}', 'suffix', this.value)" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
-            </div>
-          </div>`;
+          // string / regex-genex / code
+          const isKeyField = f.constraint && (f.constraint.includes('PK') || f.constraint.includes('UK') || f.constraint.includes('FK'));
+          if (isKeyField) {
+            html += `<div class="grid grid-cols-1 sm:grid-cols-3 gap-2 items-center">
+              <div>
+                <label class="block text-[9.5px] text-slate-500 font-semibold">Préfixe fixe :</label>
+                <input type="text" value="${fStrat.prefix || ''}" onchange="updateFieldStratRegex('${f.name}', 'prefix', this.value)" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
+              </div>
+              <div>
+                <label class="block text-[9.5px] text-slate-500 font-semibold">Début compteur :</label>
+                <input type="number" min="0" value="${fStrat.startNum || 1}" onchange="updateFieldStratRegex('${f.name}', 'startNum', this.value)" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
+              </div>
+              <div>
+                <label class="block text-[9.5px] text-slate-500 font-semibold">Nb chiffres (padding) :</label>
+                <input type="number" min="1" max="10" value="${fStrat.numDigits || 3}" onchange="updateFieldStratRegex('${f.name}', 'numDigits', this.value)" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
+              </div>
+            </div>`;
+          } else {
+            html += `<div class="grid grid-cols-1 sm:grid-cols-2 gap-2 items-center">
+              <div>
+                <label class="block text-[9.5px] text-slate-500 font-semibold">Préfixe / Valeur texte :</label>
+                <input type="text" value="${fStrat.prefix || ''}" onchange="updateFieldStratRegex('${f.name}', 'prefix', this.value)" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
+              </div>
+            </div>`;
+          }
         }
 
         html += `</div></div>`;
@@ -9025,32 +9568,33 @@ SORTIE
       const promptView = document.getElementById('schema-prompt-view');
       const dataView = document.getElementById('schema-data-view');
 
-      // Normalisation des vues : 'ui', 'uml', 'erd', 'data'
-      let targetMode = 'ui';
-      if (view === 'uml' || view === 'mermaid') targetMode = 'uml';
-      else if (view === 'erd' || view === 'prompt' || view === '<>' || view === 'ai' || view === 'md') targetMode = 'erd';
+      // Normalisation des vues : 'data', 'mermaid' (anc. ui), 'uml', '<>uml' (anc. erd)
+      let targetMode = 'data';
+      if (view === 'mermaid' || view === 'ui') targetMode = 'mermaid';
+      else if (view === 'uml') targetMode = 'uml';
+      else if (view === '<>uml' || view === 'erd' || view === 'prompt' || view === '<>' || view === 'ai' || view === 'md') targetMode = '<>uml';
       else if (view === 'data' || view === 'table') targetMode = 'data';
-      else targetMode = 'ui';
+      else targetMode = 'data';
 
       schemaViewMode = targetMode;
       try {
         localStorage.setItem('maestro_switch_schema', targetMode);
       } catch (e) {}
 
-      if (svgView) svgView.classList.toggle('hidden', targetMode !== 'ui');
+      if (svgView) svgView.classList.toggle('hidden', targetMode !== 'mermaid');
       if (mermaidView) mermaidView.classList.toggle('hidden', targetMode !== 'uml');
-      if (promptView) promptView.classList.toggle('hidden', targetMode !== 'erd');
+      if (promptView) promptView.classList.toggle('hidden', targetMode !== '<>uml');
       if (dataView) dataView.classList.toggle('hidden', targetMode !== 'data');
 
       updateToggleButtons('schema-toggle', targetMode);
 
-      if (targetMode === 'ui') {
+      if (targetMode === 'mermaid') {
         renderMermaidVisual(selections[2] || 'A');
       } else if (targetMode === 'uml') {
         updateMermaidCode(selections[2] || 'A');
         const g = selections[2] || 'A';
         updateSchemaMermaidErrorBadge(validateMermaidErdSyntax(getMermaidSchema(g)));
-      } else if (targetMode === 'erd') {
+      } else if (targetMode === '<>uml') {
         updateSchemaPromptView(selections[2] || 'A');
       } else if (targetMode === 'data') {
         renderStep2DataView();
@@ -9763,25 +10307,31 @@ SORTIE
           });
           html += `</div></div>`;
         } else {
-          // regex-genex / code
-          html += `<div class="grid grid-cols-1 sm:grid-cols-4 gap-2 items-center">
-            <div>
-              <label class="block text-[9.5px] text-slate-500 font-semibold">Préfixe fixe :</label>
-              <input type="text" value="${fStrat.prefix || ''}" onchange="updateMesureStratRegex('${f.name}', 'prefix', this.value)" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
-            </div>
-            <div>
-              <label class="block text-[9.5px] text-slate-500 font-semibold">Début compteur :</label>
-              <input type="number" min="0" value="${fStrat.startNum || 1}" onchange="updateMesureStratRegex('${f.name}', 'startNum', this.value)" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
-            </div>
-            <div>
-              <label class="block text-[9.5px] text-slate-500 font-semibold">Nb chiffres (padding) :</label>
-              <input type="number" min="1" max="10" value="${fStrat.numDigits || 3}" onchange="updateMesureStratRegex('${f.name}', 'numDigits', this.value)" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
-            </div>
-            <div>
-              <label class="block text-[9.5px] text-slate-500 font-semibold">Suffixe :</label>
-              <input type="text" value="${fStrat.suffix || ''}" onchange="updateMesureStratRegex('${f.name}', 'suffix', this.value)" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
-            </div>
-          </div>`;
+          // string / regex-genex / code
+          const isKeyField = f.constraint && (f.constraint.includes('PK') || f.constraint.includes('UK') || f.constraint.includes('FK'));
+          if (isKeyField) {
+            html += `<div class="grid grid-cols-1 sm:grid-cols-3 gap-2 items-center">
+              <div>
+                <label class="block text-[9.5px] text-slate-500 font-semibold">Préfixe fixe :</label>
+                <input type="text" value="${fStrat.prefix || ''}" onchange="updateMesureStratRegex('${f.name}', 'prefix', this.value)" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
+              </div>
+              <div>
+                <label class="block text-[9.5px] text-slate-500 font-semibold">Début compteur :</label>
+                <input type="number" min="0" value="${fStrat.startNum || 1}" onchange="updateMesureStratRegex('${f.name}', 'startNum', this.value)" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
+              </div>
+              <div>
+                <label class="block text-[9.5px] text-slate-500 font-semibold">Nb chiffres (padding) :</label>
+                <input type="number" min="1" max="10" value="${fStrat.numDigits || 3}" onchange="updateMesureStratRegex('${f.name}', 'numDigits', this.value)" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
+              </div>
+            </div>`;
+          } else {
+            html += `<div class="grid grid-cols-1 sm:grid-cols-2 gap-2 items-center">
+              <div>
+                <label class="block text-[9.5px] text-slate-500 font-semibold">Préfixe / Valeur texte :</label>
+                <input type="text" value="${fStrat.prefix || ''}" onchange="updateMesureStratRegex('${f.name}', 'prefix', this.value)" class="w-full px-2 py-0.5 border border-slate-300 rounded text-xs" />
+              </div>
+            </div>`;
+          }
         }
 
         html += `</div></div>`;
@@ -10381,9 +10931,13 @@ SORTIE
 
       const gridColumns = cols.map((c, idx) => {
         const isCalc = idx >= cols.length - 2;
+        const fObj = fieldList.find(f => f.name === c);
+        const badgeConstraint = fObj && fObj.constraint ? ` <span class="px-1 py-0.2 rounded text-[8.5px] font-mono ${fObj.constraint === 'PK' ? 'bg-amber-100 text-amber-900 border border-amber-300' : 'bg-blue-100 text-blue-900 border border-blue-300'}">${fObj.constraint}</span>` : '';
+        const baseW = Math.max(140, (c.length * 9) + (fObj && fObj.constraint ? 55 : 30));
         return {
           id: c,
-          name: c,
+          name: gridjs.html(`<span class="font-bold text-slate-700">${c}</span>${badgeConstraint}`),
+          width: `${baseW}px`,
           formatter: (cell) => {
             if (isCalc) {
               return gridjs.html('<span class="text-blue-800 font-bold font-mono">' + escapeHtml(cell) + '</span>');
@@ -10407,7 +10961,7 @@ SORTIE
         data: gridRows,
         sort: true,
         resizable: true,
-        pagination: { limit: 15, summary: true },
+        pagination: { limit: 10, summary: true },
         language: {
           pagination: {
             previous: 'Préc.',
@@ -10417,7 +10971,7 @@ SORTIE
             showing: 'Affichage de',
             of: 'sur',
             to: 'à',
-            results: 'enregistrements (15 par page)'
+            results: 'enregistrements (10 par page)'
           },
           loading: 'Chargement...',
           noRecordsFound: 'Aucune donnée disponible',
@@ -10500,9 +11054,13 @@ SORTIE
 
       const gridColumns = cols.map((c, idx) => {
         const isCalc = idx >= cols.length - 2;
+        const fObj = fieldList.find(f => f.name === c);
+        const badgeConstraint = fObj && fObj.constraint ? ` <span class="px-1 py-0.2 rounded text-[8.5px] font-mono ${fObj.constraint === 'PK' ? 'bg-amber-100 text-amber-900 border border-amber-300' : 'bg-blue-100 text-blue-900 border border-blue-300'}">${fObj.constraint}</span>` : '';
+        const baseW = Math.max(140, (c.length * 9) + (fObj && fObj.constraint ? 55 : 30));
         return {
           id: c,
-          name: c,
+          name: gridjs.html(`<span class="font-bold text-slate-700">${c}</span>${badgeConstraint}`),
+          width: `${baseW}px`,
           formatter: (cell) => {
             if (isCalc) {
               return gridjs.html('<span class="text-purple-700 font-bold font-mono">' + escapeHtml(cell) + '</span>');
@@ -10526,7 +11084,7 @@ SORTIE
         data: gridRows,
         sort: true,
         resizable: true,
-        pagination: { limit: 15, summary: true },
+        pagination: { limit: 10, summary: true },
         language: {
           pagination: {
             previous: 'Préc.',
@@ -10536,7 +11094,7 @@ SORTIE
             showing: 'Affichage de',
             of: 'sur',
             to: 'à',
-            results: 'enregistrements (15 par page)'
+            results: 'enregistrements (10 par page)'
           },
           loading: 'Chargement...',
           noRecordsFound: 'Aucune donnée disponible',

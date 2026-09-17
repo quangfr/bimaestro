@@ -91,7 +91,7 @@ Le projet MAESTRO s'articule autour des acteurs décisionnels de la maintenance 
 
 > **Question de cadrage :** Quelles tables et niveaux de granularité permettent le calcul du Turn Around Time (TAT) et la planification d'atelier ?  
 > **En-tête de l'interface :** Étape 2 : Modèle de Données  
-> **Bouton d'affichage :** En haut à gauche du panel de droite, le bouton `schema-toggle` bascule entre le rendu visuel Mermaid SVG (`ui`), l'éditeur code Mermaid interactif (`uml`), le prompt IA de génération ERD (`erd`) et la vue de données (`data`), rigoureusement synchronisés avec les diagrammes `erDiagram` et définitions ci-dessous. Le crayon `✎` du générateur de données est disponible en haut à droite dans les vues `ui`, `uml` et `erd`.
+> **Bouton d'affichage :** En haut à droite du panel de droite, le bouton `schema-toggle` bascule entre la vue exemple de données (`data`), le rendu visuel Mermaid SVG (`mermaid`), l'éditeur code Mermaid interactif (`uml`) et le prompt IA de génération ERD (`<>uml`), rigoureusement synchronisés avec les diagrammes `erDiagram` et définitions ci-dessous. Le crayon `✎` du générateur de données est disponible en haut à droite dans les vues `mermaid`, `uml` et `<>uml`.
 
 ---
 
@@ -103,7 +103,6 @@ Les fondations du modèle de données reposent sur deux structures maîtres : l'
 - **Rôle :** Représente l'en-tête de la demande de révision moteur émise par une compagnie aérienne ou un opérateur.
 - **🔑 Clé Primaire (PK) :** `ID_DEMANDE` (ex. `D-2026-000123`, `D-2026-000124`)
 - **🏷️ Attributs de Gestion :**
-  - `DEMANDEUR` : Compagnie cliente donneuse d'ordre (ex. `Air France (AFR)`, `Lufthansa (DLH)`, `Delta Air Lines (DAL)`).
   - `DEMANDEUR_NAME` : Code court normalisé de la compagnie (`Enum`, ex. `EZY`, `AFR`, `ACH`, `RYA`).
   - `DATE_DEMANDE` : Horodatage / date d'émission de la demande (`Date / Timestamp`, ex. `2026-03-01`).
   - `PROGRAMME_MOTEUR` : Famille technologique de motorisation (ex. `CFM56`, `LEAP`, `GE90`).
@@ -124,25 +123,25 @@ Les fondations du modèle de données reposent sur deux structures maîtres : l'
 
 ### 2. 🎛️ Planning Levels (Niveaux de Granularité des Calculs)
 
-Le panneau latéral droit de l'Étape 2 propose un sélecteur à 4 vues :
-- **Vue Visuelle Schéma Relationnel (`ui` / `svg`) :** Visualisateur dynamique Mermaid ERD directement branché sur le modèle de données avec clés PK/FK et types normalisés.
-- **Vue Modèle Mermaid ERD Éditable (`uml`) :** Code source Mermaid ERD éditable en direct avec persistance en local storage, impactant instantanément le rendu visuel, accompagné de boutons de copie et de réinitialisation (`↻`).
-- **Vue Prompt IA Diagramme ERD (`erd`) :** Prompt IA structuré prêt à copier pour générer ou adapter un diagramme Mermaid ERD selon des critères normés (PK, FK, UK, types obligatoires `*`, support explicite du type `enum` avec liste de choix séparée par `|` en commentaire, cardinalités à verbe infinitif).
-- **Vue Exemple de Données Tabulaire (`data`) :** Tableau dynamique interactif propulsé par **Grid.js** (thème personnalisé BiMaestro compact) montrant les enregistrements de la table principale (au centre de l'étoile) et des tables dimensionnelles / de faits associées :
+Le panneau latéral droit de l'Étape 2 propose un sélecteur à 4 vues (`data` | `mermaid` | `uml` | `<>uml`) :
+- **Vue Exemple de Données Tabulaire (`data`) :** Tableau dynamique interactif propulsé par **Grid.js** (thème personnalisé BiMaestro compact, police augmentée à 13px) montrant les enregistrements de la table principale (au centre de l'étoile) et des tables dimensionnelles / de faits associées :
   - **Tri par colonne :** Tri ascendant / descendant natif Grid.js au clic sur l'en-tête de colonne avec indicateurs fléchés.
-  - **Pagination intégrée :** Affichage strict de 15 lignes par page avec pagination numérique et résumé (`[Préc.] [1] [2]... [Suiv.]`).
-  - **Redimensionnement des colonnes :** Support du redimensionnement interactif Grid.js (`resizable: true`).
+  - **Pagination intégrée :** Affichage strict de 10 lignes par page avec pagination numérique et résumé (`[Préc.] [1] [2]... [Suiv.]`).
+  - **Redimensionnement des colonnes & badges :** Largeur adaptative garantissant la lisibilité des badges de contrainte (`PK`, `FK`, `UK`) et support du redimensionnement interactif Grid.js (`resizable: true`).
   - **Jointures & Drill-down :**
-    - Pour les relations $N-1$ : affichage d'une colonne unique portant la valeur du premier champ dont le nom contient `NOM` ou se termine par `_NAME` (ex. `STATION_NAME`, `SHOP_NAME`) ou le libellé du premier champ non PK/FK de la table liée (les autres colonnes de la table liée ne sont pas affichées pour alléger la vue).
-    - Pour les relations $1-N$ : affichage d'un badge cliquable indiquant le nombre d'enregistrements liés (ex. `X interventions ↗`) ouvrant la vue filtrée de la table enfant avec fil d'Ariane de retour (`← Table principale`).
+    - Pour les relations $N-1$ : affichage d'une colonne unique portant la valeur du premier champ dont le nom contient `NOM` ou se termine par `_NAME` (ex. `STATION_NAME`, `SHOP_NAME`) ou le libellé du premier champ non PK/FK de la table liée.
+    - Pour les relations $1-N$ : affichage d'un badge cliquable indiquant le nombre d'enregistrements liés (ex. `3 ↗`) ouvrant la vue filtrée de la table enfant avec fil d'Ariane de retour épuré (`←`).
   - **Générateur de Données Déduit Dynamiquement (✎) :** Modale de paramétrage avec sélection de la table et ajustement des règles de génération :
     - *Nombres :* min, max, moyenne. La moyenne est déduite du commentaire UML (ex. `"14.0 h"` → moyenne 14 avec suffixe `h`) pour tous les types numériques ; si le commentaire ne contient aucun nombre valide, une moyenne aléatoire entre 20 et 80 est appliquée. Lorsque min et max ne sont pas renseignés, la règle automatique $\pm 50\%$ de la moyenne est appliquée à la génération, et les bornes résultantes sont affichées en placeholder de saisie (jamais injectées dans la modale).
     - *Dates :* intervalle de date début / fin avec tirage aléatoire uniforme.
     - *Booléens & Enums :* distribution en pourcentages éditables (somme à 100%) ; par défaut répartition équitable, la valeur préfixée `*` (valeur par défaut UML) se voyant appliquer un double poids de répartition.
-    - *Regex / Codes :* incrémentation automatique des chiffres après le dernier tiret `-` (ex. `D-2026-000123`).
-    - *Type par champ :* sélecteur de type par champ (string, int, float, date, boolean, enum) — les possibilités de saisie (min/max/moyenne, intervalle de dates, répartition %, préfixe/padding, valeurs d'énumération éditables) s'adaptent immédiatement au type choisi, sans régénération ; le type ou le commentaire modifié est écrit dans l'UML par le bouton `Sauvegarder`.
-    - *Actions (barre harmonisée avec l'éditeur de mesures) :* `Sauvegarder` (écrit types/commentaires dans l'UML, sans régénérer), `Regénérer` la table active, `Restaurer` (schéma Mermaid et données d'origine, tenant compte des modèles personnalisés) ; réglage du nombre de lignes à la volée.
-- **Bouton `+ Créer un tableau` :** Présent dans l'en-tête de l'Étape 2, ouvre une modale permettant d'ajouter des schémas de données personnalisés (Titre, Description, code Mermaid ERD, prompt IA pour générer le diagramme), persistés en `localStorage` et intégrés dynamiquement dans la liste des options d'Étape 2.
+    - *Regex / Codes & Chaînes :* saisie épurée du préfixe texte fixe (suffixe supprimé). Pour les clés (`PK`, `UK`, `FK`), affichage configurable du compteur initial (`startNum`) et du nombre de chiffres de padding (`numDigits`).
+    - *Type par champ :* sélecteur de type par champ (string, int, float, date, boolean, enum) — les possibilités de saisie s'adaptent immédiatement sans régénération.
+    - *Actions (barre harmonisée avec l'éditeur de mesures) :* `Sauvegarder` (écrit types/commentaires dans l'UML, sans régénérer), `Regénérer` la table active, `Restaurer` (schéma Mermaid et données d'origine) ; réglage du nombre de lignes à la volée.
+- **Vue Visuelle Schéma Relationnel (`mermaid`) :** Visualisateur dynamique Mermaid SVG directement branché sur le modèle de données avec clés PK/FK et types normalisés, commandes de zoom/pan (+, −, ↺).
+- **Vue Modèle Mermaid ERD Éditable (`uml`) :** Code source Mermaid ERD éditable en direct avec persistance en local storage, impactant instantanément le rendu visuel, accompagné de boutons de copie et de réinitialisation (`↻`).
+- **Vue Prompt IA Diagramme ERD (`<>uml`) :** Prompt IA structuré prêt à copier pour générer ou adapter un diagramme Mermaid ERD selon des critères normés (PK, FK, UK, types obligatoires `*`, support explicite du type `enum` avec liste de choix séparée par `|` en commentaire, cardinalités à verbe infinitif).
+- **Bouton `+ Table` :** Présent dans l'en-tête de l'Étape 2, ouvre une modale permettant d'ajouter des schémas de données personnalisés (Titre, Description, code Mermaid ERD, prompt IA pour générer le diagramme), persistés en `localStorage`.
 
 Le modèle propose deux perspectives décisionnelles complémentaires selon le niveau de détail souhaité :
 
@@ -165,7 +164,6 @@ Le modèle propose deux perspectives décisionnelles complémentaires selon le n
 | :--- | :--- | :--- | :--- | :--- |
 | **`MDT_MAINTENANCE_REQUEST`** | | **Fait / MDT Central** | **1 ligne = 1 demande globale de maintenance moteur** | `D-2026-000123` |
 | ↳ `ID_DEMANDE` | `String` (`D-YYYY-XXXXXX`)| **PK** (1:1) | Identifiant unique de la demande | `"D-2026-000123"` |
-| ↳ `DEMANDEUR` | `String` (Code/Nom Client)| Attribut client | Compagnie aérienne propriétaire ou opératrice | `"Air France (AFR)"` |
 | ↳ `DEMANDEUR_NAME` | `String` (`Enum`) | Code client | Code court normalisé de la compagnie donneuse d'ordre (`*EZY`, `AFR`, `ACH`, `RYA`) | `"EZY"` |
 | ↳ `DATE_DEMANDE` | `Date` (`YYYY-MM-DD`) | Attribut temporel | Date d'émission de la demande d'intervention | `"2026-03-01"` |
 | ↳ `PROGRAMME_MOTEUR` | `String` (`Enum`) | Famille moteur | Famille technologique globale de motorisation | `"LEAP"` / `"CFM56"` |
@@ -184,7 +182,6 @@ erDiagram
 
     MDT_MAINTENANCE_REQUEST ["Demande de Maintenance Moteur"] {
         string ID_DEMANDE PK "D-2026-000123"
-        enum DEMANDEUR "*Air France (AFR) | Lufthansa (DLH) | Delta Air Lines (DAL) | EasyJet (EZY) | Air China (CCA) | Emirates (UAE) | Singapore Airlines (SIA)"
         enum DEMANDEUR_NAME "*EZY | AFR | ACH | RYA"
         date DATE_DEMANDE "2026-03-01"
         enum PROGRAMME_MOTEUR "*LEAP | CFM56 | GE90"
@@ -203,7 +200,6 @@ erDiagram
     }
     CONTRACT_SLA ["Contrat SLA Client"] {
         string ID_CONTRAT PK "CTR-AFR-01"
-        enum DEMANDEUR "*Air France (AFR) | Lufthansa (DLH) | Delta Air Lines (DAL) | EasyJet (EZY) | Air China (CCA) | Emirates (UAE) | Singapore Airlines (SIA)"
         float SLA_CIBLE_JOURS "18.0 j"
         float PENALITE_JOUR_EUR "2500 EUR"
     }
@@ -234,8 +230,8 @@ erDiagram
 | Table & Champ | Type / Format | Cardinalité | Rôle & Description | Exemple Concret |
 | :--- | :--- | :--- | :--- | :--- |
 | **`MDT_INTERVENTION`** | | **Fait / MDT Central** | **1 ligne = 1 intervention unitaire sur station & shop** | `I-2026-000123-01` |
-| ↳ `ID_DEMANDE` | `String` (`D-YYYY-XXXXXX`)| **PK composite** (1/2)| Référence à l'en-tête de demande parente | `"D-2026-000123"` |
-| ↳ `ID_INTERVENTION` | `String` (`I-YYYY-XXXXXX-ZZ`)| **PK composite** (2/2)| Numéro d'opération unitaire dans le dossier | `"I-2026-000123-01"` |
+| ↳ `ID_DEMANDE` | `String` (`Enum` / FK)| **FK vers Demande** | Référence à l'en-tête de demande parente (1:N) | `"D-2026-000123"` |
+| ↳ `ID_INTERVENTION` | `String` (`I-YYYY-XXXXXX-ZZ`)| **PK unique** | Numéro d'opération unitaire dans le dossier | `"I-2026-000123-01"` |
 | ↳ `TYPE_REPARATION` | `String` (`Enum`) | Type de réparation | Gamme technique parmi les 8 types (`T-XXXXXX`) | `"T-AUBTUR"` |
 | ↳ `PRECISION_AUTRE` | `String` | Précision technique | Détail obligatoire si `TYPE_REPARATION` = "Autre" | `""` (ou `"Re-frettage spécifique"`) |
 | ↳ `STATION_NAME` | `String` (`Enum`) | **FK vers STATION** | Station de réparation assignée (`S-XXX-YY`, 3-10 par shop) | `"S-MON-01"` |
@@ -283,7 +279,7 @@ erDiagram
     DUREE_STANDARDS ||--o{ MDT_INTERVENTION : "1 standard → N interventions (1:N)"
 
     MDT_INTERVENTION ["Intervention d'Atelier"] {
-        string ID_DEMANDE PK "D-2026-000123"
+        enum ID_DEMANDE FK "*D-2026-000123 | D-2026-000124 | D-2026-000125"
         string ID_INTERVENTION PK "I-2026-000123-01"
         enum TYPE_REPARATION "*T-AUBTUR | T-INSCND | T-MAJLOU | T-BANESS | T-EQUROT | T-COMHOT | T-REVCAR | T-FODREP"
         enum PRECISION_AUTRE "*Re-frettage spécifique | Usinage aubes HP | CND Ultra-sons | Traitement thermique | Équilibrage dynamique"
@@ -307,7 +303,6 @@ erDiagram
     }
     MDT_MAINTENANCE_REQUEST ["Demande de Maintenance Moteur"] {
         string ID_DEMANDE PK "D-2026-000123"
-        enum DEMANDEUR "*Air France (AFR) | Lufthansa (DLH) | Delta Air Lines (DAL) | EasyJet (EZY) | Air China (CCA) | Emirates (UAE) | Singapore Airlines (SIA)"
         enum DEMANDEUR_NAME "*EZY | AFR | ACH | RYA"
         enum ENGINE_TYPE "*LEAP-1A26 | CFM56-7B | CFM56-5B | LEAP-1B | GE90-115B"
         enum NIVEAU_URGENCE_GLOBAL "*Haute (AOG) | Moyenne | Basse"
@@ -363,30 +358,34 @@ Le modèle relie les MDTs et les Planning Levels aux Key Figures de calcul suiva
 > **Question de cadrage :** Quel niveau de complexité mathématique et d'hypothèse adopter ?  
 > **En-tête de l'interface :** Étape 3 : Calcul du Délai (TAT)
 
-> **Rendu Tableau & Modes de Vue (Étape 3) :** Le panneau latéral droit dispose d'un sélecteur à 4 modes :
-> - **`data` :** Vue tableau interactive propulsée par Grid.js (tri multi-colonnes, pagination 15/15 avec résumé, redimensionnement) avec crayon `✎` d'édition des mesures à droite de `+ Mesure`.
-> - **`uml` :** Modèle relationnel UML ciblé affichant uniquement les tables et champs intervenant dans le calcul du TAT, avec commandes de zoom/pan (+, −, ↺), crayon `✎` d'édition des mesures (`#mesure-generator-modal`, interface unifiée avec le générateur de données, support de tous les types de champs, mode distribution ou formule compact avec autocomplétion des opérateurs et champs, descriptifs UML des champs et opérateurs dans le dropdown et validation syntaxique instantanée ; pour les champs numériques, moyenne déduite du commentaire UML, min/max vides appliquant la règle $\pm 50\%$ affichée en placeholder) et mode éditeur en cas de mesure personnalisée (`+ Mesure`).
-> - **`chartjs` :** Prompt IA standardisé et personnalisable (bouton template `✎` visible sur ce mode, copie `⧉`) pour proposer une visualisation pertinente basée sur les entrées dans un code bloc au format contenu sans le { } de l'objet js de ChartJS.
-> - **`visuels` :** Prompt IA structuré formulant 3 idées de visuels compatibles SAP-IBP / SAC.
+> **Rendu Tableau & Modes de Vue (Étape 3) :** Le panneau latéral droit dispose d'un sélecteur à 4 modes (`data` | `uml` | `mermaid` | `<>visuels`) :
+> - **`data` :** Vue tableau interactive propulsée par Grid.js (tri multi-colonnes, pagination 10 lignes par page avec résumé, colonnes dimensionnées avec badges PK/FK, redimensionnement) avec crayon `✎` d'édition des mesures à droite de `+ Mesure`.
+> - **`uml` :** Code source Mermaid ERD ciblé et éditable en direct dans un bloc texte interactif avec persistance.
+> - **`mermaid` :** Modèle relationnel Mermaid SVG d'illustration spécifique à chaque option (table principale reliée à 2–3 tables secondaires participant au calcul), avec commandes de zoom/pan (+, −, ↺), crayon `✎` d'édition des mesures (`#mesure-generator-modal`, interface unifiée avec le générateur de données, support de tous les types de champs, mode distribution ou formule compacte avec autocomplétion des opérateurs et champs, validation syntaxique instantanée) et mode éditeur en cas de mesure personnalisée (`+ Mesure`).
+> - **`<>visuels` :** Prompt IA structuré formulant 3 idées de visuels compatibles SAP-IBP / SAC.
 
 ### Les 4 Méthodes de Calcul du TAT :
 1. **Option 3.A : S&OP (D-SOP)**
    - *Description :* Délais contractuels et standards constructeur basés sur les gammes opératoires et les forfaits d'acheminement.
+   - *Modèle relationnel UML :* `MDT_MAINTENANCE_REQUEST` reliée à `MDT_INTERVENTION`, `CONTRACT_SLA` et `TIMEPROFILE`.
    - *Principe :* Barème fixe additionnant le temps de révision nominal et les transits logistiques (`ESTIMATED_REPAIR_DURATION` + `TRANSIT_BUFFER`).
    - *Usage MRO :* Devis d'engagement initial Part-145 et planification macro à moyen terme.
    - *Formule DAX :* `SUMX(MDT_INTERVENTION, [ESTIMATED_REPAIR_DURATION] + [TRANSIT_BUFFER])`
 2. **Option 3.B : Projection statistique (D-STA)**
    - *Description :* Historique réel des visites et dispersion constatée (P5, P50, P95) pour sécuriser les engagements clients.
+   - *Modèle relationnel UML :* `MDT_MAINTENANCE_REQUEST` reliée à `MDT_INTERVENTION`, `DUREE_STANDARDS` et `ENGINE_FLEET`.
    - *Principe :* Distribution empirique réelle issue des passages réels pour mesurer les aléas de visite ($P_5, P_{50}, P_{95}$).
    - *Usage MRO :* Négociation des fenêtres de vol garanties (SLA) et maîtrise du risque de pénalité.
    - *Formule DAX :* `PERCENTILEX.INC(FAIT, FAIT[Duree_Reelle], 0.50)`
 3. **Option 3.C : Projection capacitaire (D-CAP)**
    - *Description :* Délais réels ajustés selon le niveau de charge et l'encombrement des ateliers.
+   - *Modèle relationnel UML :* `MDT_MAINTENANCE_REQUEST` reliée à `MDT_INTERVENTION`, `STATION` et `SHOP`.
    - *Principe :* Allongement dynamique des délais d'attente à mesure que l'atelier sature (> 85%).
    - *Usage MRO :* Alerte précoce sur les goulets d'étranglement et réorientation préventive des moteurs.
    - *Formule DAX :* `DIVIDE(Temps_Usinage, 1 - RELATED(DIM_SITE[Taux_Charge]))`
 4. **Option 3.D : Modélisation avancée (D-ML)**
    - *Description :* Prévision dynamique combinant l'usure prédictive des pièces et les aléas techniques de visite.
+   - *Modèle relationnel UML :* `MDT_MAINTENANCE_REQUEST` reliée à `MDT_INTERVENTION`, `COMPOSANT_CRITIQUE` et `CONTROLE_CND`.
    - *Principe :* Simulation multi-paramètres intégrant l'historique moteur, les contrôles et les rebuts.
    - *Usage MRO :* Pilotage prédictif fin de l'ordonnancement et optimisation continue des créneaux.
    - *Formule DAX :* `SIMULATE_TAT_ADVANCED(FAIT, CONTEXT)`
@@ -395,11 +394,11 @@ Le modèle relie les MDTs et les Planning Levels aux Key Figures de calcul suiva
 
 #### Extrait A : Consolidation Demande (MDT_MAINTENANCE_REQUEST) × Projection Statistique (3.B D-STA)
 ```text
-| ID_DEMANDE     | DEMANDEUR       | ENGINE_TYPE | P05_OPT | P50_MEDIAN | P95_PESS | TOTAL_ENGINE_TAT |
+| ID_DEMANDE     | DEMANDEUR_NAME  | ENGINE_TYPE | P05_OPT | P50_MEDIAN | P95_PESS | TOTAL_ENGINE_TAT |
 | :------------- | :-------------- | :---------- | :------ | :--------- | :------- | :--------------- |
-| D-2026-000123  | Air France      | LEAP-1A26   | 15.0 j  | 21.5 j     | 32.0 j   | 21.5 j           |
-| D-2026-000124  | Lufthansa       | CFM56-5B    | 11.5 j  | 16.0 j     | 23.5 j   | 16.0 j           |
-| D-2026-000125  | Delta Air Lines | CFM56-7B    | 18.0 j  | 24.5 j     | 36.0 j   | 24.5 j           |
+| D-2026-000123  | AFR             | LEAP-1A26   | 15.0 j  | 21.5 j     | 32.0 j   | 21.5 j           |
+| D-2026-000124  | DLH             | CFM56-5B    | 11.5 j  | 16.0 j     | 23.5 j   | 16.0 j           |
+| D-2026-000125  | DAL             | CFM56-7B    | 18.0 j  | 24.5 j     | 36.0 j   | 24.5 j           |
 ```
 *Formule DAX associée :* `Total_Engine_TAT_Median = PERCENTILEX.INC(MDT_MAINTENANCE_REQUEST, [TOTAL_ENGINE_TAT], 0.50)`
 
@@ -419,12 +418,13 @@ Le modèle relie les MDTs et les Planning Levels aux Key Figures de calcul suiva
 
 > **Question de cadrage :** Quels visuels utiliser pour piloter les délais des demandes de maintenance (MDT_MAINTENANCE_REQUEST) et les engagements clients ?  
 > **En-tête de l'interface :** Étape 4 : Sélectionner les visuels pour le Délai (TAT)  
-> **Rendu Chart.js & Modes de Vue (Étape 4) :** Les cartes d'options disposent d'un panneau à droite piloté par un sélecteur à 5 modes :
-> - **`ui` :** Vue graphique Chart.js interactive avec infobulles et étiquettes de données (`chartjs-plugin-datalabels`).
-> - **`config` :** Configuration JSON Chart.js éditable en temps réel avec répercussion instantanée sur le rendu graphique `ui` et persistance automatique.
-> - **`chartjs` :** Prompt IA permettant de générer une configuration Chart.js à partir des entrées calculées et des schémas ERD.
-> - **`visuels` :** Prompt IA structuré formulant 3 idées de visuels compatibles SAP-IBP / SAC.
-> - **`sap` :** Descriptif structuré technique et autoporteur en Markdown aligné sur l'interface et les possibilités natives de SAP-IBP et SAC (titre, composant SAC, modèle MDT IBP, axes X/Y, dimensions, mesures et Key Figures, règles et seuils d'alerte) avec bouton de copie rapide pour injection directe dans un prompt IA.
+> **Rendu Graphique & Modes de Vue (Étape 4) :** Les cartes d'options disposent d'un panneau à droite piloté par un sélecteur à 6 modes (`data` | `graph` | `js` | `<>js` | `<>visuels` | `<>sap`) :
+> - **`data` :** Vue données sous forme de tableau statique reprenant les séries et étiquettes du graphique, dotée du bouton crayon `✎` ouvrant le générateur de données graphiques (`#graph-data-generator-modal`) pour ajuster dynamiquement la moyenne et l'écart-type/dispersion de chaque série, modifiant directement le graphique actif.
+> - **`graph` :** Vue graphique Chart.js interactive avec infobulles et étiquettes de données (`chartjs-plugin-datalabels`).
+> - **`js` :** Configuration JSON Chart.js éditable en temps réel avec répercussion instantanée sur le rendu graphique `graph` et persistance automatique.
+> - **`<>js` :** Prompt IA permettant de générer une configuration Chart.js à partir des entrées calculées et des schémas ERD.
+> - **`<>visuels` :** Prompt IA structuré formulant 3 idées de visuels compatibles SAP-IBP / SAC.
+> - **`<>sap` :** Descriptif structuré technique et autoporteur en Markdown aligné sur l'interface et les possibilités natives de SAP-IBP et SAC (titre, composant SAC, modèle MDT IBP, axes X/Y, dimensions, mesures et Key Figures, règles et seuils d'alerte) avec bouton de copie rapide pour injection directe dans un prompt IA.
 
 ### Les 9 Graphiques Disponibles pour le Délai :
 - **4.A : TAT Médian & Bornes (P5-P95)**  
@@ -572,30 +572,34 @@ xychart-beta
 > **Question de cadrage :** Sur quelle base dimensionner et projeter la capacité des interventions d'atelier sur chaque shop (`S-XXX`) ?  
 > **En-tête de l'interface :** Étape 5 : Choisir la méthode d'évaluation de la Capacité d'Intervention en Atelier
 
-> **Rendu Tableau & Modes de Vue (Étape 5) :** Le panneau latéral droit dispose d'un sélecteur à 4 modes :
-> - **`data` :** Vue tableau interactive propulsée par Grid.js (tri multi-colonnes, pagination 15/15 avec résumé, redimensionnement) avec crayon `✎` d'édition des mesures à droite de `+ Mesure`.
-> - **`uml` :** Modèle relationnel UML ciblé affichant uniquement les tables et champs intervenant dans l'évaluation de la Capacité, avec commandes de zoom/pan (+, −, ↺), crayon `✎` d'édition des mesures (`#mesure-generator-modal`, interface unifiée avec le générateur de données, support de tous les types de champs, mode distribution ou formule compact avec autocomplétion des opérateurs et champs, descriptifs UML des champs et opérateurs dans le dropdown et validation syntaxique instantanée ; pour les champs numériques, moyenne déduite du commentaire UML, min/max vides appliquant la règle $\pm 50\%$ affichée en placeholder) et mode éditeur en cas de mesure personnalisée (`+ Mesure`).
-> - **`chartjs` :** Prompt IA standardisé et personnalisable (bouton template `✎` visible sur ce mode, copie `⧉`) formulant des propositions de visualisations comparatives à partir de l'option active et des diagrammes relationnels ERD 2.A et 2.B.
-> - **`visuels` :** Prompt IA structuré formulant 3 idées de visuels compatibles SAP-IBP / SAC.
+> **Rendu Tableau & Modes de Vue (Étape 5) :** Le panneau latéral droit dispose d'un sélecteur à 4 modes (`data` | `uml` | `mermaid` | `<>visuels`) :
+> - **`data` :** Vue tableau interactive propulsée par Grid.js (tri multi-colonnes, pagination 10 lignes par page avec résumé, colonnes dimensionnées avec badges PK/FK, redimensionnement) avec crayon `✎` d'édition des mesures à droite de `+ Mesure`.
+> - **`uml` :** Code source Mermaid ERD ciblé et éditable en direct dans un bloc texte interactif avec persistance.
+> - **`mermaid` :** Modèle relationnel Mermaid SVG d'illustration spécifique à chaque option (table principale reliée à 2–3 tables secondaires participant au calcul), avec commandes de zoom/pan (+, −, ↺), crayon `✎` d'édition des mesures (`#mesure-generator-modal`, interface unifiée avec le générateur de données, support de tous les types de champs, mode distribution ou formule compacte avec autocomplétion des opérateurs et champs, validation syntaxique instantanée) et mode éditeur en cas de mesure personnalisée (`+ Mesure`).
+> - **`<>visuels` :** Prompt IA structuré formulant 3 idées de visuels compatibles SAP-IBP / SAC.
 
 ### Les 4 Méthodes d'Évaluation de la Capacité :
 1. **Option 5.A : Capacité S&OP (C-SOP)**
    - *Description :* Capacité nominale planifiée pour l'arbitrage réseau et la réservation des créneaux à moyen terme (12–36 mois).
+   - *Modèle relationnel UML :* `MDT_INTERVENTION` reliée à `SHOP`, `CALENDRIER_OUVERTURE` et `BAIE_MAINTENANCE`.
    - *Principe :* Adéquation globale entre les volumes d'heures prévisionnels et l'ouverture théorique des baies (`SUM(MDT_INTERVENTION[HEURES_GAMME])` / `[CAPACITE_HEURES_SHOP]`).
    - *Usage MRO :* Plan industriel de charge, équilibrage multi-sites et dimensionnement des équipes.
    - *Formule DAX :* `Charge_SOP = DIVIDE(SUM(MDT_INTERVENTION[HEURES_GAMME]), [CAPACITE_HEURES_SHOP])`
 2. **Option 5.B : Projection statistique (C-STA)**
    - *Description :* Cadence réelle d'écoulement et débit effectif basés sur les moteurs actuellement en cours (WIP) dans les ateliers.
+   - *Modèle relationnel UML :* `MDT_INTERVENTION` reliée à `STATION`, `SHOP` et `FLUX_ENCOURS`.
    - *Principe :* Extrapolation du rythme de sortie constaté sur les dernières semaines selon l'en-cours actif.
    - *Usage MRO :* Régulation hebdomadaire des lancements et détection des baisses de rythme aux postes.
    - *Formule DAX :* `Debit_Stats = CALCULATE([INTERVENTIONS_CLOTUREES], DATESINPERIOD('Calendar'[Date], TODAY(), -3, MONTH))`
 3. **Option 5.C : Projection logistique (C-LOG)**
    - *Description :* Capacité d'intervention alignée sur la disponibilité effective des pièces et kits critiques de réparation (OTIF).
+   - *Modèle relationnel UML :* `MDT_INTERVENTION` reliée à `SHOP`, `STOCK_PIECES` et `FOURNISSEUR_LOGISTIQUE`.
    - *Principe :* Capacité utile bridée par la pièce manquante la plus lente (aubes, disques, kits LLP).
    - *Usage MRO :* Synchronisation des montages d'intervention sur les dates confirmées d'approvisionnement.
    - *Formule DAX :* `Capacite_Logistique = MIN([CAPACITE_POSTES], [KITS_DISPO] * [CADENCE_STANDARD])`
 4. **Option 5.D : Modélisation avancée (C-ML)**
    - *Description :* Capacité prédictive intégrant les retouches d'usinage, les contrôles CND et la disponibilité des bancs d'essai.
+   - *Modèle relationnel UML :* `MDT_INTERVENTION` reliée à `SHOP`, `EQUIPEMENT_CRITIQUE` et `REBUT_STATISTIQUE`.
    - *Principe :* Simulation prévisionnelle tenant compte des taux de rebut et pannes d'équipements critiques.
    - *Usage MRO :* Dimensionnement dynamique des stocks tampons et gestion proactive de la variabilité.
    - *Formule DAX :* `Capacite_ML = FORECAST_CAPACITY([INTERVENTIONS_PREVUES], [ALEAS_CND], [DISPO_BANCS])`
@@ -629,12 +633,13 @@ xychart-beta
 
 > **Question de cadrage :** Quels visuels choisir pour repérer les goulots d'intervention et la surcharge des ateliers (`S-XXX`) ?  
 > **En-tête de l'interface :** Étape 6 : Sélectionner les visuels pour la Saturation des Interventions en Atelier  
-> **Rendu Chart.js & Modes de Vue (Étape 6) :** Les cartes d'options disposent d'un panneau à droite piloté par un sélecteur à 5 modes :
-> - **`ui` :** Vue graphique Chart.js interactive (dont Treemap 6.H avec drill-down au clic Moteurs ➔ Réparations et Heatmap 6.F par semaine).
-> - **`config` :** Configuration JSON Chart.js éditable en temps réel avec répercussion instantanée sur le rendu graphique `ui` et persistance automatique.
-> - **`chartjs` :** Prompt IA permettant de générer une configuration Chart.js à partir des entrées calculées et des schémas ERD.
-> - **`visuels` :** Prompt IA structuré de génération de 3 idées de visuels SAP-IBP / SAC.
-> - **`sap` :** Descriptif technique structuré et autoporteur en Markdown aligné sur l'interface et les possibilités natives de SAP-IBP et SAC (titre, composant SAC, modèle MDT IBP, dimensions, mesures et Key Figures, filtres, règles et seuils d'alerte) avec bouton copier.
+> **Rendu Graphique & Modes de Vue (Étape 6) :** Les cartes d'options disposent d'un panneau à droite piloté par un sélecteur à 6 modes (`data` | `graph` | `js` | `<>js` | `<>visuels` | `<>sap`) :
+> - **`data` :** Vue données sous forme de tableau statique reprenant les séries et étiquettes du graphique, dotée du bouton crayon `✎` ouvrant le générateur de données graphiques (`#graph-data-generator-modal`) pour ajuster dynamiquement la moyenne et l'écart-type/dispersion de chaque série, modifiant directement le graphique actif.
+> - **`graph` :** Vue graphique Chart.js interactive (dont Treemap 6.H avec drill-down au clic Moteurs ➔ Réparations et Heatmap 6.F par semaine).
+> - **`js` :** Configuration JSON Chart.js éditable en temps réel avec répercussion instantanée sur le rendu graphique `graph` et persistance automatique.
+> - **`<>js` :** Prompt IA permettant de générer une configuration Chart.js à partir des entrées calculées et des schémas ERD.
+> - **`<>visuels` :** Prompt IA structuré de génération de 3 idées de visuels SAP-IBP / SAC.
+> - **`<>sap` :** Descriptif technique structuré et autoporteur en Markdown aligné sur l'interface et les possibilités natives de SAP-IBP et SAC (titre, composant SAC, modèle MDT IBP, dimensions, mesures et Key Figures, filtres, règles et seuils d'alerte) avec bouton copier.
 
 ### Les 9 Graphiques de Saturation :
 - **6.A : Taux de Retard par Shop**  
