@@ -91,7 +91,7 @@ Le projet MAESTRO s'articule autour des acteurs décisionnels de la maintenance 
 
 > **Question de cadrage :** Quelles tables et niveaux de granularité permettent le calcul du Turn Around Time (TAT) et la planification d'atelier ?  
 > **En-tête de l'interface :** Étape 2 : Modèle de Données  
-> **Bouton d'affichage :** En haut à droite du panel de droite, le bouton `schema-toggle` bascule entre la vue exemple de données (`data`), le rendu visuel Mermaid SVG (`mermaid`), l'éditeur code Mermaid interactif (`uml`) et le prompt IA de génération ERD (`<>uml`), rigoureusement synchronisés avec les diagrammes `erDiagram` et définitions ci-dessous. Le crayon `✎` du générateur de données est disponible en haut à droite dans les vues `mermaid`, `uml` et `<>uml`.
+> **Bouton d'affichage :** En haut à droite du panel de droite, le bouton `schema-toggle` bascule entre la vue exemple de données (`data`), le rendu visuel Mermaid SVG (`graph`), l'éditeur code Mermaid interactif (`uml`) et le prompt IA de génération ERD (`<>uml`), rigoureusement synchronisés avec les diagrammes `erDiagram` et définitions ci-dessous. Le crayon `✎` du générateur de données est disponible en haut à droite dans les vues `graph`, `uml` et `<>uml`.
 
 ---
 
@@ -123,7 +123,7 @@ Les fondations du modèle de données reposent sur deux structures maîtres : l'
 
 ### 2. 🎛️ Planning Levels (Niveaux de Granularité des Calculs)
 
-Le panneau latéral droit de l'Étape 2 propose un sélecteur à 4 vues (`data` | `mermaid` | `uml` | `<>uml`) :
+Le panneau latéral droit de l'Étape 2 propose un sélecteur à 4 vues (`data` | `graph` | `uml` | `<>uml`) :
 - **Vue Exemple de Données Tabulaire (`data`) :** Tableau dynamique interactif propulsé par **Grid.js** (thème personnalisé BiMaestro compact, police augmentée à 13px) montrant les enregistrements de la table principale (au centre de l'étoile) et des tables dimensionnelles / de faits associées :
   - **Tri par colonne :** Tri ascendant / descendant natif Grid.js au clic sur l'en-tête de colonne avec indicateurs fléchés.
   - **Pagination intégrée :** Affichage strict de 10 lignes par page avec pagination numérique et résumé (`[Préc.] [1] [2]... [Suiv.]`).
@@ -138,7 +138,7 @@ Le panneau latéral droit de l'Étape 2 propose un sélecteur à 4 vues (`data` 
     - *Regex / Codes & Chaînes :* saisie épurée du préfixe texte fixe (suffixe supprimé). Pour les clés (`PK`, `UK`, `FK`), affichage configurable du compteur initial (`startNum`) et du nombre de chiffres de padding (`numDigits`).
     - *Type par champ :* sélecteur de type par champ (string, int, float, date, boolean, enum) — les possibilités de saisie s'adaptent immédiatement sans régénération.
     - *Actions (barre harmonisée avec l'éditeur de mesures) :* `Sauvegarder` (écrit types/commentaires dans l'UML, sans régénérer), `Regénérer` la table active, `Restaurer` (schéma Mermaid et données d'origine) ; réglage du nombre de lignes à la volée.
-- **Vue Visuelle Schéma Relationnel (`mermaid`) :** Visualisateur dynamique Mermaid SVG directement branché sur le modèle de données avec clés PK/FK et types normalisés, commandes de zoom/pan (+, −, ↺).
+- **Vue Visuelle Schéma Relationnel (`graph`) :** Visualisateur dynamique Mermaid SVG directement branché sur le modèle de données avec clés PK/FK et types normalisés, commandes de zoom/pan (+, −, ↺).
 - **Vue Modèle Mermaid ERD Éditable (`uml`) :** Code source Mermaid ERD éditable en direct avec persistance en local storage, impactant instantanément le rendu visuel, accompagné de boutons de copie et de réinitialisation (`↻`).
 - **Vue Prompt IA Diagramme ERD (`<>uml`) :** Prompt IA structuré prêt à copier pour générer ou adapter un diagramme Mermaid ERD selon des critères normés (PK, FK, UK, types obligatoires `*`, support explicite du type `enum` avec liste de choix séparée par `|` en commentaire, cardinalités à verbe infinitif).
 - **Bouton `+ Table` :** Présent dans l'en-tête de l'Étape 2, ouvre une modale permettant d'ajouter des schémas de données personnalisés (Titre, Description, code Mermaid ERD, prompt IA pour générer le diagramme), persistés en `localStorage`.
@@ -193,9 +193,9 @@ erDiagram
         float TOTAL_ENGINE_TAT "21.5 j"
     }
     TIMEPROFILE ["Profil Temporel"] {
-        string ID_PERIOD PK "2026-W10"
-        date START_DATE "2026-03-02"
-        date END_DATE "2026-03-08"
+        string ID_PERIOD PK "2026-W36"
+        date START_DATE "2026-09-01"
+        date END_DATE "2026-09-07"
         boolean IS_WORKING_DAY "*true | false"
     }
     CONTRACT_SLA ["Contrat SLA Client"] {
@@ -313,9 +313,9 @@ erDiagram
         float DUREE_STANDARD_H "18.5 h"
     }
     TIMEPROFILE ["Profil Temporel"] {
-        string ID_PERIOD PK "2026-W10"
-        date DATE_DEBUT "2026-03-02"
-        date DATE_FIN "2026-03-08"
+        string ID_PERIOD PK "2026-W36"
+        date DATE_DEBUT "2026-09-01"
+        date DATE_FIN "2026-09-07"
     }
 ```
 
@@ -324,6 +324,12 @@ erDiagram
 ### 3. 📊 Key Figures (Indicateurs Clés Associés)
 
 Le modèle relie les MDTs et les Planning Levels aux Key Figures de calcul suivantes :
+
+> [!NOTE]
+> **Unités & Règle de Conversion Heures / Jours :**
+> - Les opérations d'atelier unitaires (`Estimated Repair Duration`, `Shop Queue Time`, `Intervention TAT`, charge machine) sont mesurées et ordonnancées en **heures ouvrées ($h$)**.
+> - Le délai consolidé de visite moteur (`Total Engine TAT`) au niveau dossier client est mesuré et contractuellement restitué en **jours ouvrés ($j$)**, avec la conversion standard :  
+>   $$1\text{ jour ouvré} \approx 7\text{ heures de travail effectif en atelier}$$
 
 #### 📥 Indicateurs d'Ordre & État (Pilotage Dossier) :
 1. **`Intervention Count`** :
@@ -337,17 +343,17 @@ Le modèle relie les MDTs et les Planning Levels aux Key Figures de calcul suiva
 
 #### ⏱️ Indicateurs de Temps & Charge par Atelier :
 1. **`Estimated Repair Duration`** :
-   - *Définition :* Durée standard théorique estimée pour le `TYPE_REPARATION` et l'`ENGINE_TYPE` retenus.
+   - *Définition :* Durée standard théorique estimée pour le `TYPE_REPARATION` et l'`ENGINE_TYPE` retenus (en heures).
    - *Source :* Barème méthode constructeur issu de la table de référence dimensionnelle.
 2. **`Shop Queue Time`** :
-   - *Définition :* Temps d'attente estimé dans le `SHOP_NAME`, calculé en fonction de la charge instantanée et de l'engorgement de l'atelier face au seuil critique (85%).
+   - *Définition :* Temps d'attente estimé dans le `SHOP_NAME` (en heures), calculé en fonction de la charge instantanée et de l'engorgement de l'atelier face au seuil critique (85%).
    - *Formule :* `Shop_Queue_Time = f(Taux_Occupation_Shop, Seuil_Saturation)`.
 3. **`Intervention TAT`** :
-   - *Définition :* Turn Around Time unitaire de l'opération d'atelier.
+   - *Définition :* Turn Around Time unitaire de l'opération d'atelier (en heures).
    - *Formule :* `Intervention_TAT = Shop_Queue_Time + Estimated_Repair_Duration + Delai_Transit_Eventuel`.
 4. **`Total Engine TAT (Dossier)`** :
-   - *Définition :* Délai global consolidé de la visite moteur pour le client.
-   - *Formule :* $\max(\text{Intervention\_TAT})$ pour les opérations menées en parallèle, ou $\sum(\text{Intervention\_TAT})$ pour les opérations menées sur le chemin critique en série.
+   - *Définition :* Délai global consolidé de la visite moteur pour le client (en jours ouvrés).
+   - *Formule :* $\max(\text{Intervention\_TAT})/7$ pour les opérations menées en parallèle, ou $\sum(\text{Intervention\_TAT})/7$ pour les opérations menées sur le chemin critique en série.
 
 ---
 
@@ -358,10 +364,14 @@ Le modèle relie les MDTs et les Planning Levels aux Key Figures de calcul suiva
 > **Question de cadrage :** Quel niveau de complexité mathématique et d'hypothèse adopter ?  
 > **En-tête de l'interface :** Étape 3 : Calcul du Délai (TAT)
 
-> **Rendu Tableau & Modes de Vue (Étape 3) :** Le panneau latéral droit dispose d'un sélecteur à 4 modes (`data` | `uml` | `mermaid` | `<>visuels`) :
-> - **`data` :** Vue tableau interactive propulsée par Grid.js (tri multi-colonnes, pagination 10 lignes par page avec résumé, colonnes dimensionnées avec badges PK/FK, redimensionnement) avec crayon `✎` d'édition des mesures à droite de `+ Mesure`.
+> **Rendu Tableau & Modes de Vue (Étape 3) :** Le panneau latéral droit dispose d'un sélecteur à 4 modes (`data` | `uml` | `graph` | `<>visuels`) :
+> - **`data` :** Vue tableau interactive propulsée par Grid.js (tri multi-colonnes, pagination 10 lignes par page avec résumé, colonnes dimensionnées avec badges PK/FK, redimensionnement) :
+>   - *Sélecteur de table :* Dropdown au-dessus du tableau affichant le titre de la table active et permettant de naviguer sur l'ensemble des tables du modèle Mermaid de l'option (`#step-3-data-table-select`).
+>   - *Drilldown & Relations :* Liens 1-N cliquables (`count ↗`) pour naviguer et filtrer vers les tables associées (`drillDownToStepTable`), et colonnes résolues N-1 affichant le nom de l'entité liée.
+>   - *Navigation & Retour :* Bouton de retour `←` (`#step-3-data-back-btn`) et badge de filtre actif dès qu'on quitte la table principale.
+>   - *Variabilité & Mesures :* Mesures calculées variant d'une ligne à l'autre selon la moyenne et la dispersion définie, et crayon `✎` ouvrant la modale SAP IBP d'édition des mesures.
 > - **`uml` :** Code source Mermaid ERD ciblé et éditable en direct dans un bloc texte interactif avec persistance.
-> - **`mermaid` :** Modèle relationnel Mermaid SVG d'illustration spécifique à chaque option (table principale reliée à 2–3 tables secondaires participant au calcul), avec commandes de zoom/pan (+, −, ↺), crayon `✎` d'édition des mesures (`#mesure-generator-modal`, interface unifiée avec le générateur de données, support de tous les types de champs, mode distribution ou formule compacte avec autocomplétion des opérateurs et champs, validation syntaxique instantanée) et mode éditeur en cas de mesure personnalisée (`+ Mesure`).
+> - **`graph` :** Modèle relationnel Mermaid SVG d'illustration spécifique à chaque option (table principale reliée à 2–3 tables secondaires participant au calcul), avec commandes de zoom/pan (+, −, ↺), crayon `✎` d'édition des mesures (`#mesure-generator-modal`, interface unifiée avec le générateur de données, support de tous les types de champs, mode distribution ou formule compacte avec autocomplétion des opérateurs et champs, validation syntaxique instantanée) et mode éditeur en cas de mesure personnalisée (`+ Mesure`).
 > - **`<>visuels` :** Prompt IA structuré formulant 3 idées de visuels compatibles SAP-IBP / SAC.
 
 ### Les 4 Méthodes de Calcul du TAT :
@@ -572,10 +582,14 @@ xychart-beta
 > **Question de cadrage :** Sur quelle base dimensionner et projeter la capacité des interventions d'atelier sur chaque shop (`S-XXX`) ?  
 > **En-tête de l'interface :** Étape 5 : Choisir la méthode d'évaluation de la Capacité d'Intervention en Atelier
 
-> **Rendu Tableau & Modes de Vue (Étape 5) :** Le panneau latéral droit dispose d'un sélecteur à 4 modes (`data` | `uml` | `mermaid` | `<>visuels`) :
-> - **`data` :** Vue tableau interactive propulsée par Grid.js (tri multi-colonnes, pagination 10 lignes par page avec résumé, colonnes dimensionnées avec badges PK/FK, redimensionnement) avec crayon `✎` d'édition des mesures à droite de `+ Mesure`.
+> **Rendu Tableau & Modes de Vue (Étape 5) :** Le panneau latéral droit dispose d'un sélecteur à 4 modes (`data` | `uml` | `graph` | `<>visuels`) :
+> - **`data` :** Vue tableau interactive propulsée par Grid.js (tri multi-colonnes, pagination 10 lignes par page avec résumé, colonnes dimensionnées avec badges PK/FK, redimensionnement) :
+>   - *Sélecteur de table :* Dropdown au-dessus du tableau affichant le titre de la table active et permettant de basculer entre les différentes tables du modèle relationnel de l'option (`#step-5-data-table-select`).
+>   - *Drilldown & Relations :* Liens 1-N cliquables (`count ↗`) permettant d'inspecter et filtrer les tables reliées (`drillDownToStepTable`), et colonnes résolues N-1 affichant le nom de l'entité parente liée.
+>   - *Navigation & Retour :* Bouton de retour `←` (`#step-5-data-back-btn`) et badge de filtre actif dès qu'on navigue hors de la table principale.
+>   - *Variabilité & Mesures :* Mesures calculées variant d'une ligne à l'autre selon la moyenne et la dispersion définie, et crayon `✎` ouvrant la modale SAP IBP d'édition des mesures de capacité.
 > - **`uml` :** Code source Mermaid ERD ciblé et éditable en direct dans un bloc texte interactif avec persistance.
-> - **`mermaid` :** Modèle relationnel Mermaid SVG d'illustration spécifique à chaque option (table principale reliée à 2–3 tables secondaires participant au calcul), avec commandes de zoom/pan (+, −, ↺), crayon `✎` d'édition des mesures (`#mesure-generator-modal`, interface unifiée avec le générateur de données, support de tous les types de champs, mode distribution ou formule compacte avec autocomplétion des opérateurs et champs, validation syntaxique instantanée) et mode éditeur en cas de mesure personnalisée (`+ Mesure`).
+> - **`graph` :** Modèle relationnel Mermaid SVG d'illustration spécifique à chaque option (table principale reliée à 2–3 tables secondaires participant au calcul), avec commandes de zoom/pan (+, −, ↺), crayon `✎` d'édition des mesures (`#mesure-generator-modal`, interface unifiée avec le générateur de données, support de tous les types de champs, mode distribution ou formule compacte avec autocomplétion des opérateurs et champs, validation syntaxique instantanée) et mode éditeur en cas de mesure personnalisée (`+ Mesure`).
 > - **`<>visuels` :** Prompt IA structuré formulant 3 idées de visuels compatibles SAP-IBP / SAC.
 
 ### Les 4 Méthodes d'Évaluation de la Capacité :
